@@ -1,0 +1,19 @@
+{
+    "header_len": 1536,
+    "text": "DigitShield",
+    "expiry": 0,
+    "version": {
+        "major": 0,
+        "minor": 0
+    },
+    "sig_m": 1,
+    "trust": {
+        "show_vendor_string": false,
+        "require_user_click": false,
+        "red_background": false,
+        "delay": 0
+    },
+    "pubkeys": [
+        "639BAF894B85BE2D02D48DBFA822A48C7962BFDAF8C6D00605F76A1B2A6B65B9"
+    ]
+}

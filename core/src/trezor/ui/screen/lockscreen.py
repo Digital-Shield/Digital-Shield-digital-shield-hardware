@@ -1,0 +1,55 @@
+import lvgl as lv
+
+from . import Screen
+from storage import device
+from trezor import log, ui, utils
+from trezor.ui import i18n
+from trezor.ui.component.container import HStack
+
+class LockScreen(Screen):
+    def __init__(self):
+        super().__init__()
+
+        wallpaper = device.get_homescreen()
+        self.set_style_bg_img_src(wallpaper, lv.PART.MAIN)
+
+        self.create_content(HStack)
+        # manually type annotation
+        self.content: HStack
+
+        self.content.items_center()
+        # items space equally
+        self.content.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
+
+        self.content.set_style_pad_top(32, lv.PART.MAIN)
+        self.content.set_style_pad_bottom(32, lv.PART.MAIN)
+
+        # lock icon
+        icon = lv.img(self.content)
+        icon.set_src("A:/res/lock.png")
+
+        # logo icon
+        logo = lv.img(self.content)
+        logo.set_src("A:/res/logo.png")
+
+        # tip
+        tip = lv.label(self.content)
+        tip.set_text(i18n.Text.tap_to_unlock)
+
+        self.add_event_cb(self.on_click, lv.EVENT.CLICKED, None)
+
+
+    def on_click(self, e):
+        if not ui.display.backlight() and not device.is_tap_awake_enabled():
+            return
+        if utils.turn_on_lcd_if_possible():
+            return
+        from trezor import workflow
+        from apps.base import unlock_device
+
+        workflow.spawn(unlock_device())
+
+    async def show(self):
+        from . import manager
+        # as the first screen when the device is booted, it should be a scene, switch it
+        await manager.switch_scene(self)

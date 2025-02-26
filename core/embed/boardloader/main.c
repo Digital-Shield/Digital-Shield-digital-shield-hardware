@@ -1,0 +1,550 @@
+/*
+ * This file is part of the Trezor project, https://trezor.io/
+ *
+ * Copyright (c) SatoshiLabs
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <string.h>
+
+#include "blake2s.h"
+#include "common.h"
+#include "compiler_traits.h"
+#include "display.h"
+#include "emmc.h"
+#include "ff.h"
+#include "flash.h"
+#include "image.h"
+#include "mipi_lcd.h"
+#include "qspi_flash.h"
+#include "rng.h"
+
+#ifdef TREZOR_MODEL_T
+#include "sdram.h"
+#include "touch.h"
+#endif
+
+#include "usb.h"
+#include "lowlevel.h"
+#include "version.h"
+#include "memzero.h"
+#include "ble.h"
+#include "usart.h"
+
+#define BOARD_MODE 1
+#define BOOT_MODE 2
+#define PIXEL_STEP 5
+
+// TODO: change verification policy
+#if PRODUCTION
+const uint8_t BOARDLOADER_KEY_M = 4;
+const uint8_t BOARDLOADER_KEY_N = 7;
+#else
+const uint8_t BOARDLOADER_KEY_M = 2;
+const uint8_t BOARDLOADER_KEY_N = 3;
+#endif
+
+// TODO add our own keys to verify firmware
+static const uint8_t * const BOARDLOADER_KEYS[] = {
+#if PRODUCTION
+#else
+// TREZOR dev_key
+(const uint8_t
+*)"\xdb\x99\x5f\xe2\x51\x69\xd1\x41\xca\xb9\xbb\xba\x92\xba\xa0\x1f\x9f\x2e\x1e\xce\x7d\xf4\xcb\x2a\xc0\x51\x90\xf3\x7f\xcc\x1f\x9d",
+(const uint8_t
+*)"\x21\x52\xf8\xd1\x9b\x79\x1d\x24\x45\x32\x42\xe1\x5f\x2e\xab\x6c\xb7\xcf\xfa\x7b\x6a\x5e\xd3\x00\x97\x96\x0e\x06\x98\x81\xdb\x12",
+(const uint8_t
+*)"\x22\xfc\x29\x77\x92\xf0\xb6\xff\xc0\xbf\xcf\xdb\x7e\xdb\x0c\x0a\xa1\x4e\x02\x5a\x36\x5e\xc0\xe3\x42\xe8\x6e\x38\x29\xcb\x74\xb6",
+#endif
+};
+
+#define BOARD_VERSION "Digitshield Boardloader 1.0.0\n"
+
+extern volatile uint32_t system_reset;
+
+static FATFS fs_instance;
+PARTITION VolToPart[FF_VOLUMES] = {
+    {0, 1},
+    {0, 2},
+};
+uint32_t *emmc_buf = (uint32_t *)0x24000000;
+uint32_t *emmc_buf1 = (uint32_t *)0x24000000 + IMAGE_HEADER_SIZE;
+
+#define BOOT_EMMC_BLOCKS (2 * 1024 * 1024)
+void fatfs_init(void) {
+  FRESULT res;
+  BYTE work[FF_MAX_SS];
+  MKFS_PARM mk_para = {
+      .fmt = FM_FAT32,
+  };
+
+  LBA_t plist[] = {
+      BOOT_EMMC_BLOCKS,
+      100};  // 1G sectors for 1st partition and left all for 2nd partition
+  res = f_mount(&fs_instance, "", 1);
+  if (res == FR_OK) return;
+
+  if (res == FR_NO_FILESYSTEM) {
+    res = f_fdisk(0, plist, work); /* Divide physical drive 0 */
+    if (res) {
+      display_printf("f_fdisk error%d\n", res);
+    }
+    res = f_mkfs("0:", &mk_para, work, sizeof(work));
+    if (res) {
+      display_printf("f_mkfs 0 error%d\n", res);
+    }
+    FATFS fs;
+    res = f_mount(&fs, "0:", 1);
+    if (res) {
+      display_printf("fatfs mount error");
+    }
+    f_setlabel("0:System Data");
+    f_unmount("0:");
+
+    res = f_mkfs("1:", &mk_para, work, sizeof(work));
+    if (res) {
+      display_printf("fatfs Format error");
+    }
+    res = f_mount(&fs, "1:", 1);
+    if (res) {
+      display_printf("fatfs mount error");
+    }
+    f_setlabel("1:User Data");
+    f_unmount("1:");
+  } else {
+    display_printf("mount err %d\n", res);
+  }
+}
+
+int fatfs_check_res(void) {
+  FRESULT res;
+  FIL fsrc;
+  res = f_mount(&fs_instance, "", 1);
+  if (res != FR_OK) {
+    display_printf("fatfs mount error");
+    return 0;
+  }
+  res = f_open(&fsrc, "/res/.DIGITSHIELD_RESOURCE", FA_READ);
+  if (res != FR_OK) {
+    f_unmount("");
+  }
+  return res;
+}
+
+secbool check_emmc_image_contents(const image_header *const hdr,
+                                     uint32_t firstskip, FIL fsrc) {
+  void *data = emmc_buf1;
+
+  FRESULT res;
+  UINT num_of_read = 0;
+
+  res = f_read(&fsrc, data, IMAGE_CHUNK_SIZE - firstskip, &num_of_read);
+  if ((num_of_read != (IMAGE_CHUNK_SIZE - firstskip)) || (res != FR_OK)) {
+    f_close(&fsrc);
+    return secfalse;
+  }
+
+  int remaining = hdr->codelen;
+  if (remaining <= IMAGE_CHUNK_SIZE - firstskip) {
+    if (sectrue != check_single_hash(hdr->hashes, data,
+                                     MIN(remaining, IMAGE_CHUNK_SIZE))) {
+      return secfalse;
+    } else {
+      return sectrue;
+    }
+  }
+
+  BLAKE2S_CTX ctx;
+  uint8_t hash[BLAKE2S_DIGEST_LENGTH];
+  blake2s_Init(&ctx, BLAKE2S_DIGEST_LENGTH);
+
+  blake2s_Update(&ctx, data, MIN(remaining, IMAGE_CHUNK_SIZE - firstskip));
+  int block = 1;
+  int update_flag = 1;
+  remaining -= IMAGE_CHUNK_SIZE - firstskip;
+  while (remaining > 0) {
+    res = f_read(&fsrc, data, MIN(remaining, IMAGE_CHUNK_SIZE), &num_of_read);
+    if ((num_of_read != MIN(remaining, IMAGE_CHUNK_SIZE)) || (res != FR_OK)) {
+      f_close(&fsrc);
+      return secfalse;
+    }
+
+    if (remaining - IMAGE_CHUNK_SIZE > 0) {
+      if (block % 2) {
+        update_flag = 0;
+        blake2s_Update(&ctx, data, MIN(remaining, IMAGE_CHUNK_SIZE));
+        blake2s_Final(&ctx, hash, BLAKE2S_DIGEST_LENGTH);
+        if (0 != memcmp(hdr->hashes + (block / 2) * 32, hash,
+                        BLAKE2S_DIGEST_LENGTH)) {
+          return secfalse;
+        }
+      } else {
+        blake2s_Init(&ctx, BLAKE2S_DIGEST_LENGTH);
+        blake2s_Update(&ctx, data, MIN(remaining, IMAGE_CHUNK_SIZE));
+        update_flag = 1;
+      }
+    } else {
+      if (update_flag) {
+        blake2s_Update(&ctx, data, MIN(remaining, IMAGE_CHUNK_SIZE));
+        blake2s_Final(&ctx, hash, BLAKE2S_DIGEST_LENGTH);
+        if (0 != memcmp(hdr->hashes + (block / 2) * 32, hash,
+                        BLAKE2S_DIGEST_LENGTH)) {
+          return secfalse;
+        }
+      } else {
+        if (sectrue != check_single_hash(hdr->hashes + (block / 2) * 32, data,
+                                         MIN(remaining, IMAGE_CHUNK_SIZE))) {
+          return secfalse;
+        }
+      }
+    }
+    block++;
+    remaining -= MIN(remaining, IMAGE_CHUNK_SIZE);
+  }
+  return sectrue;
+}
+
+static secbool check_emmc(image_header *hdr) {
+  FRESULT res;
+
+  res = f_mount(&fs_instance, "", 1);
+  if (res != FR_OK) {
+    return secfalse;
+  }
+  uint64_t cap = emmc_get_capacity_in_bytes();
+  if (cap < 1024 * 1024) {
+    return secfalse;
+  }
+
+  memzero(emmc_buf, IMAGE_HEADER_SIZE);
+
+  FIL fsrc;
+  UINT num_of_read = 0;
+
+  res = f_open(&fsrc, "/boot/bootloader.bin", FA_READ);
+  if (res != FR_OK) {
+    return secfalse;
+  }
+  res = f_read(&fsrc, emmc_buf, IMAGE_HEADER_SIZE, &num_of_read);
+  if ((num_of_read != IMAGE_HEADER_SIZE) || (res != FR_OK)) {
+    f_close(&fsrc);
+    return secfalse;
+  }
+
+  secbool new_present = secfalse;
+
+  new_present =
+      load_image_header((const uint8_t *)emmc_buf, BOOTLOADER_IMAGE_MAGIC,
+                        BOOTLOADER_IMAGE_MAXSIZE, BOARDLOADER_KEY_M,
+                        BOARDLOADER_KEY_N, BOARDLOADER_KEYS, hdr);
+  if (sectrue == new_present) {
+    new_present = check_emmc_image_contents(hdr, IMAGE_HEADER_SIZE, fsrc);
+  }
+
+  f_close(&fsrc);
+  return sectrue == new_present ? sectrue : secfalse;
+}
+
+static void progress_callback(int pos, int len) { display_printf("."); }
+
+static secbool copy_emmc(uint32_t code_len) {
+  display_backlight(255);
+
+  display_printf(BOARD_VERSION);
+  display_printf("=====================\n\n");
+
+  display_printf("new version bootloader found\n\n");
+
+  display_printf("\n\nerasing flash:\n\n");
+
+  // erase all flash (except boardloader)
+  static const uint8_t sectors[] = {
+      FLASH_SECTOR_BOOTLOADER_1,
+      FLASH_SECTOR_BOOTLOADER_2,
+  };
+
+  if (sectrue !=
+      flash_erase_sectors(sectors, sizeof(sectors), progress_callback)) {
+    display_printf(" failed\n");
+    return secfalse;
+  }
+  display_printf(" done\n\n");
+
+  ensure(flash_unlock_write(), NULL);
+
+  display_printf("coping boardloader to flash ...\n\n");
+
+  memzero(emmc_buf, EMMC_BLOCK_SIZE);
+
+  FIL fsrc;
+  FRESULT res;
+  UINT num_of_read;
+  res = f_open(&fsrc, "/boot/bootloader.bin", FA_READ);
+  if (res != FR_OK) {
+    return secfalse;
+  }
+  int blocks = (IMAGE_HEADER_SIZE + code_len) / EMMC_BLOCK_SIZE;
+  int percent = 0, percent_bak = 0;
+  for (int i = 0; i < blocks; i++) {
+    percent = (i * 100) / blocks;
+    if (percent != percent_bak) {
+      percent_bak = percent;
+      display_printf("%d ", percent);
+    }
+
+    f_lseek(&fsrc, i * EMMC_BLOCK_SIZE);
+    res = f_read(&fsrc, emmc_buf, EMMC_BLOCK_SIZE, &num_of_read);
+    if ((num_of_read != EMMC_BLOCK_SIZE) || (res != FR_OK)) {
+      f_close(&fsrc);
+      return secfalse;
+    }
+    if (i * EMMC_BLOCK_SIZE < FLASH_FIRMWARE_SECTOR_SIZE) {
+      for (int j = 0; j < EMMC_BLOCK_SIZE / (sizeof(uint32_t) * 8); j++) {
+        ensure(
+            flash_write_words(FLASH_SECTOR_BOOTLOADER_1,
+                              i * EMMC_BLOCK_SIZE + j * (sizeof(uint32_t) * 8),
+                              (uint32_t *)&emmc_buf[8 * j]),
+            NULL);
+      }
+    } else {
+      for (int j = 0; j < EMMC_BLOCK_SIZE / (sizeof(uint32_t) * 8); j++) {
+        ensure(flash_write_words(
+                   FLASH_SECTOR_BOOTLOADER_2,
+                   (i - FLASH_FIRMWARE_SECTOR_SIZE / EMMC_BLOCK_SIZE) *
+                           EMMC_BLOCK_SIZE +
+                       j * (sizeof(uint32_t) * 8),
+                   (uint32_t *)&emmc_buf[8 * j]),
+               NULL);
+      }
+    }
+  }
+  f_close(&fsrc);
+  f_unlink("/boot/bootloader.bin");
+  ensure(flash_lock_write(), NULL);
+
+  display_printf("\ndone\n\n");
+  display_printf("Device will be restart in 3 seconds\n");
+
+  for (int i = 3; i >= 0; i--) {
+    display_printf("%d ", i);
+    hal_delay(1000);
+  }
+  HAL_NVIC_SystemReset();
+  return sectrue;
+}
+
+void show_poweron_bar(void) {
+  static bool forward = true;
+  static uint32_t step = 0, location = 0, indicator = 0;
+
+  if (forward) {
+    step += PIXEL_STEP;
+    if (step <= 90) {
+      indicator += PIXEL_STEP;
+    } else if (step <= 160) {
+      location += PIXEL_STEP;
+    } else if (step < 250) {
+      location += PIXEL_STEP;
+      indicator -= PIXEL_STEP;
+    } else {
+      forward = false;
+    }
+  } else {
+    step -= PIXEL_STEP;
+    if (step > 160) {
+      location -= PIXEL_STEP;
+      indicator += PIXEL_STEP;
+    } else if (step > 90) {
+      location -= PIXEL_STEP;
+    } else if (step > 0) {
+      indicator -= PIXEL_STEP;
+    } else {
+      forward = true;
+    }
+  }
+
+  display_bar_radius(160, 352, 160, 4, COLOR_DARK, COLOR_BLACK, 2);
+  display_bar_radius(160 + location, 352, indicator, 4, COLOR_WHITE,
+                     COLOR_BLACK, 2);
+}
+
+int main(void) {
+  volatile uint32_t startup_mode_flag = *STAY_IN_FLAG_ADDR;
+  reset_flags_reset();
+
+  periph_init();
+
+  /* Enable the CPU Cache */
+  cpu_cache_enable();
+
+  system_clock_config();
+
+  rng_init();
+
+  flash_option_bytes_init();
+
+  clear_otg_hs_memory();
+
+  flash_otp_init();
+
+  sdram_init();
+
+  mpu_config();
+
+  touch_init();
+  emmc_init();
+  fatfs_init();
+
+  display_clear();
+  lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
+  // if boardloader need UI, then init backlight
+  // lcd_pwm_init();
+
+  if (startup_mode_flag != STAY_IN_BOARDLOADER_FLAG &&
+      startup_mode_flag != STAY_IN_BOOTLOADER_FLAG) {
+  }
+
+
+  uint32_t mode = 0;
+  bool factory_mode = false;
+
+  if (startup_mode_flag == STAY_IN_BOARDLOADER_FLAG) {
+    mode = BOARD_MODE;
+    *STAY_IN_FLAG_ADDR = 0;
+  } else if (fatfs_check_res() != 0) {
+    mode = BOARD_MODE;
+    factory_mode = true;
+  }
+  if (startup_mode_flag == STAY_IN_BOOTLOADER_FLAG) {
+    mode = BOOT_MODE;
+  }
+
+  // TODO: lvgl display
+
+  // if (!mode) { // touch choose entry to boardloader or bootloader mode
+  //   ble_usart_init();
+  //   bool touched = false;
+  //   uint32_t touch_data, x_start, y_start, x_mov, y_mov;
+  //   touch_data = x_start = y_start = x_mov = y_mov = 0;
+
+  //   for (int timer = 0; timer < 1600; timer++) {
+  //     ble_uart_poll();
+
+  //     if (timer % 8 == 0) {
+  //       show_poweron_bar();
+  //     }
+
+  //     if (ble_power_button_state() == 2) {
+  //       if (touched) {
+  //         mode = BOARD_MODE;
+  //       } else {
+  //         mode = BOOT_MODE;
+  //       }
+  //       break;
+  //     }
+  //     touch_data = touch_read();
+  //     if (touch_data != 0) {
+  //       if (touch_data & TOUCH_START) {
+  //         x_start = x_mov = (touch_data >> 12) & 0xFFF;
+  //         y_start = y_mov = touch_data & 0xFFF;
+  //       }
+
+  //       if (touch_data & TOUCH_MOVE) {
+  //         x_mov = (touch_data >> 12) & 0xFFF;
+  //         y_mov = touch_data & 0xFFF;
+  //       }
+
+  //       if ((abs(x_start - x_mov) > 100) || (abs(y_start - y_mov) > 100)) {
+  //         touched = true;
+  //       }
+  //     }
+
+  //     hal_delay(1);
+  //   }
+  //   ble_usart_irq_disable();
+  //   display_bar(160, 352, 160, 4, COLOR_BLACK);
+  // }
+
+  if (mode == BOARD_MODE) {
+    if (!factory_mode) {
+      f_chmod("/res/", AM_RDO | AM_SYS | AM_HID, AM_RDO | AM_SYS | AM_HID);
+    }
+  } else {
+    f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
+  }
+
+  if (mode == BOARD_MODE) {
+    display_printf(BOARD_VERSION);
+    display_printf("USB Mass Storage Mode\n");
+    display_printf("======================\n\n");
+    usb_msc_init();
+    while (1) {
+      if (system_reset == 1) {
+        hal_delay(5);
+        restart();
+      }
+    }
+  }
+
+  if (mode == BOOT_MODE) {
+    *STAY_IN_FLAG_ADDR = STAY_IN_BOOTLOADER_FLAG;
+    SCB_CleanDCache();
+  }
+
+  image_header hdr_inner, hdr_sd;
+
+  const uint8_t sectors[] = {
+      FLASH_SECTOR_BOOTLOADER_1,
+      FLASH_SECTOR_BOOTLOADER_2,
+  };
+  secbool boot_hdr = secfalse, boot_present = secfalse;
+
+  boot_hdr = load_image_header((const uint8_t *)BOOTLOADER_START,
+                               BOOTLOADER_IMAGE_MAGIC, BOOTLOADER_IMAGE_MAXSIZE,
+                               BOARDLOADER_KEY_M, BOARDLOADER_KEY_N,
+                               BOARDLOADER_KEYS, &hdr_inner);
+
+  if (sectrue == boot_hdr) {
+    boot_present = check_image_contents(&hdr_inner, IMAGE_HEADER_SIZE, sectors,
+                                        sizeof(sectors));
+  }
+
+  if (sectrue == check_emmc(&hdr_sd)) {
+    if (sectrue == boot_hdr) { // trigger system reset
+      if (memcmp(&hdr_sd.version, &hdr_inner.version, 4) >= 0) {
+        return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
+      }
+    } else {
+      return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
+    }
+  }
+
+  boot_present = sectrue; // jump to bootloader
+  if (boot_present == secfalse) {
+    display_printf(BOARD_VERSION);
+    display_printf("USB Mass Storage Mode\n");
+    display_printf("======================\n\n");
+    usb_msc_init();
+    while (1) {
+      if (system_reset == 1) {
+        hal_delay(5);
+        restart();
+      }
+    }
+  }
+  jump_to(BOOTLOADER_START + IMAGE_HEADER_SIZE);
+
+  return 0;
+}
