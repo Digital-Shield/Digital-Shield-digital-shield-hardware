@@ -348,15 +348,20 @@ def lock_device() -> None:
         config.lock()
         wire.find_handler = get_pinlocked_handler
         workflow.close_others()
-        workflow.spawn(set_homescreen())
+        return workflow.spawn(set_homescreen())
 
 
 def lock_device_if_unlocked() -> None:
     if config.is_unlocked():
-        lock_device()
+        lock_task = lock_device()
     from trezor import loop
 
-    loop.schedule(utils.turn_off_lcd())
+    async def turn_off():
+        if lock_task is not None:
+            await lock_task
+        await utils.turn_off_lcd()
+
+    loop.schedule(turn_off())
 
 
 def screen_off_if_possible() -> None:
