@@ -205,9 +205,9 @@ def set_tap_awake_enable(enable: bool) -> None:
 
 def is_animation_enabled() -> bool:
     enabled = common.get(_NAMESPACE, _ANIMATION, public=True)
-    if enabled == common._FALSE_BYTE:
-        return False
-    return True
+    if enabled == common._TRUE_BYTE:
+        return True
+    return False
 
 
 def set_animation_enable(enable: bool) -> None:
