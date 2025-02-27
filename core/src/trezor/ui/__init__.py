@@ -98,7 +98,10 @@ async def lvgl_tick():
         disp = lv.disp_get_default()
         inactive_time = disp.get_inactive_time()
         if inactive_time < inactive_time_bak:
+            # if user operating, touch idle timer
             workflow.idle_timer.touch()
+            # and turn on screen
+            utils.turn_on_lcd_if_possible()
 
         inactive_time_bak = inactive_time
 
