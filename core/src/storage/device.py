@@ -249,10 +249,7 @@ def get_wp_cnts() -> int:
 
 
 def is_initialized() -> bool:
-    if utils.EMULATOR:
-        return common.get_bool(_NAMESPACE, INITIALIZED, public=True)
-    else:
-        return config.has_pin()
+    return common.get_bool(_NAMESPACE, INITIALIZED, public=True)
 
 
 def _new_device_id() -> str:

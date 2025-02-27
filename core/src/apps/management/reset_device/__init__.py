@@ -31,7 +31,6 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
     # validate parameters and device state
     _validate_reset_device(msg)
 
-    utils.mark_initialization_processing()
     if msg.language is not None:
         i18n.change_language(msg.language)
     await show_popup(i18n.Text.wiping_device, timeout_ms=2000)
@@ -113,12 +112,12 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
         # if we backed up the wallet, show success message
         if perform_backup:
             await layout.show_backup_success(ctx)
+
     except BaseException as e:
         raise e
     else:
         return Success(message="Initialized")
     finally:
-        utils.mark_initialization_done()
         if isinstance(ctx, wire.DummyContext):
             loop.clear()
 

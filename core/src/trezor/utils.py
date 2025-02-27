@@ -49,7 +49,6 @@ BATTERY_CAP: int | None = None
 SHORT_AUTO_LOCK_TIME_MS = 10 * 1000
 DEFAULT_LABEL = "Digitshield"
 _SHOW_APP_GUIDE = False
-_INITIALIZATION_PROCESSING = False
 if __debug__:
     if EMULATOR:
         import uos
@@ -159,21 +158,6 @@ def show_app_guide():
 def make_show_app_guide():
     global _SHOW_APP_GUIDE
     _SHOW_APP_GUIDE = True
-
-
-def mark_initialization_processing():
-    global _INITIALIZATION_PROCESSING
-    _INITIALIZATION_PROCESSING = True
-
-
-def is_initialization_processing():
-    return _INITIALIZATION_PROCESSING
-
-
-def mark_initialization_done():
-    global _INITIALIZATION_PROCESSING
-    _INITIALIZATION_PROCESSING = False
-
 
 def unimport_begin() -> set[str]:
     return set(sys.modules)
