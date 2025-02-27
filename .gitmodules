@@ -4,7 +4,6 @@
 [submodule "vendor/QR-Code-generator"]
 	path = vendor/QR-Code-generator
 	url = https://github.com/nayuki/QR-Code-generator.git
-	ignore = untracked
 [submodule "vendor/secp256k1-zkp"]
 	path = vendor/secp256k1-zkp
 	url = https://github.com/ElementsProject/secp256k1-zkp.git
@@ -19,7 +18,7 @@
 	url = https://github.com/trezor/fido2-tests.git
 [submodule "common/defs/ethereum/chains"]
 	path = common/defs/ethereum/chains
-	url = https://github.com/ethereum-lists/chains
+	url = https://github.com/ethereum-lists/chains.git
 [submodule "vendor/quirc"]
 	path = vendor/quirc
 	url = https://github.com/ziancube/quirc.git
