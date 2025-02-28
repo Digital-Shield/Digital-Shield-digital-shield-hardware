@@ -45,7 +45,7 @@ async def confirm_output(
 ):
     from trezor.ui.screen.bitcoin import Output
 
-    screen = Output(address, amount)
+    screen = Output(to=address, amount=amount)
     await screen.show()
     return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.SignTx))
 

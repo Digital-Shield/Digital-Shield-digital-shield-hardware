@@ -29,7 +29,6 @@ def require_confirm_data(ctx: Context, data: bytes, data_total: int) -> Awaitabl
         title=i18n.Title.view_data,
         description=i18n.Text.bytes_.format(data_total),
         data=data,
-        br_code=ButtonRequestType.SignTx,
     )
 
 
@@ -43,7 +42,6 @@ def require_confirm_tx(
         ctx,
         address=to_str,
         amount=format_amount_trx(value, None),
-        br_code=ButtonRequestType.SignTx,
     )
 
 
@@ -60,7 +58,6 @@ def require_confirm_trigger_trc20(
             ctx,
             address=toAddress,
             amount=format_amount_trx(amount, token),
-            br_code=ButtonRequestType.SignTx,
         )
 
     # Unknown token
@@ -69,7 +66,6 @@ def require_confirm_trigger_trc20(
         i18n.Title.unknown_token,
         contract_address,
         description=i18n.Text.contract,
-        br_code=ButtonRequestType.SignTx,
     )
 
 
