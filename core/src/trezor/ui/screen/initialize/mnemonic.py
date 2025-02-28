@@ -206,7 +206,7 @@ class MnemonicInput(base(Navigation)):
             return
 
         # reset inputted word
-        item.word = ""
+        # item.word = ""
 
         index = item.index
         self.input = Input(self, index)
@@ -385,27 +385,41 @@ class Input(lv.obj):
         )
         self.content.items_center()
         self.content.align(lv.ALIGN.BOTTOM_MID, 0, 0)
+        
+        # <index> and `textarea`
+        container = VStack(self.content)
+        container.add_style(
+            Style()
+            .width(lv.pct(100))
+            .height(80)
+            .pad_left(16)
+            .pad_right(16)
+            .pad_column(16),
+            lv.PART.MAIN
+        )
+        container.set_style_flex_cross_place(lv.FLEX_ALIGN.END, lv.PART.MAIN)
 
         # a label for index
-        self.title = Title(self.content)
-        self.title.set_text(f"#{index + 1}")
-
-        self.ta = lv.textarea(self.content)
+        self.index = lv.label(container)
+        self.index.add_style(Styles.title_text, lv.PART.MAIN)
+        self.index.set_text(f"#{index + 1}")
+        
+        self.ta = lv.textarea(container)
         self.ta.set_one_line(True)
         self.ta.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)
         self.ta.add_style(
             Style()
             .bg_opa(lv.OPA.TRANSP)
-            .width(lv.pct(80))
-            .text_font(font.Bold.SCS48)
-            .text_letter_space(8)
+            .width(300)
+            .height(64)
+            .text_font(font.Bold.SCS38)
             .text_align_center()
             .border_width(3)
             .border_color(colors.DS.BLACK)
             .border_side(lv.BORDER_SIDE.BOTTOM),
             lv.PART.MAIN,
         )
-
+        self.ta.set_flex_grow(1)
 
         self.kbd = MnemonicKeyboard(self.content)
         self.kbd.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
@@ -416,4 +430,4 @@ class Input(lv.obj):
         self.kbd.default_state()
 
     def set_index(self, index):
-        self.title.text.set_text(f"#{index + 1}")
+        self.index.set_text(f"#{index + 1}")
