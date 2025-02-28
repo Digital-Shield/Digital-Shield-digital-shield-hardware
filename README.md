@@ -8,11 +8,22 @@
 ```
 STM32PROG_DIR=/path/to/your/stm32cubeprogrmmer
 ```
+5.安装git-lfs  
+mac系统  
+```
+brew install git-lfs
+```
+ubuntu系统
+```
+sudo apt install git-lfs
+```
 
 # 代码编译
 
 ```
 git submodule update --init --recursivecd
+git lfs install
+git lfs pull
 nix-shell
 poetry install
 poetry shell
@@ -26,7 +37,16 @@ sh ./flash.sh
 ```
 
 # 拷贝资源文件
-第一次烧录后，硬件上电进行bootloader，会在电脑系统上挂载两个U盘，把core/src/trezor/res 文件夹下除res/nfts文件拷贝到SYSTEM盘符下
+第一次烧录后，硬件上电进入boardloader，会在电脑系统上挂载两个U盘，把core/src/trezor/res 文件夹下除res/nfts文件拷贝到SYSTEM盘符下
+
+# 固件升级指令
+```
+trezorctl device reboot-to-bootloader
+trezorctl device emmc-dir-make -p 0:updates
+trezorctl device emmc-file-write -l ./firmware2.bin -r 0:updates/firmware.bin -f -cs 16384
+trezorctl device firmware-update-emmc -p 0:updates/firmware.bin
+trezorctl device reboot-to-boardloader
+```
 
 # ⚠️ 注意Poetry 版本
 如果使用nix-shell中的poetry或者2.0以下版本，注释掉pyproject.toml中这句
