@@ -89,7 +89,6 @@ def require_confirm_fee(
         format_amount_trx(value, token),
         format_amount_trx(fee_limit, None),
         total_amount,
-        network,
     )
 
 

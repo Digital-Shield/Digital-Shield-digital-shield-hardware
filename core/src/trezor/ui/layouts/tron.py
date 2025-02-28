@@ -115,8 +115,9 @@ async def confirm_total(
         from_address,
         to_address,
         fee_max,
-        total_amount=total_amount,
+        total=total_amount,
     )
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.SignTx)
     )

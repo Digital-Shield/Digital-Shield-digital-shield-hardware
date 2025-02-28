@@ -182,7 +182,7 @@ class Text:
     send = "发送"
     to = "至"
     amount = "金额"
-    from_ = "来自"
+    from_ = "发送者"
     receiver = "接收者"
     fee = "手续费"
     max_fee = "最大手续费"
