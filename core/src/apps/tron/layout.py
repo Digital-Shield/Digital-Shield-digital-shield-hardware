@@ -29,6 +29,7 @@ def require_confirm_data(ctx: Context, data: bytes, data_total: int) -> Awaitabl
         title=i18n.Title.view_data,
         description=i18n.Text.bytes_.format(data_total),
         data=data,
+        br_code = ButtonRequestType.SignTx,
     )
 
 
