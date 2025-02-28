@@ -110,7 +110,7 @@ class Styles:
         Style()
         .border_width(0)
         .bg_opa(lv.OPA.TRANSP)
-        .pad_all(2)
+        .pad_all(0)
         .pad_column(5)
         .pad_row(3)
     )

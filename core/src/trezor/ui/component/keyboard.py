@@ -44,10 +44,6 @@ class Keyboard(lv.btnmatrix):
     def on_event(self, event: lv.event_t):
         target = event.target
 
-        # do nothing if not a btnmatrix
-        if not isinstance(target, lv.btnmatrix):
-            return
-
         btn_id = target.get_selected_btn()
         # do nothing if not a button
         if btn_id == lv.BTNMATRIX_BTN.NONE:
@@ -223,6 +219,7 @@ class MnemonicKeyboard(Keyboard):
         self.tip_container.set_height(64)
         self.tip_container.align(lv.ALIGN.TOP_MID, 0, -64)
         self.tip_container.set_style_pad_column(0, lv.PART.MAIN)
+        self.tip_container.clear_flag(lv.obj.FLAG.EVENT_BUBBLE)
 
         self.add_event_cb(self.on_draw, lv.EVENT.DRAW_PART_BEGIN, None)
         self.add_event_cb(self.on_ready, lv.EVENT.READY, None)
