@@ -27,3 +27,9 @@ sh ./flash.sh
 
 # 拷贝资源文件
 第一次烧录后，硬件上电进行bootloader，会在电脑系统上挂载两个U盘，把core/src/trezor/res 文件夹下除res/nfts文件拷贝到SYSTEM盘符下
+
+# ⚠️ 注意Poetry 版本
+如果使用nix-shell中的poetry或者2.0以下版本，注释掉pyproject.toml中这句
+```
+#package-mode = false
+```
