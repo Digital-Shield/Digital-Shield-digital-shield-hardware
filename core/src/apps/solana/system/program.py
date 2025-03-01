@@ -343,8 +343,8 @@ async def parse(ctx: wire.Context, accounts: list[PublicKey], data: bytes) -> No
 async def sol_transaction_confirm(
     ctx: wire.Context, transfer_params: TransferParams
 ) -> None:
-    from trezor.ui.layouts.lvgl import confirm_output
-    from trezor.ui.layouts.lvgl import confirm_sol_transfer
+    from trezor.ui.layouts.solana import confirm_output
+    from trezor.ui.layouts.solana import confirm_sol_transfer
     from ..utils.helpers import sol_format_amount
 
     await confirm_output(
@@ -357,5 +357,4 @@ async def sol_transaction_confirm(
         from_addr=str(transfer_params.from_pubkey),
         to_addr=str(transfer_params.to_pubkey),
         amount=sol_format_amount(transfer_params.lamports),
-        fee_payer=str(transfer_params.from_pubkey),
     )
