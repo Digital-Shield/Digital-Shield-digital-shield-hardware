@@ -392,6 +392,10 @@ async def confirm_sign_message(
     screen.set_mode("sign")
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen))
+    # show success
+    await show_popup(
+        i18n.Text.transaction_signed, timeout_ms=3000, icon="A:/res/success.png"
+    )
 
 
 async def confirm_verify_message(

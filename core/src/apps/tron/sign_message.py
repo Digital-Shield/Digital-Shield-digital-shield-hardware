@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from trezor.crypto.curve import secp256k1
 from trezor.crypto.hashlib import sha3_256
 from trezor.messages import TronMessageSignature, TronSignMessage
-from trezor.ui.layouts import confirm_signverify
+from trezor.ui.layouts import confirm_sign_message
 from trezor.utils import HashWriter
 
 from apps.common import paths
@@ -31,8 +31,8 @@ async def sign_message(
     public_key = secp256k1.publickey(seckey, False)
     address = get_address_from_public_key(public_key[:65])
     ctx.icon_path = ICON
-    await confirm_signverify(
-        ctx, "TRON", decode_message(msg.message), address, verify=False
+    await confirm_sign_message(
+        ctx, "TRON", decode_message(msg.message), address = address,
     )
 
     # hash the message

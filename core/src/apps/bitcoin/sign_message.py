@@ -4,7 +4,7 @@ from trezor import wire
 from trezor.crypto.curve import secp256k1
 from trezor.enums import InputScriptType
 from trezor.messages import MessageSignature
-from trezor.ui.layouts import confirm_signverify
+from trezor.ui.layouts import confirm_sign_message
 
 from apps.common.helpers import validate_message
 from apps.common.paths import validate_path
@@ -35,12 +35,11 @@ async def sign_message(
     node = keychain.derive(address_n)
     address = get_address(script_type, coin, node)
     ctx.icon_path = f"A:/res/{coin.icon}"
-    await confirm_signverify(
+    await confirm_sign_message(
         ctx,
         coin.coin_name,
         decode_message(message),
-        address_short(coin, address),
-        verify=False,
+        address = address_short(coin, address),
     )
 
     seckey = node.private_key()

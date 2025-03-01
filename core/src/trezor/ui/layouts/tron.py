@@ -30,6 +30,7 @@ async def confirm_freeze(
         duration=duration,
         receiver=receiver,
     )
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.ProtectCall)
     )
@@ -52,6 +53,7 @@ async def confirm_unfreeze(
         duration=duration,
         receiver=receiver,
     )
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.ProtectCall)
     )
@@ -74,6 +76,7 @@ async def confirm_delegate(
         receiver=receiver,
         lock=lock,
     )
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.ProtectCall)
     )
@@ -96,6 +99,7 @@ async def confirm_undelegate(
         receiver=receiver,
         lock=lock,
     )
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.ProtectCall)
     )
