@@ -7,11 +7,17 @@ class CheckMnemonic(SampleItem):
     def action(self):
         super().action()
         from trezor import workflow
+        from trezor.ui.screen import manager
         from apps.management.recovery_device import recovery_device
         from trezor.messages import RecoveryDevice
-        from trezor.wire import DUMMY_CONTEXT
+        from trezor.wire import DUMMY_CONTEXT, ProcessError
+        async def check_mnemonic():
+            try:
+                await recovery_device(DUMMY_CONTEXT, RecoveryDevice(dry_run=True))
+            finally:
+                manager.try_switch_to(SecurityApp)
 
-        workflow.spawn(recovery_device(DUMMY_CONTEXT, RecoveryDevice(dry_run=True)))
+        workflow.spawn(check_mnemonic())
 
 
 class BackupMnemonic(SampleItem):

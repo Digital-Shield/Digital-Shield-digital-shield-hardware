@@ -53,7 +53,7 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
     try:
         if isinstance(ctx, wire.DummyContext):
             # on device reset, we need to ask for a new strength to override the default  value 12
-            msg.strength = await request_strength()
+            msg.strength = await request_strength(ctx)
 
         # request and set new PIN
         if msg.pin_protection:

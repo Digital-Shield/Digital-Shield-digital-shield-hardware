@@ -353,6 +353,12 @@ class Item(HStack):
 
 
 class Input(lv.obj):
+    def on_click_blank(self, e: lv.event_t):
+        if e.get_target() != self:
+            return
+
+        lv.event_send(self, lv.EVENT.CANCEL, None)
+
     def __init__(self, parent, index):
         super().__init__(parent)
         self.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
@@ -369,6 +375,8 @@ class Input(lv.obj):
             0
         )
         self.set_pos(0, 0)
+        self.add_flag(lv.obj.FLAG.CLICKABLE)
+        self.add_event_cb(self.on_click_blank, lv.EVENT.CLICKED, None)
 
         self.content = HStack(self)
         self.content.add_style(

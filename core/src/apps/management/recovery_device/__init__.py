@@ -5,7 +5,7 @@ import storage.recovery
 
 from . import layout, recover
 from trezor import config, loop, utils, wire
-from trezor.ui import i18n
+from trezor.ui import i18n, NavigationBack
 from trezor.messages import Success
 from trezor.enums import MessageType, BackupType
 from trezor.errors import MnemonicError
@@ -48,44 +48,33 @@ async def recovery_device(ctx: wire.Context, msg: RecoveryDevice) -> Success:
     the device anytime and continue without a computer.
     """
     _validate(msg)
-    if not msg.dry_run:
-
-        if msg.language is not None:
-            i18n.change_language(msg.language)
-        await show_popup(
-            i18n.Text.wiping_device, timeout_ms=2000
-        )
-        # wipe storage to make sure the device is in a clear state
-        storage.reset()
-        if msg.language is not None:
-            storage.device.set_language(msg.language)
-    if storage.recovery.is_in_progress():
-        return await recovery_process(ctx)
-
-    await _continue_dialog(ctx, msg)
 
     if isinstance(ctx, wire.DummyContext):
         utils.play_dead()
 
-    try:  # for dry run pin needs to be entered
-        if msg.dry_run:
-            curpin, salt = await request_pin_and_sd_salt(ctx, i18n.Title.enter_pin)
-            if not config.check_pin(curpin, salt):
-                await error_pin_invalid(ctx)
-
+    try:
         if not msg.dry_run:
+            if msg.language is not None:
+                i18n.change_language(msg.language)
+            await show_popup(
+                i18n.Text.wiping_device, timeout_ms=2000
+            )
+            # wipe storage to make sure the device is in a clear state
+            storage.reset()
+            if msg.language is not None:
+                storage.device.set_language(msg.language)
+            await _continue_dialog(ctx, msg)
             # set up pin if requested
             if msg.pin_protection:
                 await confirm_pin_security(ctx, "", recovery=True)
                 newpin = await request_pin_confirm(ctx, allow_cancel=False)
                 config.change_pin("", newpin, None, None)
-
             storage.device.set_passphrase_enabled(bool(msg.passphrase_protection))
             if msg.u2f_counter is not None:
                 storage.device.set_u2f_counter(msg.u2f_counter)
             if msg.label is not None:
                 storage.device.set_label(msg.label)
-
+        
         storage.recovery.set_in_progress(True)
         storage.recovery.set_dry_run(bool(msg.dry_run))
         result = await recovery_process(ctx)
@@ -139,21 +128,21 @@ async def _continue_dialog(ctx: wire.Context, msg: RecoveryDevice) -> None:
         await confirm_check_recovery_mnemonic(ctx)
 
 
-
-
 async def _continue_recovery_process(ctx: wire.GenericContext) -> Success:
     # gather the current recovery state from storage
     dry_run = storage.recovery.is_dry_run()
+    from trezor.ui import NavigationBack
 
     secret = None
     while secret is None:
-        word_count = await _request_word_count(ctx, dry_run)
-
-        try:
-            words = await layout.request_mnemonic(ctx, word_count, None)
-        except wire.ActionCancelled:
+        r = await _request_word_count(ctx, dry_run)
+        if isinstance(r, NavigationBack):
+            raise recover.RecoveryAborted
+        word_count = r
+        r = await layout.request_mnemonic(ctx, word_count, None)
+        if isinstance(r, NavigationBack):
             continue
-
+        words = r
         # if they were invalid or some checks failed we continue and request them again
         if not words:
             continue
@@ -215,7 +204,7 @@ async def _finish_recovery(
     return Success(message="Device recovered")
 
 
-async def _request_word_count(ctx: wire.GenericContext, dry_run: bool) -> int:
+async def _request_word_count(ctx: wire.GenericContext, dry_run: bool):
     # ask for the number of words
     return await request_word_count(ctx, dry_run)
 

@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING
 
 import storage.recovery
-from trezor import ui, wire
+from trezor import wire
 from trezor.ui import i18n
-from trezor.enums import ButtonRequestType
 from trezor.ui.layouts import (
     show_success,
     show_warning,
@@ -16,16 +15,9 @@ if TYPE_CHECKING:
 
 async def request_mnemonic(
     ctx: wire.GenericContext, word_count: int, backup_type: BackupType | None
-) -> str | None:
-    from trezor.ui.screen.initialize.mnemonic import MnemonicInput
-    from trezor.ui import NavigationBack
-    screen = MnemonicInput(word_count)
-    await screen.show()
-    r = await screen
-    if isinstance(r, NavigationBack):
-        raise wire.ActionCancelled()
-    words = screen.mnemonics
-    return ' '.join(words)
+):
+    from trezor.ui.layouts import request_mnemonic
+    return await request_mnemonic(ctx, word_count)
 
 async def show_dry_run_result(
     ctx: wire.GenericContext, result: bool
@@ -41,7 +33,7 @@ async def show_dry_run_result(
         await show_warning(
             ctx,
             text,
-            button=i18n.Button.try_again,
+            button=i18n.Button.continue_,
             title=i18n.Title.mnemonic_not_match,
         )
 

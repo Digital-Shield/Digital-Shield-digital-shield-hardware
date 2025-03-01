@@ -1,14 +1,22 @@
-class Result:
-    def __init__(self, value):
-        self.value = value
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Generic, TypeVar
 
+    T = TypeVar("T")
+else:
+    # typechecker cheat: Generic[T] will be `object` which is a valid parent type
+    Generic = [object]
+    T = 0
+class Result(Generic[T]):
+    def __init__(self, value: T):
+        self.value = value
 
 class NavigationBack:
     """"
     Navigation screen navigate back
     """
     def __bool__(self):
-        return False
+        return True
 
 class Redo:
     """

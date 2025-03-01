@@ -6,9 +6,10 @@ from storage import device
 from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Union, Literal
+    from typing import Union, Literal, Type, TypeVar
     # break recursion importing
     from trezor.ui.screen import Screen, Navigation, Modal
+    S = TypeVar('S', bound=Screen)
     ScreenType = Union[Navigation, Modal]
     SceneType = Literal['load', 'unload']
     ScreenState = Literal['loaded', 'dismissing']
@@ -22,20 +23,25 @@ class Lock:
 
     async def acquire(self):
         # wait until lock is free.
+        # log.debug(__name__, "acquiring lock ...")
         while self.locked:
             await loop.sleep(13)
 
         # lock the locker
         self.locked = True
+        # log.debug(__name__, "locked")
     async def release(self):
         # unlock the locker
+        # log.debug(__name__, "release lock")
         self.locked = False
 
     async def __aenter__(self):
+        # log.debug(__name__, "aenter locker")
         await self.acquire()
         __signal__.publish(None)
 
     async def __aexit__(self, exc_type, exc, tb):
+        # log.debug(__name__, "aexit locker")
         await self.release()
 
 __locker__ = Lock()
@@ -92,6 +98,23 @@ async def switch_scene(screen: 'Screen'):
             lv.scr_load(screen)
 
         await screen.wait_loaded()
+
+def try_switch_to(cls: Type[S]) -> S:
+    """There maybe a `S` type instance on manager stack, we switch to it
+    """
+    log.debug(__name__, f"try switch to: {cls.__name__}")
+    it = iter(__screens)
+    dst = None
+    for s in it:
+        # have found destination screen, mark all screen after it dismissing
+        if dst:
+            mark_dismissing(s)
+        # cache found instance
+        if isinstance(s, cls):
+            dst = s
+        
+    return dst
+
 
 async def push(screen: 'Screen'):
     """

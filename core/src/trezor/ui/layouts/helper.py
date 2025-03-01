@@ -36,7 +36,7 @@ async def interact(
     screen: Screen,
     br_code: ButtonRequestType = ButtonRequestType.Other,
 ) -> Any:
-    await button_request(ctx)
+    await button_request(ctx, br_code)
     return await ctx.wait(screen)
 
 # user create many template function, such as

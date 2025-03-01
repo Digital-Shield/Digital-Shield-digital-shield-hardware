@@ -6,6 +6,7 @@ from trezor import log, wire, workflow, loop
 from trezor.enums import ButtonRequestType
 from trezor.messages import ButtonAck, ButtonRequest
 from trezor.ui import i18n, colors
+from trezor.ui import NavigationBack
 
 if TYPE_CHECKING:
     from typing import Any, Awaitable, TypeVar, Sequence
@@ -200,24 +201,6 @@ async def mnemonic_security_tip(ctx: wire.GenericContext) -> bool:
         ButtonRequestType.ResetDevice,
     )
 
-
-async def request_strength() -> int:
-    word_cnt_strength_map = {
-        12: 128,
-        18: 192,
-        24: 256,
-    }
-
-    from trezor.ui.screen.initialize.wordcount import WordcountScreen
-
-    screen = WordcountScreen()
-    await screen.show()
-    count = await screen
-    if not isinstance(count, int):
-        raise wire.ActionCancelled()
-    return word_cnt_strength_map[count]
-
-
 async def request_pin_on_device(
     ctx: wire.GenericContext,
     prompt: str,
@@ -246,16 +229,45 @@ async def request_pin_on_device(
     assert isinstance(result, str)
     return result
 
+async def request_word_count(ctx: wire.GenericContext, dry_run: bool) -> int | NavigationBack:
+    from trezor.ui.screen.initialize.wordcount import WordcountScreen
+    from trezor.ui.screen import manager
+    screen = manager.try_switch_to(WordcountScreen)
+    if not screen:
+        screen = WordcountScreen()
+        await screen.show()
 
-async def request_word_count(ctx: wire.GenericContext, dry_run: bool) -> int:
+    r = await interact(ctx, screen, ButtonRequestType.MnemonicWordCount)
+    if isinstance(r, NavigationBack):
+        return r
+    return int(r)
+
+async def request_mnemonic(ctx, word_count: int) -> str | NavigationBack:
+    from trezor.ui.screen.initialize.mnemonic import MnemonicInput
+    screen = MnemonicInput(word_count)
+    await screen.show()
+    r = await interact(ctx, screen, ButtonRequestType.MnemonicInput)
+    if isinstance(r, NavigationBack):
+        await screen.wait_unloaded()
+        return r
+    words = screen.mnemonics
+    return ' '.join(words)
+
+async def request_strength(ctx) -> int:
+    word_cnt_strength_map = {
+        12: 128,
+        18: 192,
+        24: 256,
+    }
+
     from trezor.ui.screen.initialize.wordcount import WordcountScreen
 
     screen = WordcountScreen()
     await screen.show()
-    count = await raise_if_cancelled(
-        interact(ctx, screen, ButtonRequestType.MnemonicWordCount)
-    )
-    return int(count)
+    count = await interact(ctx, screen, ButtonRequestType.MnemonicWordCount)
+    if not isinstance(count, int):
+        raise wire.ActionCancelled()
+    return word_cnt_strength_map[count]
 
 
 async def confirm_reset_device(
