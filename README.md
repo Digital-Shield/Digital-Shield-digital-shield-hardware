@@ -37,7 +37,13 @@ sh ./flash.sh
 ```
 
 # 拷贝资源文件
-第一次烧录后，硬件上电进入boardloader，会在电脑系统上挂载两个U盘，把core/src/trezor/res 文件夹下除res/nfts文件拷贝到SYSTEM盘符下
+- 第一次烧录后，硬件上电进入 boardloader，会在电脑系统上挂载两个 U 盘，把 core/src/trezor/res 文件夹下除 res/nfts 文件拷贝到 SYSTEM 盘符下。
+- 后续测试时，在 poetry shell 环境下使用如下指令回到 boardloader，同样会在系统上挂载两个 U 盘，把相应的资源拷贝到相应位置。
+```
+trezorctl device reboot-to-boardloader
+```
+
+- 真正上线时，禁止回boardloader指令，使用update-res指令进行升级资源
 
 # 固件升级指令
 ```
