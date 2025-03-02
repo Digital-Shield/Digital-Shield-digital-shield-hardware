@@ -52,3 +52,5 @@ class WipeDeviceTips(HolderConfirm):
             self.holder.disabled = False
         else:
             self.holder.disabled = True
+            self.holder.reset()
+            self.btn_confirm.add_state(lv.STATE.DISABLED)

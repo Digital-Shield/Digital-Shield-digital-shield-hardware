@@ -96,6 +96,11 @@ class ArcHolder(lv.obj):
 
         lv.anim_timeline_set_reverse(self.timeline, released)
         lv.anim_timeline_start(self.timeline)
+    
+    def reset(self):
+        self.done = False
+        self.arc.add_flag(lv.obj.FLAG.CLICKABLE)
+        self.arc.set_end_angle(0)
 
     @property
     def disabled(self):
