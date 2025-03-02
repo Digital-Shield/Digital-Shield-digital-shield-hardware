@@ -352,6 +352,7 @@ def lock_device() -> None:
 
 
 def lock_device_if_unlocked() -> None:
+    lock_task = None
     if config.is_unlocked():
         lock_task = lock_device()
     from trezor import loop

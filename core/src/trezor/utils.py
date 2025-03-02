@@ -138,6 +138,15 @@ async def turn_off_lcd():
     await wire.signal_ack()
     loop.clear()
 
+def toggle_lcd():
+    from trezor.ui import display
+    from apps import base
+
+    if display.backlight():
+        base.lock_device_if_unlocked()
+    else:
+        turn_on_lcd_if_possible()
+
 
 def play_dead():
     from trezor import loop

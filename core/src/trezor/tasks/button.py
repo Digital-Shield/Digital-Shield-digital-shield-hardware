@@ -12,8 +12,6 @@ async def handle_power():
     log.debug(__name__, f"powered by {'battery' if by_battery else 'USB'}")
 
     # powered by USB, can't power off
-    if not by_battery:
-        return
     while True:
         if pressing:
             wait_button = loop.wait(io.BUTTON)
@@ -23,14 +21,14 @@ async def handle_power():
             pressing = False
             if wait_button in racer.finished:
                 log.debug(__name__, "Power key released in 2 seconds")
-                screen = PowerOff()
-                await screen.show()
-                # wait done
-                await screen
+                log.debug(__name__, "toggle screen state")
+                utils.toggle_lcd()
             elif long_time in racer.finished:
+                if not by_battery:
+                    return
                 log.debug(__name__, "Long time press power key detected")
-                log.debug(__name__, "force power off ...")
-                screen = ShutingDown()
+                log.debug(__name__, "power off ...")
+                screen = PowerOff()
                 await screen.show()
                 await screen
                 break
@@ -40,5 +38,3 @@ async def handle_power():
             event = "Pressed" if evt == io.BUTTON_PRESSED else "Released" if evt == io.BUTTON_RELEASED else "Unknown event"
             log.debug(__name__, f"{name} {event}")
             pressing = True if evt == io.BUTTON_PRESSED else False
-            # pop up power off dialog
-            utils.lcd_resume()
