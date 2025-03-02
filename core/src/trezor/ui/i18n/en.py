@@ -48,8 +48,11 @@ class Guide:
     terms_title_contact_us = 'Contact Us'
     terms_describe_contact_us = 'If you have any questions or concerns, please email us at support@digitshield.com'
 
+    device_label = "Label"
     device_title_firmware_version = 'Firmware Version'
     device_title_serial_number = 'Serial Number'
+    bluetooth_name = "Bluetooth Name"
+    bluetooth_version = "Bluetooth Version"
 
     firmware_title_1 = '1.Ensure that you Device has at least 20% battery life remaining.'
     firmware_title_2 = '2.Connect you Device to you computer using a USB-C cable'
