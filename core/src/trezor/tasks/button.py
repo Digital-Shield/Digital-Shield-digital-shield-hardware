@@ -23,6 +23,8 @@ async def handle_power():
                 log.debug(__name__, "Power key released in 2 seconds")
                 log.debug(__name__, "toggle screen state")
                 utils.toggle_lcd()
+                # wait a short time, avoid button shake
+                await loop.sleep(50)
             elif long_time in racer.finished:
                 if not by_battery:
                     return
