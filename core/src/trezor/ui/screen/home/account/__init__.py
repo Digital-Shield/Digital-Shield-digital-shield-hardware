@@ -6,6 +6,8 @@ from trezor import loop, workflow
 from trezor.ui import i18n, Style, theme, colors
 from trezor.ui.component import HStack, VStack, LabeledText
 from trezor.ui.screen import Navigation, with_title
+from .evm import EVM, ETH_CHAIN_ID,BSC_CHAIN_ID,MATIC_CHAIN_ID
+
 
 class AccountApp(with_title(Navigation)):
     def __init__(self):
@@ -17,15 +19,26 @@ class AccountApp(with_title(Navigation)):
         self.content.set_style_pad_left(16, lv.PART.MAIN)
         self.content.set_style_pad_right(16, lv.PART.MAIN)
 
+
+        from .btcfork import BTCFork, BTC_COIN_NAME, LTC_COIN_NAME, DOGE_COIN_NAME
         # coin
-        from .bitcion import Bitcoin
-        Coin(self.content, Bitcoin)
+        Coin(self.content, BTCFork(BTC_COIN_NAME))
+        # coin
+        Coin(self.content, BTCFork(LTC_COIN_NAME))
+        # coin
+        Coin(self.content, BTCFork(DOGE_COIN_NAME))
 
-        from .ethereum import Ethereum
-        Coin(self.content, Ethereum)
+        # eth
+        Coin(self.content, EVM(ETH_CHAIN_ID))
 
-        from .eos import Eos
-        Coin(self.content, Eos)
+        # bsc
+        Coin(self.content, EVM(BSC_CHAIN_ID))
+
+        # matic
+        Coin(self.content, EVM(MATIC_CHAIN_ID))
+
+        # from .eos import Eos
+        # Coin(self.content, Eos)
 
         from .solana import Solana
         Coin(self.content, Solana)
