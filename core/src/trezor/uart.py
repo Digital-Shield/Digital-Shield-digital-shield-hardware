@@ -38,15 +38,9 @@ async def handle_usb_state():
             utils.lcd_resume()
             if state:
                 StatusBar.instance().show_usb(True)
-                # deal with charging state
-                utils.BATTERY_CHARGING = True
-                StatusBar.instance().show_charging(True)
                 motor.vibrate()
             else:
                 StatusBar.instance().show_usb(False)
-                # deal with charging state
-                utils.BATTERY_CHARGING = False
-                StatusBar.instance().show_charging()
             usb_auto_lock = device.is_usb_lock_enabled()
             if usb_auto_lock and device.is_initialized() and config.has_pin():
                 if config.is_unlocked():

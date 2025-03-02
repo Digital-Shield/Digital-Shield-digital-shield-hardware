@@ -38,8 +38,23 @@ static mp_obj_t mod_trezorio_battery_state_of_charge(mp_obj_t self) {
 
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_state_of_charge_obj, mod_trezorio_battery_state_of_charge);
 
+/// def state_of_current(self) -> int|None:
+///     """
+///     read (state of current), in 1mA
+///
+///     Returns current in mA, positive in discharging, negative is charging
+///     """
+
+static mp_obj_t mod_trezorio_battery_state_of_current(mp_obj_t self) {
+    int current = battery_read_current();
+    return MP_OBJ_NEW_SMALL_INT(current);
+}
+
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_state_of_current_obj, mod_trezorio_battery_state_of_current);
+
 static const mp_rom_map_elem_t mod_trezorio_battery_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_state_of_charge), MP_ROM_PTR(&mod_trezorio_battery_state_of_charge_obj) },
+    { MP_ROM_QSTR(MP_QSTR_state_of_current), MP_ROM_PTR(&mod_trezorio_battery_state_of_current_obj) },
 };
 
 static MP_DEFINE_CONST_DICT(mod_trezorio_battery_locals_dict, mod_trezorio_battery_locals_dict_table);
