@@ -174,6 +174,7 @@ class Title:
     import_credential = "Import Credential"
     export_credential = "Export Credential"
     asset = "Asset"
+    unimplemented = "Unimplemented"
 
 
 class Tip:
@@ -358,3 +359,9 @@ class MnemonicSecurity:
         "2. Please backup your mnemonic in the correct order and never share your mnemonic with anyone.",
         "3. Please save the mnemonic offline in a safe place, never back up the mnemonic electronically, and never upload it online.",
     ]
+
+class Solana:
+    ata_reciver = "Reciver(ATA)"
+    ata_sender = "Sender(ATA)"
+    source_owner = "Source Owner"
+    fee_payer = "Fee Payer"

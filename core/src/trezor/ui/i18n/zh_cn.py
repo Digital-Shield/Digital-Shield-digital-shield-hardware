@@ -138,6 +138,7 @@ class Title:
     import_credential = "导入凭证"
     export_credential = "导出凭证"
     asset = "资产"
+    unimplemented = "未实现"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -351,3 +352,9 @@ class PinSecurity:
         "3. PIN码的最大重试次数为10次，当错误10次后设备将会被重置",
         "4. 请妥善保管PIN码，不要和任何人分享您的PIN码",
     ]
+
+class Solana:
+    ata_reciver = "接收者(关联代币账户)"
+    ata_sender = "发送者(关联代币账户)"
+    source_owner = "交易签名者"
+    fee_payer = "手续费支付者"

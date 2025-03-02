@@ -346,7 +346,7 @@ async def parse(ctx: wire.Context, accounts: list[PublicKey], data: bytes) -> No
             signers=accounts[3:] if len(accounts) > 3 else [],
             amount=parsed_data.amount,
         )
-        from trezor.ui.layouts import confirm_sol_token_transfer
+        from trezor.ui.layouts.solana import confirm_sol_token_transfer
         from ..utils.helpers import sol_format_amount
 
         await confirm_sol_token_transfer(
@@ -434,7 +434,7 @@ async def parse(ctx: wire.Context, accounts: list[PublicKey], data: bytes) -> No
             amount=parsed_data.amount,
             decimals=parsed_data.decimals,
         )
-        from trezor.ui.layouts import confirm_sol_token_transfer
+        from trezor.ui.layouts.solana import confirm_sol_token_transfer
         from ..utils.helpers import sol_format_amount
 
         await confirm_sol_token_transfer(

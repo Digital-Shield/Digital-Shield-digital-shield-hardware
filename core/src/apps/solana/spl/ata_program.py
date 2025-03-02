@@ -49,7 +49,7 @@ async def parse(ctx: wire.Context, accounts: list[PublicKey], data: bytes) -> No
         system_program_id=accounts[4],
         spl_token_program_id=accounts[5],
     )
-    from trezor.ui.layouts.lvgl import confirm_sol_create_ata
+    from trezor.ui.layouts.solana import confirm_sol_create_ata
 
     await confirm_sol_create_ata(
         ctx,

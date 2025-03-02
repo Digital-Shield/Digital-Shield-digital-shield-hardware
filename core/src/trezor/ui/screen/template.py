@@ -291,3 +291,24 @@ class HoldConfirmAction(HolderConfirm):
         self.holder.set_text(i18n.Button.hold_to_sign)
         self.btn_cancel.set_text(i18n.Button.reject)
         self.btn_cancel.mode('reject')
+
+class UnImplemented(with_title_and_buttons(Modal, i18n.Button.continue_)):
+    def __init__(self):
+        super().__init__()
+        self.set_title(i18n.Title.unimplemented)
+        self.content.set_style_pad_all(16, lv.PART.MAIN)
+        label = lv.label(self.content)
+        label.set_long_mode(lv.label.LONG.WRAP)
+        label.set_text(i18n.Title.unimplemented)
+        label.set_width(lv.pct(100))
+        label.set_style_text_font(font.mono, lv.PART.MAIN)
+        label.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
+        label.set_style_text_color(colors.DS.DANGER, lv.PART.MAIN)
+
+
+       # confirm button
+        self.btn_continue = self.btn_right
+        self.btn_continue.add_event_cb(self.on_btn_continue, lv.EVENT.CLICKED, None)
+
+    def on_btn_continue(self, e):
+        self.close(Confirm())
