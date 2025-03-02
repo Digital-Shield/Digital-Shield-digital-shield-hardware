@@ -44,7 +44,6 @@ else:
 BLE_NAME: str | None = None
 DISABLE_ANIMATION = 0
 BLE_CONNECTED: bool | None = None
-BATTERY_CHARGING: bool = False
 BATTERY_CAP: int | None = None
 SHORT_AUTO_LOCK_TIME_MS = 10 * 1000
 DEFAULT_LABEL = "Digitshield"
@@ -103,6 +102,14 @@ def try_remove_scr(screen):
     except Exception:
         pass
 
+def is_usb_connected() -> bool:
+    """ get usb state by test current
+    """
+    # it not very exactly when not have battery
+    from trezor import io
+    battery = io.Battery()
+    current = battery.state_of_current()
+    return current >= 0
 
 def turn_on_lcd_if_possible() -> bool:
     return lcd_resume()
