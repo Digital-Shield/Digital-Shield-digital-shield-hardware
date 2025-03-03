@@ -319,6 +319,10 @@ class Text:
     duration = "Duration:"
     lock = "Lock"
     unlock = "Unlock"
+    all = "All"
+    source = "Source:"
+    tip = "Tip:"
+    keep_alive = "Keep alive:"
 
 class WalletSecurity:
     header = "Write down mnemonic on a piece of paper and store it in a safe place."

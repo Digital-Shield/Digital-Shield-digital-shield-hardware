@@ -163,6 +163,12 @@ def find_message_handler_module(msg_type: int) -> str:
         if msg_type == MessageType.EosSignTx:
             return "apps.eos.sign_tx"
 
+        # polkadot
+        if msg_type == MessageType.PolkadotGetAddress:
+            return "apps.polkadot.get_address"
+        if msg_type == MessageType.PolkadotSignTx:
+            return "apps.polkadot.sign_tx"
+
         # tron
         if msg_type == MessageType.TronGetAddress:
             return "apps.tron.get_address"

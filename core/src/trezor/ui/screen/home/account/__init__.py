@@ -43,18 +43,14 @@ class AccountApp(with_title(Navigation)):
         from .solana import Solana
         Coin(self.content, Solana)
 
-
+        # tron
         from .tron import Tron
         Coin(self.content, Tron)
 
-        # Coin(self.content,'BTC','A:/res/btc-btc.png',"44'/0'/0'/0/0")
-        # Coin(self.content,'LTC','A:/res/btc-ltc.png',"44'/0'/0'/0/0")
-        # Coin(self.content,'DOGE','A:/res/btc-doge.png',"44'/0'/0'/0/0")
+        from .polkadot import Polkadot
+        Coin(self.content, Polkadot)
 
-        # Coin(self.content,'ETH','A:/res/evm-bnb.png',"44'/60'/0'/0/0", Ethereum)
-        # Coin(self.content,'BSC','A:/res/evm-eth.png',"44'/0'/0'/0/0")
-        # Coin(self.content,'POLYGON','A:/res/evm-matic.png',"44'/0'/0'/0/0")
-        # Coin(self.content,'TRX','A:/res/chain-tron.png',"44'/0'/0'/0/0")
+
 
 class Item(VStack):
     """

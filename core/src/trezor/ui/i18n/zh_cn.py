@@ -283,6 +283,10 @@ class Text:
     duration = "持续时间"
     lock = "锁定"
     unlock = "解锁"
+    all = "全部"
+    source = "来源"
+    tip = "提示"
+    keep_alive = "Keep alive"
 
 class Tip:
     swipe_down_to_close = "向下滑动以关闭"

@@ -661,6 +661,7 @@ if FROZEN:
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/layouts/ethereum/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/layouts/bitcoin/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/layouts/tron/*.py'))
+    SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/layouts/polkadot/*.py'))
 
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/wire/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/airgap/*.py'))
@@ -732,6 +733,9 @@ if FROZEN:
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/solana/*.py'))
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/solana/*/*.py'))
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/solana/*/*/*.py'))
+
+        SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/polkadot/*.py'))
+        SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/polkadot/*/*.py'))
 
     source_mpy = env.FrozenModule(source=SOURCE_PY, source_dir=SOURCE_PY_DIR, bitcoin_only=BITCOIN_ONLY)
 
