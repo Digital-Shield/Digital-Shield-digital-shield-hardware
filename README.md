@@ -49,7 +49,7 @@ trezorctl device reboot-to-boardloader
 ```
 trezorctl device reboot-to-bootloader
 trezorctl device emmc-dir-make -p 0:updates
-trezorctl device emmc-file-write -l ./firmware2.bin -r 0:updates/firmware.bin -f -cs 16384
+trezorctl device emmc-file-write -l ./core/build/firmware/firmware.bin -r 0:updates/firmware.bin -f -cs 16384
 trezorctl device firmware-update-emmc -p 0:updates/firmware.bin
 trezorctl device reboot-to-boardloader
 ```
