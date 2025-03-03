@@ -101,7 +101,7 @@ async def _require_confirm_by_type(ctx, transaction, owner_address):
                     network="TRON",
                 )
         else:
-            from trezor.ui.layouts.lvgl import confirm_blind_sign_common
+            from trezor.ui.layouts import confirm_blind_sign_common
 
             await confirm_blind_sign_common(ctx, owner_address, data)
     elif contract.freeze_balance_contract:

@@ -118,13 +118,14 @@ class Blob(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.canc
         super().__init__()
 
         self.set_title(title)
-        self.set_style_pad_all(16, lv.PART.MAIN)
+        self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(theme.Styles.board, lv.PART.MAIN)
 
         if message:
             item = self.add(lv.label)
+            item.set_width(lv.pct(100))
             item.set_long_mode(lv.label.LONG.WRAP)
             item.set_text(message)
 
@@ -133,7 +134,7 @@ class Blob(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.canc
             item.set_label(label)
             if isinstance(blob,(bytes, bytearray)):
                 from ubinascii import hexlify
-                blob = hexlify(blob).decode()
+                blob = '0x'+hexlify(blob).decode()
 
         item.set_text(blob)
 

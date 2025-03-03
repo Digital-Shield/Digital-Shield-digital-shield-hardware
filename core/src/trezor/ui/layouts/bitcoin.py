@@ -64,6 +64,7 @@ async def confirm_payment_request(
         recipient_name,
         message=message,
     )
+    await screen.show()
     return await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.ConfirmOutput)
     )
@@ -94,6 +95,7 @@ async def confirm_modify_output(
         description = i18n.Text.amount_decreased
 
     screen = OutputChange(amount_new, address, amount_change, description)
+    await screen.show()
     await raise_if_cancelled(
         interact(
             ctx,
@@ -116,6 +118,7 @@ async def confirm_modify_fee(
         description = i18n.Text.fee_increased
 
     screen = FeeChange(fee_new, fee_change, description)
+    await screen.show()
     return await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.SignTx)
     )
@@ -129,6 +132,7 @@ async def confirm_total(
 ) -> None:
     from trezor.ui.screen.bitcoin import Total
     screen = Total(amount, fee_amount, total_amount, coin)
+    await screen.show()
     return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.SignTx))
 
 async def confirm_joint_total(
@@ -139,7 +143,7 @@ async def confirm_joint_total(
 ) :
     from trezor.ui.screen.bitcoin import JointAmount
     screen = JointAmount(spending_amount, total_amount, coin)
-
+    await screen.show()
     await raise_if_cancelled(
         interact(ctx, screen, ButtonRequestType.SignTx)
     )

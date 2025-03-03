@@ -472,3 +472,9 @@ async def confirm_text(
     ctx: wire.GenericContext, title: str, text: str, *, description: str
 ):
     return await confirm_blob(ctx, title, "", blob=text, description=description)
+
+
+async def confirm_blind_sign_common(
+    ctx: wire.Context, signer: str, raw_message: bytes
+) -> None:
+    return await confirm_blob(ctx, i18n.Text.do_sign_this_transaction.format(ctx.name), signer, blob=raw_message,description="Data:")

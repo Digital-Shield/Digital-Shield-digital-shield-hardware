@@ -177,6 +177,14 @@ def find_message_handler_module(msg_type: int) -> str:
         if msg_type == MessageType.SolanaSignTx:
             return "apps.solana.sign_tx"
 
+        # sui
+        if msg_type == MessageType.SuiGetAddress:
+            return "apps.sui.get_address"
+        if msg_type == MessageType.SuiSignTx:
+            return "apps.sui.sign_tx"
+        if msg_type == MessageType.SuiSignMessage:
+            return "apps.sui.sign_message"
+
     raise ValueError
 
 
