@@ -13,9 +13,9 @@ async def updating_battery_state():
         await loop.sleep(1000)
 
         state_of_charge = battery.state_of_charge()
-        log.debug(__name__, f"state of battery: {state_of_charge}")
+        # log.debug(__name__, f"state of battery: {state_of_charge}")
         state_of_current = battery.state_of_current()
-        log.debug(__name__, f"state of current: {state_of_current}")
+        # log.debug(__name__, f"state of current: {state_of_current}")
 
         charging = state_of_current >= 0
         
