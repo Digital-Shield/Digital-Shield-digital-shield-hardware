@@ -5,16 +5,16 @@ from . import DetailBase
 from .helper import parser_path
 
 
-class Polkadot(DetailBase):
+class Sui(DetailBase):
     @staticmethod
     def get_name() -> str:
-        return "Polkadot"
+        return "SUI"
     @staticmethod
     def get_icon() -> str:
-        return "A:/res/chain-dot.png"
+        return "A:/res/chain-sui.png"
     @staticmethod
     def get_path() -> str:
-        return "m/44'/354'/0'/0'/0'"
+        return "m/44'/784'/0'/0'/0'"
 
     @classmethod
     async def get_address(cls) -> str:
@@ -22,15 +22,15 @@ class Polkadot(DetailBase):
         with import_manager:
             from trezor.wire import DUMMY_CONTEXT as ctx
             from apps.base import handle_Initialize
-            from trezor.messages import Initialize, PolkadotGetAddress
-            from apps.polkadot.get_address import get_address
+            from trezor.messages import Initialize, SuiGetAddress
+            from apps.sui.get_address import get_address
 
             # step 1: initialize
             init = Initialize(session_id=b"\x00")
             await handle_Initialize(ctx, init)
 
             # step 2: get address
-            req = PolkadotGetAddress(address_n=parser_path(cls.get_path()), prefix=0, network='polkadot')
+            req = SuiGetAddress(address_n=parser_path(cls.get_path()))
             resp = await get_address(ctx, req)
 
             return resp.address

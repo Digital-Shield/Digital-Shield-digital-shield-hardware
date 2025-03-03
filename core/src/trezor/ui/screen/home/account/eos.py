@@ -15,8 +15,8 @@ class Eos(DetailBase):
     def get_path() -> str:
         return "m/44'/194'/0'/0/0"
 
-    @staticmethod
-    async def get_address() -> str:
+    @classmethod
+    async def get_address(cls) -> str:
         import_manager = utils.unimport()
         with import_manager:
             from trezor.wire import DUMMY_CONTEXT as ctx
@@ -29,7 +29,7 @@ class Eos(DetailBase):
             await handle_Initialize(ctx, init)
 
             # step 2: get address
-            req = EosGetPublicKey(address_n=parser_path(Eos.get_path()))
+            req = EosGetPublicKey(address_n=parser_path(cls.get_path()))
             resp = await get_public_key(ctx, req)
 
             return resp.wif_public_key

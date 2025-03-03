@@ -45,8 +45,8 @@ def BTCFork(coin_name:str):
         def get_path() -> str:
             return path_map[coin_name]
 
-        @staticmethod
-        async def get_address() -> str:
+        @classmethod
+        async def get_address(cls) -> str:
             import_manager = utils.unimport()
             with import_manager:
                 from trezor.wire import DUMMY_CONTEXT as ctx
@@ -59,7 +59,7 @@ def BTCFork(coin_name:str):
                 await handle_Initialize(ctx, init)
 
                 # step 2: get address
-                req = GetAddress(address_n=parser_path(_BTCFork.get_path()),coin_name = coin_name,script_type = script_map[coin_name])
+                req = GetAddress(address_n=parser_path(cls.get_path()),coin_name = coin_name,script_type = script_map[coin_name])
                 resp = await get_address(ctx, req)
 
                 return resp.address

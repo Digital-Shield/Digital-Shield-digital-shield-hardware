@@ -15,8 +15,8 @@ class Solana(DetailBase):
     def get_path() -> str:
         return "m/44'/501'/0'/0'"
 
-    @staticmethod
-    async def get_address() -> str:
+    @classmethod
+    async def get_address(cls) -> str:
         import_manager = utils.unimport()
         with import_manager:
             from trezor.wire import DUMMY_CONTEXT as ctx
@@ -29,7 +29,7 @@ class Solana(DetailBase):
             await handle_Initialize(ctx, init)
 
             # step 2: get address
-            req = SolanaGetAddress(address_n=parser_path(Solana.get_path()))
+            req = SolanaGetAddress(address_n=parser_path(cls.get_path()))
             resp = await get_address(ctx, req)
 
             return resp.address

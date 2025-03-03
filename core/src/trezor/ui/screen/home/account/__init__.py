@@ -50,6 +50,11 @@ class AccountApp(with_title(Navigation)):
         from .polkadot import Polkadot
         Coin(self.content, Polkadot)
 
+        from .sui import Sui
+        Coin(self.content, Sui)
+
+        from .aptos import Aptos
+        Coin(self.content, Aptos)
 
 
 class Item(VStack):
@@ -132,8 +137,8 @@ class DetailBase(with_title(Navigation)):
     def get_path() -> str:
         raise NotImplementedError
 
-    @staticmethod
-    async def get_address() -> str:
+    @classmethod
+    async def get_address(cls) -> str:
         raise NotImplementedError
 
     def __init__(self):
