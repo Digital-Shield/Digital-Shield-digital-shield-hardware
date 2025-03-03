@@ -54,8 +54,22 @@ trezorctl device firmware-update-emmc -p 0:updates/firmware.bin
 trezorctl device reboot-to-boardloader
 ```
 
+# ⚠️ 注意Nix 版本
+Nix-shell需要安装2.23版本，可以使用如下指令安装
+```
+sh <(curl -L https://releases.nixos.org/nix/nix-2.23.3/install) --daemon
+```
+如果Mac系统报3001 User无法使用，可以使用如下指令安装
+```
+NIX_FIRST_BUILD_UID=30001 sh <(curl -L https://releases.nixos.org/nix/nix-2.23.3/install) --daemon
+```
+如果已经安装其他版本的Nix，先按照官方手册进行卸载  
+https://nix.dev/manual/nix/2.21/installation/uninstall
+
+
 # ⚠️ 注意Poetry 版本
 如果使用nix-shell中的poetry或者2.0以下版本，注释掉pyproject.toml中这句
 ```
 #package-mode = false
 ```
+
