@@ -185,6 +185,14 @@ def find_message_handler_module(msg_type: int) -> str:
         if msg_type == MessageType.SuiSignMessage:
             return "apps.sui.sign_message"
 
+        # aptos
+        if msg_type == MessageType.AptosGetAddress:
+            return "apps.aptos.get_address"
+        if msg_type == MessageType.AptosSignTx:
+            return "apps.aptos.sign_tx"
+        if msg_type == MessageType.AptosSignMessage:
+            return "apps.aptos.sign_message"
+
     raise ValueError
 
 

@@ -7,7 +7,7 @@ from apps.common import paths, seed
 from apps.common.keychain import Keychain, auto_keychain
 
 from .helper import INTENT_BYTES, sui_address_from_pubkey
-
+from . import ICON
 
 @auto_keychain(__name__)
 async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiSignedTx:
@@ -24,7 +24,7 @@ async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiS
     if INTENT_BYTES != intent:
         raise wire.DataError("Invalid raw tx")
     ctx.name = 'SUI'
-    ctx.icon_path = 'A:/res/chain-sui.png'
+    ctx.icon_path = ICON
     await confirm_blind_sign_common(ctx, address, msg.raw_tx)
     await confirm_final(ctx, "SUI")
     signature = ed25519.sign(
