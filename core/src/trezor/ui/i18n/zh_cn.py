@@ -142,6 +142,7 @@ class Title:
     export_credential = "导出凭证"
     asset = "资产"
     unimplemented = "未实现"
+    invalid_data="无效的数据格式"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -287,6 +288,7 @@ class Text:
     source = "来源"
     tip = "提示"
     keep_alive = "Keep alive"
+    invalid_ur = "不支持的二维码类型，请重试"
 
 class Tip:
     swipe_down_to_close = "向下滑动以关闭"

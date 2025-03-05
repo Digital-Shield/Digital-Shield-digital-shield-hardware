@@ -117,6 +117,7 @@ async def handle_scanning(airgap: Airgap) -> None:
         log.debug(__name__, f"accepted: {accepted}")
 
         if not accepted:
+            await airgap.event_hub.put(event.InvalidUR())
             continue
 
         if airgap.decoder.is_complete():

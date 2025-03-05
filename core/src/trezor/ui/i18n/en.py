@@ -178,7 +178,7 @@ class Title:
     export_credential = "Export Credential"
     asset = "Asset"
     unimplemented = "Unimplemented"
-
+    invalid_data = "Invalid data type"
 
 class Tip:
     swipe_down_to_close = "Swipe down to close"
@@ -323,6 +323,7 @@ class Text:
     source = "Source:"
     tip = "Tip:"
     keep_alive = "Keep alive:"
+    invalid_ur = "Unsupported QR code type, please try again"
 
 class WalletSecurity:
     header = "Write down mnemonic on a piece of paper and store it in a safe place."

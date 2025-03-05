@@ -84,12 +84,24 @@ class ScanApp(with_title(Navigation)):
 
     async def scanning(self):
         from trezor.airgap import Airgap
+        from trezor.airgap.event import InvalidUR
+        from trezor.ui.layouts import show_warning
+        from trezor.wire import DUMMY_CONTEXT as ctx
+
         airgap = Airgap.instance()
         airgap.reset()
 
         while True:
             event = await airgap.event_hub.take()
             log.debug(__name__, f"event: {event}")
-            if event == 3:
+            if isinstance(event, InvalidUR):
+                await show_warning(
+                    ctx,
+                    i18n.Text.invalid_ur,
+                    i18n.Title.invalid_data,
+                    i18n.Button.try_again,
+                )
+                airgap.reset()
+            elif event == 3:
                 airgap.reset()
                 workflow.spawn(self.restart_camera())
