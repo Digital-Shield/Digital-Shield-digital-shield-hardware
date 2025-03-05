@@ -18,34 +18,35 @@ class Firmware(with_title(Navigation)):
             Style().pad_left(16).pad_right(16),
             0
         )
-        view = self.add(Text)
-        view.set_label(i18n.Guide.firmware_title_1)
 
-        view = self.add(Text)
-        view.set_label(i18n.Guide.firmware_title_2)
+        view = self.add(lv.label)
+        view.set_text(i18n.Guide.firmware_title_1)
+        view.set_width(lv.pct(100))
+        view.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        view.set_long_mode(lv.label.LONG.WRAP)
 
-        view = self.add(Text)
-        view.set_label(i18n.Guide.firmware_title_3)
+        view = self.add(lv.label)
+        view.set_text(i18n.Guide.firmware_title_2)
+        view.set_width(lv.pct(100))
+        view.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        view.set_long_mode(lv.label.LONG.WRAP)
+
+        view = self.add(lv.label)
+        view.set_text(i18n.Guide.firmware_title_3)
         style = (
             Style()
+            .width(lv.pct(100))
             .pad_right(16)
             .pad_left(16)
             .text_color(lv.color_hex(0xc39700))
         )
+
         view = self.add(lv.label)
         view.add_style(style,0)
+        view.set_long_mode(lv.label.LONG.WRAP)
         view.set_text(i18n.Guide.firmware_title_caution)
+
         view = self.add(lv.label)
         view.add_style(style,0)
+        view.set_long_mode(lv.label.LONG.WRAP)
         view.set_text(i18n.Guide.firmware_describe_caution)
-        
-class Text(LabeledItem):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.add_style(
-            Style()
-            .border_width(0)
-            .pad_top(0)
-            .pad_bottom(0),
-            0
-        )
