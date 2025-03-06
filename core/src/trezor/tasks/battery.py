@@ -18,7 +18,7 @@ async def updating_battery_state():
         # log.debug(__name__, f"state of current: {state_of_current}")
 
         charging = state_of_current >= 0
-        
+
         # need refresh if charge state changed
         refresh = prev_charge != state_of_charge
         # need refresh if charging is chaged
@@ -31,14 +31,15 @@ async def updating_battery_state():
             prev_charge = state_of_charge
             StatusBar.instance().show_battery_none()
             continue
-        
+
         # cache charge state
         if prev_charge != state_of_charge:
             prev_charge = state_of_charge
             StatusBar.instance().show_battery_img(state_of_charge, charging)
-            
+
         # cache charging state
         if prev_charging != charging:
+            StatusBar.instance().show_battery_img(state_of_charge, charging)
             StatusBar.instance().show_charging(charging)
             prev_charging = charging
 
