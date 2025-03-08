@@ -10,6 +10,7 @@ class PowerOff(Confirm):
     def __init__(self):
         super().__init__()
         self.set_title(i18n.Title.power_off)
+        self.btn_cancel.set_text(i18n.Button.cancel)
         self.btn_confirm.set_text(i18n.Button.power_off)
         self.btn_confirm.color(colors.DS.DANGER)
 
