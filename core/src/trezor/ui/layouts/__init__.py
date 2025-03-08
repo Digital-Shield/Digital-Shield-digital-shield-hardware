@@ -382,7 +382,7 @@ async def confirm_words(ctx: wire.GenericContext, share_words: Sequence[str]) ->
     await screen.show()
 
     r = await interact(ctx, screen, ButtonRequestType.Other)
-    if not r:
+    if isinstance(r, NavigationBack):
         raise wire.ActionCancelled()
     log.debug(__name__, f"checked words: {r}")
 
