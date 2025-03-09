@@ -204,8 +204,7 @@ class TransactionDetail(
         self.btn_continue = self.btn_right
 
         # reject button
-        self.btn_reject.color(colors.DS.WHITE)
-        self.btn_reject.text_color(colors.DS.DANGER)
+        self.btn_reject.mode('reject')
         self.btn_reject.add_event_cb(self.on_click_reject, lv.EVENT.CLICKED, None)
 
         # continue button

@@ -262,8 +262,7 @@ class TransactionOverview(with_title_and_buttons(Modal, i18n.Button.confirm, i18
 
         # reject button
         self.btn_reject = self.btn_left
-        self.btn_reject.color(colors.DS.WHITE)
-        self.btn_reject.text_color(colors.DS.DANGER)
+        self.btn_reject.mode('reject')
         self.btn_reject.add_event_cb(self.on_click_reject, lv.EVENT.CLICKED, None)
 
         # confirm button

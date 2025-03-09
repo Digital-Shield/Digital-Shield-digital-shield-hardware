@@ -230,6 +230,8 @@ class Text:
     max_fee = "Max fee:"
     max_priority_fee_per_gas = "Max priority fee per gas:"
     max_fee_per_gas = "Max fee per gas:"
+    max_gas_limit = "Max gas limit:"
+    gas_unit_price= "Gas unit price:"
     gas_price = "Price:"
     total = "Total:"
     do_sign_this_transaction = "Do you want to sign this {} transaction?"
@@ -238,6 +240,7 @@ class Text:
     public_key = 'Public key:'
     xpub = "XPub:"
     unknown_tx_type = "Unknown transaction type, please check input data"
+    unknown_function = "Unknown function:"
     use_app_scan_this_signature = "Please use your wallet scan the signature"
     internal_error = "Internal error"
     tap_switch_to_airgap = "Tap QRCode to show airgaped address"
@@ -324,6 +327,9 @@ class Text:
     tip = "Tip:"
     keep_alive = "Keep alive:"
     invalid_ur = "Unsupported QR code type, please try again"
+    sequence_number = "Sequence number:"
+    expiration_time = "Expiration time:"
+    argument_x = "Argument #{}:"
 
 class WalletSecurity:
     header = "Write down mnemonic on a piece of paper and store it in a safe place."

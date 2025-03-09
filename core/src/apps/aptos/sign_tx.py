@@ -6,8 +6,14 @@ from trezor.messages import AptosSignedTx, AptosSignTx
 from apps.common import paths, seed
 from apps.common.keychain import Keychain, auto_keychain
 
-from . import ICON, PRIMARY_COLOR
-from .helper import TRANSACTION_PREFIX, aptos_address_from_pubkey
+from . import ICON
+from .helper import TRANSACTION_PREFIX
+from .account_address import AccountAddress
+from .transaction import RawTransaction
+from trezor.ui.layouts.aptos import (
+    confirm_transaction_detail,
+    show_transaction_overview,
+)
 
 
 @auto_keychain(__name__)
@@ -19,14 +25,30 @@ async def sign_tx(
 
     node = keychain.derive(msg.address_n)
     pub_key_bytes = seed.remove_ed25519_prefix(node.public_key())
-    address = aptos_address_from_pubkey(pub_key_bytes)
+    address = AccountAddress.from_key(pub_key_bytes).__str__()
 
     from trezor.ui.layouts import confirm_blind_sign_common, confirm_final
 
-    ctx.name = 'APTOS'
-    ctx.icon_path =  ICON
-    await confirm_blind_sign_common(ctx, address, msg.raw_tx)
-    prefix_bytes = sha3_256(TRANSACTION_PREFIX).digest()
+    try:
+        tx: RawTransaction = RawTransaction.from_bytes(msg.raw_tx)
+        # from trezor import log
+        # log.debug(__name__, f"tx: {tx}")
+        from .well_known import find_confirm_handler
+        confirm_handler = find_confirm_handler(tx)
+        if tx.sender != AccountAddress.from_str(address):
+            raise wire.DataError('Invalid sender, sender not match address in device')
+    except:
+        confirm_handler = None
+
+    ctx.name = "APTOS"
+    ctx.icon_path = ICON
+
+    if confirm_handler:
+        await confirm_handler(ctx, tx)
+    else:
+        await confirm_blind_sign_common(ctx, address, msg.raw_tx)
+
+    prefix_bytes = RawTransaction.prehash()
     raw_tx = prefix_bytes + msg.raw_tx
     signature = ed25519.sign(node.private_key(), raw_tx)
     await confirm_final(ctx, "APTOS")
