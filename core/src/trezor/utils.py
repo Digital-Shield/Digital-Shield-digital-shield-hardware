@@ -23,9 +23,6 @@ from trezorutils import (  # noqa: F401; FIRMWARE_SECTORS_COUNT,; firmware_secto
     reset,
     usb_data_connected,
     power_off,
-    power_source,
-    POWER_SOURCE_BATTERY,
-    POWER_SOURCE_USB,
 )
 
 if not EMULATOR:

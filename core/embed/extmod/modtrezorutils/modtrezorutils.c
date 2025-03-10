@@ -319,12 +319,6 @@ static mp_obj_t mod_trezorutils_power_off(void) {
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_off_obj, mod_trezorutils_power_off);
 
-static mp_obj_t mod_trezorutils_power_source(void) {
-  PowerSource source = device_power_source();
-  return mp_obj_new_int(source);
-}
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_source_obj, mod_trezorutils_power_source);
-
 /// SCM_REVISION: bytes
 /// BUILD_ID: bytes
 /// VERSION_MAJOR: int
@@ -334,8 +328,6 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_source_obj, mod_trezoruti
 /// EMULATOR: bool
 /// BITCOIN_ONLY: bool
 /// FIRMWARE_SECTORS_COUNT: int
-/// POWER_SOURCE_USB: int
-/// POWER_SOURCE_BATTERY: int
 
 STATIC const mp_rom_map_elem_t mp_module_trezorutils_globals_table[] = {
     {MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_trezorutils)},
@@ -386,10 +378,7 @@ STATIC const mp_rom_map_elem_t mp_module_trezorutils_globals_table[] = {
 #else
     {MP_ROM_QSTR(MP_QSTR_BITCOIN_ONLY), mp_const_false},
 #endif
-    {MP_ROM_QSTR(MP_QSTR_POWER_SOURCE_BATTERY), MP_ROM_INT(BATTERY_POWER)},
-    {MP_ROM_QSTR(MP_QSTR_POWER_SOURCE_USB), MP_ROM_INT(USB_POWER)},
     {MP_ROM_QSTR(MP_QSTR_power_off), MP_ROM_PTR(&mod_trezorutils_power_off_obj)},
-    {MP_ROM_QSTR(MP_QSTR_power_source), MP_ROM_PTR(&mod_trezorutils_power_source_obj)},
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_trezorutils_globals,
