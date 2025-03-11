@@ -1,7 +1,7 @@
 import lvgl as lv
 
 from . import manager
-
+from trezor.ui import Style, font
 from trezor import loop, log
 from trezor.ui import Style, events, theme, colors
 from trezor.ui.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -25,6 +25,7 @@ class Screen(lv.obj):
         if __USE_BACKGROUND_IMAGE__:
             self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
 
+       
         # an empty content view, this is the root of `all` user UI components
         # almost all
         # default content is self
@@ -109,6 +110,9 @@ class Screen(lv.obj):
 
         User decide how to show it.
         """
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         log.debug(__name__, f"{self.__class__.__name__} show")
         pass
 
@@ -305,7 +309,7 @@ def with_title(cls: Type[S]) -> Type[TitledScreen]:
 
             # add title
             self.title = self.add(Title)
-
+            # self.title.set_style_text_font(font.Bold.SCS26, 0)
             # `content` is remained, for draw all other ui components
             self.create_content(lv.obj)
             self.content.set_flex_grow(1)

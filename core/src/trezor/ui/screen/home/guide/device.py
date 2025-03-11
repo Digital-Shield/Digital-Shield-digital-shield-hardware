@@ -17,7 +17,8 @@ class Device(with_title(Navigation)):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16).pad_right(16),
+            Style()
+            .pad_all(16),
             0
         )
 
@@ -54,7 +55,9 @@ class Item(HStack):
         self.add_style(
             Style()
             .radius(16)
-            .bg_opa(lv.OPA.COVER)
+            .bg_color(lv.color_hex(0x111126))
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
+            .text_color(lv.color_hex(0xFFFFFF))
             .width(lv.pct(100))
             .height(90)
             .pad_right(32)

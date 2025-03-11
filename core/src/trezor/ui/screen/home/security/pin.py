@@ -3,6 +3,7 @@ from . import *
 class ChangePin(SampleItem):
     def __init__(self, parent):
         super().__init__(parent, i18n.Security.change_pin, "A:/res/pin-two.png")
+        
 
     def action(self):
         super().action()

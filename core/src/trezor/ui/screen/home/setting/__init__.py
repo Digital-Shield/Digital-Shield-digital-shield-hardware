@@ -139,7 +139,7 @@ __OPTION_VALUE_CHANGED = lv.event_register_id()
 class OptionsItem(SampleItem):
     def __init__(self, parent, text, icon):
         super().__init__(parent, text, icon)
-
+    
         # current option
         self.option = lv.label(self)
         text = self.current()

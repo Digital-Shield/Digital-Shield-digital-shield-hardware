@@ -1,6 +1,6 @@
 import lvgl as lv
 from typing import TYPE_CHECKING
-
+from trezor.ui import Style, font, colors, i18n
 from . import *
 from trezor.ui.screen import Navigation, with_title
 
@@ -29,7 +29,7 @@ class Terms(with_title(Navigation)):
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_terms_us)
         view.set_text(i18n.Guide.terms_describe_terms_us)
-
+        
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_product_services)
         view.set_text(i18n.Guide.terms_describe_product_services)
@@ -41,6 +41,7 @@ class Terms(with_title(Navigation)):
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_disclaimers)
         view.set_text(i18n.Guide.terms_describe_disclaimers)
+
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_contact_us)
         view.set_text(i18n.Guide.terms_describe_contact_us)
@@ -52,6 +53,8 @@ class Text(LabeledText):
             Style()
             .border_width(0)
             .pad_top(0)
+            .text_color(colors.STD.WHITE)
+            .text_line_space(8)
             .pad_bottom(0),
             0
         )
