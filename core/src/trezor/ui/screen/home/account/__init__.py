@@ -75,9 +75,9 @@ class Item(VStack):
             .bg_opa(lv.OPA.COVER)
             .width(432) #lv.pct(100)
             .height(80)
-            .text_color(lv.color_hex(0xFFFFFF))
             .pad_right(32)
-            .pad_column(16),
+            .pad_column(16)
+            .bg_color(lv.color_hex(0x111126)),
             0,
         )
         self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
@@ -90,11 +90,13 @@ class Item(VStack):
         self.label = lv.label(self)
         self.label.set_flex_grow(1)
         self.label.set_text(text)
+        self.label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
+        # self.label.set_style_pad_all(28, lv.PART.MAIN)
         self.add_flag(lv.obj.FLAG.CLICKABLE)
         # right-arrow
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
-        self.arrow.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        self.arrow.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
     def action(self):
@@ -151,30 +153,44 @@ class DetailBase(with_title(Navigation)):
         super().__init__()
         self.set_style_bg_img_src(None, lv.PART.MAIN)  # 取消背景图
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
-        self.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
-
+        # self.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+        # self.set_style_pad_bottom(20, lv.PART.MAIN)
+        background = lv.obj(self)
+        background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+        background.set_width(432)
+        background.set_height(708)
+        background.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
+        # background.set_style_border_color(lv.color_hex(0x000000), lv.PART.MAIN)  # 设置边框颜色为黑色
+        background.set_style_border_width(0, lv.PART.MAIN)  # 设置边框宽度为0
+        background.align(lv.ALIGN.TOP_MID, 0, 25)
+        # 将背景图移动到最底层
+        background.move_background()
         # self.set_title(self.get_name())
 
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(Style().pad_left(16).pad_right(16), 0)
 
-        # qr code
+        # 二维码图片
         self.container = self.add(lv.obj)
         self.container.add_style(theme.Styles.container, 0)
         self.container.set_height(QRCODE_SIZE + 32)
+        self.container.set_style_pad_bottom(50, lv.PART.MAIN)
         self._qrcode_view: lv.qrcode = None
 
         # address
         self.address_view = self.add(LabeledText)
         self.address_view.set_label(i18n.Text.address)
         self.address_view.set_text("")
+        self.address_view.set_style_pad_bottom(60, lv.PART.MAIN)
+        self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         # set_text later
 
         # path
         path_view = self.add(LabeledText)
         path_view.set_label(i18n.Text.path)
         path_view.set_text(self.get_path())
+        # self.address_view.set_style_text_color(lv.color_hex(0x0000FF), lv.PART.MAIN)
 
     def on_loaded(self):
         super().on_loaded()
@@ -189,9 +205,10 @@ class DetailBase(with_title(Navigation)):
     def qrcode_view(self) -> lv.qrcode:
         if self._qrcode_view:
             return self._qrcode_view
-        self._qrcode_view = lv.qrcode(self.container, 400, colors.DS.BLACK, colors.DS.WHITE)
+        self._qrcode_view = lv.qrcode(self.container, 300, colors.DS.BLACK, colors.DS.WHITE)
         self._qrcode_view.set_style_border_width(16, lv.PART.MAIN)
         self._qrcode_view.set_style_border_color(colors.DS.WHITE, lv.PART.MAIN)
+        # self._qrcode_view.set_style_pad_bottom(20, lv.PART.MAIN)  # 设置下边距为20像素
         self._qrcode_view.center()
         return self._qrcode_view
 
@@ -199,5 +216,6 @@ class DetailBase(with_title(Navigation)):
         address = await self.get_address()
         self.qrcode_view.update(address, len(address))
         self.address_view.set_text(address)
+        self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
 
