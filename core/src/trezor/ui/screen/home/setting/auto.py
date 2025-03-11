@@ -7,7 +7,7 @@ from storage import device
 
 class AutoLock(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.auto_lock, "A:/res/lock-setting.png")
+        super().__init__(parent, i18n.Setting.auto_lock, "A:/res/lock-setting-two.png")
 
         # seconds, -1 means never
         self.times = [30, 60, 120, 300, 600, -1]
@@ -37,7 +37,7 @@ class AutoLockDetails(TimeOptionDetails):
 
 class AutoShutdown(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.auto_shutdown, "A:/res/auto-power-off.png")
+        super().__init__(parent, i18n.Setting.auto_shutdown, "A:/res/auto-power-off-two.png")
         # seconds, -1 means never
         self.times = [60, 120, 300, 600, 900, 1800, -1]
 

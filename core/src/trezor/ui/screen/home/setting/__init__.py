@@ -8,8 +8,14 @@ from trezor.ui.screen import Navigation, with_title
 class SettingApp(with_title(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.App.setting)
+        title_label = lv.label(self)
+        title_label.set_text(i18n.App.setting)
+        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
+        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
 
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
@@ -51,8 +57,8 @@ class SettingApp(with_title(Navigation)):
         PowerOff(self.content)
 
         # restart
-        from .power import Restart
-        Restart(self.content)
+        # from .power import Restart
+        # Restart(self.content)
 
 
 class Item(VStack):
@@ -66,21 +72,27 @@ class Item(VStack):
         self.add_style(
             Style()
             .radius(16)
-            .bg_opa(lv.OPA.COVER)
+            .bg_color(lv.color_hex(0x111126))  # 深色背景
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
+            # .bg_opa(lv.OPA.COVER)
             .width(lv.pct(100))
             .height(72)
             .pad_right(32)
             .pad_column(16),
             0,
         )
-        self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
+        # self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
         self.icon = lv.img(self)
         self.icon.set_src(icon)
+        # self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
+        # self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
 
         self.label = lv.label(self)
         self.label.set_flex_grow(1)
         self.label.set_text(text)
+        self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
 
 
 class SampleItem(Item):
@@ -104,6 +116,9 @@ class ToggleItem(Item):
         self.switch.set_width(96)
         self.switch.add_flag(lv.obj.FLAG.CLICKABLE)
         self.switch.add_event_cb(lambda _: self.toggle(), lv.EVENT.VALUE_CHANGED, None)
+
+        self.switch.set_style_bg_color(lv.color_hex(0x3C84FC), lv.PART.INDICATOR | lv.STATE.CHECKED)
+        self.switch.set_style_bg_opa(lv.OPA.COVER, lv.PART.INDICATOR | lv.STATE.CHECKED)
 
     @property
     def checked(self):
@@ -129,11 +144,13 @@ class OptionsItem(SampleItem):
         self.option = lv.label(self)
         text = self.current()
         self.option.set_text(text)
+        self.option.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+ 
 
         # right-arrow
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
-        self.arrow.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        self.arrow.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
         # update `option` when an option value is changed
         self.add_event_cb(

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Wallpaper(SampleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.wallpaper, "A:/res/wallpaper.png")
+        super().__init__(parent, i18n.Setting.wallpaper, "A:/res/wallpaper-two.png")
 
         # right-arrow
         self.arrow = lv.label(self)

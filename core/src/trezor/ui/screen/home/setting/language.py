@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class Language(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.language, "A:/res/language-setting.png")
+        super().__init__(parent, i18n.Setting.language, "A:/res/language-setting-two.png")
 
     def current(self):
         return i18n.using.name

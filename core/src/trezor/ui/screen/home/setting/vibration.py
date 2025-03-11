@@ -8,7 +8,7 @@ from storage import device
 class Vibration(ToggleItem):
 
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.vibration, "A:/res/vibration.png")
+        super().__init__(parent, i18n.Setting.vibration, "A:/res/vibration-two.png")
         self.checked = device.keyboard_haptic_enabled()
 
     def toggle(self):

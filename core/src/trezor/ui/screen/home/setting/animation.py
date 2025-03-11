@@ -4,7 +4,7 @@ from storage import device
 
 class Animation(ToggleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.animation, "A:/res/animation.png")
+        super().__init__(parent, i18n.Setting.animation, "A:/res/animation-two.png")
         self.checked = device.is_animation_enabled()
 
     def toggle(self):

@@ -70,6 +70,7 @@ class Styles:
     primary = Style().bg_color(colors.DS.PRIMARY)
 
     label = Style().text_color(colors.DS.BLACK)
+    label = Style().text_font(font.Bold.SCS30)
     label_disabled = Style().text_color(colors.DS.TEXT_DISABLED)
 
     ta_label = Style().text_color(colors.STD.WHITE)

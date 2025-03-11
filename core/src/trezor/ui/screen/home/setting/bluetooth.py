@@ -14,7 +14,7 @@ BLE_CMD_CTRL_OP_DISCONNECT = const(3)
 class Bluetooth(ToggleItem):
 
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.bluetooth, "A:/res/ble-connected.png")
+        super().__init__(parent, i18n.Setting.bluetooth, "A:/res/ble-connected-two.png")
         self.checked = device.ble_enabled()
 
     def toggle(self):
