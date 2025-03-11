@@ -10,13 +10,22 @@ from trezor import io, loop, uart, utils, workflow, log
 class NftApp(with_title(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.App.nft)
+        # self.set_title(i18n.App.nft)
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+
+        title_label = lv.label(self)
+        title_label.set_text(i18n.App.nft)
+        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
+        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
 
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
         self.content.set_style_pad_left(16, lv.PART.MAIN)
         self.content.set_style_pad_right(16, lv.PART.MAIN)
+        self.content.set_style_pad_top(15, lv.PART.MAIN)  # 设置顶部填充
         # self.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)
         nft_counts = 0
         file_name_list = []
