@@ -64,6 +64,8 @@ class Title:
     enter_pin_again = "もう一度PINコードを入力してください"
     select_language = "言語を選択"
     create_wallet = "ウォレットを作成"
+    wallet = "ウォレットを作成"
+    import_wallet = "지갑 가져오기"
     restore_wallet = "ウォレットを復元"
     wallet_is_ready = "ウォレットの準備ができました"
     select_word_count = "単語数を選択"

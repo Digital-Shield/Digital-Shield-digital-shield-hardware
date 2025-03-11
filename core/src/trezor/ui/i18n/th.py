@@ -64,6 +64,8 @@ class Title:
     enter_pin_again = "다시 PIN 코드를 입력하십시오"
     select_language = "언어 선택"
     create_wallet = "지갑 생성"
+    wallet = "지갑"
+    import_wallet = "지갑 가져오기"
     restore_wallet = "지갑 복원"
     wallet_is_ready = "지갑이 준비되었습니다"
     select_word_count = "단어 수 선택"

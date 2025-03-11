@@ -65,6 +65,8 @@ class Title:
     enter_pin_again = "請再次輸入PIN碼"
     select_language = "語言"
     create_wallet = "建立錢包"
+    wallet = "錢包"
+    import_wallet = "導入钱包"
     restore_wallet = "恢復錢包"
     wallet_is_ready = "錢包準備就緒"
     select_word_count = "選擇單詞數量"

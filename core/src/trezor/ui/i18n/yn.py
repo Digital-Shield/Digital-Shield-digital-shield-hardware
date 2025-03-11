@@ -65,6 +65,8 @@ class Title:
     enter_pin_again = "Vui lòng nhập lại mã PIN"
     select_language = "Chọn ngôn ngữ"
     create_wallet = "Tạo ví"
+    wallet = "Ví tiền"
+    import_wallet = "Ví nhập khẩu"
     restore_wallet = "Phục hồi ví"
     wallet_is_ready = "Ví đã sẵn sàng"
     select_word_count = "Chọn số lượng từ"

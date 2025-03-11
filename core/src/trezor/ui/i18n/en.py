@@ -98,6 +98,8 @@ class Title:
     enter_pin_again = "Enter PIN again"
     select_language = "Language"
     create_wallet = "Create Wallet"
+    wallet = "Wallet"
+    import_wallet = "Import Wallet"
     restore_wallet = "Restore Wallet"
     wallet_is_ready = "Wallet is ready"
     select_word_count = "Select Word Count"

@@ -66,6 +66,8 @@ class Title:
     enter_pin_again = "يرجى إدخال رمز PIN مرة أخرى"
     select_language = "اختيار اللغة"
     create_wallet = "إنشاء محفظة"
+    wallet = "محفظة"
+    import_wallet = "استيراد المحفظة"
     restore_wallet = "استعادة المحفظة"
     wallet_is_ready = "المحفظة جاهزة"
     select_word_count = "اختيار عدد الكلمات"
