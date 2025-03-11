@@ -50,6 +50,7 @@ class Item(VStack):
         code = event.code
         if code == lv.EVENT.FOCUSED:
             self.state.set_text(lv.SYMBOL.OK)
+            self.state.set_style_text_color(lv.color_hex(0xFFFFFF), 0)
         elif code == lv.EVENT.DEFOCUSED:
             self.state.set_text("")
 
@@ -58,25 +59,41 @@ class OptionDetails(with_title(Navigation)):
         self.subscriber: lv.obj = None
 
         super().__init__()
-        self.set_title(title)
-
+        # self.set_title(title)
+        title_label = lv.label(self)
+        title_label.set_text(title)
+        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
+        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
             Style()
-            .radius(16)
-            .pad_all(16)
+            # .radius(16)
+            # .pad_all(16)
             .height(lv.SIZE.CONTENT)
-            .bg_opa(lv.OPA.COVER),
+            .width(lv.pct(100))
+            .bg_opa(lv.OPA.TRANSP),  # 设置完全透明
+            # .bg_color(lv.color_hex(0x0D0D17)),  # 深色背景
             lv.PART.MAIN
         )
 
         self.options = [Item(self.content, self.option_format(o)) for o in options]
+            
         for item, o in zip(self.options, options):
             # add time to item as a property
             item.option = o
+            item.add_style(
+                Style()
+                .bg_color(lv.color_hex(0x111126))
+                .bg_opa(lv.OPA._90)
+                .radius(16)     
+                .height(72)
+                .width(lv.pct(100))
+                .pad_all(8),
+                lv.PART.MAIN | lv.STATE.DEFAULT
+            )
 
         self.group = lv.group_create()
         for item in self.options:
@@ -84,11 +101,12 @@ class OptionDetails(with_title(Navigation)):
 
         # find the current and set focus
         current = self.current()
+        
         item = utils.first(self.options, lambda item: item.option == current)
         lv.group_focus_obj(item)
 
         self.group.set_focus_cb(self.on_group_focus_changed)
-
+    
 
     @classmethod
     def option_format(cls, v: T) -> str:

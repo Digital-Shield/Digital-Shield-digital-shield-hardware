@@ -44,19 +44,26 @@ class SimpleConfirm(Confirm):
 
     def __init__(self, message: str):
         super().__init__()
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
 
         self.content: lv.obj
         self.content.set_style_pad_left(16, lv.PART.MAIN)
         self.content.set_style_pad_right(16, lv.PART.MAIN)
         self.create_content(lv.obj)
         self.content: lv.obj
+
         self.content.add_style(theme.Styles.board, lv.PART.MAIN)
+        
 
         self.text = self.add(lv.label)
         self.text.set_long_mode(lv.label.LONG.WRAP)
         self.text.set_width(lv.pct(90))
         self.text.set_height(lv.SIZE.CONTENT)
         self.text.set_text(message)
+        self.text.set_style_text_color(colors.DS.WHITE, 0)
+        self.text.set_style_text_line_space(8, 0)
         self.text.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
         self.text.center()
 

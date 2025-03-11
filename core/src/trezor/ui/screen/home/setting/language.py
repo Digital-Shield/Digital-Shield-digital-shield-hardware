@@ -29,6 +29,9 @@ class Language(OptionsItem):
 class LanguageDetails(OptionDetails):
     def __init__(self, title, languages: List[i18n.Language]):
         super().__init__(title, languages)
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         self.reverting = False
 
     @classmethod

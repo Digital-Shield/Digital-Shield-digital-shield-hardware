@@ -80,6 +80,7 @@ class Styles:
         Style()
         .text_color(colors.DS.BUTTON_TEXT)
         .text_align(lv.TEXT_ALIGN.CENTER)
+        .bg_color(lv.color_hex(0x3C84FC))
         .align(lv.ALIGN.CENTER)
     )
 
@@ -160,7 +161,8 @@ class Styles:
     board = (
         Style()
         .pad_all(16)
-        .bg_opa(lv.OPA.COVER)
+        # .bg_opa(lv.OPA.COVER)
+        .bg_opa(lv.OPA.TRANSP)
         .radius(16)
     )
     title_text = Style().text_font(font.Bold.SCS38)
