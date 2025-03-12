@@ -558,10 +558,8 @@ int main(void)
     ensure_emmcfs(emmc_fs_init(), "emmc_fs_init");
     ensure_emmcfs(emmc_fs_mount(true, false), "emmc_fs_mount");
 
-    ble_usart_init();
-
+    ble_power_init();
     ble_power_on();
-    spi_slave_init();
 
     secbool stay_in_bootloader = secfalse; // flag to stay in bootloader
     if ( stay_in_bootloader_flag == STAY_IN_BOOTLOADER_FLAG )

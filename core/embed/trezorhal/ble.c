@@ -2,6 +2,7 @@
 #include "common.h"
 #include "display.h"
 #include "spi.h"
+#include "stm32h7xx_hal_gpio.h"
 #include "sys.h"
 #include "usart.h"
 
@@ -209,6 +210,18 @@ void ble_refresh_dev_info(void) {
     hal_delay(5);
     ble_uart_poll();
   }
+}
+
+void ble_power_init() {
+  GPIO_InitTypeDef gpio;
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio.Pull = GPIO_PULLDOWN;
+  gpio.Speed = GPIO_SPEED_LOW;
+  gpio.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOD, &gpio);
+  // only init, not power on
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
 }
 
 void ble_power_on() {

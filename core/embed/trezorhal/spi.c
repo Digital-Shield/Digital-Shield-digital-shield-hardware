@@ -229,11 +229,6 @@ int32_t spi_slave_init() {
     return -1;
   }
 
-  // POWER UP BLE
-  gpio.Pin = GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOD, &gpio);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
-
   return 0;
 }
 int32_t spi_slave_deinit() {

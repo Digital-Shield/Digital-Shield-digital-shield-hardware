@@ -45,6 +45,7 @@ void ble_cmd_req(uint8_t cmd, uint8_t value);
 void ble_uart_poll(void);
 
 #if !EMULATOR
+void ble_power_init(void);
 void ble_power_on(void);
 void ble_power_off(void);
 bool ble_name_state(void);
