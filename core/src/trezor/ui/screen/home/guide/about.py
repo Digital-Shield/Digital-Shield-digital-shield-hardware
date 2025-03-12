@@ -60,7 +60,7 @@ class Item(VStack):
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
         # right-qc-code
         qr = lv.img(self)
-        qr.set_src("A:/res/qr-code.png")
+        qr.set_src("A:/res/qr-code-two.png")
         qr.set_style_img_recolor(lv.color_white(), 0)
 
     def action(self):

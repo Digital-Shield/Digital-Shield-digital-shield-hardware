@@ -36,6 +36,8 @@ class Message(with_title_and_buttons(Modal, i18n.Button.ok)):
             # self.msg.set_style_max_width(320, 0)
             self.text.set_text(message)
             self.text.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
+            self.text.set_style_text_line_space(8, 0)
+            self.text.set_style_pad_top(15, 0)
 
         self.btn = self.btn_right
 
@@ -53,7 +55,7 @@ class Message(with_title_and_buttons(Modal, i18n.Button.ok)):
 
 class Info(Message):
     def __init__(self, title, message):
-        super().__init__(title, message, "A:/res/info.png")
+        super().__init__(title, message, "A:/res/info-two.png")
 
 class Success(Message):
     def __init__(self, title, message):
