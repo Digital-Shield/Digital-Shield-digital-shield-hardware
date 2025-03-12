@@ -37,6 +37,7 @@ class Message(with_title_and_buttons(Modal, i18n.Button.ok)):
             self.text.set_text(message)
             self.text.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
             self.text.set_style_text_line_space(8, 0)
+            self.text.set_style_text_color(colors.DS.WHITE, 0)
             self.text.set_style_pad_top(15, 0)
 
         self.btn = self.btn_right

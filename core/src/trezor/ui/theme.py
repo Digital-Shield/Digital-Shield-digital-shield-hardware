@@ -171,6 +171,11 @@ class Styles:
         .text_color(colors.STD.WHITE)
         .text_align(lv.TEXT_ALIGN.CENTER)
     )
+    language_title_text = (
+        Style()
+        .text_font(font.Bold.SCS30)
+        .text_color(colors.STD.WHITE)
+    )
 
     popup = (
         Style()
