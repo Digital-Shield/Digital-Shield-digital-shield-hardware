@@ -3,7 +3,7 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 
 from trezor import loop, workflow
-from trezor.ui import i18n, Style, theme, colors
+from trezor.ui import i18n, Style, theme, colors,font
 from trezor.ui.component import HStack, VStack, LabeledText
 from trezor.ui.screen import Navigation, with_title
 from .evm import EVM, ETH_CHAIN_ID,BSC_CHAIN_ID,MATIC_CHAIN_ID
@@ -18,6 +18,7 @@ class AccountApp(with_title(Navigation)):
         # self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 设置背景颜色的透明度为完全不透明
 
         self.set_title(i18n.App.account)
+        self.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置标题颜色为白色
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
@@ -182,15 +183,19 @@ class DetailBase(with_title(Navigation)):
         self.address_view = self.add(LabeledText)
         self.address_view.set_label(i18n.Text.address)
         self.address_view.set_text("")
-        self.address_view.set_style_pad_bottom(60, lv.PART.MAIN)
-        self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
+        self.address_view.set_style_align(lv.ALIGN.TOP_LEFT, lv.PART.MAIN)
+        self.address_view.set_style_pad_top(0, lv.PART.MAIN)
+        self.address_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        #self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         # set_text later
 
         # path
         path_view = self.add(LabeledText)
         path_view.set_label(i18n.Text.path)
         path_view.set_text(self.get_path())
-        # self.address_view.set_style_text_color(lv.color_hex(0x0000FF), lv.PART.MAIN)
+        path_view.set_style_pad_top(0, lv.PART.MAIN)
+        path_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        path_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
     def on_loaded(self):
         super().on_loaded()

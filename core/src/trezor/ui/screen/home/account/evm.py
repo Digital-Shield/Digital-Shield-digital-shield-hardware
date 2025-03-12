@@ -4,7 +4,7 @@ import lvgl as lv
 from .helper import parser_path
 
 from trezor import utils, workflow, loop, log
-from trezor.ui import i18n, Style, theme, colors
+from trezor.ui import i18n, Style, theme, colors,font
 from trezor.ui.screen import with_title, Navigation
 from trezor.ui.component import HStack, LabeledText
 
@@ -58,6 +58,17 @@ def EVM(chain_id:int):
             # cache `receive_address` and `airgap_address`, lazy loaded
             self._receive_address = None
             self._airgap_address = None
+            #背景底图
+            background = lv.obj(self)
+            background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+            background.set_width(432)
+            background.set_height(708)
+            background.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
+            # background.set_style_border_color(lv.color_hex(0x000000), lv.PART.MAIN)  # 设置边框颜色为黑色
+            background.set_style_border_width(0, lv.PART.MAIN)  # 设置边框宽度为0
+            background.align(lv.ALIGN.TOP_MID, 0, 25)
+            # 将背景图移动到最底层
+            background.move_background()
 
             self.set_title(self.get_name())
 
@@ -68,10 +79,11 @@ def EVM(chain_id:int):
             # default is `receive` state
             self.state = "receive"
 
-            # qr code
+            # 二维码
             self.container = self.add(lv.obj)
             self.container.add_style(theme.Styles.container, 0)
             self.container.set_height(QRCODE_SIZE + 32)
+            self.container.set_style_pad_bottom(50, lv.PART.MAIN)
             self._qrcode_view: lv.qrcode = None
 
             # a tip
@@ -79,17 +91,26 @@ def EVM(chain_id:int):
             self.tip.set_width(440)
             self.tip.set_long_mode(lv.label.LONG.WRAP)
             self.tip.set_text(i18n.Text.tap_switch_to_airgap)
+            self.tip.set_style_pad_top(-10, lv.PART.MAIN)
+            self.tip.set_style_pad_left(10, lv.PART.MAIN)
+            self.tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
             # address
             self.address_view = self.add(LabeledText)
             self.address_view.set_label(i18n.Text.address)
             self.address_view.set_text("")
+            self.address_view.set_style_pad_top(0, lv.PART.MAIN)
+            self.address_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+            self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
             # set_text later
 
             # path
             path_view = self.add(LabeledText)
             path_view.set_label(i18n.Text.path)
             path_view.set_text(self.get_path())
+            path_view.set_style_pad_top(0, lv.PART.MAIN)
+            path_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+            path_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         def on_loaded(self):
             super().on_loaded()
@@ -114,7 +135,7 @@ def EVM(chain_id:int):
         def qrcode_view(self) -> lv.qrcode:
             if self._qrcode_view:
                 return self._qrcode_view
-            self._qrcode_view = lv.qrcode(self.container, 400, colors.DS.BLACK, colors.DS.WHITE)
+            self._qrcode_view = lv.qrcode(self.container, 300, colors.DS.BLACK, colors.DS.WHITE)
             self._qrcode_view.set_style_border_width(16, lv.PART.MAIN)
             self._qrcode_view.set_style_border_color(colors.DS.WHITE, lv.PART.MAIN)
             self._qrcode_view.center()
