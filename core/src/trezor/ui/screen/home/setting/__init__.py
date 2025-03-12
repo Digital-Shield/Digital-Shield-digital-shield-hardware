@@ -21,7 +21,7 @@ class SettingApp(with_title(Navigation)):
         self.content: HStack
         self.content.set_style_pad_left(16, lv.PART.MAIN)
         self.content.set_style_pad_right(16, lv.PART.MAIN)
-
+        self.content.set_style_pad_top(20, lv.PART.MAIN)
         # brightness
         from .brightness import Brightness
         Brightness(self.content)
@@ -85,8 +85,8 @@ class Item(VStack):
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
         self.icon = lv.img(self)
         self.icon.set_src(icon)
-        # self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
-        # self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
+        self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
+        self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
 
         self.label = lv.label(self)
         self.label.set_flex_grow(1)
@@ -139,7 +139,7 @@ __OPTION_VALUE_CHANGED = lv.event_register_id()
 class OptionsItem(SampleItem):
     def __init__(self, parent, text, icon):
         super().__init__(parent, text, icon)
-    
+
         # current option
         self.option = lv.label(self)
         text = self.current()

@@ -1,5 +1,5 @@
 import lvgl as lv
-
+from storage import device
 from . import manager
 from trezor.ui import Style, font
 from trezor import loop, log
@@ -20,12 +20,16 @@ class Screen(lv.obj):
 
     def __init__(self):
         super().__init__()
-
+        self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
+        wallpaper = device.get_homescreen()
+        if wallpaper:  # 判断 `wallpaper` 是否存在
+            self.set_style_bg_img_src(wallpaper, 0)
+        else:
+            self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
         # maybe speedup if not use background image
-        if __USE_BACKGROUND_IMAGE__:
-            self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
+        # if __USE_BACKGROUND_IMAGE__:
+        #     self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
 
-       
         # an empty content view, this is the root of `all` user UI components
         # almost all
         # default content is self
@@ -49,6 +53,7 @@ class Screen(lv.obj):
         )
         self.add_event_cb(lambda _: self.on_unloaded(), lv.EVENT.SCREEN_UNLOADED, None)
         self.add_event_cb(lambda _: self.on_deleting(), lv.EVENT.DELETE, None)
+
 
     def create_content(self, cls: Type[Widget]):
         """

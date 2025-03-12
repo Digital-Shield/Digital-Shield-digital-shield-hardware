@@ -34,15 +34,13 @@ class HomeScreen(Screen):
     def __init__(self):
         super().__init__()
         self.set_style_pad_top(64, lv.PART.MAIN)
-        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
-
         tip = lv.label(self)
         tip.set_text(i18n.Tip.swipe_down_to_close)
         tip.align(lv.ALIGN.TOP_MID, 0, -32)
         tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
 
         self.add_event_cb(self.on_swipe_down, events.SWIPEDOWN, None)
-        self.add_event_cb
+        self.add_event_cb(self.on_change_wallpaper, events.WALLPAPER_CHANGED, None)
 
        # apps
         self.create_content(VStack)# 创建内容
@@ -52,8 +50,7 @@ class HomeScreen(Screen):
         self.content.set_style_pad_top(50, lv.PART.MAIN)  # 设置顶部填充
         self.content.set_style_pad_row(30, lv.PART.MAIN)  # 设置行间距
         self.content.align(lv.ALIGN.TOP_MID, 0, 0)# 设置位置
-
-
+        
         apps = [
             # account
             {
