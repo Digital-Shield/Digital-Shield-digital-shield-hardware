@@ -187,7 +187,8 @@ class Tip:
 class Text:
     tap_to_unlock = "Tap to unlock"
     unlocking = "Unlocking device ..."
-    str_words = "#18794E {}# words"
+    # str_words = "#18794E {}# words"
+    str_words = "#FFFFFF {}# words"
     backup_manual = "write down mnemonic and store it safely"
     check_manual = "click mnemonic in the correct order"
     backup_verified = "Your mnemonic has been backed up. Please store it offline in a safe place and never share it with anyone."

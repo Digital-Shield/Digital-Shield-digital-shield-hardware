@@ -149,7 +149,8 @@ class MnemonicCheck(base(Navigation)):
 class MnemonicInput(base(Navigation)):
     def __init__(self, count):
         super().__init__()
-        self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
+        # self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
+        self.set_title(i18n.Title.enter_mnemonic)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)

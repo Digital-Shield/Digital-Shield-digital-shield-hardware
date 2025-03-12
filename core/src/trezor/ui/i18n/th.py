@@ -147,7 +147,8 @@ class Title:
 class Text:
     tap_to_unlock = "터치하여 잠금 해제"
     unlocking = "장치를 해제하는 중..."
-    str_words = "#18794E {}# 개의 단어"
+    # str_words = "#18794E {}# 개의 단어"
+    str_words = "#FFFFFF {}# 개의 단어"
     backup_manual = "니모닉을 종이에 적어 안전한 곳에 보관하십시오"
     check_manual = "아래 단어를 순서대로 클릭하십시오"
     backup_verified = "니모닉 백업이 완료되었습니다. 다른 사람과 공유하지 마십시오"

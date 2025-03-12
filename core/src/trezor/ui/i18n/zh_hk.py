@@ -147,7 +147,8 @@ class Title:
 class Text:
     tap_to_unlock = "點擊以解鎖"
     unlocking = "正在解鎖裝置..."
-    str_words = "#18794E {}# 個單詞"
+    # str_words = "#18794E {}# 個單詞"
+    str_words = "#FFFFFF {}# 個單詞"
     backup_manual = "手動寫下助記詞並存放在安全的地方"
     check_manual = "按順序依次點擊下面的單詞"
     backup_verified = "您已完成助記詞的備份，請妥善保存，不要與任何人分享"
