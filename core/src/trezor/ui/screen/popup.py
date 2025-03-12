@@ -19,7 +19,7 @@ class Popup(Modal):
 
         self.create_content(HStack)
         self.content: HStack
-        self.add_style(Styles.board, lv.PART.MAIN)
+        self.add_style(Styles.popup_board, lv.PART.MAIN)
 
         self.content.items_center()
         self.content.center()
@@ -32,7 +32,7 @@ class Popup(Modal):
         self.text.set_text(operating)
         self.text_color(lv.color_hex(0xFFFFFF))  
         # auto close after 1.5 seconds
-        self.auto_close_timeout = 1500
+        self.auto_close_timeout = 2500
 
     def text_color(self, color):
         self.text.set_style_text_color(color, 0)

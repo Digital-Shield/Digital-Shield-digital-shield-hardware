@@ -165,6 +165,11 @@ class Styles:
         .bg_opa(lv.OPA.TRANSP)
         .radius(16)
     )
+    popup_board= (
+        Style()
+        .pad_all(16)
+        .bg_opa(lv.OPA.COVER)
+    )
     title_text = (
         Style()
         .text_font(font.Bold.SCS30)
