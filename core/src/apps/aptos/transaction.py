@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
 from .account_address import AccountAddress
-from .bcs import Deserializable, Serializable
-from .bcs import Deserializer, Serializer
+from ..common.bcs import Deserializable, Serializable
+from ..common.bcs import Deserializer, Serializer
 from .type_tag import TypeTag
 
 if TYPE_CHECKING:
