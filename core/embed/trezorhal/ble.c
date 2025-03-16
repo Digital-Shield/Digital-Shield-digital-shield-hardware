@@ -212,19 +212,7 @@ void ble_refresh_dev_info(void) {
   }
 }
 
-void ble_power_init() {
-  GPIO_InitTypeDef gpio;
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  gpio.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio.Pull = GPIO_PULLDOWN;
-  gpio.Speed = GPIO_SPEED_LOW;
-  gpio.Pin = GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOD, &gpio);
-  // only init, not power on
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET);
-}
-
-void ble_power_on() {
+void ble_function_on() {
   BLE_POWER_ON();
   spi_slave_init();
   ble_usart_init();
@@ -232,7 +220,7 @@ void ble_power_on() {
   ble_connect = true;
 }
 
-void ble_power_off() {
+void ble_function_off() {
   BLE_POWER_OFF();
   spi_slave_deinit();
   ble_usart_deinit();

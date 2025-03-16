@@ -161,8 +161,7 @@ int main(void) {
   display_clear();
 
   // power PIN have initialized in bootloader
-
-  ble_power_on();
+  ble_function_on();
 
   timer_init();
 

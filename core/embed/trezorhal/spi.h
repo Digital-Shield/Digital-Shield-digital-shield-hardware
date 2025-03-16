@@ -9,7 +9,7 @@
 #define SPI_BUF_MAX_IN_LEN (16 * 1024)
 #define SPI_BUF_MAX_OUT_LEN (3 * 1024)
 
-
+#define BLE_CTL_PIN_INIT() control_pin_init()
 #define BLE_RST_PIN_HIGH() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_SET)
 #define BLE_RST_PIN_LOW() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_RESET)
 
@@ -51,6 +51,7 @@ extern uint8_t spi_data_out[SPI_BUF_MAX_OUT_LEN];
 int32_t wait_spi_rx_event(int32_t timeout);
 int32_t wait_spi_tx_event(int32_t timeout);
 int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout);
+void control_pin_init();
 int32_t spi_slave_init();
 int32_t spi_slave_deinit();
 uint32_t spi_slave_poll(uint8_t *buf);
