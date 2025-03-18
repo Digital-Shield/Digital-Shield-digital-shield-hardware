@@ -29,7 +29,10 @@ class LabeledItem(HStack):
 
     def set_label(self, text: str):
         self.label.set_text(text)
-
+    def set_device_label(self, text: str):
+        self.label.set_text(text)
+        self.label.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)
         return self.item
@@ -50,3 +53,5 @@ class LabeledText(LabeledItem):
         self.item.set_text(text)
         self.item.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
        
+    def set_device_text(self, text: str):
+        self.item.set_text(text)

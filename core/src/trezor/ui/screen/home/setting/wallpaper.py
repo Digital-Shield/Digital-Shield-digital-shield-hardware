@@ -27,6 +27,7 @@ class Wallpaper(SampleItem):
 class WallpaperImage(lv.img):
     def __init__(self, parent):
         super().__init__(parent)
+        # self.set_style_pad_all(10, lv.PART.MAIN)
 
     def set_src(self, src : 'ImageSource'):
         super().set_src(src.thumbnail())
@@ -58,12 +59,10 @@ class WallpaperDetail(with_title(Navigation)):
         # self.content.set_align_items(lv.ALIGN.CENTER)
         self.content.add_style(
             Style()
-            .pad_left(16)
-            .pad_right(16)
-            .pad_top(25)
-            .pad_bottom(25)
-            .pad_column(25)
-            .pad_row(15)
+            .pad_all(25)
+            .pad_left(35)
+            .pad_column(45)
+            .pad_row(20)
             .bg_color(lv.color_hex(0x111126))
             .bg_opa(lv.OPA.COVER)
             .width(lv.pct(100))  # 占满宽度

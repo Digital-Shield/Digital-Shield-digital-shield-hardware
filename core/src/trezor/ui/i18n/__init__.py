@@ -13,7 +13,7 @@ languages = [
     Language('zh_hk', '繁體中文'),
     Language('th','한국어'),
     Language('ja','日本語'),
-    # Language('al','بالعربية'),
+    Language("al","بالعربية"),
     Language('yn','Tiếng Việt'),
 ]
 

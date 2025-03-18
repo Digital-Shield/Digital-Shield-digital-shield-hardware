@@ -85,8 +85,8 @@ class Item(VStack):
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
         self.icon = lv.img(self)
         self.icon.set_src(icon)
-        self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
-        self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
+        # self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
+        # self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
 
         self.label = lv.label(self)
         self.label.set_flex_grow(1)

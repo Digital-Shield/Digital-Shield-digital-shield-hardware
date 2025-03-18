@@ -44,8 +44,12 @@ class Guide:
     terms_describe_disclaimers = '提供的訊息不是財務建議。在做出任何決定前，請尋求專業建議。'
     terms_title_contact_us = '聯絡我們'
     terms_describe_contact_us = '如果您有任何疑問或疑慮，請給我們傳送電子郵件至support@digitshield.com'
+
+    device_label = "設備名称"
     device_title_firmware_version = '韌體版本'
     device_title_serial_number = '序號'
+    bluetooth_name = "藍牙名稱"
+    bluetooth_version = "藍牙版本"
     firmware_title_1 = '1.請確保裝置電量高於20%'
     firmware_title_2 = '2.使用USB-C線將裝置連結至電腦'
     firmware_title_3 = '3.單擊「韌體升級」'

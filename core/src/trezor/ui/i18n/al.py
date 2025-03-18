@@ -1,8 +1,7 @@
-#### Setting App
 class App:
     account = "الحساب"
     scan = "مسح الصفقات"
-    nft = "صالة عرض NFT"
+    nft = "صالة العرض NFT"
     guide = "تعليمات الاستخدام"
     security = "الأمان"
     setting = "الإعدادات"
@@ -16,16 +15,16 @@ class Setting:
     brightness = "سطوع الشاشة"
     auto_lock = "قفل تلقائي"
     auto_shutdown = "إيقاف تلقائي"
-    animation = "تحريك الانتقال"
+    animation = "رسوم انتقالية"
     wallpaper = "خلفية الشاشة"
     power_off = "إيقاف التشغيل"
     restart = "إعادة التشغيل"
 
 #### Security App
 class Security:
-    change_pin = "تغيير رمز PIN"
-    backup_mnemonic = "نسخ احتياطي للكلمات المميزة"
-    check_mnemonic = "فحص الكلمات المميزة"
+    change_pin = "تغيير الرقم السري"
+    backup_mnemonic = "نسخ احتياطي للكلمات المفردة"
+    check_mnemonic = "فحص الكلمات المفردة"
     wipe_device = "مسح الجهاز"
 
 #### guide App
@@ -33,84 +32,84 @@ class Guide:
     about = "حول Digit Shield"
     terms_of_use = 'شروط الاستخدام'
     device_info = 'معلومات الجهاز'
-    firmware_update = 'ترقية البرمجيات الثابتة'
+    firmware_update = 'تحديث البرنامج الثابت'
     terms_title_terms_us = 'شروط استخدام Digit Shield'
-    terms_describe_terms_us = 'للحصول على النسخة الكاملة لشروط الاستخدام، يرجى زيارة الرابط التالي:\n http://digitshield.com/terms'
+    terms_describe_terms_us = 'للوصول إلى النسخة الكاملة لشروط الاستخدام، يرجى زيارة الرابط التالي:\n http://digitshield.com/terms'
 
     terms_title_product_services = 'منتجات وخدمات Digit Shield'
-    terms_describe_product_services = 'محفظتنا المادية آمنة في إدارة العملات المشفرة'
+    terms_describe_product_services = 'تدير محافظنا المادية العملات المشفرة بأمان'
     terms_title_risks = ' المخاطر'
     terms_describe_risks = 'يرجى الانتباه إلى المخاطر المتعلقة بالعملات المشفرة والثغرات التقنية.'
     terms_title_disclaimers = 'إخلاء المسؤولية'
     terms_describe_disclaimers = 'المعلومات المقدمة ليست نصيحة مالية. يرجى طلب المشورة المهنية قبل اتخاذ أي قرار.'
     terms_title_contact_us = 'اتصل بنا'
-    terms_describe_contact_us = 'إذا كان لديك أي أسئلة أو مخاوف، يرجى إرسال بريد إلكتروني إلى support@digitshield.com'
+    terms_describe_contact_us = 'إذا كان لديك أي أسئلة أو مخاوف، فأرسل لنا بريدًا إلكترونيًا على support@digitshield.com'
     device_label = "اسم الجهاز"
-    device_title_firmware_version = 'إصدار البرمجيات الثابتة'
+    device_title_firmware_version = 'إصدار البرنامج الثابت'
     device_title_serial_number = 'الرقم التسلسلي'
     bluetooth_name = "اسم البلوتوث"
     bluetooth_version = "إصدار البلوتوث"
-    firmware_title_1 = '1. يرجى التأكد من أن بطارية الجهاز أكثر من 20%'
+    firmware_title_1 = '1. تأكد أن بطارية الجهاز أعلى من 20%'
     firmware_title_2 = '2. قم بتوصيل الجهاز بالكمبيوتر باستخدام كابل USB-C'
-    firmware_title_3 = '3. انقر على "ترقية البرمجيات الثابتة"'
+    firmware_title_3 = '3. انقر فوق "تحديث البرنامج الثابت"'
     firmware_title_caution = 'تحذير'
-    firmware_describe_caution = 'أثناء الترقية، يرجى التأكد من استقرار اتصال USB'
+    firmware_describe_caution = 'خلال التحديث، يرجى التأكد من توصيل USB'
 
 class Nft:
-    nft_item ="{} عنصر"
+    nft_item ="عنصر {}"
     nft_items ="{} عناصر"
 class Title:
-    enter_old_pin = "يرجى إدخال رمز PIN القديم"
-    enter_new_pin = "يرجى إدخال رمز PIN الجديد"
-    enter_pin = "يرجى إدخال رمز PIN"
-    enter_pin_again = "يرجى إدخال رمز PIN مرة أخرى"
+    enter_old_pin = "الرجاء إدخال الرقم السري القديم"
+    enter_new_pin = "الرجاء إدخال الرقم السري الجديد"
+    enter_pin = "الرجاء إدخال الرقم السري"
+    enter_pin_again = "أدخل الرقم السري مرة أخرى"
     select_language = "اختيار اللغة"
     create_wallet = "إنشاء محفظة"
     wallet = "محفظة"
-    import_wallet = "استيراد المحفظة"
-    restore_wallet = "استعادة المحفظة"
+    import_wallet = "استيراد محفظة"
+    restore_wallet = "استعادة محفظة"
     wallet_is_ready = "المحفظة جاهزة"
     select_word_count = "اختيار عدد الكلمات"
     wallet_security = "أمان المحفظة"
-    pin_security = "تلميح الأمان لرمز PIN"
-    mnemonic_security = "تلميح الأمان للكلمات المميزة"
-    backup_mnemonic = "نسخ احتياطي للكلمات المميزة"
-    enter_mnemonic = "يرجى إدخال الكلمات المميزة"
-    check_mnemonic = "فحص الكلمات المميزة"
+    pin_security = "تلميح الأمان للرقم السري"
+    mnemonic_security = "تلميح الأمان للكلمات المفردة"
+    backup_mnemonic = "نسخ احتياطي للكلمات المفردة"
+    enter_mnemonic = "الرجاء إدخال الكلمات المفردة"
+    check_mnemonic = "فحص الكلمات المفردة"
     success = "نجاح"
     warning = "تحذير"
     error = "خطأ"
-    verified = "اكتمل نسخ احتياطي للكلمات المميزة"
-    invalid_mnemonic = "الكلمات المميزة غير صالحة"
-    pin_not_match = "رمز PIN غير متطابق"
-    check_recovery_mnemonic = "فحص الكلمات المميزة للاستعادة"
-    mnemonic_not_match = "الكلمات المميزة غير متطابقة"
+    verified = "اكتمل نسخ احتياطي للكلمات المفردة"
+    invalid_mnemonic = "الكلمات المفردة غير صالحة"
+    pin_not_match = "الرقم السري غير متطابق"
+    check_recovery_mnemonic = "فحص الكلمات المفردة للاستعادة"
+    mnemonic_not_match = "الكلمات المفردة غير متطابقة"
     power_off = "إيقاف التشغيل"
     restart = "إعادة التشغيل"
     change_language = "تغيير اللغة"
     wipe_device = "مسح الجهاز"
-    bluetooth_pairing = "تزوج البلوتوث"
+    bluetooth_pairing = "توصيل البلوتوث"
     address="{} العنوان"
-    public_key = "{} المفتاح العمومي"
+    public_key = "{} المفتاح العام"
     xpub = "{} XPub"
     transaction = "{} الصفقة"
     transaction_detail = "تفاصيل الصفقة"
     confirm_transaction = "تأكيد الصفقة"
     confirm_message = "تأكيد الرسالة"
     signature = "نتيجة التوقيع"
-    wrong_pin = "رمز PIN خاطئ"
-    pin_changed = "تم تغيير رمز PIN"
-    pin_enabled = "تم تفعيل رمز PIN"
-    pin_disabled = "تم تعطيل رمز PIN"
+    wrong_pin = "الرقم السري خاطئ"
+    pin_changed = "تم تغيير الرقم السري"
+    pin_enabled = "تم تمكين الرقم السري"
+    pin_disabled = "تم تعطيل الرقم السري"
     unknown_token = "رمز غير معروف"
     view_data = "عرض البيانات"
     sign_message = "{} توقيع الرسالة"
     verify_message = "{} التحقق من الرسالة"
-    typed_data = "{} بيانات موstructured"
-    typed_hash = "{} هاش موstructured"
-    system_update = "ترقية النظام"
+    typed_data = "{} البيانات المنظمة"
+    typed_hash = "{} التجزئة المنظمة"
+    system_update = "تحديث النظام"
     entering_boardloader = "الدخول إلى Boardloader"
-    remove_credential = "إزالة البطاقة"
+    remove_credential = "حذف البطاقة"
     list_credentials = "سرد البطاقات"
     authorize_coinjoin = "تفويض CoinJoin"
     multisig_address_m_of_n = "{} عنوان التوقيع المتعدد\n({} من {})"
@@ -120,7 +119,7 @@ class Title:
     fido2_register = "تسجيل FIDO2"
     fido2_unregister = "إلغاء تسجيل FIDO2"
     fido2_authenticate = "مصادقة FIDO2"
-    fee_is_high = "رسوم عالية للغاية"
+    fee_is_high = "رسوم عالية"
     confirm_locktime = "تأكيد وقت القفل"
     view_transaction = "عرض الصفقة"
     x_confirm_payment = "{} تأكيد الدفع"
@@ -131,43 +130,43 @@ class Title:
     enable_passphrase = "تفعيل عبارة المرور"
     disable_passphrase = "تعطيل عبارة المرور"
     passphrase_source = "إعداد إدخال عبارة المرور"
-    enable_safety_checks ="تفعيل فحص الأمان"
-    disable_safety_checks ="تعطيل فحص الأمان"
+    enable_safety_checks ="تفعيل الفحوصات الأمنية"
+    disable_safety_checks ="تعطيل الفحوصات الأمنية"
     experiment_mode = "الوضع التجريبي"
     set_as_homescreen = "تعيين كشاشة رئيسية"
-    get_next_u2f_counter = "الحصول على عداد U2F التالي"
+    get_next_u2f_counter = "الحصول على العداد التالي لـ U2F"
     set_u2f_counter = "تعيين عداد U2F"
     encrypt_value = "تشفير البيانات"
     decrypt_value = "فك تشفير البيانات"
-    confirm_entropy = "تصدير Entropy"
+    confirm_entropy = "تصدير الكمية العشوائية"
     memo = "ملاحظة"
     import_credential = "استيراد البطاقة"
     export_credential = "تصدير البطاقة"
     asset = "الأصول"
     unimplemented = "لم يتم التنفيذ"
-
+    invalid_data="تنسيق البيانات غير صالح"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
-    tap_to_unlock = "انقر لل解锁"
-    unlocking = "جاري فك قفل الجهاز..."
-    # str_words = "#18794E {}# كلمة"
-    str_words = "#FFFFFF {}# كلمة"
-    backup_manual = "اكتب الكلمات المميزة يدويًا并存ها في مكان آمن"
+    tap_to_unlock = "انقر للفتح"
+    unlocking = "جاري فتح الجهاز..."
+    # str_words = "#18794E {}# words"
+    str_words = "#FFFFFF {}# كلمات"
+    backup_manual = "اكتب الكلمات المفردة يدويًا并存ها في مكان آمن"
     check_manual = "انقر على الكلمات أدناه بالترتيب"
-    backup_verified = "لقد قمت بنسخ الكلمات المميزة احتياطيًا، يرجى الحفاظ عليها جيدًا ولا تشاركها مع أي شخص"
-    backup_invalid = "الكلمات المميزة التي أدخلتها غير صحيحة، يرجى فحص الكلمات المميزة الاحتياطية ثم المحاولة مرة أخرى"
-    pin_not_match = "رمز PIN الذي أدخلته غير صحيح، يرجى المحاولة مرة أخرى"
+    backup_verified = "لقد أكملت نسخ احتياطي للكلمات المفردة، احفظها جيدًا ولا تشاركها مع أي شخص"
+    backup_invalid = "الكلمات المفردة التي أدخلتها غير صحيحة، يرجى فحص نسخة النسخ الاحتياطي للكلمات المفردة ثم المحاولة مرة أخرى"
+    pin_not_match = "الرقم السري الذي أدخلته غير صحيح، يرجى المحاولة مرة أخرى"
     please_wait = "يرجى الانتظار"
     wiping_device = "جاري مسح بيانات الجهاز..."
-    create_wallet = "إنشاء محفظة جديدة بتحديد مجموعة جديدة من الكلمات المميزة"
-    restore_wallet = "استعادة المحفظة من الكلمات المميزة الاحتياطية"
-    restore_mnemonic_match = "الكلمات المميزة متطابقة، نسخة الكلمات المميزة الاحتياطية صحيحة"
+    create_wallet = "إنشاء مجموعة جديدة من الكلمات المفردة لإنشاء محفظة جديدة"
+    restore_wallet = "استعادة المحفظة من الكلمات المفردة التي قمت بنسخها احتياطيًا"
+    restore_mnemonic_match = "تطابق الكلمات المفردة التي أدخلتها، نسخة النسخ الاحتياطي للكلمات المفردة صحيحة"
     restore_success = "استعادة المحفظة بنجاح"
-    create_success = "لقد تم نسخ الكلمات المميزة احتياطيًا بنجاح، تم إنشاء المحفظة"
-    check_recovery_mnemonic = "يرجى فحص الكلمات المميزة للتأكد من أنها متطابقة تمامًا"
-    invalid_recovery_mnemonic = "الكلمات المميزة التي أدخلتها غير صحيحة، يرجى فحص الكلمات المميزة ثم المحاولة مرة أخرى"
-    check_recovery_not_match = "الكلمات المميزة التي أدخلتها صحيحة، لكنها لا تتطابق مع الكلمات المميزة في الجهاز"
+    create_success = "لقد تم نسخ احتياطي للكلمات المفردة بنجاح، تم إنشاء المحفظة"
+    check_recovery_mnemonic = "يرجى فحص الكلمات المفردة، تأكيد أنها تطابق تمامًا"
+    invalid_recovery_mnemonic = "الكلمات المفردة التي أدخلتها غير صالحة، يرجى فحص الكلمات المفردة ثم المحاولة مرة أخرى"
+    check_recovery_not_match = "الكلمات المفردة التي أدخلتها صالحة، لكنها لا تطابق الكلمات المفردة الموجودة في الجهاز"
     shutting_down = "جاري إيقاف التشغيل..."
     restarting = "جاري إعادة التشغيل..."
     never = "أبدًا"
@@ -175,110 +174,113 @@ class Text:
     seconds = "ثواني"
     minute = "دقيقة"
     minutes = "دقائق"
-    changing_language = "أنت بصدد تغيير اللغة\nتطبيق هذه الإعدادات سيؤدي إلى إعادة تشغيل الجهاز"
-    change_pin = "حدد رمز PIN بطول 4~16 رقمًا لحماية جهازك"
-    wipe_device = "استعادة الجهاز إلى حالة المصنع.\nتحذير: سيؤدي هذا إلى مسح جميع بيانات جهازك."
+    changing_language = "أنت بصدد تغيير اللغة\nسيؤدي تطبيق هذه الإعدادات إلى إعادة تشغيل الجهاز"
+    change_pin = "حدد رقم سري يتراوح بين 4 إلى 16 رقمًا لحماية جهازك"
+    wipe_device = "استعادة الجهاز إلى حالة المصنع.\nتحذير:这将 يمسح جميع البيانات من جهازك."
     wipe_device_check = [
-        "مسح الجهاز سيؤدي إلى حذف جميع البيانات",
+        "مسح الجهاز سيحذف جميع البيانات",
         "لن تتمكن من استعادة البيانات",
-        "لقد قمت بنسخ الكلمات المميزة احتياطيًا",
+        "لقد قمت بنسخ احتياطي للكلمات المفردة",
     ]
-    wipe_device_success = "لقد تم مسح بيانات الجهاز بنجاح\n جاري إعادة تشغيل الجهاز ..."
-    bluetooth_pair = "يرجى إدخال رمز التزوج على جهازك"
-    bluetooth_pair_failed = "فشل زوجة البلوتوث"
-    path = "مسار التفريع:"
+    wipe_device_success = "تم مسح بيانات الجهاز بنجاح\n جاري إعادة تشغيل الجهاز ..."
+    bluetooth_pair = "يرجى إدخال رمز التوصيل على جهازك"
+    bluetooth_pair_failed = "فشل توصيل البلوتوث"
+    path = "مسار التوريث:"
     chain_id = "Chain ID:"
     send = "إرسال"
     to = "إلى"
     amount = "المبلغ"
     from_ = "المرسل"
     receiver = "المستقبل"
-    fee = "رسوم"
-    max_fee = "رسوم القمة"
-    max_priority_fee_per_gas = "رسوم الأولوية القصوى لكل غاز"
-    max_fee_per_gas = "رسوم الصفقة لكل غاز"
-    gas_price = "سعر الغاز"
+    fee = "الرسوم"
+    max_fee = "الرسوم القصوى"
+    max_priority_fee_per_gas = "الرسوم القصوى للغاز"
+    max_fee_per_gas = "الحد الأقصى لرسوم الغاز لكل وحدة غاز"
+    max_gas_limit = "الحد الأقصى لكمية الغاز"
+    gas_unit_price= "سعر وحدة الغاز"
+    gas_price = "سعر الوقود"
     total = "المجموع"
-    do_sign_this_transaction = "هل تريد توقيع هذه الصفقة {}؟"
+    do_sign_this_transaction = "هل تريد توقيع هذه الصفقة {}"
     transaction_signed = "تم توقيع الصفقة"
     address = 'العنوان:'
-    public_key = "المفتاح العمومي:"
+    public_key = "المفتاح العام:"
     xpub = "XPub:"
     unknown_tx_type = "نوع الصفقة غير معروف، يرجى فحص بيانات الإدخال"
+    unknown_function = "الوظيفة غير معروفة"
     use_app_scan_this_signature = "يرجى استخدام تطبيق المحفظة لمسح نتيجة التوقيع"
     internal_error = "خطأ داخلي"
-    tap_switch_to_airgap = "انقر على رمز الاستجابة السريعة للتبديل إلى عرض عنوان Airgap"
-    tap_switch_to_receive = "انقر على رمز الاستجابة السريعة للتبديل إلى عرض عنوان استلام المحفظة"
-    incorrect_pin_times_left = "رمز PIN غير صحيح، عدد المحاولات المتبقية {}"
-    incorrect_pin_last_time = "رمز PIN غير صحيح، هذه هي المحاولة الأخيرة"
-    wrong_pin = "رمز PIN الذي أدخلته غير صحيح"
-    seedless = "لا توجد بذرة"
+    tap_switch_to_airgap = "انقر على رمز QR للتبديل إلى عرض عنوان Airgap"
+    tap_switch_to_receive = "انقر على رمز QR للتبديل إلى عرض عنوان الاستلام"
+    incorrect_pin_times_left = "الرقم السري غير صحيح، تبقى {} محاولات"
+    incorrect_pin_last_time = "الرقم السري غير صحيح، هذه هي المحاولة الأخيرة"
+    wrong_pin = "الرقم السري الذي أدخلته غير صحيح"
+    seedless = "نقص البذور"
     backup_failed = "فشل النسخ الاحتياطي!"
     need_backup = "يحتاج إلى النسخ الاحتياطي!"
-    pin_not_set = "لم يتم تعيين رمز PIN!"
+    pin_not_set = "لم يتم تعيين الرقم السري!"
     experimental_mode = "الوضع التجريبي"
-    pin_change_success = "تم تغيير رمز PIN بنجاح"
-    pin_enable_success = "تم تفعيل رمز PIN بنجاح"
-    pin_disable_success = "تم تعطيل رمز PIN بنجاح"
+    pin_change_success = "تم تغيير الرقم السري بنجاح"
+    pin_enable_success = "تم تمكين الرقم السري بنجاح"
+    pin_disable_success = "تم تعطيل الرقم السري بنجاح"
     contract = "العقد:"
-    new_contract = "عقد جديد؟"
+    new_contract = "عقد جديد?"
     bytes_ = "{} بايت"
     message = "الرسالة:"
     no_message = "لا تحتوي على رسالة"
     contains_x_key = "تحتوي على {} مفتاح"
-    array_of_x_type = "مصفوفة من نوع {} {}"
-    do_sign_712_typed_data = "هل تريد توقيع هذه الصفقة المstructured البيانات؟"
-    do_sign_typed_hash = "هل تريد توقيع هذه الصفقة المstructured هاش؟"
-    domain_hash = "هاش النطاق:"
-    message_hash = "هاش الرسالة:"
+    array_of_x_type = "نوع المصفوفة {} {}"
+    do_sign_712_typed_data = "هل تريد توقيع هذه الصفقة بالبيانات المنظمة؟"
+    do_sign_typed_hash = "هل تريد توقيع هذه الصفقة بالتجزئة المنظمة؟"
+    domain_hash = "تجزئة المجال:"
+    message_hash = "تجزئة الرسالة:"
     switch_to_update_mode = "التبديل إلى وضع التحديث"
     switch_to_boardloader = "التبديل إلى وضع Boardloader"
     list_credentials = "هل تريد تصدير معلومات البطاقات المخزنة على هذا الجهاز؟"
-    coinjoin_at_x = "هل ترغب في المشاركة في هذه الصفقة Coinjoin؟:\n{}"
-    signature_is_valid = "التوقيع صحيح"
-    signature_is_invalid = "التوقيع غير صحيح"
+    coinjoin_at_x = "هل تريد المشاركة في الصفقة Coinjoin التالية:\n{}"
+    signature_is_valid = "التوقيع صالح"
+    signature_is_invalid = "التوقيع غير صالح"
     u2f_already_registered = "U2F مسجل بالفعل"
     u2f_not_registered = "U2F غير مسجل"
-    fido2_already_registered_x = "FIDO2 مسجل بالفعل {}"
+    fido2_already_registered_x = "FIDO2 مسجل {}"
     fido2_verify_user = "تحقق من المستخدم FIDO2"
-    device_already_registered_x = "الجهاز مسجل بالفعل {}"
-    device_verify_user = "تحقق من المستخدم على الجهاز"
+    device_already_registered_x = "الجهاز مسجل {}"
+    device_verify_user = "تحقق من المستخدم الجهاز"
     finalize_transaction = "إكمال الصفقة"
     meld_transaction = "دمج الصفقة"
     update_transaction = "تحديث الصفقة"
-    fee_is_unexpectedly_high = "رسوم عالية للغاية"
-    change_count = "عدد القطع المتبقية"
+    fee_is_unexpectedly_high = "الرسوم مرتفعة للغاية"
+    change_count = "عدد الفكة"
     locktime_will_have_no_effect = "لن يكون لوقت القفل أي تأثير"
     confirm_locktime_for_this_transaction = "تأكيد وقت القفل لهذه الصفقة"
     block_height = "ارتفاع الكتلة"
     time = "الوقت"
     amount_increased = "زيادة المبلغ"
-    amount_decreased = "انخفاض المبلغ"
-    fee_unchanged = "رسوم بدون تغيير"
+    amount_decreased = "تقليل المبلغ"
+    fee_unchanged = "لم تتغير الرسوم"
     fee_increased = "زيادة الرسوم"
-    fee_decreased = "انخفاض الرسوم"
-    your_spend = "مصروفاتك"
+    fee_decreased = "تقليل الرسوم"
+    your_spend = "نفقاتك"
     change_label_to_x = "تغيير التسمية إلى {}"
     enable_passphrase = "هل تريد تفعيل تشفير عبارة المرور؟"
     disable_passphrase = "هل تريد تعطيل تشفير عبارة المرور؟"
     enable_passphrase_always = "هل تريد دائمًا إدخال عبارة المرور على هذا الجهاز؟"
-    revoke_enable_passphrase_always = "هل تريد سحب إعداد دائم إدخال عبارة المرور على هذا الجهاز؟"
-    auto_lock_x = "هل تريد قفل الجهاز تلقائيًا بعد {}؟"
-    enable_safety_checks = "هل تريد تنفيذ فحص أمان صارم؟ سيوفر هذا حماية أكثر شمولاً."
-    disable_safety_checks = "هل تريد تعطيل فحص الأمان؟ قبل المتابعة، يرجى معرفة المخاطر المحتملة المرتبطة بهذا السلوك."
+    revoke_enable_passphrase_always = "هل تريد سحب تفعيل إدخال عبارة المرور دائمًا؟"
+    auto_lock_x = "هل أنت متأكد من رغبتك في قفل الجهاز تلقائيًا بعد {}؟"
+    enable_safety_checks = "هل تريد تنفيذ فحوصات أمنية صارمة؟ سيوفر ذلك حماية أكثر شمولاً."
+    disable_safety_checks = "هل أنت متأكد من رغبتك في تعطيل الفحوصات الأمنية؟ قبل المتابعة، يرجى العلم بالمخاطر الأمنية المحتملة لهذا الإجراء."
     enable_experiment_mode = "هل تريد تفعيل الوضع التجريبي؟"
-    set_as_homescreen = "هل تريد تغيير الشاشة الرئيسية؟"
-    replace_homescreen = "هل تريد استبدال الشاشة الرئيسية؟ سيؤدي هذا إلى حذف ورقة الحائط التي تم تحميلها أول مرة."
-    get_next_u2f_counter = "هل تريد الحصول على عداد U2F التالي؟"
-    set_u2f_counter_x = "هل تريد تعيين عداد U2F إلى {}؟"
-    confirm_entropy = "هل تريد تصدير Entropy؟ قبل المتابعة، يرجى فهم ما تفعله!"
+    set_as_homescreen = "هل أنت متأكد من رغبتك في تغيير الشاشة الرئيسية؟"
+    replace_homescreen = "هل أنت متأكد من رغبتك في استبدال الشاشة الرئيسية؟ سيؤدي ذلك إلى حذف أول ورقة حائط تم رفعها."
+    get_next_u2f_counter = "هل تريد الحصول على العداد التالي لـ U2F؟"
+    set_u2f_counter_x = "هل أنت متأكد من رغبتك في تعيين عداد U2F على {}؟"
+    confirm_entropy = "هل أنت متأكد من رغبتك في تصدير الكمية العشوائية؟ قبل المتابعة، يرجى العلم بما تفعله!"
     bandwidth = "عرض النطاق"
     energy = "الطاقة"
     sender = "المرسل"
     recipient = "المستقبل"
     resource = "المورد"
-    frozen_balance = "الرصيد المجمّد"
-    unfrozen_balance = "الرصيد غير المجمّد"
+    frozen_balance = "الرصيد المجمد"
+    unfrozen_balance = "الرصيد غير المجمد"
     delegated_balance = "الرصيد المفوض"
     undelegated_balance = "الرصيد غير المفوض"
     you_are_freezing = "أنت بصدد تجميد الأصول"
@@ -288,84 +290,74 @@ class Text:
     duration = "المدة"
     lock = "قفل"
     unlock = "فك القفل"
+    all = "الكل"
+    source = "المصدر"
+    tip = "تلميح"
+    keep_alive = "Keep alive"
+    invalid_ur = "نوع رمز QR غير مدعوم، يرجى المحاولة مرة أخرى"
+    sequence_number = "رقم التسلسل"
+    expiration_time = "وقت الانتهاء"
+    argument_x = "المعامل #{}"
 
 class Tip:
-    swipe_down_to_close = "اسحب لأسفل لإغلاق"
-
+    swipe_down_to_close = "اسحب لأسفل للإغلاق"
 class Button:
     done = "تم"
-    ok = "موافق"
+    ok = "حسنًا"
     confirm = "تأكيد"
     reject = "رفض"
     next = "التالي"
     cancel = "إلغاء"
-    redo = "إعادة"
+    redo = "إعادة إنشاء"
     continue_ = "متابعة"
     try_again = "إعادة المحاولة"
     power_off = "إيقاف التشغيل"
     restart = "إعادة التشغيل"
-    hold = "الضغط"
+    hold = "اضغط"
     address = "العنوان"
-    qr_code = "رمز الاستجابة السريعة"
+    qr_code = "رمز QR"
     view_detail = "عرض التفاصيل"
-    hold_to_sign = "الضغط للتوقيع"
-    hold_to_wipe = "الضغط لمسح"
+    hold_to_sign = "اضغط للتوقيع"
+    hold_to_wipe = "اضغط لمسح"
     receive = "عنوان الاستلام"
     airgap = "Airgap"
-    sign = "التوقيع"
-    verify = "التحقق"
+    sign = "توقيع"
+    verify = "تحقق"
     view_full_array = "عرض المصفوفة الكاملة"
     view_full_struct = "عرض الهيكل الكامل"
     view_full_message = "عرض الرسالة الكاملة"
     view_data = "عرض البيانات"
     view_more = "عرض المزيد"
-
 class WalletSecurity:
-    header = "اكتب الكلمات المميزة على ورقة وقم بتخزينها في مكان آمن"
+    header = "الكلمات المفردة هي مجموعة من الكلمات تستخدم لاستعادة أصول المحفظة، امتلاك الكلمات المفردة يعني أنه يمكنك استخدام أصولك، احفظها جيدًا"
+
     tips = [
-        {
-            "level": "info",
-            "msgs": [
-                "#00001F يجب تخزين الكلمات المميزة بشكل آمن#",
-                "#18794E * في خزنة مصرفية#",
-                "#18794E * في خزنة#",
-                "#18794E * في مواقع سرية متعددة#",
-            ]
-        },
-        {
-            "level": "warning",
-            "msgs": [
-                "#00001F يجب الانتباه#",
-                "#CD2B31 * تذكر الكلمات المميزة#",
-                "#CD2B31 * لا تفقدها#",
-                "#CD2B31 * لا تشاركها مع الآخرين#",
-                "#CD2B31 * لا تقم بتخزينها على الإنترنت#",
-                "#CD2B31 * لا تقم بتخزينها على الكمبيوتر#",
-            ]
-        },
+        "1. يرجى فحص سلامة البيئة، التأكد من عدم وجود مراقبين أو كاميرات",
+        "2. يرجى نسخ الكلمات المفردة بالترتيب الصحيح، ولا تشارك الكلمات المفردة مع أي شخص",
+        "3. يرجى حفظ الكلمات المفردة في مكان آمن دون اتصال بالإنترنت، لا تقم بنسخ الكلمات المفردة إلكترونيًا، ولا تقم بتحميلها على الإنترنت",
     ]
 
 class MnemonicSecurity:
-    header = "الكلمات المميزة هي مجموعة من الكلمات تستخدم لاستعادة أصول المحفظة، امتلاك الكلمات المميزة يعني أنك تستطيع استخدام أصولك، يرجى الحفاظ عليها جيدًا"
+    header = "الكلمات المفردة هي مجموعة من الكلمات تستخدم لاستعادة أصول المحفظة، امتلاك الكلمات المفردة يعني أنه يمكنك استخدام أصولك، احفظها جيدًا"
 
     tips = [
-        "1. يرجى فحص سلامة البيئة والتأكد من عدم وجود مشاهد أو كاميرات",
-        "2. يرجى نسخ الكلمات المميزة بالترتيب الصحيح ولا تشاركها مع الآخرين",
-        "3. يرجى تخزين الكلمات المميزة في مكان آمن دون اتصال بالإنترنت ولا تقم بتخزينها إلكترونيًا",
+        "1. يرجى فحص سلامة البيئة، التأكد من عدم وجود مراقبين أو كاميرات",
+        "2. يرجى نسخ الكلمات المفردة بالترتيب الصحيح، ولا تشارك الكلمات المفردة مع أي شخص",
+        "3. يرجى حفظ الكلمات المفردة في مكان آمن دون اتصال بالإنترنت، لا تقم بنسخ الكلمات المفردة إلكترونيًا، ولا تقم بتحميلها على الإنترنت",
     ]
 
 class PinSecurity:
-    header = "رمز PIN هو كلمة المرور للوصول إلى الجهاز، يستخدم للتحقق من الوصول إلى الجهاز الحالي. يرجى استخدام رمز PIN بشكل صحيح وفقًا للإرشادات التالية"
+    header = "الرقم السري هو كلمة المرور للوصول إلى الجهاز، يستخدم للسماح بالوصول إلى الجهاز الحالي. يرجى استخدام تلميحات الأمان التالية لاستخدام الرقم السري بشكل صحيح"
     tips = [
-        "1. يرجى فحص سلامة البيئة عند تعيين أو إدخال رمز PIN والتأكد من عدم وجود مشاهد أو كاميرات",
-        "2. يرجى تعيين رمز PIN بطول 4~16 رقمًا قويًا، تجنب استخدام الأرقام المتكررة أو المتتالية",
-        "3. عدد المحاولات القصوى لرمز PIN هو 10 مرات، عند الخطأ 10 مرات على التوالي سيتم إعادة تعيين الجهاز",
-        "4. يرجى الحفاظ على رمز PIN جيدًا ولا تشاركه مع الآخرين",
+        "1. عند تعيين أو إدخال الرقم السري، يرجى فحص سلامة البيئة، التأكد من عدم وجود مراقبين أو كاميرات",
+        "2. يرجى تعيين رقم سري قوي يتراوح بين 4 إلى 16 رقمًا، تجنب استخدام الأرقام المتتالية أو المتكررة",
+        "3. عدد المحاولات القصوى للرقم السري هو 10 مرات، عند الخطأ 10 مرات، سيتم إعادة تعيين الجهاز",
+        "4. يرجى الاحتفاظ بالرقم السري جيدًا، ولا تشارك الرقم السري مع أي شخص",
     ]
 
 class Solana:
-    ata_reciver = "المستقبل (حساب العملة المميزة المرتبط)"
-    ata_sender = "المرسل (حساب العملة المميزة المرتبط)"
-    source_owner = "مالك التوقيع"
+    ata_reciver = "المستقبل (حساب العملة المشفرة المرتبط)"
+    ata_sender = "المرسل (حساب العملة المشفرة المرتبط)"
+    source_owner = "مؤشر الصفقة"
     fee_payer = "دافع الرسوم"
 

@@ -41,7 +41,7 @@ class LanguageScreen(base(Modal)):
             {"title" : "繁體中文", "icon" : None},
             {"title" : "한국어", "icon" : None},
             {"title" : "日本語", "icon" : None},
-            # {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
             {"title" : "Tiếng Việt", "icon" : None},
         ]
 

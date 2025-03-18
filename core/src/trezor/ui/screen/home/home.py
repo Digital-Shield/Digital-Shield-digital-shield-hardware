@@ -33,6 +33,14 @@ class Developing(with_title(Navigation)):
 class HomeScreen(Screen):
     def __init__(self):
         super().__init__()
+        self.set_style_bg_img_src(None, lv.PART.MAIN)  # 取消背景图
+        # self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
+        wallpaper = device.get_homescreen()
+        if wallpaper:  # 判断 `wallpaper` 是否存在
+            self.set_style_bg_img_src(wallpaper, 0)
+        else: 
+            self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+        
         self.set_style_pad_top(64, lv.PART.MAIN)
         tip = lv.label(self)
         tip.set_text(i18n.Tip.swipe_down_to_close)
@@ -99,6 +107,7 @@ class HomeScreen(Screen):
         self.dismiss()
 
     def on_change_wallpaper(self, event):
+        # self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         wallpaper = device.get_homescreen()
         self.set_style_bg_img_src(wallpaper, 0)
 
@@ -174,9 +183,9 @@ class Item(HStack):
         title = lv.label(self)
         title.set_text(label)
         title.set_height(60)
-        title.set_style_pad_top(12, lv.PART.MAIN)  # 调小此值，减少文字与图片之间的间距
+        # title.set_style_pad_top(12, lv.PART.MAIN)  # 调小此值，减少文字与图片之间的间距
         title.align(lv.ALIGN.OUT_BOTTOM_MID, 0, -2)  # 减小 y 轴偏移
-        title.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
+        # title.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
         title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         self.on_click: Callable[["Item"], None] = None
 
