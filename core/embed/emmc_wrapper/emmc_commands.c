@@ -681,7 +681,8 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         ui_install_ble_confirm();
         ui_fadein();
 
-        int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
+        // int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
+        int response = INPUT_CONFIRM;
         if ( INPUT_CONFIRM != response )
         {
             // We could but should not remove the file if user cancels
@@ -705,29 +706,28 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         ui_fadein();
 
         // enter dfu
-        ExecuteCheck_MSGS_ADV(bluetooth_enter_dfu(), true, {
-            emmc_fs_file_delete(msg_recv.path);
+        bool ret = bluetooth_enter_dfu();
+        if (!ret) {
+            // emmc_fs_file_delete(msg_recv.path);
             send_failure(iface_num, FailureType_Failure_ProcessError, "Bluetooth enter DFU failed!");
             return -6;
-        });
+        }
 
         // install
         uint8_t* p_init = (uint8_t*)bl_update_buffer + IMAGE_HEADER_SIZE;
         uint32_t init_data_len = p_init[0] + (p_init[1] << 8);
-        ExecuteCheck_MSGS_ADV(
-            bluetooth_update(
-                p_init + 4, init_data_len, bl_update_buffer + IMAGE_HEADER_SIZE + BLE_INIT_DATA_LEN,
-                file_hdr.codelen - BLE_INIT_DATA_LEN, ui_screen_progress_bar_update
-            ),
-            true,
-            {
-                emmc_fs_file_delete(msg_recv.path);
-                send_failure(
-                    iface_num, FailureType_Failure_ProcessError, "Update bluetooth firmware failed!"
-                );
-                return -6;
-            }
+        ret = bluetooth_update(
+            p_init + 4, init_data_len, bl_update_buffer + IMAGE_HEADER_SIZE + BLE_INIT_DATA_LEN,
+            file_hdr.codelen - BLE_INIT_DATA_LEN, ui_screen_progress_bar_update
         );
+
+        if (!ret) {
+            emmc_fs_file_delete(msg_recv.path);
+            send_failure(
+                iface_num, FailureType_Failure_ProcessError, "Update bluetooth firmware failed!"
+            );
+            return -6;
+        }
 
         // update progress (final)
         ui_screen_progress_bar_update(NULL, NULL, 100);

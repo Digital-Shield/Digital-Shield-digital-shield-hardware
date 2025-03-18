@@ -10,7 +10,7 @@ class PowerOff(SampleItem):
         super().__init__(parent, i18n.Setting.power_off, "A:/res/power-off-two.png")
         self.label.set_style_text_color(colors.DS.DANGER, lv.PART.MAIN)
 
-        enable = utils.power_source() == utils.POWER_SOURCE_BATTERY
+        enable = not utils.is_usb_connected()
         log.debug(__name__, f"power source: {'battery' if enable else 'USB'}")
         log.debug(__name__, f"power off is {'enabled' if enable else 'disabled'}")
         if enable:

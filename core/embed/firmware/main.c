@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "ble.h"
 #include STM32_HAL_H
 
 #include <stdint.h>
@@ -159,8 +160,8 @@ int main(void) {
 
   display_clear();
 
-  ble_usart_init();
-  spi_slave_init();
+  // power PIN have initialized in bootloader
+  ble_function_on();
 
   timer_init();
 

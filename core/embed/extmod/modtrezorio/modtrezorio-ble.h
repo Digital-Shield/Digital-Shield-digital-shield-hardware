@@ -62,7 +62,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_3(mod_trezorio_BLE_ctrl_obj,
 ///     Turn on the BLE.
 ///     """
 static mp_obj_t mod_trezorio_BLE_power_on(mp_obj_t self) {
-  ble_power_on();
+  ble_function_on();
   return mp_const_none;
 }
 
@@ -74,7 +74,7 @@ mod_trezorio_BLE_power_on);
 ///     Turn off the BLE.
 ///     """
 static mp_obj_t mod_trezorio_BLE_power_off(mp_obj_t self) {
-  ble_power_off();
+  ble_function_off();
   return mp_const_none;
 }
 

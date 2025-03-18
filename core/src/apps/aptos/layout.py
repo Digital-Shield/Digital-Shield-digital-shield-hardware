@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from .transaction import RawTransaction
 from .account_address import AccountAddress
-from .bcs import Deserializer
+from ..common.bcs import Deserializer
 from trezor.strings import format_amount, format_timestamp
 
 if TYPE_CHECKING:

@@ -732,10 +732,3 @@ void device_power_off(void) {
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
   printf("power off end ...\n");
 }
-
-PowerSource device_power_source(void) {
-  if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1) == GPIO_PIN_SET) {
-    return BATTERY_POWER;
-  }
-  return USB_POWER;
-}

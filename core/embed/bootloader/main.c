@@ -491,30 +491,33 @@ int main(void)
     random_delays_init();
     motor_init();
 
-    // #0 default is not powered by battery
+    // #0 hold system power pin
+    // 1. the device is powered, if user push `power button` then release
+    // 2. the device is not shutdown, if user connect USB then disconnect USB
     __HAL_RCC_GPIOC_CLK_ENABLE();
     GPIO_InitTypeDef sys_power_on;
     sys_power_on.Pin = GPIO_PIN_1;
     sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
     sys_power_on.Pull = GPIO_PULLDOWN;
     sys_power_on.Speed = GPIO_SPEED_MEDIUM;
+
+    // pull up power pin
     HAL_GPIO_Init(GPIOC, &sys_power_on);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
 
     // read PJ4 GPIO state, if high, device is powered by battery, otherwise powered by USB
-    __HAL_RCC_GPIOJ_CLK_ENABLE();
-    GPIO_InitTypeDef power_key;
-    power_key.Pin = GPIO_PIN_4;
-    power_key.Mode = GPIO_MODE_INPUT;
-    power_key.Pull = GPIO_NOPULL;
-    power_key.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOJ, &power_key);
-    if ( HAL_GPIO_ReadPin(GPIOJ, GPIO_PIN_4) != GPIO_PIN_RESET )
-    {
-        // powered by Battery
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
-    }
-    HAL_GPIO_DeInit(GPIOJ, GPIO_PIN_4);
+    // __HAL_RCC_GPIOJ_CLK_ENABLE();
+    // GPIO_InitTypeDef power_key;
+    // power_key.Pin = GPIO_PIN_4;
+    // power_key.Mode = GPIO_MODE_INPUT;
+    // power_key.Pull = GPIO_NOPULL;
+    // power_key.Speed = GPIO_SPEED_FREQ_LOW;
+    // HAL_GPIO_Init(GPIOJ, &power_key);
+    // if ( HAL_GPIO_ReadPin(GPIOJ, GPIO_PIN_4) != GPIO_PIN_RESET )
+    // {
+    //     // here can test battery state of charge, if low battery can shutdown immediately
+    // }
+    // HAL_GPIO_DeInit(GPIOJ, GPIO_PIN_4);
 
     bus_fault_enable();
     /* Initialize the QSPI */
@@ -534,7 +537,7 @@ int main(void)
       serial_set = device_serial_set();
       serial_set = true; // TODO: need debug.
     }
-    
+
     // se_init();
     if (!cert_set) { // if se certificate is not set
     //   uint32_t cert_len = 0;
@@ -555,10 +558,8 @@ int main(void)
     ensure_emmcfs(emmc_fs_init(), "emmc_fs_init");
     ensure_emmcfs(emmc_fs_mount(true, false), "emmc_fs_mount");
 
-    ble_usart_init();
-
-    ble_power_on();
-    spi_slave_init();
+    BLE_CTL_PIN_INIT();
+    ble_function_on();
 
     secbool stay_in_bootloader = secfalse; // flag to stay in bootloader
     if ( stay_in_bootloader_flag == STAY_IN_BOOTLOADER_FLAG )

@@ -93,6 +93,21 @@ void SPI1_IRQHandler(void) { HAL_SPI_IRQHandler(&spi); }
 void SPI2_IRQHandler(void) { HAL_SPI_IRQHandler(&spi); }
 void SPI5_IRQHandler(void) { HAL_SPI_IRQHandler(&spi); }
 
+void control_pin_init(void) {
+  GPIO_InitTypeDef gpio;
+  // BLE SHAKE PIN
+  gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio.Pull = GPIO_PULLUP;
+  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+  gpio.Pin = GPIO_PIN_2;
+  HAL_GPIO_Init(GPIOE, &gpio);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET); 
+
+  // POWER UP BLE
+  gpio.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOD, &gpio);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+}
 
 int32_t spi_slave_init() {
   GPIO_InitTypeDef gpio;
@@ -115,15 +130,6 @@ int32_t spi_slave_init() {
 
   __HAL_RCC_SPI1_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
-
-  gpio.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio.Pull = GPIO_PULLUP;
-  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-
-  // use pe2 as software handshake pin
-  gpio.Pin = GPIO_PIN_2;
-  HAL_GPIO_Init(GPIOE, &gpio);
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET);
 
   // PA15(NSS)
   gpio.Mode = GPIO_MODE_INPUT;
@@ -223,16 +229,11 @@ int32_t spi_slave_init() {
 
   memset(recv_buf, 0, SPI_PKG_SIZE);
   spi_rx_event = 1;
-  SET_RX_BUS_IDEL();
+  // SET_RX_BUS_IDEL();
   /* start SPI receive */
   if (HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE) != HAL_OK) {
     return -1;
   }
-
-  // POWER UP BLE
-  gpio.Pin = GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOD, &gpio);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
 
   return 0;
 }
@@ -260,8 +261,8 @@ int32_t spi_slave_deinit() {
   gpio.Speed = GPIO_SPEED_FREQ_LOW;
 
   // use pe2 as software handshake pin
-  gpio.Pin = GPIO_PIN_2;
-  HAL_GPIO_Init(GPIOE, &gpio);
+  // gpio.Pin = GPIO_PIN_2;
+  // HAL_GPIO_Init(GPIOE, &gpio);
 
   // PA15(NSS)
   gpio.Pin = GPIO_PIN_15;

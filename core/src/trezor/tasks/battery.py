@@ -43,3 +43,9 @@ async def updating_battery_state():
             StatusBar.instance().show_charging(charging)
             prev_charging = charging
 
+        # not connect usb, and battery is empty, shut down device
+        if not state_of_charge and not charging:
+            from trezor.ui.screen.power import ShutingDown
+            screen = ShutingDown()
+            await screen.show()
+            await screen

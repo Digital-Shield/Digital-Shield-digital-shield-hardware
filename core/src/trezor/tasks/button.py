@@ -7,9 +7,6 @@ from trezor.ui.screen.power import PowerOff, ShutingDown
 
 async def handle_power():
     pressing = False
-    source = utils.power_source()
-    by_battery = source == utils.POWER_SOURCE_BATTERY
-    log.debug(__name__, f"powered by {'battery' if by_battery else 'USB'}")
 
     # powered by USB, can't power off
     while True:
@@ -26,7 +23,7 @@ async def handle_power():
                 await loop.sleep(50)
                 pressing = False
             elif long_time in racer.finished:
-                if not by_battery or utils.is_usb_connected():
+                if utils.is_usb_connected():
                     continue
                 pressing = False
                 log.debug(__name__, "Long time press power key detected")

@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING
 
 from ubinascii import hexlify, unhexlify
 from trezor.crypto.hashlib import sha3_256
-from .bcs import Deserializable, Serializable
+from ..common.bcs import Deserializable, Serializable
 
 if TYPE_CHECKING:
     from __future__ import annotations
-    from .bcs import Deserializer, Serializer
+    from ..common.bcs import Deserializer, Serializer
 
 class AuthKeyScheme:
     Ed25519: bytes = b"\x00"

@@ -5,6 +5,7 @@
 #include "display.h"
 #include "spi.h"
 #include "usart.h"
+#include "ble.h"
 
 #define default_prn 0
 #define resp_header 0x60
@@ -239,25 +240,24 @@ static bool ping_boot(uint8_t id) {
 static void enter_boot(void) {
   ble_usart_irq_disable();
   SET_COMBUS_LOW();
-  // BLE_RST_PIN_LOW();  // reset ble
-  BLE_POWER_OFF();  // ble power off
+  ble_function_off();
   hal_delay(100);
-  // BLE_RST_PIN_HIGH();
-  BLE_POWER_ON();  // ble power on
-  hal_delay(500);
+  ble_function_on();
+  hal_delay(1000);
+  ble_usart_irq_disable();
   SET_COMBUS_HIGH();
 }
 
-bool ble_boot_mode(void) { // check bluetooth is enter dfu mode 
-  enter_boot(); 
+bool ble_boot_mode(void) { // check bluetooth is enter dfu mode
+  enter_boot();
   for (uint8_t i = 0; i < 100; i++) {
     if (ping_boot(i) == true)
       break;
     else if (i == 99) {
       return false;
-    } 
+    }
   }
-  return true; 
+  return true;
 }
 bool updateBle(uint8_t *init_data, uint8_t init_len, uint8_t *firmware,
                uint32_t fm_len) {
@@ -314,13 +314,10 @@ bool updateBle(uint8_t *init_data, uint8_t init_len, uint8_t *firmware,
 void bluetooth_reset() {
   ble_usart_irq_disable();
   SET_COMBUS_HIGH();  // make sure dfu io released
-  // BLE_RST_PIN_LOW();  // reset ble
-  BLE_POWER_OFF();  // ble power off
+  ble_function_off();
   hal_delay(100);
-  // BLE_RST_PIN_HIGH();
-  BLE_POWER_ON();  // ble power on
-  hal_delay(500);
-  ble_usart_init();
+  ble_function_on();
+
 }
 
 bool bluetooth_enter_dfu() {

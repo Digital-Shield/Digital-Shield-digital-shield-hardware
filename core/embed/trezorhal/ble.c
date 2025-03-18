@@ -2,6 +2,7 @@
 #include "common.h"
 #include "display.h"
 #include "spi.h"
+#include "stm32h7xx_hal_gpio.h"
 #include "sys.h"
 #include "usart.h"
 
@@ -211,7 +212,7 @@ void ble_refresh_dev_info(void) {
   }
 }
 
-void ble_power_on() {
+void ble_function_on() {
   BLE_POWER_ON();
   spi_slave_init();
   ble_usart_init();
@@ -219,7 +220,7 @@ void ble_power_on() {
   ble_connect = true;
 }
 
-void ble_power_off() {
+void ble_function_off() {
   BLE_POWER_OFF();
   spi_slave_deinit();
   ble_usart_deinit();

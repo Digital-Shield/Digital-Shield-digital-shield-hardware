@@ -107,11 +107,6 @@ def power_off() -> None:
     Power off the device.
     """
 
-def power_source() -> int:
-    """
-    Returns the power source. POWER_SOURCE_USB or POWER_SOURCE_BATTERY.
-    """
-
 SCM_REVISION: bytes
 BUILD_ID: bytes
 VERSION_MAJOR: int
@@ -121,5 +116,3 @@ MODEL: str
 EMULATOR: bool
 BITCOIN_ONLY: bool
 FIRMWARE_SECTORS_COUNT: int
-POWER_SOURCE_USB: int
-POWER_SOURCE_BATTERY: int

@@ -27,11 +27,6 @@ typedef struct __attribute__((packed)) {
   uint8_t random_key[32];
 } DeviceInfomation;
 
-typedef enum {
-  BATTERY_POWER,
-  USB_POWER,
-}PowerSource;
-
 void device_set_factory_mode(bool mode);
 bool device_is_factory_mode(void);
 void device_para_init(void);
@@ -48,5 +43,4 @@ void device_test(bool force);
 void device_burnin_test(bool force);
 
 void device_power_off(void);
-PowerSource device_power_source(void);
 #endif

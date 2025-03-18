@@ -379,7 +379,7 @@ def shutdown_device() -> None:
     from trezor import uart
 
     if storage.device.is_initialized():
-        if utils.POWER_SOURCE_BATTERY == utils.power_source():
+        if not utils.is_usb_connected():
             utils.power_off()
 
 async def unlock_device(ctx: wire.GenericContext = wire.DUMMY_CONTEXT) -> None:

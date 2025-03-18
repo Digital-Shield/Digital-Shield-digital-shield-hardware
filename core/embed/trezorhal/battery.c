@@ -172,8 +172,22 @@ int battery_read_SOC(void)
 
     result = battery_read_register(REG_SOC, &ret);
     OP_CHECK(result);
+    // printf("SOC before: %d\n", ret);
 
-    return ret;
+    // 隐藏5%电量
+    if (ret <= 5) return 0;
+    if (ret >= 100) return 100;
+
+    // [5, 100] => [0, 100]
+    int scaled = (ret - 5) * 100;
+    ret = scaled / 95; // 正数部分
+    int reminder = scaled % 95; // 小数部分
+
+    // 四舍五入
+    if (reminder * 2 >= 95) ret += 1;
+    // printf("SOC after: %d\n", ret);
+
+    return ret > 100 ?  100 : ret;
 }
 
 int battery_read_SOH(void)
@@ -624,7 +638,7 @@ int battery_init(void)
     /*---------V1.1.0 Force re-initial RT9426 when SW update--------*/
     /*
 
-    // test change battery 
+    // test change battery
     RT9426_Initial();
     battery_write_register(REG_RSVD, SWVER);   //--record present SW version
     battery_write_register(REG_DUMMY, 0x0000); // Add Dummy Write by V1.1.0
