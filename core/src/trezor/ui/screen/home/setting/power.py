@@ -7,7 +7,7 @@ from trezor.ui import colors
 
 class PowerOff(SampleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.power_off, "A:/res/power-off.png")
+        super().__init__(parent, i18n.Setting.power_off, "A:/res/power-off-two.png")
         self.label.set_style_text_color(colors.DS.DANGER, lv.PART.MAIN)
 
         enable = not utils.is_usb_connected()

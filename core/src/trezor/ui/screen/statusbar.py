@@ -92,8 +92,12 @@ class StatusBar(VStack):
         if charging:
             self.battery_percent.clear_flag(lv.obj.FLAG.HIDDEN)
             self.battery_percent.set_text(f"{percent}%")
+            self.battery_percent.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置文本颜色为白色
         else:
-            self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
+            # self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
+            self.battery_percent.clear_flag(lv.obj.FLAG.HIDDEN)
+            self.battery_percent.set_text(f"{percent}%")
+            self.battery_percent.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置文本颜色为白色
 
         percent = ((value+5)//5)*5
         percent = min(percent, 100)

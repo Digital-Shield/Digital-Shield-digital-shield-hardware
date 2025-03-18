@@ -30,7 +30,7 @@ class WipeDeviceTips(HolderConfirm):
             .text_font(font.Bold.SCS30)
             .width(lv.pct(100))
         )
-        style_checked = Style().text_color(colors.DS.BLACK)
+        style_checked = Style().text_color(colors.DS.WHITE)
         for check in i18n.Text.wipe_device_check:
             checkbox = self.add(lv.checkbox)
             checkbox.set_ext_click_area(6)
@@ -42,6 +42,7 @@ class WipeDeviceTips(HolderConfirm):
 
         self.holder.set_size(200, 200)
         self.holder.set_text(i18n.Button.hold_to_wipe)
+        self.holder.set_style_text_color(lv.color_hex(0xFFFFFF), 0)
         self.holder.disabled = True
         self.btn_confirm.color(colors.DS.DANGER)
 

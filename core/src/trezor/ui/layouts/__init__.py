@@ -329,6 +329,7 @@ async def confirm_change_pin(ctx: wire.GenericContext):
     text = i18n.Text.change_pin
     screen = Info(title, text)
     screen.button_text(i18n.Button.continue_)
+    screen.text_color(colors.DS.WHITE)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Other))
 

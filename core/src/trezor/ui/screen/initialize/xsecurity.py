@@ -19,7 +19,8 @@ if TYPE_CHECKING:
 class XSecurity(base(Modal)):
     def __init__(self, title, message: SecurityMessage):
         super().__init__()
-        self.set_title(title, "A:/res/app_security.png")
+        # self.set_title(title, "A:/res/app_security.png")
+        self.set_title(title)
 
         self.create_content(HStack)
         self.content: HStack
@@ -34,7 +35,8 @@ class XSecurity(base(Modal)):
             .bg_opa(lv.OPA.COVER)
             .radius(16)
             .pad_all(16)
-            .text_font(font.small),
+            .text_line_space(10)
+            .text_font(font.Bold.SCS26),
             lv.PART.MAIN,
         )
 
@@ -46,6 +48,8 @@ class XSecurity(base(Modal)):
             tip.add_style(
                 Styles.subtitle.width(lv.pct(100))
                 .height(lv.SIZE.CONTENT)
+                .text_color(colors.DS.WHITE)
+                .text_line_space(10)
                 .text_align(lv.TEXT_ALIGN.LEFT),
                 lv.PART.MAIN,
             )

@@ -15,7 +15,10 @@ class About(with_title(Navigation)):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16).pad_right(16),
+            Style()
+            .pad_left(16)
+            .pad_top(25)
+            .pad_right(16),
             0
         )
         Item(self.content,'Digit Shield','A:/res/web.png',"https://digitshield.com")
@@ -33,7 +36,10 @@ class Item(VStack):
         self.add_style(
             Style()
             .radius(16)
-            .bg_opa(lv.OPA.COVER)
+            .bg_color(lv.color_hex(0x111126))
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
+            .text_color(lv.color_hex(0xFFFFFF))
+            # .bg_opa(lv.OPA.COVER)
             .width(lv.pct(100))
             .height(72)
             .pad_right(32)
@@ -54,7 +60,8 @@ class Item(VStack):
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
         # right-qc-code
         qr = lv.img(self)
-        qr.set_src("A:/res/qr-code.png")
+        qr.set_src("A:/res/qr-code-two.png")
+        qr.set_style_img_recolor(lv.color_white(), 0)
 
     def action(self):
         from trezor import workflow        

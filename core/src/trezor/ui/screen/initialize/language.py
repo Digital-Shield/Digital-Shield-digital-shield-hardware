@@ -13,17 +13,36 @@ from trezor.ui.component.container import VStack, HStack
 class LanguageScreen(base(Modal)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Title.select_language, "A:/res/language.png")
-
+        # self.set_title(i18n.Title.select_language, "A:/res/language.png")
+        self.set_title(i18n.Title.select_language)
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         # content
         self.create_content(HStack)
         self.content: HStack
+        self.content.add_style(
+            Style()
+            .pad_top(25),
+            0
+        )
 
         # languages item
         langs = [
-            {"title" : "English", "icon" : "A:/res/lang-en_UK.png"},
-            {"title" : "简体中文", "icon" : "A:/res/lang-zh_CN.png"},
-            # {"title" : "日语", "icon" : "A:/res/lang-jp_JP.png"},
+            # {"title" : "English", "icon" : "A:/res/lang-en_UK.png"},
+            # {"title" : "简体中文", "icon" : "A:/res/lang-zh_CN.png"},
+            # {"title" : "繁體中文", "icon" : "A:/res/lang-zh_CN.png"},
+            # {"title" : "한국어", "icon" : "A:/res/lang-zh_CN.png"},
+            # {"title" : "日本語", "icon" : "A:/res/lang-zh_CN.png"},
+            # # {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
+            # {"title" : "Tiếng Việt", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "English", "icon" : None},
+            {"title" : "简体中文", "icon" : None},
+            {"title" : "繁體中文", "icon" : None},
+            {"title" : "한국어", "icon" : None},
+            {"title" : "日本語", "icon" : None},
+            {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "Tiếng Việt", "icon" : None},
         ]
 
         self.languages = [Item(parent=self.content, **lang) for lang in langs]
@@ -73,7 +92,7 @@ class Item(VStack):
 
         # name
         self.title = lv.label(self)
-        self.title.add_style(Styles.title_text, lv.PART.MAIN)
+        self.title.add_style(Styles.language_title_text, lv.PART.MAIN)
         self.title.set_text(title)
         self.title.set_flex_grow(1)
 
@@ -85,19 +104,19 @@ class Item(VStack):
         self.state.add_style(
             Style()
             .radius(lv.RADIUS.CIRCLE)
-            .bg_color(colors.DS.WHITE)
-            .border_color(colors.DS.BORDER)
+            .bg_color(lv.color_hex(0x0D0D17))
+            .border_color(colors.DS.WHITE)
             .border_width(1),
             lv.STATE.DEFAULT
         )
         # checked state
         self.state.add_style(
             Style()
-            .text_color(colors.DS.WHITE)
+            .text_color(colors.DS.BLACK)
+            .bg_color(colors.DS.WHITE)
             .text_align_center()
             .text_font(font.small)
             .radius(lv.RADIUS.CIRCLE)
-            .bg_color(colors.DS.PRIMARY)
             .bg_opa(lv.OPA.COVER)
             .border_width(0),
             lv.PART.MAIN | lv.STATE.CHECKED
@@ -112,6 +131,7 @@ class Item(VStack):
         if checked:
             self.state.add_state(lv.STATE.CHECKED)
             self.state.set_text(lv.SYMBOL.OK)
+            self.state.set_style_text_color(lv.color_hex(0x0D0D17), 0)
         else:
             self.state.clear_state(lv.STATE.CHECKED)
             self.state.set_text("")

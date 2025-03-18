@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Wallpaper(SampleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.wallpaper, "A:/res/wallpaper.png")
+        super().__init__(parent, i18n.Setting.wallpaper, "A:/res/wallpaper-two.png")
 
         # right-arrow
         self.arrow = lv.label(self)
@@ -27,6 +27,7 @@ class Wallpaper(SampleItem):
 class WallpaperImage(lv.img):
     def __init__(self, parent):
         super().__init__(parent)
+        # self.set_style_pad_all(10, lv.PART.MAIN)
 
     def set_src(self, src : 'ImageSource'):
         super().set_src(src.thumbnail())
@@ -46,16 +47,26 @@ class ImageSource:
 class WallpaperDetail(with_title(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Setting.wallpaper)
+        # self.set_title(i18n.Setting.wallpaper)
+        title_label = lv.label(self)
+        title_label.set_text(i18n.Setting.wallpaper)
+        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
+        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
 
         self.create_content(VStack)
         self.content: VStack
         self.content.set_flex_flow(lv.FLEX_FLOW.ROW_WRAP)
+        # self.content.set_align_items(lv.ALIGN.CENTER)
         self.content.add_style(
             Style()
-            .flex_main_place(lv.FLEX_ALIGN.SPACE_EVENLY)
-            .width(480 - 32)
-            .height(800 - 200),
+            .pad_all(25)
+            .pad_left(35)
+            .pad_column(45)
+            .pad_row(20)
+            .bg_color(lv.color_hex(0x111126))
+            .bg_opa(lv.OPA.COVER)
+            .width(lv.pct(100))  # 占满宽度
+            .height(800-175),
             0
         )
         self.images: List[WallpaperImage] = []
@@ -65,6 +76,7 @@ class WallpaperDetail(with_title(Navigation)):
             log.debug(__name__, f"thumbnail wallpaper: {w.thumbnail()}")
             img = WallpaperImage(self.content)
             img.set_src(w)
+            
             img.set_style_border_width(2, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.set_style_border_color(colors.DS.PRIMARY, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.add_flag(lv.obj.FLAG.CLICKABLE)

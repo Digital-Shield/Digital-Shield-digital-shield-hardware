@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from __future__ import annotations
     from typing import Any, List, Tuple
-
     from ..common.bcs import Deserializer, Serializer
     from .account_address import AccountAddress
     pass

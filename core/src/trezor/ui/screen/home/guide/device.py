@@ -2,7 +2,7 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 
 from . import *
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation, with_title,font
 
 from storage import device
 
@@ -17,7 +17,8 @@ class Device(with_title(Navigation)):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16).pad_right(16),
+            Style()
+            .pad_all(24),
             0
         )
 
@@ -30,10 +31,10 @@ class Device(with_title(Navigation)):
         # serial number
         Item(self.content,i18n.Guide.device_title_serial_number, device.get_serial())
 
-        # line
-        sep = self.add(lv.line)
-        sep.set_width(2)
-        sep.set_points([{"x":0, "y": 0}, {"x": 300, "y": 0}], 2)
+        # # line
+        # sep = self.add(lv.line)
+        # sep.set_width(2)
+        # sep.set_points([{"x":0, "y": 0}, {"x": 300, "y": 0}], 2)
 
         # bluetooth name
         from trezor import utils
@@ -54,9 +55,11 @@ class Item(HStack):
         self.add_style(
             Style()
             .radius(16)
-            .bg_opa(lv.OPA.COVER)
+            .bg_color(lv.color_hex(0x111126))
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
+            .text_color(lv.color_hex(0xFFFFFF))
             .width(lv.pct(100))
-            .height(90)
+            .height(120)
             .pad_right(32)
             .pad_column(16),
             0,
@@ -68,8 +71,8 @@ class Item(HStack):
             lv.FLEX_ALIGN.START,lv.FLEX_ALIGN.START,lv.FLEX_ALIGN.START
         )
         view = self.add(Text)
-        view.set_label(title)
-        view.set_text(desc)
+        view.set_device_label(title)  # 设置title为小号瘦体
+        view.set_device_text(desc)  # 设置desc为大号粗体
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
     
     def action(self):
@@ -81,7 +84,28 @@ class Text(LabeledText):
         self.add_style(
             Style()
             .border_width(0)
-            .pad_top(0)
-            .pad_bottom(0),
+            .pad_left(48),
             0
         )
+    # def set_label(self, text):
+    #     self.set_label(text)
+    #     self.add_style(
+    #         Style()
+    #         .pad_top(25)
+    #         .text_font(font.Regular.SCS24)  # 设置为小号瘦体
+    #         .text_color(lv.color_hex(0xFFFFFF))
+    #         .height(lv.pct(100))  # 设置高度为100%
+    #         .align(lv.ALIGN.CENTER),  # 设置居中对齐
+    #         0
+    #     )
+
+    # def set_desc_text(self, text):
+    #     self.set_text(text)
+    #     self.add_style(
+    #         Style()
+    #         .pad_bottom(25)
+    #         .text_color(lv.color_hex(0xFFFFFF))
+    #         .height(lv.pct(100))  # 设置高度为100%
+    #         .align(lv.ALIGN.CENTER),  # 设置居中对齐
+    #         0
+    #     )

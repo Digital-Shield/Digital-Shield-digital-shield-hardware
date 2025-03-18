@@ -43,7 +43,7 @@ class ShutingDown(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo.png")
+        self.add(lv.img).set_src("A:/res/logo_two.png")
         self.add(lv.label).set_text(i18n.Text.shutting_down)
 
         async def shutdown_delay():
@@ -71,7 +71,7 @@ class Restarting(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo.png")
+        self.add(lv.img).set_src("A:/res/logo_two.png")
         self.add(lv.label).set_text(i18n.Text.restarting)
 
 

@@ -98,6 +98,8 @@ class Title:
     enter_pin_again = "Enter PIN again"
     select_language = "Language"
     create_wallet = "Create Wallet"
+    wallet = "Wallet"
+    import_wallet = "Import Wallet"
     restore_wallet = "Restore Wallet"
     wallet_is_ready = "Wallet is ready"
     select_word_count = "Select Word Count"
@@ -185,7 +187,8 @@ class Tip:
 class Text:
     tap_to_unlock = "Tap to unlock"
     unlocking = "Unlocking device ..."
-    str_words = "#18794E {}# words"
+    # str_words = "#18794E {}# words"
+    str_words = "#FFFFFF {}# words"
     backup_manual = "write down mnemonic and store it safely"
     check_manual = "click mnemonic in the correct order"
     backup_verified = "Your mnemonic has been backed up. Please store it offline in a safe place and never share it with anyone."

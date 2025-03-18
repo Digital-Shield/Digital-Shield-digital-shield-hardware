@@ -14,18 +14,25 @@ class MnemonicDisplay(with_title_and_buttons(Modal, i18n.Button.next, i18n.Butto
 
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Title.backup_mnemonic, "A:/res/app_security.png")
+        # self.set_title(i18n.Title.backup_mnemonic, "A:/res/app_security.png")
+        self.set_title(i18n.Title.backup_mnemonic)
 
         self.create_content(VStack)
         self.content: VStack
         self.content.set_flex_flow(lv.FLEX_FLOW.ROW_WRAP)
         self.content.set_style_pad_left(12, lv.PART.MAIN)
         self.content.set_style_pad_row(16, lv.PART.MAIN)
+        self.content.add_style(
+            Style()
+            .pad_top(25),
+            0
+        )
 
         self.btn_next = self.btn_right
         self.btn_redo = self.btn_left
-        self.btn_redo.bg_opa(lv.OPA.TRANSP)
-        self.btn_redo.text_color(colors.DS.PRIMARY)
+        self.btn_redo.set_text(i18n.Button.redo)
+        # self.btn_redo.bg_opa(lv.OPA.TRANSP)
+        # self.btn_redo.text_color(colors.DS.PRIMARY)
 
         self.btn_redo.add_event_cb(
             lambda e: self.channel.publish(Redo()), lv.EVENT.CLICKED, None
@@ -60,7 +67,8 @@ class MnemonicDisplay(with_title_and_buttons(Modal, i18n.Button.next, i18n.Butto
 class MnemonicCheck(base(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Title.check_mnemonic, "A:/res/app_security.png")
+        # self.set_title(i18n.Title.check_mnemonic, "A:/res/app_security.png")
+        self.set_title(i18n.Title.check_mnemonic)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
@@ -149,7 +157,8 @@ class MnemonicCheck(base(Navigation)):
 class MnemonicInput(base(Navigation)):
     def __init__(self, count):
         super().__init__()
-        self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
+        # self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
+        self.set_title(i18n.Title.enter_mnemonic)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
@@ -270,9 +279,12 @@ class Item(HStack):
         self._index = index
         self.add_style(
             Style()
+            .bg_color(lv.color_hex(0x111126))  # 深色背景
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
             .radius(16)
             .width(140)
             .height(96)
+            .text_color(colors.DS.WHITE)
             .border_width(1)
             .bg_opa(lv.OPA.COVER),
             lv.PART.MAIN,
@@ -287,7 +299,7 @@ class Item(HStack):
 
         self.index_label = lv.label(self)
         self.index_label.add_style(
-            Style().text_font(font.small).text_color(colors.DS.GRAY), lv.PART.MAIN
+            Style().text_font(font.small).text_color(colors.DS.WHITE), lv.PART.MAIN
         )
         self.index_label.set_text("" if index is None else str(index + 1))
 
@@ -369,7 +381,8 @@ class Input(lv.obj):
             .pad_right(0)
             .pad_bottom(0)
             .bg_color(colors.DS.GRAY)
-            .bg_opa(lv.OPA._40)
+            .bg_opa(lv.OPA._20)
+            .border_width(0)
             .width(lv.pct(100))
             .height(lv.pct(100)),
             0
@@ -421,10 +434,11 @@ class Input(lv.obj):
             .width(300)
             .height(64)
             .text_font(font.Bold.SCS38)
-            .text_align_center()
-            .border_width(3)
-            .border_color(colors.DS.BLACK)
-            .border_side(lv.BORDER_SIDE.BOTTOM),
+            .border_width(0)
+            .text_align_center(),
+            # .border_width(3)
+            # .border_color(colors.DS.BLACK)
+            # .border_side(lv.BORDER_SIDE.BOTTOM),
             lv.PART.MAIN,
         )
         self.ta.set_flex_grow(1)

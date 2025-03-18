@@ -11,7 +11,12 @@ from trezor.ui.component.container import HStack
 class InputPinScreen(with_title(Modal)):
     def __init__(self, title: str | None = None):
         super().__init__()
-        self.set_title(title or i18n.Title.enter_pin, "A:/res/app_security.png")
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+        tip = lv.label(self)# 创建一个label
+        tip.set_text(i18n.Title.enter_pin)# 设置文本
+        tip.align(lv.ALIGN.TOP_MID, 0, -32)# 设置位置
+        tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
+        tip.set_style_text_font(font.Regular.SCS30, 0)
 
         self.create_content(HStack)
         self.content: HStack
@@ -32,17 +37,21 @@ class InputPinScreen(with_title(Modal)):
 
         self.ta.add_style(
             Style()
+            # .bg_color(colors.DS.BLACK)
+            # .border_color(colors.STD.WHITE)
+            # .border_side(lv.BORDER_SIDE.BOTTOM),
+            .border_width(0)
+            .text_color(colors.STD.WHITE)
             .bg_opa(lv.OPA.TRANSP)
             .width(lv.pct(80))
             .text_font(font.Bold.SCS48)
             .text_letter_space(8)
-            .text_align_center()
-            .border_width(3)
-            .border_color(colors.DS.BLACK)
-            .border_side(lv.BORDER_SIDE.BOTTOM),
+            .text_align_center(),
             lv.PART.MAIN,
         )
-
+        label = self.ta.get_label()
+        label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        
         kbd = self.add(PinKeyboard)
         kbd.textarea = self.ta
         kbd.tip_count_min = MIN_PIN_LENGTH

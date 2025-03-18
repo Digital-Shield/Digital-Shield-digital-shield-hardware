@@ -2,7 +2,7 @@ from . import *
 
 class CheckMnemonic(SampleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Security.check_mnemonic, "A:/res/check-mnemonic.png")
+        super().__init__(parent, i18n.Security.check_mnemonic, "A:/res/check-mnemonic-two.png")
 
     def action(self):
         super().action()

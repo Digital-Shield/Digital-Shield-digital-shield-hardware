@@ -9,12 +9,23 @@ from trezor.ui.screen import Navigation, with_title
 class SecurityApp(with_title(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.App.security)
+        # self.set_title(i18n.App.security)
+
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+
+        title_label = lv.label(self)
+        title_label.set_text(i18n.App.security)
+        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
+        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
+
         self.create_content(HStack)
         self.content: HStack
 
         self.content.set_style_pad_left(16, lv.PART.MAIN)
         self.content.set_style_pad_right(16, lv.PART.MAIN)
+        self.content.set_style_pad_top(15, lv.PART.MAIN)  # 设置顶部填充
 
         # change pin
         from .pin import ChangePin
@@ -45,7 +56,9 @@ class Item(VStack):
         self.add_style(
             Style()
             .radius(16)
-            .bg_opa(lv.OPA.COVER)
+            .bg_color(lv.color_hex(0x111126))  # 深色背景
+            .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
+            # .bg_opa(lv.OPA.COVER)
             .width(lv.pct(100))
             .height(72)
             .pad_right(32)
@@ -60,6 +73,8 @@ class Item(VStack):
         self.label = lv.label(self)
         self.label.set_flex_grow(1)
         self.label.set_text(text)
+        self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
+        self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
 
 
 class SampleItem(Item):

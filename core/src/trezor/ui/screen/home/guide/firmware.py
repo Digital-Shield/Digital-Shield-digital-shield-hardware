@@ -15,24 +15,29 @@ class Firmware(with_title(Navigation)):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16).pad_right(16),
+            Style()
+            .pad_left(16)
+            .pad_right(16)
+            .pad_top(25),
             0
         )
 
         view = self.add(lv.label)
         view.set_text(i18n.Guide.firmware_title_1)
         view.set_width(lv.pct(100))
-        view.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        view.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         view.set_long_mode(lv.label.LONG.WRAP)
 
         view = self.add(lv.label)
         view.set_text(i18n.Guide.firmware_title_2)
         view.set_width(lv.pct(100))
-        view.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        view.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         view.set_long_mode(lv.label.LONG.WRAP)
 
         view = self.add(lv.label)
         view.set_text(i18n.Guide.firmware_title_3)
+        view.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+
         style = (
             Style()
             .width(lv.pct(100))

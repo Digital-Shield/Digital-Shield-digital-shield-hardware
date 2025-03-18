@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class Language(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.language, "A:/res/language-setting.png")
+        super().__init__(parent, i18n.Setting.language, "A:/res/language-setting-two.png")
 
     def current(self):
         return i18n.using.name
@@ -29,6 +29,9 @@ class Language(OptionsItem):
 class LanguageDetails(OptionDetails):
     def __init__(self, title, languages: List[i18n.Language]):
         super().__init__(title, languages)
+        self.set_style_bg_img_src(None, lv.PART.MAIN)
+        self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         self.reverting = False
 
     @classmethod
@@ -86,8 +89,9 @@ class RestartApp(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo.png")
+        self.add(lv.img).set_src("A:/res/logo_two.png")
         self.add(lv.label).set_text(i18n.Text.restarting)
+        # self.add(lv.label).set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
 
         async def restart_delay():

@@ -11,8 +11,8 @@ from trezor.ui.component.container import VStack, HStack
 class Quickstart(base(Navigation)):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Title.create_wallet, "A:/res/create-wallet.png")
-
+        self.set_title(i18n.Title.wallet, "")
+        self.title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置文本颜色为白色
         # no need next button
         self.btn_next.add_flag(lv.obj.FLAG.HIDDEN)
 
@@ -27,7 +27,7 @@ class Quickstart(base(Navigation)):
 
         # restore new wallet
         restore = Item(
-            self.content, i18n.Title.restore_wallet, "A:/res/restore-wallet.png"
+            self.content, i18n.Title.import_wallet, "A:/res/restore-wallet.png"
         )
         restore.add_event_cb(self.on_restore_wallet, lv.EVENT.CLICKED, None)
 
@@ -70,7 +70,17 @@ class Item(VStack):
     def __init__(self, parent, title, icon):
         super().__init__(parent)
         self.items_center()
-        self.add_style(item_style, 0)
+        # self.add_style(item_style, 0)
+        self.add_style(
+            Style()
+            .radius(16)
+            .bg_opa(lv.OPA.COVER)
+            .width(432) #lv.pct(100)
+            .height(80)
+            .pad_right(32)
+            .bg_color(lv.color_hex(0x111126)),
+            0,
+        )
         self.add_flag(lv.obj.FLAG.CLICKABLE)
 
         # icon
@@ -80,12 +90,14 @@ class Item(VStack):
         # text
         self.title = lv.label(self)
         self.title.add_style(Styles.title_text, lv.PART.MAIN)
+        self.title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         self.title.set_text(title)
         self.title.set_flex_grow(1)
 
         # right-arrow
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
+        self.arrow.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         self.arrow.add_style(
             Styles.subtitle
             .size(32)

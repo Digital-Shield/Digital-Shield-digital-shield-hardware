@@ -2,7 +2,7 @@ import lvgl as lv
 
 from . import HStack
 from trezor.ui import Style, colors
-
+from trezor.ui import Style, font, colors
 from trezor.ui.types import *
 
 # can't use typing.Generic here, so T can't be infer
@@ -14,7 +14,7 @@ class LabeledItem(HStack):
         .pad_all(16)
         .border_side(lv.BORDER_SIDE.BOTTOM)
         .border_width(1)
-        .border_color(colors.DS.GRAY)
+        # .border_color(colors.DS.GRAY)
         .border_opa(lv.OPA._60)
     )
 
@@ -25,11 +25,14 @@ class LabeledItem(HStack):
 
         self.label = self.add(lv.label)
         self.label.set_text("")
-        self.label.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
     def set_label(self, text: str):
         self.label.set_text(text)
-
+    def set_device_label(self, text: str):
+        self.label.set_text(text)
+        self.label.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)
         return self.item
@@ -45,6 +48,10 @@ class LabeledText(LabeledItem):
 
         self.item.set_width(lv.pct(100))
         self.item.set_long_mode(lv.label.LONG.WRAP)
-
+       
     def set_text(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+       
+    def set_device_text(self, text: str):
         self.item.set_text(text)

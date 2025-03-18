@@ -70,7 +70,7 @@ class VStack(lv.obj):
         # no border
         style.set_border_width(0)
         # as a container, not a visible object
-        style.set_bg_opa(lv.OPA.TRANSP)
+        # style.set_bg_opa(lv.OPA.TRANSP)
         # padding left and right 8
         style.set_pad_left(8)
         style.set_pad_right(8)
