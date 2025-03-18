@@ -23,7 +23,7 @@ class Screen(lv.obj):
 
         # maybe speedup if not use background image
         if __USE_BACKGROUND_IMAGE__:
-            self.set_style_bg_img_src("A:/res/background.png", lv.PART.MAIN)
+            self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
 
         # an empty content view, this is the root of `all` user UI components
         # almost all

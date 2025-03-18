@@ -193,6 +193,8 @@ class Text:
     max_fee = "最大手续费"
     max_priority_fee_per_gas = "最大优先级手续费"
     max_fee_per_gas = "单位Gas的交易费上限"
+    max_gas_limit = "最大Gas上限"
+    gas_unit_price= "单位Gas价格"
     gas_price = "燃料价格"
     total = "总金额"
     do_sign_this_transaction = "是否签名这笔{}交易"
@@ -201,6 +203,7 @@ class Text:
     public_key = "公钥:"
     xpub = "XPub:"
     unknown_tx_type = "未知交易类型, 请检查输入数据"
+    unknown_function = "未知的函数"
     use_app_scan_this_signature = "请使用钱包 APP 扫描签名结果"
     internal_error = "内部错误"
     tap_switch_to_airgap = "点击二维码切换为展示Airgap地址"
@@ -289,6 +292,9 @@ class Text:
     tip = "提示"
     keep_alive = "Keep alive"
     invalid_ur = "不支持的二维码类型，请重试"
+    sequence_number = "序列号"
+    expiration_time = "过期时间"
+    argument_x = "参数 #{}"
 
 class Tip:
     swipe_down_to_close = "向下滑动以关闭"

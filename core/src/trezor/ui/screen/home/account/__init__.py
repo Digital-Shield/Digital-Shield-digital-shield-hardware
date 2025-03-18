@@ -8,10 +8,15 @@ from trezor.ui.component import HStack, VStack, LabeledText
 from trezor.ui.screen import Navigation, with_title
 from .evm import EVM, ETH_CHAIN_ID,BSC_CHAIN_ID,MATIC_CHAIN_ID
 
-
+__USE_BACKGROUND_IMAGE__ = False
 class AccountApp(with_title(Navigation)):
     def __init__(self):
         super().__init__()
+        self.set_style_bg_img_src(None, lv.PART.MAIN)  # 取消背景图
+        # self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+        # self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 设置背景颜色的透明度为完全不透明
+
         self.set_title(i18n.App.account)
         # use HStack as content
         self.create_content(HStack)
@@ -68,8 +73,9 @@ class Item(VStack):
             Style()
             .radius(16)
             .bg_opa(lv.OPA.COVER)
-            .width(lv.pct(100))
-            .height(72)
+            .width(432) #lv.pct(100)
+            .height(80)
+            .text_color(lv.color_hex(0xFFFFFF))
             .pad_right(32)
             .pad_column(16),
             0,
@@ -143,7 +149,11 @@ class DetailBase(with_title(Navigation)):
 
     def __init__(self):
         super().__init__()
-        self.set_title(self.get_name())
+        self.set_style_bg_img_src(None, lv.PART.MAIN)  # 取消背景图
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+        self.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+
+        # self.set_title(self.get_name())
 
         self.create_content(HStack)
         self.content: HStack

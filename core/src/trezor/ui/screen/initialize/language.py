@@ -23,7 +23,11 @@ class LanguageScreen(base(Modal)):
         langs = [
             {"title" : "English", "icon" : "A:/res/lang-en_UK.png"},
             {"title" : "简体中文", "icon" : "A:/res/lang-zh_CN.png"},
-            # {"title" : "日语", "icon" : "A:/res/lang-jp_JP.png"},
+            {"title" : "繁體中文", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "한국어", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "日本語", "icon" : "A:/res/lang-zh_CN.png"},
+            # {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "Tiếng Việt", "icon" : "A:/res/lang-zh_CN.png"},
         ]
 
         self.languages = [Item(parent=self.content, **lang) for lang in langs]

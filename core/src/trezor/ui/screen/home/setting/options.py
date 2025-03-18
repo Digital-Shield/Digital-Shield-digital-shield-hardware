@@ -23,16 +23,19 @@ class Item(VStack):
             .bg_opa(lv.OPA.COVER)
             .width(lv.pct(100))
             .height(72)
+            .text_color(lv.color_hex(0xFFFFFF))
             .pad_right(32)
             .pad_column(16)
-            .border_width(1)
-            .border_side(lv.BORDER_SIDE.BOTTOM),
+            .border_width(0)
+            .border_side(lv.BORDER_SIDE.BOTTOM)
+            .bg_color(lv.color_hex3(0x123456)),
             0,
         )
         self.items_center()
         # option
         self.label = lv.label(self)
         self.label.set_text(text)
+        self.label.set_style_text_color(lv.color_hex(0xFFFFFF), 0)
 
         # state
         self.state = lv.label(self)

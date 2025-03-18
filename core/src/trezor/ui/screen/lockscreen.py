@@ -11,8 +11,8 @@ class LockScreen(Screen):
         super().__init__()
 
         wallpaper = device.get_homescreen()
-        self.set_style_bg_img_src(wallpaper, lv.PART.MAIN)
-
+        # self.set_style_bg_img_src(wallpaper, lv.PART.MAIN)
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         self.create_content(HStack)
         # manually type annotation
         self.content: HStack
@@ -26,16 +26,16 @@ class LockScreen(Screen):
 
         # lock icon
         icon = lv.img(self.content)
-        icon.set_src("A:/res/lock.png")
+        icon.set_src("A:/res/lock_two.png")
 
         # logo icon
         logo = lv.img(self.content)
-        logo.set_src("A:/res/logo.png")
+        logo.set_src("A:/res/logo_two.png")
 
         # tip
         tip = lv.label(self.content)
         tip.set_text(i18n.Text.tap_to_unlock)
-
+        tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         self.add_event_cb(self.on_click, lv.EVENT.CLICKED, None)
 
 

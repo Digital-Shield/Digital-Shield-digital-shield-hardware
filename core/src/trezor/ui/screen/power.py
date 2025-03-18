@@ -10,6 +10,7 @@ class PowerOff(Confirm):
     def __init__(self):
         super().__init__()
         self.set_title(i18n.Title.power_off)
+        self.btn_cancel.set_text(i18n.Button.cancel)
         self.btn_confirm.set_text(i18n.Button.power_off)
         self.btn_confirm.color(colors.DS.DANGER)
 
@@ -42,7 +43,7 @@ class ShutingDown(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo.png")
+        self.add(lv.img).set_src("A:/res/logo_two.png")
         self.add(lv.label).set_text(i18n.Text.shutting_down)
 
         async def shutdown_delay():
@@ -70,7 +71,7 @@ class Restarting(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo.png")
+        self.add(lv.img).set_src("A:/res/logo_two.png")
         self.add(lv.label).set_text(i18n.Text.restarting)
 
 

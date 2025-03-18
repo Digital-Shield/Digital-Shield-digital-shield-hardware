@@ -5,9 +5,8 @@ from trezor.messages import AptosMessageSignature, AptosSignMessage
 from apps.common import paths, seed
 from apps.common.keychain import Keychain, auto_keychain
 
-from . import ICON, PRIMARY_COLOR
-from .helper import aptos_address_from_pubkey
-
+from . import ICON
+from .account_address import AccountAddress
 
 @auto_keychain(__name__)
 async def sign_message(
@@ -18,7 +17,7 @@ async def sign_message(
 
     node = keychain.derive(msg.address_n)
     pub_key_bytes = seed.remove_ed25519_prefix(node.public_key())
-    address = aptos_address_from_pubkey(pub_key_bytes)
+    address = AccountAddress.from_key(pub_key_bytes).__str__()
 
     full_message = "APTOS\n"
     payload = msg.payload

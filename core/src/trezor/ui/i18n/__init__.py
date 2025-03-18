@@ -10,6 +10,11 @@ class Language:
 languages = [
     Language('en', 'English'),
     Language('zh_cn', '简体中文'),
+    Language('zh_hk', '繁體中文'),
+    Language('th','한국어'),
+    Language('ja','日本語'),
+    # Language('al','بالعربية'),
+    Language('yn','Tiếng Việt'),
 ]
 
 
@@ -31,6 +36,17 @@ def change_language(lang: str | Language | None = None):
         from . import en as lang_module
     elif lang == 'zh_cn':
         from . import zh_cn as lang_module
+    elif lang == 'zh_hk':
+        from . import zh_hk as lang_module
+    elif lang == 'th':
+        from . import th as lang_module
+    elif lang == 'ja':
+        from . import ja as lang_module
+    elif lang == 'al':
+        from . import al as lang_module
+    elif lang == 'yn':
+        from . import yn as lang_module
+   
     else:
         raise ValueError(f"Unsupported language: {lang}")
     global using

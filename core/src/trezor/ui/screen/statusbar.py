@@ -93,7 +93,9 @@ class StatusBar(VStack):
             self.battery_percent.clear_flag(lv.obj.FLAG.HIDDEN)
             self.battery_percent.set_text(f"{percent}%")
         else:
-            self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
+            # self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
+            self.battery_percent.clear_flag(lv.obj.FLAG.HIDDEN)
+            self.battery_percent.set_text(f"{percent}%")
 
         percent = ((value+5)//5)*5
         percent = min(percent, 100)

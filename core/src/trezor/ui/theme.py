@@ -21,6 +21,9 @@ class DSTheme(lv.theme_t):
                 obj.add_style(Styles.button_label, lv.PART.MAIN)
                 obj.add_style(Styles.disabled, lv.STATE.DISABLED)
                 return
+            if parent.get_class() == lv.textarea_class:
+                obj.add_style(Styles.ta_label, lv.PART.MAIN)
+                return
             obj.add_style(Styles.label, lv.PART.MAIN | lv.STATE.DEFAULT)
             obj.add_style(Styles.label_disabled, lv.PART.MAIN | lv.STATE.DISABLED)
         elif typ == lv.btn_class:
@@ -66,8 +69,10 @@ disabled_dsc.init(lambda _, c, o: colors.DS.DISABLED_FILTER_COLOR.color_mix(c, o
 class Styles:
     primary = Style().bg_color(colors.DS.PRIMARY)
 
-    label = Style().text_color(colors.DS.TEXT_DEFAULT)
+    label = Style().text_color(colors.DS.BLACK)
     label_disabled = Style().text_color(colors.DS.TEXT_DISABLED)
+
+    ta_label = Style().text_color(colors.STD.WHITE)
 
     button = Style().radius(lv.RADIUS.CIRCLE)
     button_label = (
@@ -110,7 +115,7 @@ class Styles:
         Style()
         .border_width(0)
         .bg_opa(lv.OPA.TRANSP)
-        .pad_all(0)
+        .pad_all(2)
         .pad_column(5)
         .pad_row(3)
     )
@@ -171,14 +176,14 @@ class Styles:
     # apps in home screen: icon and a label
     home_app = (
         Style()
-        .bg_color(colors.DS.WHITE)
-        .bg_opa(lv.OPA._60)
+        # .bg_color(colors.DS.WHITE)
+        # .bg_opa(lv.OPA._60)
         .pad_top(0)
         .pad_bottom(0)
         .pad_column(0)
         .width(194)
         .height(194)
-        .radius(16)
+        .radius(20)
         .border_width(0)
     )
 
