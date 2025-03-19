@@ -418,15 +418,12 @@ int main(void) {
 
 
   uint32_t mode = 0;
-  bool factory_mode = false;
+  //bool factory_mode = false;
 
   if (startup_mode_flag == STAY_IN_BOARDLOADER_FLAG) {
     mode = BOARD_MODE;
     *STAY_IN_FLAG_ADDR = 0;
-  } else if (fatfs_check_res() != 0) {
-    mode = BOARD_MODE;
-    factory_mode = true;
-  }
+  } 
   if (startup_mode_flag == STAY_IN_BOOTLOADER_FLAG) {
     mode = BOOT_MODE;
   }
@@ -477,13 +474,14 @@ int main(void) {
   //   display_bar(160, 352, 160, 4, COLOR_BLACK);
   // }
 
-  if (mode == BOARD_MODE) {
-    if (!factory_mode) {
-      f_chmod("/res/", AM_RDO | AM_SYS | AM_HID, AM_RDO | AM_SYS | AM_HID);
-    }
-  } else {
-    f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
-  }
+  // if (mode == BOARD_MODE) {
+  //   if (!factory_mode) {
+  //     f_chmod("/res/", AM_RDO | AM_SYS | AM_HID, AM_RDO | AM_SYS | AM_HID);
+  //   }
+  // } else {
+  //   f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
+  // }
+  //f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
 
   if (mode == BOARD_MODE) {
     display_printf(BOARD_VERSION);
@@ -530,8 +528,8 @@ int main(void) {
       return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
     }
   }
+  //boot_present = sectrue;
 
-  boot_present = sectrue; // jump to bootloader
   if (boot_present == secfalse) {
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");

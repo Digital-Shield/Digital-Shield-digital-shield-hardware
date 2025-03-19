@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include "battery.h"
+#include "lowlevel.h"
 #include "qspi_flash.h"
 #include "random_delays.h"
 #include "secbool.h"
@@ -44,9 +45,8 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_rcc.h"
 #include "uart_log.h"
-#include "lowlevel.h"
 
-#define MSG_NAME_TO_ID(x) MessageType_MessageType_##x
+#define MSG_NAME_TO_ID(x)         MessageType_MessageType_##x
 
 #define USB_OTG_HS_DATA_FIFO_RAM  (USB_OTG_HS_PERIPH_BASE + 0x20000U)
 #define USB_OTG_HS_DATA_FIFO_SIZE (4096U)
@@ -58,7 +58,7 @@ const uint8_t BOOTLOADER_KEY_N = 7;
 const uint8_t BOOTLOADER_KEY_M = 2;
 const uint8_t BOOTLOADER_KEY_N = 3;
 #endif
-const uint8_t * const BOOTLOADER_KEYS[] = {
+const uint8_t* const BOOTLOADER_KEYS[] = {
 #if PRODUCTION
 #else
     (const uint8_t *)"\x57\x11\x4f\x0a\xa6\x69\xd2\xf8\x37\xe0\x40\xab\x9b\xb5\x1c\x00\x99\x12\x09\xf8\x4b\xfd\x7b\xf0\xf8\x93\x67\x62\x46\xfb\xa2\x4a",
@@ -473,7 +473,7 @@ static secbool validate_firmware_code(vendor_header* const vhdr, image_header* c
 int main(void)
 {
     volatile uint32_t stay_in_bootloader_flag = *STAY_IN_FLAG_ADDR;
-    bool serial_set = false, cert_set = false;
+    bool serial_set = false, cert_set = false, res_set = false, vaild_firmware = false;
 
     // use log
     uart_log_init();
@@ -525,6 +525,10 @@ int main(void)
     qspi_flash_config();
     qspi_flash_memory_mapped();
 
+    wait_random();
+    ensure_emmcfs(emmc_fs_init(), "emmc_fs_init");
+    ensure_emmcfs(emmc_fs_mount(true, false), "emmc_fs_mount");
+
     // bus_fault_disable();
     // /* Initialize the LCD */
     // TODO: add boot ui
@@ -533,30 +537,24 @@ int main(void)
     // display_clear();
 
     // device_para_init(); // TODO: need debug.
-    if (!serial_set) {
-      serial_set = device_serial_set();
-      serial_set = true; // TODO: need debug.
+    if ( !serial_set )
+    {
+        serial_set = device_serial_set();
+        serial_set = true; // TODO: need debug.
     }
 
     // se_init();
-    if (!cert_set) { // if se certificate is not set
-    //   uint32_t cert_len = 0;
-    //   cert_set = se_get_certificate_len(&cert_len);
-      cert_set = true; // TODO: need debug.
+    if ( !cert_set )
+    {                    // if se certificate is not set
+                         //   uint32_t cert_len = 0;
+                         //   cert_set = se_get_certificate_len(&cert_len);
+        cert_set = true; // TODO: need debug.
     }
 
-    if (!serial_set || !cert_set) {
-      display_clear();
-      device_set_factory_mode(true);
-      ui_bootloader_factory();
-      if (bootloader_usb_loop_factory(NULL, NULL) != sectrue) {
-        return 1;
-      }
+    if ( emmc_fs_path_exist("0:/res/.DIGITSHIELD_RESOURCE") == true )
+    {
+        res_set = true;
     }
-
-    wait_random();
-    ensure_emmcfs(emmc_fs_init(), "emmc_fs_init");
-    ensure_emmcfs(emmc_fs_mount(true, false), "emmc_fs_mount");
 
     BLE_CTL_PIN_INIT();
     ble_function_on();
@@ -568,47 +566,8 @@ int main(void)
         stay_in_bootloader = sectrue;
     }
 
-    // stay_in_bootloader = sectrue;
-
     vendor_header vhdr;
     image_header hdr;
-    // check stay_in_bootloader flag
-    if ( stay_in_bootloader == sectrue )
-    {
-        display_clear();
-        if ( sectrue == validate_firmware_headers(&vhdr, &hdr) )
-        {
-            ui_bootloader_first(&hdr);
-            if ( bootloader_usb_loop(&vhdr, &hdr) != sectrue )
-            {
-                return 1;
-            }
-        }
-        else
-        {
-            ui_bootloader_first(NULL);
-            if ( bootloader_usb_loop(NULL, NULL) != sectrue )
-            {
-                return 1;
-            }
-        }
-        if ( sectrue == validate_firmware_headers(&vhdr, &hdr) )
-        {
-            // ui_bootloader_first(&hdr);
-            if ( bootloader_usb_loop(&vhdr, &hdr) != sectrue )
-            {
-                return 1;
-            }
-        }
-        else
-        {
-            // ui_bootloader_first(NULL);
-            if ( bootloader_usb_loop(NULL, NULL) != sectrue )
-            {
-                return 1;
-            }
-        }
-    }
 
     // check if firmware valid
     if ( sectrue == validate_firmware_headers(&vhdr, &hdr) )
@@ -616,17 +575,13 @@ int main(void)
         if ( sectrue == validate_firmware_code(&vhdr, &hdr) )
         {
             // __asm("nop"); // all good, do nothing
-        }
-        else
-        {
-            display_clear();
-            ui_bootloader_first(&hdr);
-            // if (bootloader_usb_loop(&vhdr, &hdr) != sectrue) {
-            //   return 1;
-            // }
+            vaild_firmware = true;
         }
     }
-    else
+
+    // check all flags
+    if ( stay_in_bootloader == sectrue || vaild_firmware == false || serial_set == false ||
+         cert_set == false || res_set == false )
     {
         display_clear();
         ui_bootloader_first(NULL);
@@ -636,37 +591,6 @@ int main(void)
         }
     }
 
-    // check if firmware valid again to make sure
-    // ensure(validate_firmware_headers(&vhdr, &hdr), "invalid firmware header");
-    // ensure(validate_firmware_code(&vhdr, &hdr), "invalid firmware code");
-
-    // if all VTRUST flags are unset = ultimate trust => skip the procedure
-    // if ((vhdr.vtrust & VTRUST_ALL) != VTRUST_ALL) {
-    //   // ui_fadeout();  // no fadeout - we start from black screen
-    //   ui_screen_boot(&vhdr, &hdr);
-    //   ui_fadein();
-
-    //   int delay = (vhdr.vtrust & VTRUST_WAIT) ^ VTRUST_WAIT;
-    //   if (delay > 1) {
-    //     while (delay > 0) {
-    //       ui_screen_boot_wait(delay);
-    //       hal_delay(1000);
-    //       delay--;
-    //     }
-    //   } else if (delay == 1) {
-    //     hal_delay(1000);
-    //   }
-
-    //   if ((vhdr.vtrust & VTRUST_CLICK) == 0) {
-    //     ui_screen_boot_click();
-    //     while (touch_read() == 0)
-    //       ;
-    //   }
-    //   display_clear();
-    // }
-
-    // mpu_config_firmware();
-    // jump_to_unprivileged(FIRMWARE_START + vhdr.hdrlen + IMAGE_HEADER_SIZE);
     bus_fault_disable();
     mpu_config_off();
     jump_to(FIRMWARE_START + vhdr.hdrlen + IMAGE_HEADER_SIZE);
