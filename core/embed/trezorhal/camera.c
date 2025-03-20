@@ -86,6 +86,10 @@
 // debug for qrcode scan
 #define CAMERA_SHOW_GRAY 0
 
+// the first version of sensor out image need rotate
+// TODO: remove this micro later
+#define SENSOR_OUT_IMAGE_NEED_ROTATE 1
+
 // camera power module control pin PK2
 #define CAMERA_POWER_GPIO_CLK_ENABLE() __HAL_RCC_GPIOK_CLK_ENABLE()
 #define CAMERA_POWER_GPIO_PORT GPIOK
@@ -500,8 +504,13 @@ static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
   }
 
   // (void)src;(void)dst;
+  // TODO: use senser corp image
   if (line >= window.y0 && line < window.y1) {
+#if SENSOR_OUT_IMAGE_NEED_ROTATE
 	  dst = FMC_SDRAM_CAMERA_BUFFER_ADDRESS + (line - window.y0) * window.width * 2;
+#else
+    dst = FMC_SDRAM_IMAGE_BUFFER_ADDRESS + (line - window.y0) * window.width * 2;
+#endif
 	  src = src + (window.x0) * 2;
 	  //memcpy(dst, src, window.width * 2);
     HAL_MDMA_Start(&hmdma, src, dst, window.width * 2, 1);
@@ -669,6 +678,7 @@ void histogram_equalization() {
     }
 }
 
+#if SENSOR_OUT_IMAGE_NEED_ROTATE
 #define CLOCK_WISH 0
 static void rotate_image(void) {
 #if CLOCK_WISH
@@ -699,6 +709,7 @@ static void rotate_image(void) {
   }
 #endif
 }
+#endif
 
 #if CAMERA_SHOW_GRAY
 static void gray_to_rgb565(void) {
@@ -776,7 +787,9 @@ void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi) {
   // not used
   (void)hdcmi;
   camera_suspend();
+#if SENSOR_OUT_IMAGE_NEED_ROTATE
   rotate_image();
+#endif
   // no need convert gray while COVERING or already gray
   if (qr_status != QR_GRAYSCALE && qr_status != QR_MAKING_GRAYSCALE) {
     qr_status = QR_MAKING_GRAYSCALE;
