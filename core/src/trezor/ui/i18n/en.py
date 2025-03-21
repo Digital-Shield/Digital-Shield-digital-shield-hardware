@@ -181,6 +181,7 @@ class Title:
     asset = "Asset"
     unimplemented = "Unimplemented"
     invalid_data = "Invalid data type"
+    low_power = "Low Power"
 
 class Tip:
     swipe_down_to_close = "Swipe down to close"
@@ -333,6 +334,7 @@ class Text:
     sequence_number = "Sequence number:"
     expiration_time = "Expiration time:"
     argument_x = "Argument #{}:"
+    low_power_message = "Battery is at {}% \n Please charge"
 
 class WalletSecurity:
     header = "Write down mnemonic on a piece of paper and store it in a safe place."

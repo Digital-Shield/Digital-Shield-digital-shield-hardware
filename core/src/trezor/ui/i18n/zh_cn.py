@@ -145,6 +145,7 @@ class Title:
     asset = "资产"
     unimplemented = "未实现"
     invalid_data="无效的数据格式"
+    low_power = "电量低"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -298,6 +299,7 @@ class Text:
     sequence_number = "序列号"
     expiration_time = "过期时间"
     argument_x = "参数 #{}"
+    low_power_message = "电量还剩余 {}%\n请充电"
 
 class Tip:
     swipe_down_to_close = "向下滑动以关闭"

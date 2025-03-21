@@ -5,6 +5,12 @@ from trezor import utils, workflow
 from trezor.ui import i18n, colors, Style
 from trezor.ui.component import HStack
 from trezor.ui.screen.confirm import Confirm
+from trezor.ui.screen.message import Message
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Callable
+    pass
 
 class PowerOff(Confirm):
     def __init__(self):
@@ -86,3 +92,22 @@ class Restarting(Modal):
     async def show(self):
         from trezor.ui.screen import manager
         await manager.replace(self)
+
+
+
+class LowPower(Message):
+    on_confirm: Callable[[], None]|None
+
+    def __init__(self, charge):
+        msg = i18n.Text.low_power_message.format(charge)
+        super().__init__(i18n.Title.low_power, msg)
+        self.on_confirm = None
+
+    def update_charge(self, charge: int):
+        msg = i18n.Text.low_power_message.format(charge)
+        self.text.set_text(msg)
+
+    def on_click_ok(self):
+        super().on_click_ok()
+        if self.on_confirm:
+            self.on_confirm()
