@@ -2,11 +2,16 @@ from trezor import log, loop, utils
 from trezor.ui import lvgl_tick
 from trezor.ui.screen.manager import monitor_task
 from trezor.uart import handle_ble_info, handle_uart, handle_usb_state
+from storage import device
 
 # register background tasks
 from trezor import tasks as _
 
 import apps.base
+
+if not device.ble_enabled():
+    from trezor import io
+    io.BLE().power_off()
 
 apps.base.boot()
 
@@ -14,6 +19,7 @@ if __debug__:
     import apps.debug
 
     apps.debug.boot()
+
 
 # run main event loop and specify which screen is the default
 loop.schedule(apps.base.set_homescreen())

@@ -24,12 +24,24 @@ class Bluetooth(ToggleItem):
         device.set_ble_status(enabled)
         ble = io.BLE()
         if enabled:
-            ble.ctrl(BLE_CMD_CTRL, BLE_CMD_CTRL_OP_OPEN)
-            # ble.power_on()
-            # StatusBar.instance().show_ble(StatusBar.BLE_STATE_ENABLED)
+            ble.power_on()
+            from trezor import workflow, loop
+            from trezor.uart import fetch_all
+            async def get_ble_info():
+                await loop.sleep(7)
+                fetch_all()
+            workflow.spawn(get_ble_info())
+            # async def get_ble_info():
+            #     count = 0
+            #     while count < 20:
+            #         await loop.sleep(1000)
+            #         log.debug(__name__, f"count: {count}")
+            #         count += 1
+            #         fetch_all()
+            # workflow.spawn(get_ble_info())
+
         else:
+            # power off reduce battery use
             ble.ctrl(BLE_CMD_CTRL, BLE_CMD_CTRL_OP_DISCONNECT)
             ble.ctrl(BLE_CMD_CTRL, BLE_CMD_CTRL_OP_CLOSE)
-            # power off reduce battery use
-            # ble.power_off()
-            # StatusBar.instance().show_ble(StatusBar.BLE_STATE_DISABLED)
+            ble.power_off()

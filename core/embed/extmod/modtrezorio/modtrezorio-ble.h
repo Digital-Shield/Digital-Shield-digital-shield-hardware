@@ -18,7 +18,9 @@
  */
 
 #include "ble.h"
+#include "common.h"
 #include "embed/extmod/trezorobj.h"
+#include "spi.h"
 
 /// package: trezorio.__init__
 
@@ -62,6 +64,8 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_3(mod_trezorio_BLE_ctrl_obj,
 ///     Turn on the BLE.
 ///     """
 static mp_obj_t mod_trezorio_BLE_power_on(mp_obj_t self) {
+  SET_COMBUS_HIGH();
+  hal_delay(1);
   ble_function_on();
   return mp_const_none;
 }
@@ -75,6 +79,8 @@ mod_trezorio_BLE_power_on);
 ///     """
 static mp_obj_t mod_trezorio_BLE_power_off(mp_obj_t self) {
   ble_function_off();
+  hal_delay(1);
+  SET_COMBUS_LOW();
   return mp_const_none;
 }
 
