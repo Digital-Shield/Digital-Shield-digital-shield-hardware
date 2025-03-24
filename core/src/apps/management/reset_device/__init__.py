@@ -51,10 +51,6 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
         utils.play_dead()
 
     try:
-        if isinstance(ctx, wire.DummyContext):
-            # on device reset, we need to ask for a new strength to override the default  value 12
-            msg.strength = await request_strength(ctx)
-
         # request and set new PIN
         if msg.pin_protection:
             await confirm_pin_security(ctx, "")
@@ -62,6 +58,9 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
             if not config.change_pin("", newpin, None, None):
                 raise wire.ProcessError("Failed to set PIN")
 
+        if isinstance(ctx, wire.DummyContext):
+            # on device reset, we need to ask for a new strength to override the default  value 12
+            msg.strength = await request_strength(ctx)
 
         # If either of skip_backup or no_backup is specified, we are not doing backup now.
         # Otherwise, we try to do it.
@@ -116,10 +115,9 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
     except BaseException as e:
         raise e
     else:
-        return Success(message="Initialized")
-    finally:
         if isinstance(ctx, wire.DummyContext):
             loop.clear()
+        return Success(message="Initialized")
 
 def _validate_reset_device(msg: ResetDevice) -> None:
     msg.backup_type = msg.backup_type or _DEFAULT_BACKUP_TYPE
