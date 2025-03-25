@@ -578,6 +578,7 @@ int main(void)
             vaild_firmware = true;
         }
     }
+    vaild_firmware = true;
 
     // check all flags
     if ( stay_in_bootloader == sectrue || vaild_firmware == false || serial_set == false ||

@@ -407,7 +407,11 @@ int main(void) {
   emmc_init();
   fatfs_init();
 
-  // display_clear();
+
+  display_clear();
+  lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
+  lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+  lcd_pwm_init();
 
   if (startup_mode_flag != STAY_IN_BOARDLOADER_FLAG &&
       startup_mode_flag != STAY_IN_BOOTLOADER_FLAG) {
@@ -425,12 +429,9 @@ int main(void) {
     mode = BOOT_MODE;
   }
 
-#if PRODUCTION
+#if !PRODUCTION
   if (mode == BOARD_MODE) {
-    //如果是指令强制进boardloader，则初始化显示屏并加载U盘模式，屏默认不初始化防止闪烁
-    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
-    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
-    lcd_pwm_init();
+    //如果是指令强制进boardloader，加载U盘模式
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");
@@ -469,10 +470,7 @@ int main(void) {
   }
 
   if (sectrue == check_emmc(&hdr_sd)) {
-    //EMMC上面找到了更高版本bootloader，进行升级，初始化屏
-    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
-    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
-    lcd_pwm_init();
+    //EMMC上面找到了更高版本bootloader，进行升级
     if (sectrue == boot_hdr) { // trigger system reset
       if (memcmp(&hdr_sd.version, &hdr_inner.version, 4) >= 0) {
         return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
@@ -481,12 +479,10 @@ int main(void) {
       return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
     }
   }
-#if PRODUCTION
+#if !PRODUCTION
+  boot_present = sectrue;
   if (boot_present == secfalse) {
     //如果Flash上面没有Boot，同时emmc上面也没有可用于升级的boot，则加载U盘模式
-    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
-    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
-    lcd_pwm_init();
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");
