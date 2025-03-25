@@ -57,16 +57,15 @@ class XSecurity(base(Modal)):
 
 
 class PinSecurity(XSecurity):
-    title = i18n.Title.pin_security
-    message = i18n.PinSecurity
 
     def __init__(self):
-        super().__init__(title=self.title, message=self.message)
+        title = i18n.Title.pin_security
+        message = i18n.PinSecurity
+        super().__init__(title=title, message=message)
 
 
 class MnemonicSecurity(XSecurity):
-    title = i18n.Title.mnemonic_security
-    message = i18n.MnemonicSecurity
-
     def __init__(self):
-        super().__init__(title=self.title, message=self.message)
+        title = i18n.Title.mnemonic_security
+        message = i18n.MnemonicSecurity
+        super().__init__(title=title, message=message)
