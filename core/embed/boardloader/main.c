@@ -60,7 +60,7 @@ const uint8_t BOARDLOADER_KEY_N = 3;
 static const uint8_t * const BOARDLOADER_KEYS[] = {
 #if PRODUCTION
 #else
-// TREZOR dev_key
+// Digitalshield dev_key
 (const uint8_t
 *)"\xdb\x99\x5f\xe2\x51\x69\xd1\x41\xca\xb9\xbb\xba\x92\xba\xa0\x1f\x9f\x2e\x1e\xce\x7d\xf4\xcb\x2a\xc0\x51\x90\xf3\x7f\xcc\x1f\x9d",
 (const uint8_t
@@ -407,10 +407,7 @@ int main(void) {
   emmc_init();
   fatfs_init();
 
-  display_clear();
-  lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
-  // if boardloader need UI, then init backlight
-  // lcd_pwm_init();
+  // display_clear();
 
   if (startup_mode_flag != STAY_IN_BOARDLOADER_FLAG &&
       startup_mode_flag != STAY_IN_BOOTLOADER_FLAG) {
@@ -428,62 +425,12 @@ int main(void) {
     mode = BOOT_MODE;
   }
 
-  // TODO: lvgl display
-
-  // if (!mode) { // touch choose entry to boardloader or bootloader mode
-  //   ble_usart_init();
-  //   bool touched = false;
-  //   uint32_t touch_data, x_start, y_start, x_mov, y_mov;
-  //   touch_data = x_start = y_start = x_mov = y_mov = 0;
-
-  //   for (int timer = 0; timer < 1600; timer++) {
-  //     ble_uart_poll();
-
-  //     if (timer % 8 == 0) {
-  //       show_poweron_bar();
-  //     }
-
-  //     if (ble_power_button_state() == 2) {
-  //       if (touched) {
-  //         mode = BOARD_MODE;
-  //       } else {
-  //         mode = BOOT_MODE;
-  //       }
-  //       break;
-  //     }
-  //     touch_data = touch_read();
-  //     if (touch_data != 0) {
-  //       if (touch_data & TOUCH_START) {
-  //         x_start = x_mov = (touch_data >> 12) & 0xFFF;
-  //         y_start = y_mov = touch_data & 0xFFF;
-  //       }
-
-  //       if (touch_data & TOUCH_MOVE) {
-  //         x_mov = (touch_data >> 12) & 0xFFF;
-  //         y_mov = touch_data & 0xFFF;
-  //       }
-
-  //       if ((abs(x_start - x_mov) > 100) || (abs(y_start - y_mov) > 100)) {
-  //         touched = true;
-  //       }
-  //     }
-
-  //     hal_delay(1);
-  //   }
-  //   ble_usart_irq_disable();
-  //   display_bar(160, 352, 160, 4, COLOR_BLACK);
-  // }
-
-  // if (mode == BOARD_MODE) {
-  //   if (!factory_mode) {
-  //     f_chmod("/res/", AM_RDO | AM_SYS | AM_HID, AM_RDO | AM_SYS | AM_HID);
-  //   }
-  // } else {
-  //   f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
-  // }
-  //f_chmod("/res/", 0, AM_RDO | AM_SYS | AM_HID);
-
+#if PRODUCTION
   if (mode == BOARD_MODE) {
+    //如果是指令强制进boardloader，则初始化显示屏并加载U盘模式，屏默认不初始化防止闪烁
+    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
+    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+    lcd_pwm_init();
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");
@@ -495,6 +442,8 @@ int main(void) {
       }
     }
   }
+#endif
+  
 
   if (mode == BOOT_MODE) {
     *STAY_IN_FLAG_ADDR = STAY_IN_BOOTLOADER_FLAG;
@@ -520,6 +469,10 @@ int main(void) {
   }
 
   if (sectrue == check_emmc(&hdr_sd)) {
+    //EMMC上面找到了更高版本bootloader，进行升级，初始化屏
+    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
+    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+    lcd_pwm_init();
     if (sectrue == boot_hdr) { // trigger system reset
       if (memcmp(&hdr_sd.version, &hdr_inner.version, 4) >= 0) {
         return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
@@ -528,9 +481,12 @@ int main(void) {
       return copy_emmc(hdr_sd.codelen) == sectrue ? 0 : 3;
     }
   }
-  //boot_present = sectrue;
-
+#if PRODUCTION
   if (boot_present == secfalse) {
+    //如果Flash上面没有Boot，同时emmc上面也没有可用于升级的boot，则加载U盘模式
+    lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
+    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+    lcd_pwm_init();
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");
@@ -542,6 +498,9 @@ int main(void) {
       }
     }
   }
+#else
+  (void)boot_present;
+#endif
   jump_to(BOOTLOADER_START + IMAGE_HEADER_SIZE);
 
   return 0;

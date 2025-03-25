@@ -91,8 +91,6 @@ secbool load_image_header(const uint8_t *const data, const uint32_t magic,
   }
   blake2s_Final(&ctx, hdr->fingerprint, BLAKE2S_DIGEST_LENGTH);
 
-  return sectrue;
-  // TODO: verify firmware signature
   ed25519_public_key pub;
   if (sectrue != compute_pubkey(key_m, key_n, keys, hdr->sigmask, pub))
     return secfalse;
