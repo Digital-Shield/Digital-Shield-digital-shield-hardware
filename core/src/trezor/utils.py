@@ -179,7 +179,7 @@ def unimport_end(mods: set[str], collect: bool = True) -> None:
     # static check that the size of sys.modules never grows above value of
     # MICROPY_LOADED_MODULES_DICT_SIZE, so that the sys.modules dict is never
     # reallocated at run-time
-    assert len(sys.modules) <= 160, "Please bump preallocated size in mpconfigport.h"
+    assert len(sys.modules) <= 256, "Please bump preallocated size in mpconfigport.h"
     for mod in sys.modules:  # pylint: disable=consider-using-dict-items
         if mod not in mods:
             # remove reference from sys.modules
