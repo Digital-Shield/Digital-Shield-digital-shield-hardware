@@ -115,7 +115,7 @@ static inline void clamp_coords(int x, int y, int w, int h, int *x0, int *y0,
 }
 
 void display_clear(void) {
-  fb_fill_rect(0, 0, MAX_DISPLAY_RESX, MAX_DISPLAY_RESY, 0xFFFF);
+  fb_fill_rect(0, 0, MAX_DISPLAY_RESX, MAX_DISPLAY_RESY, 0x0000);
 }
 
 void display_bar(int x, int y, int w, int h, uint16_t c) {

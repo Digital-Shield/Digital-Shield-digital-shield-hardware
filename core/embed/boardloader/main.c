@@ -408,9 +408,10 @@ int main(void) {
   fatfs_init();
 
 
-  display_clear();
+
   lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
   lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+  display_clear();
   lcd_pwm_init();
 
   if (startup_mode_flag != STAY_IN_BOARDLOADER_FLAG &&

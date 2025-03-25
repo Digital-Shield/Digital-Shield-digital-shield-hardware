@@ -34,7 +34,6 @@ async def boot() -> None:
 
 
 loop.schedule(lvgl_task)
-ui.display.backlight(ui.BACKLIGHT_NONE)
 config.init(None)
 ui.display.backlight(storage.device.get_brightness())
 clear()
