@@ -50,19 +50,21 @@ V2_BOARDLOADER_KEYS = [
 V2_BOARDLOADER_DEV_KEYS = [
     bytes.fromhex(key)
     for key in (
-        # add user keys
+        "db995fe25169d141cab9bbba92baa01f9f2e1ece7df4cb2ac05190f37fcc1f9d",
+        "2152f8d19b791d24453242e15f2eab6cb7cffa7b6a5ed30097960e069881db12",
     )
 ]
 
 V2_BOOTLOADER_KEYS = [
     bytes.fromhex(key)
     for key in (
-        # a test key, DO NOT use
-        "639BAF894B85BE2D02D48DBFA822A48C7962BFDAF8C6D00605F76A1B2A6B65B9",
+        "d759793bbc13a2819a827c76adb6fba8a49aee007f49f2d0992d99b825ad2c48",
+        "6355691c178a8ff91007a7478afb955ef7352c63e7b25703984cf78b26e21a56",
+        "b8307a71f552c60a4cbb317ff48b82cdbf6b6bb5f04c920fec7badf017883751",
     )
 ]
 
-V2_SIGS_REQUIRED = 1
+V2_SIGS_REQUIRED = 2
 
 ONEV2_CHUNK_SIZE = 1024 * 64
 V2_CHUNK_SIZE = 1024 * 256
