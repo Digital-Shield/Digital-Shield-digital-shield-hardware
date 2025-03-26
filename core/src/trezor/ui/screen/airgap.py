@@ -1,14 +1,15 @@
 import lvgl as lv
 
-from . import with_title_and_buttons
 from . import Modal
 from trezor.ui import i18n, colors, Done
 from trezor.ui.component import HStack
 
-class EthSignature(with_title_and_buttons(Modal, i18n.Button.ok)):
+class EthSignature(Modal):
     def __init__(self, sig: str):
         super().__init__()
         self.set_title(i18n.Title.signature)
+        self.btn_right.set_text(i18n.Button.ok)
+
         self.create_content(HStack)
         self.content: HStack
         self.content.items_center()

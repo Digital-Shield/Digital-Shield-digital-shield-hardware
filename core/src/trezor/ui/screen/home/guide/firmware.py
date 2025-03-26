@@ -2,13 +2,13 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 
 from . import *
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class Firmware(with_title(Navigation)):
+class Firmware(Navigation):
     def __init__(self,title):
         super().__init__()
         self.set_title(title)

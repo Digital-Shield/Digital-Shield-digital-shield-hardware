@@ -2,13 +2,13 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 from trezor.ui import Style, font, colors, i18n
 from . import *
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class Terms(with_title(Navigation)):
+class Terms(Navigation):
     def __init__(self,title):
         super().__init__()
         self.set_title(title)
@@ -25,11 +25,11 @@ class Terms(with_title(Navigation)):
         )
         contaner.set_height(lv.SIZE.CONTENT)
         contaner.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)
-        
+
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_terms_us)
         view.set_text(i18n.Guide.terms_describe_terms_us)
-        
+
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_product_services)
         view.set_text(i18n.Guide.terms_describe_product_services)

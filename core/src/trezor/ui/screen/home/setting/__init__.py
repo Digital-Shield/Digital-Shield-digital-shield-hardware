@@ -3,15 +3,12 @@ import lvgl as lv
 from trezor import log
 from trezor.ui import i18n, Style, theme, colors
 from trezor.ui.component import HStack, VStack
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
-class SettingApp(with_title(Navigation)):
+class SettingApp(Navigation):
     def __init__(self):
         super().__init__()
-        title_label = lv.label(self)
-        title_label.set_text(i18n.App.setting)
-        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
-        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
+        self.title.set_text(i18n.App.setting)
 
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
@@ -145,7 +142,7 @@ class OptionsItem(SampleItem):
         text = self.current()
         self.option.set_text(text)
         self.option.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
- 
+
 
         # right-arrow
         self.arrow = lv.label(self)

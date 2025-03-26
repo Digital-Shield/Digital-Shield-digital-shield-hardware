@@ -6,7 +6,7 @@ from trezor import log
 from trezor.ui import i18n, theme, colors, font, Style
 from trezor.ui import Confirm, Reject, Continue, Cancel, More
 from trezor.ui.component import HStack, LabeledText, Button
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 from trezor.ui.screen.confirm import HolderConfirm
 
 # import TransactionOverview in `ethereum` namespace
@@ -18,10 +18,12 @@ if TYPE_CHECKING:
     pass
 
 
-class TypedHash(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.cancel)):
+class TypedHash(Modal):
     def __init__(self, domain_hash: str, message_hash: str, *, coin: str|None = None):
         super().__init__()
         self.set_title(i18n.Title.typed_hash.format(coin or ""))
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.cancel)
 
         self.content: lv.obj
         self.content.set_style_pad_all(16, lv.PART.MAIN)
@@ -59,10 +61,12 @@ class TypedHash(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button
             self.close(Cancel())
 
 
-class Eip712(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.cancel)):
+class Eip712(Modal):
     def __init__(self, title: str, **kwargs):
         super().__init__()
         self.set_title(title)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.cancel)
 
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
@@ -96,10 +100,12 @@ class Eip712(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.ca
             self.close(Reject())
 
 
-class ShowMore(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class ShowMore(Modal):
     def __init__(self, title: str, param: Iterable[str]):
         super().__init__()
         self.set_title(title)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
 
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
@@ -152,9 +158,7 @@ class ShowMore(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.re
             log.debug(__name__, "clicked more button")
             self.close(More())
 
-class TransactionDetail(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class TransactionDetail(Modal):
     def __init__(
         self,
         amount: str,
@@ -168,6 +172,9 @@ class TransactionDetail(
         super().__init__()
 
         self.set_title(i18n.Title.transaction_detail, icon)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -238,9 +245,7 @@ class TransactionDetail(
         self.close(Continue())
 
 
-class TransactionDetail1559(
-    with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)
-):
+class TransactionDetail1559(Modal):
     def __init__(
         self,
         amount: str,
@@ -254,6 +259,9 @@ class TransactionDetail1559(
     ):
         super().__init__()
         self.set_title(i18n.Title.transaction_detail, icon)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack

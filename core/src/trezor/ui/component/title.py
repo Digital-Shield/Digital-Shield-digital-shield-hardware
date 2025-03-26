@@ -17,6 +17,11 @@ class Title(VStack):
         self.text.add_style(Styles.title_text, lv.PART.MAIN)
         self.text.set_text("")
 
+    def set(self, text: str, icon: str|None):
+        self.set_text(text)
+        if icon:
+            self.set_icon(icon)
+
     def set_text(self, text: str):
         self.text.set_text(text)
 

@@ -2,20 +2,22 @@ import lvgl as lv
 
 from . import *
 from trezor import utils, log
-from trezor.ui import i18n, Style, colors, Redo, font
-from trezor.ui.screen import Modal, Navigation, with_title_and_buttons
+from trezor.ui import i18n, Style, colors, Redo, font, Done
+from trezor.ui.screen import Modal, Navigation
 from trezor.ui.theme import Styles
-from trezor.ui.component import HStack, VStack, Title
+from trezor.ui.component import HStack, VStack
 from trezor.ui.component import MnemonicKeyboard
 
 from trezor.ui.types import *
 
-class MnemonicDisplay(with_title_and_buttons(Modal, i18n.Button.next, i18n.Button.redo)):
+class MnemonicDisplay(Modal):
 
     def __init__(self):
         super().__init__()
         # self.set_title(i18n.Title.backup_mnemonic, "A:/res/app_security.png")
         self.set_title(i18n.Title.backup_mnemonic)
+        self.btn_right.set_text(i18n.Button.next)
+        self.btn_left.set_text(i18n.Button.redo)
 
         self.create_content(VStack)
         self.content: VStack
@@ -64,11 +66,14 @@ class MnemonicDisplay(with_title_and_buttons(Modal, i18n.Button.next, i18n.Butto
             )
             self.items.append(item)
 
-class MnemonicCheck(base(Navigation)):
+class MnemonicCheck(Navigation):
     def __init__(self):
         super().__init__()
         # self.set_title(i18n.Title.check_mnemonic, "A:/res/app_security.png")
         self.set_title(i18n.Title.check_mnemonic)
+        self.btn_right.set_text(i18n.Button.next)
+        self.btn_next = self.btn_right
+        self.btn_next.add_event_cb(self.on_click_next, lv.EVENT.CLICKED, None)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
@@ -154,11 +159,14 @@ class MnemonicCheck(base(Navigation)):
         from trezor.ui.screen import manager
         manager.mark_dismissing(self)
 
-class MnemonicInput(base(Navigation)):
+class MnemonicInput(Navigation):
     def __init__(self, count):
         super().__init__()
         # self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
         self.set_title(i18n.Title.enter_mnemonic)
+        self.btn_right.set_text(i18n.Button.next)
+        self.btn_next = self.btn_right
+        self.btn_next.add_event_cb(lambda e: self.channel.publish(Done()), lv.EVENT.CLICKED, None)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
@@ -406,7 +414,7 @@ class Input(lv.obj):
         )
         self.content.items_center()
         self.content.align(lv.ALIGN.BOTTOM_MID, 0, 0)
-        
+
         # <index> and `textarea`
         container = VStack(self.content)
         container.add_style(
@@ -424,7 +432,7 @@ class Input(lv.obj):
         self.index = lv.label(container)
         self.index.add_style(Styles.title_text, lv.PART.MAIN)
         self.index.set_text(f"#{index + 1}")
-        
+
         self.ta = lv.textarea(container)
         self.ta.set_one_line(True)
         self.ta.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)

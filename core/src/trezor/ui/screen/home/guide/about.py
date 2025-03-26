@@ -2,16 +2,16 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 
 from . import *
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class About(with_title(Navigation)):
+class About(Navigation):
     def __init__(self,title):
         super().__init__()
-        self.set_title(title)
+        self.title.set_text(title)
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
@@ -64,5 +64,5 @@ class Item(VStack):
         qr.set_style_img_recolor(lv.color_white(), 0)
 
     def action(self):
-        from trezor import workflow        
+        from trezor import workflow
         workflow.spawn(QrcodeDetail(self.title,self.url).show())

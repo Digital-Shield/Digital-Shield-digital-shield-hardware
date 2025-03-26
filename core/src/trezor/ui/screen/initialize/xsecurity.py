@@ -3,6 +3,7 @@ import lvgl as lv
 from . import *
 
 from trezor.ui import i18n, Style, colors, font
+from trezor.ui import Done
 from trezor.ui.screen import Modal
 from trezor.ui.theme import Styles
 from trezor.ui.component.container import HStack
@@ -16,11 +17,13 @@ if TYPE_CHECKING:
         tips: List[str] | None = None
 
 
-class XSecurity(base(Modal)):
+class XSecurity(Modal):
     def __init__(self, title, message: SecurityMessage):
         super().__init__()
         # self.set_title(title, "A:/res/app_security.png")
         self.set_title(title)
+        self.btn_right.set_text(i18n.Button.ok)
+        self.btn_right.add_event_cb(lambda _: self.close(Done()), lv.EVENT.CLICKED, None)
 
         self.create_content(HStack)
         self.content: HStack

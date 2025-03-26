@@ -5,18 +5,18 @@ from storage import device
 from trezor import log, workflow, motor
 from trezor.ui import i18n, events,font
 from trezor.ui.theme import Styles
-from trezor.ui.screen import Screen, Navigation, with_title
+from trezor.ui.screen import Screen, Navigation
 from trezor.ui.component import VStack, HStack
 from trezor.ui.component import Swipedown
 
-class Developing(with_title(Navigation)):
+class Developing(Navigation):
     """
     A placeholder for development
     """
 
     def __init__(self, title):
         super().__init__()
-        self.set_title(title)
+        self.title.set_text(title)
 
         img = lv.img(self.content)
         img.set_src("A:/res/logo.png")
@@ -38,9 +38,9 @@ class HomeScreen(Screen):
         wallpaper = device.get_homescreen()
         if wallpaper:  # 判断 `wallpaper` 是否存在
             self.set_style_bg_img_src(wallpaper, 0)
-        else: 
+        else:
             self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
-        
+
         self.set_style_pad_top(64, lv.PART.MAIN)
         tip = lv.label(self)
         tip.set_text(i18n.Tip.swipe_down_to_close)
@@ -58,7 +58,7 @@ class HomeScreen(Screen):
         self.content.set_style_pad_top(50, lv.PART.MAIN)  # 设置顶部填充
         self.content.set_style_pad_row(30, lv.PART.MAIN)  # 设置行间距
         self.content.align(lv.ALIGN.TOP_MID, 0, 0)# 设置位置
-        
+
         apps = [
             # account
             {
@@ -179,7 +179,7 @@ class Item(HStack):
         img.set_src(icon)
         img.set_zoom(230)
         img.clear_flag(lv.obj.FLAG.SCROLLABLE)  # 禁止拖拽
-        
+
         title = lv.label(self)
         title.set_text(label)
         title.set_height(60)

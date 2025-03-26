@@ -1,21 +1,18 @@
 import lvgl as lv
 from trezor.ui import i18n, Style, theme, colors
 from trezor.ui.component import HStack, VStack, LabeledItem,LabeledText
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 from trezor import log, workflow
-class GuideApp(with_title(Navigation)):
+class GuideApp(Navigation):
     def __init__(self):
         super().__init__()
-        # self.set_title(i18n.App.guide)
+        self.title.set_text(i18n.App.guide)
+
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
 
-        title_label = lv.label(self)
-        title_label.set_text(i18n.App.guide)
-        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
-        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
-        
+
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
@@ -49,7 +46,7 @@ class GuideApp(with_title(Navigation)):
             label, action = g["label"], g["action"]
             app = Item(self.content, label)
             app.action = action
-            
+
     def click_terms(self):
         log.debug(__name__, "click terms")
         from .terms import Terms
@@ -64,7 +61,7 @@ class GuideApp(with_title(Navigation)):
         log.debug(__name__, "click firmware")
         from .firmware import Firmware
         workflow.spawn(Firmware(i18n.Guide.firmware_update).show())
-    
+
     def click_about(self):
         log.debug(__name__, "click about")
         from .about import About
@@ -102,15 +99,15 @@ class Item(VStack):
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
         self.arrow.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN) # type: ignore
-        
+
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
-  
+
     def action(self):
         pass
-class QrcodeDetail(with_title(Navigation)):
+class QrcodeDetail(Navigation):
     def __init__(self, title: str ,qrcode: str ):
         super().__init__()
-        self.set_title(title)
+        self.title.set_text(title)
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
@@ -140,4 +137,3 @@ class QrcodeDetail(with_title(Navigation)):
                         0)
         label.set_flex_grow(1)
         label.set_long_mode(lv.label.LONG.WRAP)
-       

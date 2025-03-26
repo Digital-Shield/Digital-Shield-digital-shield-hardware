@@ -5,7 +5,7 @@ from storage import device
 from trezor import log, workflow
 from trezor.ui import i18n, events,font
 from trezor.ui.theme import Styles
-from trezor.ui.screen import Screen, Navigation, with_title
+from trezor.ui.screen import Screen, Navigation
 from trezor.ui.component import VStack, HStack
 from trezor.ui.component import Swipedown
 
@@ -35,12 +35,12 @@ class FrontApp(Screen):
 
         # btn1 = lv.btn(self)
         # btn1.set_size(50, 10)
-        # btn1.align(lv.ALIGN.BOTTOM_MID, 0, -32) 
+        # btn1.align(lv.ALIGN.BOTTOM_MID, 0, -32)
         # btn1.set_style_bg_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         # btn2 = lv.btn(self)
         # btn2.set_size(50, 10)
-        # btn2.align(lv.ALIGN.BOTTOM_MID, 0, -32) 
+        # btn2.align(lv.ALIGN.BOTTOM_MID, 0, -32)
         # btn2.set_style_bg_color(lv.color_hex(0x2E4772), lv.PART.MAIN)
 
         btn_container = lv.obj(self)
@@ -60,7 +60,7 @@ class FrontApp(Screen):
         btn2 = lv.btn(btn_container)
         btn2.set_size(50, 10)
         btn2.set_style_bg_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
-        
+
         apps = [
             # guide
             {
@@ -80,8 +80,8 @@ class FrontApp(Screen):
             label, icon, action = a["label"], a["icon"], a["action"]
             app = Item(self.content, label, icon)
             app.on_click = action
-    
-        
+
+
     def on_swipe_back(self, event: lv.event_t):# 下滑事件
         print("手势事件触发")
         dir = lv.indev_get_act().get_gesture_dir()
@@ -128,7 +128,7 @@ class Item(HStack):
         img.clear_flag(lv.obj.FLAG.SCROLLABLE)  # 禁止拖拽
         title = lv.label(self)
         title.set_text(label)
-   
+
         title.set_style_text_font(font.Bold.SCS30, lv.PART.MAIN)
         title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 

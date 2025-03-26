@@ -1,14 +1,14 @@
 import lvgl as lv
 from storage import device
 from trezor.ui import i18n, font, Done
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 from trezor.ui.component import HStack
 
-class BluetoothPairing(with_title_and_buttons(Modal, i18n.Button.ok)):
+class BluetoothPairing(Modal):
     def __init__(self, code: str):
         super().__init__()
-
         self.set_title(i18n.Title.bluetooth_pairing)
+        self.btn_right.set_text(i18n.Button.ok)
 
         self.create_content(HStack)
         # type annotation

@@ -4,21 +4,16 @@ from trezor import log
 from storage import device
 from trezor.ui import i18n, Style, theme, colors
 from trezor.ui.component import HStack, VStack
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
-class SecurityApp(with_title(Navigation)):
+class SecurityApp(Navigation):
     def __init__(self):
         super().__init__()
-        # self.set_title(i18n.App.security)
+        self.set_title(i18n.App.security)
 
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
-
-        title_label = lv.label(self)
-        title_label.set_text(i18n.App.security)
-        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
-        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
 
         self.create_content(HStack)
         self.content: HStack

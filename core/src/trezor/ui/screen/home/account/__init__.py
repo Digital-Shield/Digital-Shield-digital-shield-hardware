@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 from trezor import loop, workflow
 from trezor.ui import i18n, Style, theme, colors,font
 from trezor.ui.component import HStack, VStack, LabeledText
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 from .evm import EVM, ETH_CHAIN_ID,BSC_CHAIN_ID,MATIC_CHAIN_ID
 
 __USE_BACKGROUND_IMAGE__ = False
-class AccountApp(with_title(Navigation)):
+class AccountApp(Navigation):
     def __init__(self):
         super().__init__()
         self.set_style_bg_img_src(None, lv.PART.MAIN)  # 取消背景图
@@ -17,8 +17,8 @@ class AccountApp(with_title(Navigation)):
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         # self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 设置背景颜色的透明度为完全不透明
 
-        self.set_title(i18n.App.account)
-        self.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置标题颜色为白色
+        self.title.set_text(i18n.App.account)
+
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
@@ -134,7 +134,7 @@ class Coin(Item):
         )
 
 QRCODE_SIZE = 400
-class DetailBase(with_title(Navigation)):
+class DetailBase(Navigation):
     @staticmethod
     def get_name() -> str:
         raise NotImplementedError

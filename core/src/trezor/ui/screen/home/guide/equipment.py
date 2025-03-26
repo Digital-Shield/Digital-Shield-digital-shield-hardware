@@ -3,19 +3,20 @@ from typing import TYPE_CHECKING
 from trezor import utils
 from trezor.uart import get_ble_version
 from . import *
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
 def get_ble_name() -> str:
-    return utils.BLE_NAME if utils.BLE_NAME else ""    
+    return utils.BLE_NAME if utils.BLE_NAME else ""
 
-class Equipment(with_title(Navigation)):
+class Equipment(Navigation):
     def __init__(self,title):
         super().__init__()
         self.set_title(title)
+
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
@@ -51,7 +52,7 @@ class Item(HStack):
         view.set_label(title)
         view.set_text(desc)
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
-    
+
     def action(self):
         pass
 

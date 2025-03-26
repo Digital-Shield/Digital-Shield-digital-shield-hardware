@@ -2,12 +2,10 @@ import lvgl as lv
 
 from trezor.ui import i18n, theme
 from trezor.ui import Reject, Continue
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 from trezor.ui.component import HStack, LabeledText
 
-class Balance(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class Balance(Modal):
     def __init__(
         self,
         amount: str,
@@ -21,6 +19,9 @@ class Balance(
         super().__init__()
 
         self.set_title(i18n.Title.x_transaction.format(chain_name))
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack

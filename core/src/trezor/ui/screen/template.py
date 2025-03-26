@@ -3,7 +3,7 @@ import lvgl as lv
 from trezor import log
 from trezor.ui import i18n, font, colors, theme, Style
 from trezor.ui import Confirm, Reject, Cancel, Detail
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 from trezor.ui.screen.confirm import HolderConfirm
 from trezor.ui.component import HStack, LabeledText
 
@@ -13,20 +13,22 @@ if TYPE_CHECKING:
     from typing import Literal
     AddressState = Literal["address", "qrcode"]
 
-class Address(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.qr_code)):
+class Address(Modal):
     def __init__(
         self, address: str, path: str, network: str, chain_id: int | None = None
     ):
         super().__init__()
         self.set_title(i18n.Title.address.format(network))
+        self.btn_toggle = self.btn_left
+        self.btn_confirm = self.btn_right
+        self.btn_toggle.set_text(i18n.Button.qr_code)
+        self.btn_confirm.set_text(i18n.Button.confirm)
 
         self.address = address
         self.path = path
         self.network = network
         self.chain_id = chain_id
 
-        self.btn_toggle = self.btn_left
-        self.btn_confirm = self.btn_right
 
         self.btn_toggle.add_event_cb(self.on_click_toggle, lv.EVENT.CLICKED, None)
         self.btn_confirm.add_event_cb(self.on_click_confirm, lv.EVENT.CLICKED, None)
@@ -110,7 +112,7 @@ class Address(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.qr_
         if target == self.btn_toggle:
             self.on_click_toggle(e)
 
-class Blob(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.cancel)):
+class Blob(Modal):
     """
     A `Modal` contain: `message`, `label`: `blob`
     """
@@ -118,6 +120,9 @@ class Blob(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.canc
         super().__init__()
 
         self.set_title(title)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_right.set_text(i18n.Button.cancel)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -155,7 +160,7 @@ class Blob(with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.canc
             self.close(Cancel())
 
 
-class SignMessage(with_title_and_buttons(Modal, i18n.Button.sign, i18n.Button.reject)):
+class SignMessage(Modal):
     def __init__(
         self,
         title: str,
@@ -168,6 +173,9 @@ class SignMessage(with_title_and_buttons(Modal, i18n.Button.sign, i18n.Button.re
         super().__init__()
 
         self.set_title(title, icon)
+        self.btn_right(i18n.Button.sign)
+        self.btn_left(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -208,10 +216,13 @@ class SignMessage(with_title_and_buttons(Modal, i18n.Button.sign, i18n.Button.re
             log.debug(__name__, "clicked left button")
             self.close(Reject())
 
-class TransactionOverview(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class TransactionOverview(Modal):
     def __init__(self, network: str, amount: str, to: str, icon: str):
         super().__init__()
         self.set_title(i18n.Title.transaction.format(network), icon)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -292,10 +303,11 @@ class HoldConfirmAction(HolderConfirm):
         self.btn_cancel.set_text(i18n.Button.reject)
         self.btn_cancel.mode('reject')
 
-class UnImplemented(with_title_and_buttons(Modal, i18n.Button.continue_)):
+class UnImplemented(Modal):
     def __init__(self):
         super().__init__()
         self.set_title(i18n.Title.unimplemented)
+        self.btn_right.set_text(i18n.Button.continue_)
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         label = lv.label(self.content)
         label.set_long_mode(lv.label.LONG.WRAP)

@@ -5,6 +5,7 @@ from trezor.ui import Style, font
 from trezor import loop, log
 from trezor.ui import Style, events, theme, colors
 from trezor.ui.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from trezor.ui.component import Title, Button, HStack, VStack
 
 # for type annotations
 from trezor.ui.types import *
@@ -34,6 +35,12 @@ class Screen(lv.obj):
         # almost all
         # default content is self
         self._content: lv.obj = self
+
+        # lazy initialize components
+        self._title: Title|None = None
+        self._btn_container: VStack|None = None
+        self._btn_right: Button|None = None
+        self._btn_left: Button|None = None
 
         # a channel for events
         self.channel = loop.chan()
@@ -69,12 +76,85 @@ class Screen(lv.obj):
     def content(self) -> Widget:
         return self._content
 
+    @property
+    def title(self) -> Title:
+        if not self._title:
+            # use HStack as content ot manager title and remaining content
+            self.create_content(HStack)
+            self.content: HStack
+
+            # add title
+            self._title = self.add(Title)
+            # self.title.set_style_text_font(font.Bold.SCS26, 0)
+            # `content` is remained, for draw all other ui components
+            self.create_content(lv.obj)
+            self.content.set_flex_grow(1)
+
+        return self._title
+
+    @property
+    def btn_right(self) -> Button:
+        if not self._btn_container:
+            self._create_btn_container()
+
+        if not self._btn_right:
+            if not self._btn_left:
+                # only `right` button
+                # add `right` first
+                self._btn_container.reverse()
+                self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.END, lv.PART.MAIN)
+            else:
+                self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
+            self._btn_right = self._btn_container.add(Button)
+
+        return self._btn_right
+
+    @property
+    def btn_left(self) -> Button:
+        if not self._btn_container:
+            self._create_btn_container()
+
+        if not self._btn_left:
+            if not self._btn_right:
+                # only `left` button
+                # add `left` first
+                self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.START, lv.PART.MAIN)
+            else:
+                self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
+            self._btn_left = self._btn_container.add(Button)
+
+        return self._btn_left
+
+    def _create_btn_container(self):
+        self.create_content(HStack)
+        self.content: HStack
+
+        # make buttons at bottom
+        self.content.reverse()
+        self.content.set_style_pad_bottom(32, lv.PART.MAIN)
+
+        # a container for buttons
+        self._btn_container = self.add(VStack)
+
+        # `content` is remained, for draw all other ui components
+        self.create_content(lv.obj)
+        self.content.set_flex_grow(1)
+
+        self._btn_container.set_size(lv.pct(100), lv.SIZE.CONTENT)
+        self._btn_container.set_style_pad_all(0, lv.PART.MAIN)
+        self._btn_container.set_style_pad_left(32, lv.PART.MAIN)
+        self._btn_container.set_style_pad_right(32, lv.PART.MAIN)
+
+
     # component manager
     def add(self, cls: Type[Widget]) -> Widget:
         """
         Add a `Widget` to the `content`
         """
         return cls(self.content)
+
+    def set_title(self, title:str, icon:str|None = None):
+        self.title.set(title, icon)
 
     # screen life cycle
     def on_load_start(self):
@@ -268,112 +348,3 @@ class Modal(Screen):
         from trezor import workflow
 
         workflow.spawn(manager.pop(self))
-
-# 可能使用组合的方式给`Screen`添加 `Title` 和 `Button` 是一个更好的方式
-
-if TYPE_CHECKING:
-    from trezor.ui.component import HStack, Title, Button
-    S = TypeVar("S", bound=Screen)
-    # for type annotation
-    class TitledScreen(Screen):
-        def __init__(self):
-            self.title: Title
-            ...
-
-        def set_title(self, title: str, icon: str|None = None):
-            ...
-
-    class ButtonsScreen(Screen):
-        def __init__(self):
-            self.btn_right: Button
-            self.btn_left: Button|None
-
-    class ButtonsTitledScreen(ButtonsScreen, TitledScreen, Screen):
-        ...
-
-def with_title(cls: Type[S]) -> Type[TitledScreen]:
-    """
-    Add title to screen.
-
-    class MyScreen(with_title(Screen)):
-        pass
-
-    # a titled modal
-    class MyModal(with_title(Modal)):
-        pass
-    """
-
-    from trezor.ui.component import HStack, Title
-    class Titled(cls):
-        def __init__(self):
-            super().__init__()
-
-            # use HStack as content ot manager title and remaining content
-            self.create_content(HStack)
-            self.content: HStack
-
-            # add title
-            self.title = self.add(Title)
-            # self.title.set_style_text_font(font.Bold.SCS26, 0)
-            # `content` is remained, for draw all other ui components
-            self.create_content(lv.obj)
-            self.content.set_flex_grow(1)
-
-            self.content: lv.obj
-
-        def set_title(self, title: str, icon: str|None = None):
-            # can get title width, title can very long? do need wrap?
-            # from trezor.ui import font
-            # size = lv.point_t()
-            # lv.txt_get_size(size, title, font.Bold.SCS38, 0, 0, lv.COORD.MAX, lv.TEXT_FLAG.EXPAND)
-            # log.debug(__name__, f"width of title string is: {size.x})")
-            self.title.set_text(title)
-            if icon:
-                self.title.set_icon(icon)
-
-    return Titled
-
-def with_buttons(cls: Type[S], right: str, left: str|None = None) -> Type[ButtonsScreen]:
-
-    from trezor.ui.component import HStack, VStack, Button
-    class ButtonsScreen(cls):
-        def __init__(self):
-            super().__init__()
-            self.btn_right = None
-            self.btn_left = None
-
-            self.create_content(HStack)
-            self.content: HStack
-
-            # make buttons at bottom
-            self.content.reverse()
-            self.content.set_style_pad_bottom(32, lv.PART.MAIN)
-
-            # a container for buttons
-            container = self.add(VStack)
-            container.reverse()
-            container.set_size(lv.pct(100), lv.SIZE.CONTENT)
-            if not left:
-                container.set_style_flex_main_place(lv.FLEX_ALIGN.END, lv.PART.MAIN)
-            else:
-                container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
-
-            container.set_style_pad_all(0, lv.PART.MAIN)
-            container.set_style_pad_left(32, lv.PART.MAIN)
-            container.set_style_pad_right(32, lv.PART.MAIN)
-
-            self.btn_right = container.add(Button)
-            self.btn_right.set_text(right)
-
-            if left:
-                self.btn_left = container.add(Button)
-                self.btn_left.set_text(left)
-
-            # `content` is remained, for draw all other ui components
-            self.create_content(lv.obj)
-            self.content.set_flex_grow(1)
-
-    return ButtonsScreen
-
-def with_title_and_buttons(cls: Type[S], right: str, left: str|None = None) -> Type[ButtonsTitledScreen]:
-    return with_title(with_buttons(cls, right, left))
