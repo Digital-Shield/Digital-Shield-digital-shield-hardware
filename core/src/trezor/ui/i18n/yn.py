@@ -144,8 +144,8 @@ class Title:
     export_credential = "Xuất thông tin xác thực"
     asset = "Tài sản"
     unimplemented = "Chưa thực hiện"
-
-
+    invalid_data="Định dạng dữ liệu không hợp lệ"
+    low_power = "Pin thấp"
 
 
 class Text:
@@ -225,9 +225,9 @@ class Text:
     new_contract = "Hợp đồng mới?"
     bytes_ = "{} byte"
     message = "Tin nhắn:"
-    no_message = "Không包含消息"
-    contains_x_key = "包含 {} 键"
-    array_of_x_type = "数组类型 {} {}"
+    no_message = "Không bao gồm tin nhắn"
+    contains_x_key = "Bao gồm phím {}"
+    array_of_x_type = "Kiểu mảng {} {}"
     do_sign_712_typed_data = "Bạn có muốn ký giao dịch dữ liệu có cấu trúc này không?"
     do_sign_typed_hash = "Bạn có muốn ký giao dịch hash có cấu trúc này không?"
     domain_hash = "Domain hash:"
@@ -289,6 +289,15 @@ class Text:
     duration = "Thời lượng"
     lock = "Khóa"
     unlock = "Mở khóa"
+    all = "Tất cả"
+    source = "Nguồn"
+    tip = "Gợi ý"
+    keep_alive = "Giữ hoạt động"
+    invalid_ur = "Loại mã QR không được hỗ trợ, vui lòng thử lại"
+    sequence_number = "Số thứ tự"
+    expiration_time = "Thời gian hết hạn"
+    argument_x = "Tham số #{}"
+    low_power_message = "Pin còn {}%\nVui lòng sạc"
 
 class Tip:
     swipe_down_to_close = "Vuốt xuống để đóng"

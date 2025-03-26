@@ -50,7 +50,11 @@ class ShutingDown(Modal):
         self.content.center()
 
         self.add(lv.img).set_src("A:/res/logo_two.png")
-        self.add(lv.label).set_text(i18n.Text.shutting_down)
+        # self.add(lv.label).set_text(i18n.Text.shutting_down)
+        # 添加文本并设置颜色
+        label = self.add(lv.label)
+        label.set_text(i18n.Text.shutting_down)
+        label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         async def shutdown_delay():
             from trezor import loop
@@ -78,8 +82,11 @@ class Restarting(Modal):
         self.content.center()
 
         self.add(lv.img).set_src("A:/res/logo_two.png")
-        self.add(lv.label).set_text(i18n.Text.restarting)
-
+        # self.add(lv.label).set_text(i18n.Text.restarting)
+        # 添加文本并设置颜色
+        label = self.add(lv.label)
+        label.set_text(i18n.Text.restarting)
+        label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         async def restart_delay():
             from trezor import loop

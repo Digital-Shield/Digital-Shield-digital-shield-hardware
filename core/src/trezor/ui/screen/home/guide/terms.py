@@ -33,7 +33,7 @@ class Terms(with_title(Navigation)):
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_product_services)
         view.set_text(i18n.Guide.terms_describe_product_services)
-
+        
         view = self.add(Text)
         view.set_label(i18n.Guide.terms_title_risks)
         view.set_text(i18n.Guide.terms_describe_risks)
@@ -49,12 +49,26 @@ class Terms(with_title(Navigation)):
 class Text(LabeledText):
     def __init__(self, parent):
         super().__init__(parent)
-        self.add_style(
-            Style()
-            .border_width(0)
-            .pad_top(0)
-            .text_color(colors.STD.WHITE)
-            .text_line_space(8)
-            .pad_bottom(0),
-            0
-        )
+        #获取当前语言,如果是阿拉伯语则右对齐,否则左对齐
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            self.add_style(
+                Style()
+                .border_width(0)
+                .pad_top(0)
+                .text_color(colors.STD.WHITE)
+                .text_line_space(8)
+                .pad_bottom(0)
+                .text_align(lv.TEXT_ALIGN.RIGHT),  # 添加右对齐样式
+                0
+            )
+        else:
+            self.add_style(
+                Style()
+                .border_width(0)
+                .pad_top(0)
+                .text_color(colors.STD.WHITE)
+                .text_line_space(8)
+                .pad_bottom(0),  # 添加右对齐样式
+                0
+            )

@@ -3,6 +3,7 @@ from micropython import const
 
 from . import *
 from trezor import motor, io
+from trezor.ui.screen.statusbar import StatusBar
 from storage import device
 
 BLE_CMD_CTRL = const(0x81)
@@ -25,6 +26,7 @@ class Bluetooth(ToggleItem):
         ble = io.BLE()
         if enabled:
             ble.power_on()
+            StatusBar.instance().show_ble(StatusBar.BLE_STATE_ENABLED)#打开蓝牙图标
             from trezor import workflow, loop
             from trezor.uart import fetch_all
             async def get_ble_info():

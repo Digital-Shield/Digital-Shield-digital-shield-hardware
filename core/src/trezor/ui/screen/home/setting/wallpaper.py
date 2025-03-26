@@ -18,7 +18,7 @@ class Wallpaper(SampleItem):
         # right-arrow
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
-        self.arrow.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        self.arrow.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
 
     def action(self):
         from trezor import workflow

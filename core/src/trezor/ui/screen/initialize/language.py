@@ -15,6 +15,7 @@ class LanguageScreen(base(Modal)):
         super().__init__()
         # self.set_title(i18n.Title.select_language, "A:/res/language.png")
         self.set_title(i18n.Title.select_language)
+        self.title.set_height(40)  # 设置文本高度为 50 像素
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
@@ -36,12 +37,12 @@ class LanguageScreen(base(Modal)):
             # {"title" : "日本語", "icon" : "A:/res/lang-zh_CN.png"},
             # # {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
             # {"title" : "Tiếng Việt", "icon" : "A:/res/lang-zh_CN.png"},
-            {"title" : "English", "icon" : None},
-            {"title" : "简体中文", "icon" : None},
+            # {"title" : "简体中文", "icon" : None},
             {"title" : "繁體中文", "icon" : None},
+            {"title" : "English", "icon" : None},
             {"title" : "한국어", "icon" : None},
             {"title" : "日本語", "icon" : None},
-            {"title" : "بالعربية", "icon" : "A:/res/lang-zh_CN.png"},
+            {"title" : "بالعربية", "icon" : None},
             {"title" : "Tiếng Việt", "icon" : None},
         ]
 

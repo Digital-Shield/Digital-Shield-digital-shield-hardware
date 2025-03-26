@@ -143,6 +143,7 @@ class Title:
     export_credential = "凭据 내보내기"
     asset = "자산"
     unimplemented = "구현되지 않음"
+    low_power = "배터리 부족"
 
 class Text:
     tap_to_unlock = "터치하여 잠금 해제"
@@ -203,8 +204,8 @@ class Text:
     unknown_tx_type = "알려지지 않은 거래 유형, 입력 데이터를 확인하십시오"
     use_app_scan_this_signature = "지갑 앱으로 서명 결과를 스캔하십시오"
     internal_error = "내부 오류"
-    tap_switch_to_airgap = "에어갭 주소를 표시하려면二维码를 터치하십시오"
-    tap_switch_to_receive = "지갑收款 주소를 표시하려면二维码를 터치하십시오"
+    tap_switch_to_airgap = "에어갭 주소를 표시하려면QR코드를 터치하십시오"
+    tap_switch_to_receive = "지갑收款 주소를 표시하려면QR코드를 터치하십시오"
     incorrect_pin_times_left = "PIN 코드가 잘못되었습니다. 남은 시도 횟수: {}"
     incorrect_pin_last_time = "PIN 코드가 잘못되었습니다. 마지막 기회입니다"
     wrong_pin = "잘못된 PIN 코드를 입력했습니다"
@@ -284,6 +285,17 @@ class Text:
     duration = "지속 시간"
     lock = "잠금"
     unlock = "잠금 해제"
+    all = "모두"
+    source = "소스"
+    tip = "팁"
+    keep_alive = "계속 실행"
+    invalid_ur = "지원하지 않는 QR 코드 유형, 다시 시도하세요"
+    sequence_number = "일련 번호"
+    expiration_time = "만료 시간"
+    argument_x = "매개 변수 #{}"
+    unimplemented = "구현되지 않음"
+    invalid_data="유효하지 않은 데이터 형식"
+    low_power_message = "배터리가 {}% 남았습니다.\n충전하세요"
 
 class Tip:
     swipe_down_to_close = "아래로 스와이프하여 닫기"

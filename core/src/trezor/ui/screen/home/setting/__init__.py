@@ -43,8 +43,8 @@ class SettingApp(with_title(Navigation)):
         Vibration(self.content)
 
         # transition animation
-        from .animation import Animation
-        Animation(self.content)
+        # from .animation import Animation
+        # Animation(self.content)
 
         from .auto import AutoLock
         AutoLock(self.content)
@@ -93,7 +93,25 @@ class Item(VStack):
         self.label.set_text(text)
         self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
+        self.label.set_width(230)  # 设置标签的宽度
+        # 启动滚动
+        self.label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        #获取当前语言
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            log.debug(__name__, f"current language--: {cur_language}")
+            self.label.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向为向右
+        else:
+            self.label.set_style_base_dir(lv.BASE_DIR.LTR, 0)  # 设置滚动方向为向左
+        
+        self.label.set_style_text_align(lv.TEXT_ALIGN.LEFT, lv.PART.MAIN)  # 设置左对齐
+        self.label.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO) # 滚动条自适应
+        # self.timer = lv.timer_create(self._start_scroll, 500, self)
 
+    # def _start_scroll(self, timer):
+    #     # 启动滚动
+    #     self.label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)
+    
 
 class SampleItem(Item):
     def __init__(self, parent, text, icon):
@@ -145,7 +163,7 @@ class OptionsItem(SampleItem):
         text = self.current()
         self.option.set_text(text)
         self.option.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
- 
+
 
         # right-arrow
         self.arrow = lv.label(self)

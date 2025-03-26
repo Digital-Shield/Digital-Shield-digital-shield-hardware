@@ -323,15 +323,24 @@ async def confirm_pin_security(
 
 
 async def confirm_change_pin(ctx: wire.GenericContext):
-    from trezor.ui.screen.message import Info
+    # from trezor.ui.screen.message import Info
+    from trezor.ui.screen.confirm import SimpleConfirm
 
-    title = i18n.Security.change_pin
-    text = i18n.Text.change_pin
-    screen = Info(title, text)
-    screen.button_text(i18n.Button.continue_)
+    screen = SimpleConfirm(i18n.Text.change_pin)
+    screen.title.set_text(i18n.Security.change_pin)  # 设置标题
+    #screen.btn_confirm.color(colors.DS.DANGER)
+    screen.btn_confirm.set_text(i18n.Button.continue_)
     screen.text_color(colors.DS.WHITE)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Other))
+
+    # title = i18n.Security.change_pin
+    # text = i18n.Text.change_pin
+    # screen = Info(title, text)
+    # screen.button_text(i18n.Button.continue_)
+    # screen.text_color(colors.DS.WHITE)
+    # await screen.show()
+    # await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Other))
 
 
 __show_screen = None

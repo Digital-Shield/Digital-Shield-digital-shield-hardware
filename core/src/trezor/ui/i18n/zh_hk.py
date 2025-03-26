@@ -147,6 +147,9 @@ class Title:
     import_credential = "導入憑證"
     export_credential = "導出憑證"
     asset = "資產"
+    unimplemented = "未實現"
+    invalid_data="無效的數據格式"
+    low_power = "電量低"
 
 class Text:
     tap_to_unlock = "點擊以解鎖"
@@ -288,6 +291,15 @@ class Text:
     duration = "持續時間"
     lock = "鎖定"
     unlock = "解鎖"
+    all = "全部"
+    source = "來源"
+    tip = "提示"
+    keep_alive = "Keep alive"
+    invalid_ur = "不支援的二維碼類型，請重試"
+    sequence_number = "序號"
+    expiration_time = "過期時間"
+    argument_x = "參數 #{}"
+    low_power_message = "電量還剩餘 {}%\n請充電"
 
 class Tip:
     swipe_down_to_close = "向下滑動以關閉"

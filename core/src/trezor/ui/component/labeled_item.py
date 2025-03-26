@@ -26,12 +26,14 @@ class LabeledItem(HStack):
         self.label = self.add(lv.label)
         self.label.set_text("")
         self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        self.label.set_width(lv.pct(100))
+        self.label.set_long_mode(lv.label.LONG.WRAP)
 
     def set_label(self, text: str):
         self.label.set_text(text)
     def set_device_label(self, text: str):
         self.label.set_text(text)
-        self.label.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        self.label.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)
         
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)

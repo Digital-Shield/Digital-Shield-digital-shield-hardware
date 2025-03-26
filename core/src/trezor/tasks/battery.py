@@ -5,7 +5,8 @@ from trezor import io, utils, loop, log
 from trezor.ui.screen.statusbar import StatusBar
 battery = io.Battery()
 
-LOW_STATE_OF_CHARGE = 20
+LOW_STATE_OF_CHARGE = 50
+
 
 async def updating_battery_state():
     prev_charge = None
@@ -62,7 +63,7 @@ async def updating_battery_state():
             # less than 20%, show a message
             if not charging and state_of_charge <= LOW_STATE_OF_CHARGE:
                 await alert(state_of_charge)
-
+            
         # not connect usb, and battery is empty, shut down device
         if not state_of_charge and not charging:
             from trezor.ui.screen.power import ShutingDown

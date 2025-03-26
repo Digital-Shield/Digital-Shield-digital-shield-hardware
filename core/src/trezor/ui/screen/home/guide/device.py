@@ -73,6 +73,10 @@ class Item(HStack):
         view = self.add(Text)
         view.set_device_label(title)  # 设置title为小号瘦体
         view.set_device_text(desc)  # 设置desc为大号粗体
+        #获取当前语言,如果是阿拉伯语则右对齐,否则左对齐
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            view.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
     
     def action(self):
@@ -84,7 +88,7 @@ class Text(LabeledText):
         self.add_style(
             Style()
             .border_width(0)
-            .pad_left(48),
+            .pad_left(36),
             0
         )
     # def set_label(self, text):

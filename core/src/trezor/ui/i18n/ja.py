@@ -48,9 +48,9 @@ class Guide:
     device_title_serial_number = 'シリアル番号'
     bluetooth_name = "ブルートゥース名"
     bluetooth_version = "ブルートゥースバージョン"
-    firmware_title_1 = '1.デバイスのバッテリーが20%以上であることを確認してください'
-    firmware_title_2 = '2.USB-Cケーブルを使用してデバイスをコンピュータに接続してください'
-    firmware_title_3 = '3.“ファームウェアアップデート”をクリックしてください'
+    firmware_title_1 = '1. デバイスのバッテリーが20%\n以上であることを確認してください'
+    firmware_title_2 = '2. USB-Cケーブルを使用してデバイスをコンピュータに接続してください'
+    firmware_title_3 = '3.「ファームウェアアップグレ\nード」をクリックしてください'
     firmware_title_caution = '警告'
     firmware_describe_caution = 'アップデート中は、USB接続が安定していることを確認してください'
 
@@ -143,6 +143,8 @@ class Title:
     export_credential = "資格情報をエクスポート"
     asset = "資産"
     unimplemented = "未実装"
+    invalid_data="無効なデータ形式"
+    low_power = "電池が低い"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -285,6 +287,15 @@ class Text:
     duration = "持続時間"
     lock = "ロック"
     unlock = "ロック解除"
+    all = "すべて"
+    source = "ソース"
+    tip = "ヒント"
+    keep_alive = "継続的に実行"
+    invalid_ur = "サポートされていないQRコードタイプです。再試行してください"
+    sequence_number = "シーケンス番号"
+    expiration_time = "有効期限"
+    argument_x = "引数 #{}"
+    low_power_message = "電池が {}% 残っています。\n充電してください"
 
 class Tip:
     swipe_down_to_close = "スワイプダウンで閉じる"

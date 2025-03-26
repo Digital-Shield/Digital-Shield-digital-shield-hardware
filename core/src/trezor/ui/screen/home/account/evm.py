@@ -60,7 +60,7 @@ def EVM(chain_id:int):
             self._airgap_address = None
             #背景底图
             background = lv.obj(self)
-            background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+            # background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
             background.set_width(432)
             background.set_height(708)
             background.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
@@ -82,17 +82,18 @@ def EVM(chain_id:int):
             # 二维码
             self.container = self.add(lv.obj)
             self.container.add_style(theme.Styles.container, 0)
-            self.container.set_height(QRCODE_SIZE + 32)
+            self.container.set_size(QRCODE_SIZE + 40, QRCODE_SIZE + 40)  # 增加容器的大小
+            self.container.set_height(QRCODE_SIZE + 70)
             self.container.set_style_pad_bottom(50, lv.PART.MAIN)
             self._qrcode_view: lv.qrcode = None
 
             # a tip
             self.tip = self.add(lv.label)
-            self.tip.set_width(440)
+            self.tip.set_width(450)
             self.tip.set_long_mode(lv.label.LONG.WRAP)
             self.tip.set_text(i18n.Text.tap_switch_to_airgap)
             self.tip.set_style_pad_top(-10, lv.PART.MAIN)
-            self.tip.set_style_pad_left(10, lv.PART.MAIN)
+            self.tip.set_style_pad_left(20, lv.PART.MAIN)
             self.tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
             # address
@@ -135,9 +136,11 @@ def EVM(chain_id:int):
         def qrcode_view(self) -> lv.qrcode:
             if self._qrcode_view:
                 return self._qrcode_view
-            self._qrcode_view = lv.qrcode(self.container, 300, colors.DS.BLACK, colors.DS.WHITE)
+            self._qrcode_view = lv.qrcode(self.container, 380, colors.DS.BLACK, colors.DS.WHITE)
             self._qrcode_view.set_style_border_width(16, lv.PART.MAIN)
             self._qrcode_view.set_style_border_color(colors.DS.WHITE, lv.PART.MAIN)
+            self._qrcode_view.set_style_radius(25, lv.PART.MAIN)
+            self._qrcode_view.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 添加这一行来设置背景颜色
             self._qrcode_view.center()
             self._qrcode_view.add_flag(lv.obj.FLAG.CLICKABLE)
             self._qrcode_view.add_event_cb(self.on_click_qrcode, lv.EVENT.CLICKED, None)

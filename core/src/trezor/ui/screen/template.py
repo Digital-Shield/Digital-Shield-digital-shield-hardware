@@ -56,13 +56,14 @@ class Address(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.qr_
         label.set_long_mode(lv.label.LONG.WRAP)
         label.set_width(lv.pct(100))
         label.set_style_text_font(font.mono, lv.PART.MAIN)
+        label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN) #地址白色
         label.add_style(LabeledText.style, lv.PART.MAIN)
 
         def labeled(label: str, text: str):
             item = view.add(LabeledText)
             item.set_label(label)
             item.set_text(text)
-
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN) #地址白色
         # path
         labeled(i18n.Text.path, self.path)
 
