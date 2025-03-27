@@ -54,9 +54,6 @@
 #include "systemview.h"
 #endif
 #include "rng.h"
-// #include "sdcard.h"
-// #include "atca_api.h"
-// #include "atca_hal.h"
 #include "device.h"
 #include "mipi_lcd.h"
 #include "qspi_flash.h"

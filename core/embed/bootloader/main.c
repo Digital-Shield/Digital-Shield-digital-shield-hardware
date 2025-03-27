@@ -532,9 +532,9 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     // TODO: add boot ui
-    // touch_init();
-    // lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
-    // display_clear();
+    touch_init();
+    lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+    display_clear();
 
     // device_para_init(); // TODO: need debug.
     if ( !serial_set )
@@ -578,6 +578,7 @@ int main(void)
             vaild_firmware = true;
         }
     }
+    //stay_in_bootloader = sectrue;
 
     // check all flags
     if ( stay_in_bootloader == sectrue || vaild_firmware == false || serial_set == false ||

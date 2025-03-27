@@ -480,6 +480,7 @@ int main(void) {
     }
   }
 #if !PRODUCTION
+  //boot_present = sectrue;  //调试bootloader的时候才打开
   if (boot_present == secfalse) {
     //如果Flash上面没有Boot，同时emmc上面也没有可用于升级的boot，则加载U盘模式
     display_printf(BOARD_VERSION);

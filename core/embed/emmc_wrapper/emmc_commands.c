@@ -766,41 +766,41 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         });
 
         // check file header
-        // ExecuteCheck_MSGS_ADV(
-        //     load_vendor_header(
-        //         bl_buffer->misc_buff, BOOTLOADER_KEY_M, BOOTLOADER_KEY_N, BOOTLOADER_KEYS, &file_vhdr
-        //     ),
-        //     sectrue,
-        //     {
-        //         send_failure(
-        //             iface_num, FailureType_Failure_ProcessError, "Update file vender header invalid!"
-        //         );
-        //         return -1;
-        //     }
-        // );
-        // ExecuteCheck_MSGS_ADV(
-        //     load_image_header(
-        //         bl_buffer->misc_buff + file_vhdr.hdrlen, FIRMWARE_IMAGE_MAGIC, FIRMWARE_IMAGE_MAXSIZE,
-        //         file_vhdr.vsig_m, file_vhdr.vsig_n, file_vhdr.vpub, &file_hdr
-        //     ),
-        //     sectrue,
-        //     {
-        //         send_failure(iface_num, FailureType_Failure_ProcessError, "Update file header invalid!");
-        //         return -1;
-        //     }
-        // );
+        ExecuteCheck_MSGS_ADV(
+            load_vendor_header(
+                bl_update_buffer, BOOTLOADER_KEY_M, BOOTLOADER_KEY_N, BOOTLOADER_KEYS, &file_vhdr
+            ),
+            sectrue,
+            {
+                send_failure(
+                    iface_num, FailureType_Failure_ProcessError, "Update file vender header invalid!"
+                );
+                return -1;
+            }
+        );
+        ExecuteCheck_MSGS_ADV(
+            load_image_header(
+                bl_update_buffer + file_vhdr.hdrlen, FIRMWARE_IMAGE_MAGIC, FIRMWARE_IMAGE_MAXSIZE,
+                file_vhdr.vsig_m, file_vhdr.vsig_n, file_vhdr.vpub, &file_hdr
+            ),
+            sectrue,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "Update file header invalid!");
+                return -1;
+            }
+        );
 
-        // check file firmware hash
-        // ExecuteCheck_MSGS_ADV(
-        //     check_image_contents_ram(
-        //         &file_hdr, bl_buffer->misc_buff, file_vhdr.hdrlen + file_hdr.hdrlen, FIRMWARE_SECTORS_COUNT
-        //     ),
-        //     sectrue,
-        //     {
-        //         send_failure(iface_num, FailureType_Failure_ProcessError, "Update file hash invalid!");
-        //         return -1;
-        //     }
-        // );
+        //check file firmware hash
+        ExecuteCheck_MSGS_ADV(
+            check_image_contents_ram(
+                &file_hdr, bl_update_buffer, file_vhdr.hdrlen + file_hdr.hdrlen, FIRMWARE_SECTORS_COUNT
+            ),
+            sectrue,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "Update file hash invalid!");
+                return -1;
+            }
+        );
 
         // check firmware header
         vendor_header current_vhdr;
