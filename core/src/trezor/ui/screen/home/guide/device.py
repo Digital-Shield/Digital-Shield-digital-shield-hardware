@@ -76,7 +76,8 @@ class Item(HStack):
         #获取当前语言,如果是阿拉伯语则右对齐,否则左对齐
         cur_language = i18n.using.code if i18n.using is not None else None
         if cur_language == "al":
-            view.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            view.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
+            # view.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
     
     def action(self):
