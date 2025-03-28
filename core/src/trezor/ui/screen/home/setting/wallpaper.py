@@ -118,7 +118,7 @@ class WallpaperDetail(with_title(Navigation)):
         manager.publish(events.WALLPAPER_CHANGED)
         # 显示成功提示框
         success_popup = Success(i18n.Title.operate_success, i18n.Title.theme_success)
-        workflow.spawn(success_popup.show())  # 异步显示弹框
+        workflow.spawn(success_popup.show())  #异步显示弹框
  
     @staticmethod
     def wallpapers() -> Generator[ImageSource]:

@@ -153,9 +153,9 @@ class QrcodeDetail(with_title(Navigation)):
         label = lv.label(self.content)
         label.set_text(qrcode)
         label.add_style(Style()
-                        .width(lv.pct(100))
                         .text_color(lv.color_hex(0x37b7ae)),
                         0)
+        label.set_width(500)
         label.set_flex_grow(1)
-        # label.set_long_mode(lv.label.LONG.WRAP)
+        label.set_long_mode(lv.label.LONG.WRAP)
        

@@ -80,7 +80,7 @@ class Item(VStack):
             self.label.set_text(title)
             self.add_flag(lv.obj.FLAG.CLICKABLE)
             self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
-            self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            # self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
             # right-qc-code
             qr = lv.img(self)
             qr.set_src("A:/res/qr-code-two.png")
