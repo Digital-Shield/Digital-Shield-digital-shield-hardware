@@ -6,6 +6,8 @@ from storage import device, io
 from trezor import utils
 from trezor.ui.screen import Navigation, with_title
 from trezor.ui.component import VStack
+from trezor.ui.screen.message import Success
+from trezor import workflow
 
 if TYPE_CHECKING:
     from typing import Generator, List
@@ -114,7 +116,10 @@ class WallpaperDetail(with_title(Navigation)):
         from trezor.ui.screen import manager
         from trezor.ui import events
         manager.publish(events.WALLPAPER_CHANGED)
-
+        # 显示成功提示框
+        success_popup = Success(i18n.Title.operate_success, i18n.Title.theme_success)
+        workflow.spawn(success_popup.show())  # 异步显示弹框
+ 
     @staticmethod
     def wallpapers() -> Generator[ImageSource]:
 

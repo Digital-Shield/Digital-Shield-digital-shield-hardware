@@ -36,6 +36,10 @@ class WordcountScreen(base(Navigation)):
         label.set_recolor(True)
         label.add_style(Styles.title_text, 0)
         label.set_text(i18n.Text.str_words.format(count))
+        #获取当前语言,如果是阿拉伯语则从右到左显示
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            label.set_style_base_dir(lv.BASE_DIR.RTL, 0)
         label.center()
 
         return obj

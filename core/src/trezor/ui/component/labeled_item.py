@@ -31,6 +31,11 @@ class LabeledItem(HStack):
 
     def set_label(self, text: str):
         self.label.set_text(text)
+        from trezor.ui import i18n
+        #获取当前语言,如果是阿拉伯语则从右到左显示
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            self.label.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
     def set_device_label(self, text: str):
         self.label.set_text(text)
         self.label.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)

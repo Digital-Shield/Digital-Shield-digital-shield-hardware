@@ -464,6 +464,14 @@ class Input(lv.obj):
         self.ta.set_flex_grow(1)
         self.kbd = MnemonicKeyboard(self.content)
         self.kbd.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
+        self.kbd.set_width(lv.pct(100))  # 设置键盘宽度为父容器的 100%
+        self.kbd.set_height(300)  # 设置键盘高度为 300 像素
+        self.kbd.add_style(
+            Style()
+            .text_font(font.Bold.SCS38)  # 增大键盘字体
+            .text_color(colors.DS.BLACK),  # 设置字体颜色为黑色
+            lv.PART.MAIN,
+        )
         # self.kbd.set_style_text_color(colors.DS.BLACK , lv.PART.MAIN)
         self.kbd.textarea = self.ta
         

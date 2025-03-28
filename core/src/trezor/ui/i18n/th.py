@@ -76,6 +76,8 @@ class Title:
     enter_mnemonic = "니모닉을 입력하십시오"
     check_mnemonic = "니모닉 확인"
     success = "성공"
+    operate_success = "작업 성공"
+    theme_success = "테마 전환 성공"
     warning = "경고"
     error = "오류"
     verified = "니모닉 백업 완료"

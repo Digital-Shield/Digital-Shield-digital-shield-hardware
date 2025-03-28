@@ -77,6 +77,8 @@ class Title:
     enter_mnemonic = "الرجاء إدخال الكلمات المفردة"
     check_mnemonic = "فحص الكلمات المفردة"
     success = "نجاح"
+    operate_success = "نجاح العملية"
+    theme_success = "نجاح تبديل السمة"
     warning = "تحذير"
     error = "خطأ"
     verified = "اكتمل نسخ احتياطي للكلمات المفردة"

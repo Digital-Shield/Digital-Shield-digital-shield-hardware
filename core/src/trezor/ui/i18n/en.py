@@ -110,6 +110,8 @@ class Title:
     check_mnemonic = "Check Mnemonic"
     enter_mnemonic = "Enter Mnemonic"
     success = "Success"
+    operate_success = "Operation Successful"
+    theme_success = "Theme Switched Successfully"
     warning = "Warning"
     error = "Error"
     verified = "Verified"

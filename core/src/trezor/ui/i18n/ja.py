@@ -76,6 +76,8 @@ class Title:
     enter_mnemonic = "ニモニックを入力してください"
     check_mnemonic = "ニモニックを確認"
     success = "成功"
+    operate_success = "操作が成功しました"
+    theme_success = "テーマが正常に切り替わりました"
     warning = "警告"
     error = "エラー"
     verified = "ニモニックのバックアップが完了しました"

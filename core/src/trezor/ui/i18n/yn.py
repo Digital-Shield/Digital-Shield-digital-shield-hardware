@@ -77,6 +77,8 @@ class Title:
     enter_mnemonic = "Vui lòng nhập cụm từ ghi nhớ"
     check_mnemonic = "Kiểm tra cụm từ ghi nhớ"
     success = "Thành công"
+    operate_success = "Hoạt động thành công"
+    theme_success = "Chuyển đổi chủ đề thành công"
     warning = "Cảnh báo"
     error = "Lỗi"
     verified = "Đã sao lưu cụm từ ghi nhớ"

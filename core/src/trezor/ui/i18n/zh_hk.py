@@ -81,6 +81,8 @@ class Title:
     enter_mnemonic = "請輸入助記詞"
     check_mnemonic = "檢查助記詞"
     success = "成功"
+    operate_success = "操作成功"
+    theme_success = "主題切換成功"
     warning = "警告"
     error = "錯誤"
     verified = "助記詞備份完成"
