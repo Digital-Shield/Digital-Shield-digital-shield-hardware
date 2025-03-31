@@ -2,6 +2,7 @@ import lvgl as lv
 
 from . import Modal, with_title
 
+from trezor import log
 from trezor.ui.component.keyboard import PinKeyboard
 from trezor.ui import Style, font, colors, i18n, Cancel
 from trezor.ui.constants import MAX_PIN_LENGTH, MIN_PIN_LENGTH
@@ -14,9 +15,15 @@ class InputPinScreen(with_title(Modal)):
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         tip = lv.label(self)# 创建一个label
         tip.set_text(i18n.Title.enter_pin)# 设置文本
+        #获取当前语言,如果是阿拉伯语则右对齐,否则左对齐
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            # log.debug(__name__, f"current pin con--: {i18n.Title.enter_pin}")
+            #置文本方向为从右到左
+            tip.set_style_base_dir(lv.BASE_DIR.RTL, lv.PART.MAIN)
         tip.align(lv.ALIGN.TOP_MID, 0, -32)# 设置位置
         tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
-        tip.set_style_text_font(font.Regular.SCS30, 0)
+        tip.set_style_text_font(font.Bold.SCS30, 0)
 
         self.create_content(HStack)
         self.content: HStack

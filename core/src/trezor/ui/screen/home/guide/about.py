@@ -22,9 +22,9 @@ class About(with_title(Navigation)):
             0
         )
         Item(self.content,'Digit Shield','A:/res/web.png',"https://digitshield.com")
-        Item(self.content,'Twitter','A:/res/twitter.png',"https://twitter.com/digitshield")
-        Item(self.content,'Discord','A:/res/discord.png',"https://discord.com/digitshield")
-        Item(self.content,'Telegram','A:/res/telegram.png',"https://web.telegram.org/digitshield")
+        Item(self.content,'Twitter','A:/res/twitter.png',"https://x.com/DigitShield_HQ")
+        Item(self.content,'Discord','A:/res/discord.png',"https://discord.gg/wH8HVsHz")
+        Item(self.content,'Telegram','A:/res/telegram.png',"https://t.me/digitshield")
 
 class Item(VStack):
     """

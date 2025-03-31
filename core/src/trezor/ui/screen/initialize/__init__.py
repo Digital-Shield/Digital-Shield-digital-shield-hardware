@@ -36,6 +36,8 @@ def base(S: Type[S]) -> Type[TemplatedScreen]:
             self.content: lv.obj
             self.content.set_style_pad_left(16, lv.PART.MAIN)
             self.content.set_style_pad_right(16, lv.PART.MAIN)
+            #获取i18n.Button.next当前语言内容，重新赋值
+            self.btn_right.set_text(i18n.Button.next)
             self.btn_next = self.btn_right
             self.btn_next.add_event_cb(self.on_click_next, lv.EVENT.CLICKED, None)
 

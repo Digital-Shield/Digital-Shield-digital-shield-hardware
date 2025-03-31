@@ -14,7 +14,8 @@ class Message(with_title_and_buttons(Modal, i18n.Button.ok)):
         super().__init__()
         if title:
             self.set_title(title)
-
+        #获取i18n.Button.ok当前语言内容，重新赋值
+        self.btn_right.set_text(i18n.Button.ok)
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
