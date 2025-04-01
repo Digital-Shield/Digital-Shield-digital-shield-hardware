@@ -146,6 +146,7 @@ class Title:
     unimplemented = "未实现"
     invalid_data="无效的数据格式"
     low_power = "电量低"
+    collect_nft = "收集NFT"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -300,6 +301,8 @@ class Text:
     expiration_time = "过期时间"
     argument_x = "参数 #{}"
     low_power_message = "电量还剩余 {}%\n请充电"
+    collect_nft = "确定要收集此NFT吗？"
+    replace_nft = "确定要收藏此 NFT 吗？由于数量已达上限，这将会移除最早上传的 NFT。"
 
 class Tip:
     swipe_down_to_close = "向下滑动以关闭"
