@@ -95,7 +95,7 @@ class PaymentRequest(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.But
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
-        span.style.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -105,7 +105,7 @@ class PaymentRequest(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.But
         # to
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
-        item.set_text("ceshi01" + to)
+        item.set_text(to)
         item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         
         # reject button
@@ -146,7 +146,7 @@ class Output(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reje
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
-        span.style.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -229,7 +229,7 @@ class JointAmount(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
-            item.set_text_color(colors.STD.WHITE, lv.PART.MAIN)
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
             return item
 
         # your spend
@@ -280,7 +280,7 @@ class OutputChange(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Butto
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
-        span.set_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -291,7 +291,6 @@ class OutputChange(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Butto
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
-        item.set_text("ceshi03" + to)
         item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
         # reject button

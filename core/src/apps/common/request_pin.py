@@ -78,7 +78,7 @@ def _get_last_unlock_time() -> int:
 
 async def verify_user_pin(
     ctx: wire.GenericContext = wire.DUMMY_CONTEXT,
-    prompt: str = "",
+    prompt: str = i18n.Title.enter_pin, #请输入pin码
     allow_cancel: bool = True,
     retry: bool = True,
     cache_time_ms: int = 0,

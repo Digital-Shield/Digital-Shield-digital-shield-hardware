@@ -232,6 +232,7 @@ class TransactionOverview(with_title_and_buttons(Modal, i18n.Button.confirm, i18
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -242,7 +243,8 @@ class TransactionOverview(with_title_and_buttons(Modal, i18n.Button.confirm, i18
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
-
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        
         # view detail button
         self.btn_detail = lv.btn(self.content)
         self.btn_detail.add_style(

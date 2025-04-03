@@ -14,7 +14,7 @@ class InputPinScreen(with_title(Modal)):
         super().__init__()
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         tip = lv.label(self)# 创建一个label
-        tip.set_text(i18n.Title.enter_pin)# 设置文本
+        tip.set_text(title)# 设置文本
         #获取当前语言,如果是阿拉伯语则右对齐,否则左对齐
         cur_language = i18n.using.code if i18n.using is not None else None
         if cur_language == "al":

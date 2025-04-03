@@ -94,6 +94,7 @@ class Item(VStack):
         self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
         self.label.set_width(230)  # 设置标签的宽度
+        self.label.set_height(40)  # 设置标签的宽度
         # 启动滚动
         self.label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
         #获取当前语言
@@ -163,7 +164,6 @@ class OptionsItem(SampleItem):
         text = self.current()
         self.option.set_text(text)
         self.option.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
-
 
         # right-arrow
         self.arrow = lv.label(self)
