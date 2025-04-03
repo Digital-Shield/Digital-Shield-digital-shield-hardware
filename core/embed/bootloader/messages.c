@@ -24,7 +24,7 @@
 #include "flash.h"
 #include "image.h"
 #include "sdram.h"
-#include "se_atca.h"
+#include "se_thd89.h"
 #include "secbool.h"
 #include "usb.h"
 #include "version.h"

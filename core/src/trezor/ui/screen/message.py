@@ -1,10 +1,10 @@
 import lvgl as lv
 
 from trezor.ui import i18n, Done, colors,theme
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 from trezor.ui.component.container import HStack
 
-class Message(with_title_and_buttons(Modal, i18n.Button.ok)):
+class Message(Modal):
     """
     Message screen use for display message for user
 

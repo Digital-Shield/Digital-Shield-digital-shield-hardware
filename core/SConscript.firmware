@@ -447,10 +447,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/usbd_ctlreq.c',
     'embed/trezorhal/usbd_ioreq.c',
     'embed/trezorhal/usbd_desc.c',
-    #'embed/trezorhal/atca/atca_hal.c',
-    #'embed/trezorhal/atca/atca_command.c',
-    #'embed/trezorhal/atca/atca_api.c',
-    'embed/trezorhal/atca/se_atca_void.c',
+    'embed/trezorhal/thd89/se_thd89.c',
 	'embed/trezorhal/trans_fifo.c',
     'embed/trezorhal/spi.c',
     'embed/trezorhal/usart.c',
@@ -542,7 +539,7 @@ env.Replace(
         'embed/rust',
         'embed/firmware',
         'embed/trezorhal',
-        'embed/trezorhal/atca',
+        'embed/trezorhal/thd89',
         'embed/trezorhal/fatfs',
         'embed/extmod/modtrezorui',
         'vendor/micropython',
@@ -870,11 +867,11 @@ env.Depends(program_elf, rust)
 
 if PRODUCTION_MODEL == 'H':
     action_bin=[
-        # '$OBJCOPY -O binary -j .flash -j .data --pad-to 0x08100000 $SOURCE build/firmware/firmware.p1.bin',
         '$OBJCOPY -O binary -j .vendorheader -j .header -j .flash -j .data --pad-to 0x081E0000 $SOURCE build/firmware/firmware.p1.bin',
         '$OBJCOPY -O binary -j .flash2 $SOURCE build/firmware/firmware.p2.bin',
         '$CAT build/firmware/firmware.p1.bin build/firmware/firmware.p2.bin > $TARGET',
-        '$HEADERTOOL -h $TARGET ' + ('-D' if ARGUMENTS.get('PRODUCTION', '0') == '0' else ''),
+        '$HEADERTOOL -h $TARGET ' + ('-D' if ARGUMENTS.get('PRODUCTION', '0') == '0' else ''),  
+        '$DD if=$TARGET of=build/firmware/firmware.p1.bin skip=0 bs=128k count=12',
     ]
 
 elif TREZOR_MODEL in ('T', 'R'):

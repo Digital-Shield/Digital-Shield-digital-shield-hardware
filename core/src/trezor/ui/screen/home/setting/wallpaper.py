@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from . import *
 from storage import device, io
 from trezor import utils
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 from trezor.ui.component import VStack
 from trezor.ui.screen.message import Success
 from trezor import workflow
@@ -46,14 +46,11 @@ class ImageSource:
     def source(self) -> str:
         return f"A:{self.path}/{self.name}"
 
-class WallpaperDetail(with_title(Navigation)):
+class WallpaperDetail(Navigation):
     def __init__(self):
         super().__init__()
-        # self.set_title(i18n.Setting.wallpaper)
-        title_label = lv.label(self)
-        title_label.set_text(i18n.Setting.wallpaper)
-        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
-        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
+        self.set_title(i18n.Setting.wallpaper)
+        self.title.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
 
         self.create_content(VStack)
         self.content: VStack
@@ -78,7 +75,7 @@ class WallpaperDetail(with_title(Navigation)):
             log.debug(__name__, f"thumbnail wallpaper: {w.thumbnail()}")
             img = WallpaperImage(self.content)
             img.set_src(w)
-            
+
             img.set_style_border_width(2, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.set_style_border_color(colors.DS.PRIMARY, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.add_flag(lv.obj.FLAG.CLICKABLE)

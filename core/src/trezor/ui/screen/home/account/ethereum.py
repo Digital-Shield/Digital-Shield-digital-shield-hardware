@@ -5,7 +5,7 @@ from .helper import parser_path
 
 from trezor import utils, workflow, loop, log
 from trezor.ui import i18n, Style, theme, colors
-from trezor.ui.screen import with_title, Navigation
+from trezor.ui.screen import Navigation
 from trezor.ui.component import HStack, LabeledText
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 QRCODE_SIZE = 400
 
-class Ethereum(with_title(Navigation)):
+class Ethereum(Navigation):
     @staticmethod
     def get_name() -> str:
         return "ETH"
@@ -34,7 +34,7 @@ class Ethereum(with_title(Navigation)):
         self._receive_address = None
         self._airgap_address = None
 
-        self.set_title(self.get_name())
+        self.title.set_text(self.get_name())
 
         self.create_content(HStack)
         self.content: HStack

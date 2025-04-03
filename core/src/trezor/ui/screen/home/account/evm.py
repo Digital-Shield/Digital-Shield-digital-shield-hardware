@@ -5,7 +5,7 @@ from .helper import parser_path
 
 from trezor import utils, workflow, loop, log
 from trezor.ui import i18n, Style, theme, colors,font
-from trezor.ui.screen import with_title, Navigation
+from trezor.ui.screen import Navigation
 from trezor.ui.component import HStack, LabeledText
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ def EVM(chain_id:int):
         MATIC_CHAIN_ID: "m/44'/60'/0'/0/0",#"m/44'/137'/0'/0/0",
     }
 
-    class _EVM(with_title(Navigation)):
+    class _EVM(Navigation):
         @staticmethod
         def get_name() -> str:
             return name_map[chain_id]
@@ -70,7 +70,7 @@ def EVM(chain_id:int):
             # 将背景图移动到最底层
             background.move_background()
 
-            self.set_title(self.get_name())
+            self.title.set_text(self.get_name())
 
             self.create_content(HStack)
             self.content: HStack

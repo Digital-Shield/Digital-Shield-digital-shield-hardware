@@ -10,7 +10,7 @@ from trezor.ui.component.container import VStack, HStack
 
 # LanguageScreen is first screen when device is not initialized
 # It not allow to go back
-class LanguageScreen(base(Modal)):
+class LanguageScreen(Modal):
     def __init__(self):
         super().__init__()
         # self.set_title(i18n.Title.select_language, "A:/res/language.png")

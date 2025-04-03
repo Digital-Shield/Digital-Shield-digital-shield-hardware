@@ -1,22 +1,7 @@
 import lvgl as lv
 
-from typing import TYPE_CHECKING
-
-from trezor.ui import i18n, Style, Done
-from trezor.ui.screen import with_title_and_buttons
+from trezor.ui import Style
 from trezor.ui.types import *
-
-if TYPE_CHECKING:
-    from trezor.ui.screen import Navigation, Modal, ButtonsTitledScreen
-    from trezor.ui.component import Button
-
-    class TemplatedScreen(ButtonsTitledScreen, Screen):
-
-        def __init__(self):
-            self.btn_next: Button
-            ...
-        def on_click(self, event: lv.event_t):
-            ...
 
 item_style = (
     Style()

@@ -26,12 +26,22 @@ ChannelType host_channel = CHANNEL_NULL;
 uint8_t spi_data_in[SPI_BUF_MAX_IN_LEN];
 uint8_t spi_data_out[SPI_BUF_MAX_OUT_LEN];
 
-trans_fifo spi_fifo_in = {.p_buf = spi_data_in,
-                          .buf_size = SPI_BUF_MAX_IN_LEN,
-                          .over_pre = false,
-                          .read_pos = 0,
-                          .write_pos = 0,
-                          .lock_pos = 0};
+static void log_data(char* tag, uint8_t *data, size_t len) {
+  printf("%s : \n", tag);
+  for (int i = 0; i < len; i++) {
+    printf(" %02x", data[i]);
+    if ((i+1) % 16 == 0) {
+      printf("\n");
+    }
+  }
+  printf("\n");
+}
+
+trans_fifo spi_fifo_in = {0};
+
+void spi_fifo_buffer_init(void) {
+  fifo_init(&spi_fifo_in, spi_data_in, SPI_BUF_MAX_IN_LEN);
+}
 
 secbool spi_can_write(void) {
   if (spi_tx_event == 0)
@@ -69,8 +79,8 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi) {
   }
   if (!fifo_write_no_overflow(&spi_fifo_in, recv_buf, hspi->RxXferSize)) {
     memset(recv_buf, 0, SPI_PKG_SIZE);
+    printf("spi fifo overflow!!\n");
   }
-
   HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
   SET_RX_BUS_IDEL();
 }
@@ -101,7 +111,7 @@ void control_pin_init(void) {
   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
   gpio.Pin = GPIO_PIN_2;
   HAL_GPIO_Init(GPIOE, &gpio);
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET); 
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
 
   // POWER UP BLE
   gpio.Pin = GPIO_PIN_6;
@@ -110,8 +120,12 @@ void control_pin_init(void) {
 }
 
 int32_t spi_slave_init() {
+  spi_fifo_buffer_init();
+
   GPIO_InitTypeDef gpio;
 
+  __HAL_RCC_SPI1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
   __HAL_RCC_DMA1_FORCE_RESET();
   __HAL_RCC_DMA1_RELEASE_RESET();
   __HAL_RCC_SPI1_FORCE_RESET();
@@ -136,17 +150,19 @@ int32_t spi_slave_init() {
   gpio.Pull = GPIO_NOPULL;
   gpio.Pin = GPIO_PIN_15;
   HAL_GPIO_Init(GPIOA, &gpio);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
+
   // SPI1
   gpio.Mode = GPIO_MODE_AF_PP;
-  gpio.Pull = GPIO_PULLUP;
+  gpio.Pull = GPIO_NOPULL;
   gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   gpio.Alternate = GPIO_AF5_SPI1;
 
   // PB3(SCK)
+  gpio.Pull = GPIO_PULLDOWN;
   gpio.Pin = GPIO_PIN_3;
   HAL_GPIO_Init(GPIOB, &gpio);
 
+  gpio.Pull = GPIO_PULLUP;
   // PB4(MISO)
   gpio.Pin = GPIO_PIN_4;
   HAL_GPIO_Init(GPIOB, &gpio);
@@ -173,6 +189,7 @@ int32_t spi_slave_init() {
     return -1;
   }
 
+
   /*##-3- Configure the DMA ##################################################*/
   /* Configure the DMA handler for Transmission process */
   hdma_tx.Instance = SPIx_TX_DMA_STREAM;
@@ -188,6 +205,8 @@ int32_t spi_slave_init() {
   hdma_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
   hdma_tx.Init.Mode = DMA_NORMAL;
   hdma_tx.Init.Priority = DMA_PRIORITY_LOW;
+
+  HAL_DMA_DeInit(&hdma_tx);
 
   HAL_DMA_Init(&hdma_tx);
 
@@ -229,7 +248,7 @@ int32_t spi_slave_init() {
 
   memset(recv_buf, 0, SPI_PKG_SIZE);
   spi_rx_event = 1;
-  // SET_RX_BUS_IDEL();
+  SET_RX_BUS_IDEL();
   /* start SPI receive */
   if (HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE) != HAL_OK) {
     return -1;
@@ -281,16 +300,6 @@ int32_t spi_slave_deinit() {
   HAL_GPIO_Init(GPIOD, &gpio);
   return 0;
 }
-static void log_data(char* tag, uint8_t *data, size_t len) {
-  printf("%s : \n", tag);
-  for (int i = 0; i < len; i++) {
-    printf(" %02x", data[i]);
-    if ((i+1) % 16 == 0) {
-      printf("\n");
-    }
-  }
-  printf("\n");
-}
 
 int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout) {
   uint32_t msg_size;
@@ -314,7 +323,6 @@ int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout) {
   }
 
   SET_COMBUS_LOW();
-
   spi_tx_event = 1;
 
   if (wait_spi_tx_event(timeout) != 0) {
@@ -341,7 +349,6 @@ uint32_t spi_slave_poll(uint8_t *buf) {
   if (total_len == 0) {
     return 0;
   }
-
   len = total_len > SPI_PKG_SIZE ? SPI_PKG_SIZE : total_len;
   ret = fifo_read_lock(&spi_fifo_in, buf, len);
   log_data("reading", buf, ret);

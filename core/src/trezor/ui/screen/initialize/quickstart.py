@@ -8,13 +8,11 @@ from trezor.ui.theme import Styles
 from trezor.ui.component.container import VStack, HStack
 
 
-class Quickstart(base(Navigation)):
+class Quickstart(Navigation):
     def __init__(self):
         super().__init__()
-        self.set_title(i18n.Title.wallet, "")
+        self.title.set_text(i18n.Title.wallet)
         self.title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置文本颜色为白色
-        # no need next button
-        self.btn_next.add_flag(lv.obj.FLAG.HIDDEN)
 
         self.create_content(HStack)
         self.content: HStack

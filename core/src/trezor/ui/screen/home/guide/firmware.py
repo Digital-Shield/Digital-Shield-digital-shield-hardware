@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from typing import List
     pass
 
-class Firmware(with_title(Navigation)):
+class Firmware(Navigation):
     def __init__(self,title):
         super().__init__()
         self.set_title(title)

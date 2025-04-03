@@ -8,15 +8,13 @@ from ubinascii import hexlify
 from trezor.ui import i18n, theme, Style, colors
 from trezor.ui import Continue, Reject, Detail, Confirm
 from trezor.ui.component import HStack, LabeledText
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class TransactionDetail(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class TransactionDetail(Modal):
     def __init__(
         self,
         amount: str,
@@ -32,6 +30,9 @@ class TransactionDetail(
         super().__init__()
 
         self.set_title(i18n.Title.transaction_detail, icon)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -77,12 +78,13 @@ class TransactionDetail(
         self.close(Continue())
 
 
-class EntryFunctionOverview(
-    with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)
-):
+class EntryFunctionOverview(Modal):
     def __init__(self, network: str, icon: str, function: str, args: List[bytes]):
         super().__init__()
         self.set_title(i18n.Title.transaction.format(network), icon)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -140,9 +142,7 @@ class EntryFunctionOverview(
         self.close(Confirm())
 
 
-class EntryFunctionDetail(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class EntryFunctionDetail(Modal):
     def __init__(
         self,
         sender: str,
@@ -157,6 +157,9 @@ class EntryFunctionDetail(
     ):
         super().__init__()
         self.set_title(i18n.Title.transaction_detail, icon)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack

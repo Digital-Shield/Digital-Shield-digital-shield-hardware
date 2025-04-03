@@ -2,9 +2,6 @@
 
 #include "device.h"
 #include <stdio.h>
-#include "atca_api.h"
-#include "atca_command.h"
-#include "atca_hal.h"
 #include "common.h"
 #include "display.h"
 #include "emmc.h"

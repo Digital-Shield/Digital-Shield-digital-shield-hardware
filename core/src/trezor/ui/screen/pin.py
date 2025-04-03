@@ -1,6 +1,6 @@
 import lvgl as lv
 
-from . import Modal, with_title
+from . import Modal
 
 from trezor import log
 from trezor.ui.component.keyboard import PinKeyboard
@@ -9,9 +9,10 @@ from trezor.ui.constants import MAX_PIN_LENGTH, MIN_PIN_LENGTH
 from trezor.ui.component.container import HStack
 
 
-class InputPinScreen(with_title(Modal)):
+class InputPinScreen(Modal):
     def __init__(self, title: str | None = None):
         super().__init__()
+        # self.title.set_text(title)
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         tip = lv.label(self)# 创建一个label
         tip.set_text(title)# 设置文本
@@ -58,7 +59,7 @@ class InputPinScreen(with_title(Modal)):
         )
         label = self.ta.get_label()
         label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
-        
+
         kbd = self.add(PinKeyboard)
         kbd.textarea = self.ta
         kbd.tip_count_min = MIN_PIN_LENGTH

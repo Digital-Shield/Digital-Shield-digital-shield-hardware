@@ -220,6 +220,7 @@ class Title:
     unimplemented = "Unimplemented"
     invalid_data = "Invalid data type"
     low_power = "Low Power"
+    collect_nft = "Collect NFT"
 
 class Tip:
     swipe_down_to_close = "Swipe down to close"
@@ -373,6 +374,8 @@ class Text:
     expiration_time = "Expiration time:"
     argument_x = "Argument #{}:"
     low_power_message = "Battery is at {}% \n Please charge"
+    collect_nft = "Are you sure collect the NFT?"
+    replace_nft = "Do you want to collect this NFT? You have reach the storage limit, this will remove the oldest uploaded NFT."
 
 class WalletSecurity:
     header = "Write down mnemonic on a piece of paper and store it in a safe place."

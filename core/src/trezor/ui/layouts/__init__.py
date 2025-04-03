@@ -161,6 +161,16 @@ async def confirm_set_homescreen(ctx, replace: bool = False):
         msg,
     )
 
+async def confirm_collect_nft(ctx, replace: bool = False):
+    msg = i18n.Text.collect_nft
+    if replace:
+        msg = i18n.Text.replace_nft
+    await confirm_action(
+        ctx,
+        i18n.Title.collect_nft,
+        msg,
+    )
+
 ## wipe device
 async def confirm_wipe_device(ctx: wire.GenericContext):
     from trezor.ui.screen.confirm import SimpleConfirm

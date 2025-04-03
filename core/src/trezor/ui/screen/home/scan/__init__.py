@@ -2,16 +2,15 @@ import lvgl as lv
 
 from trezor import io, log, loop, workflow
 from trezor.ui import i18n
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 CAMERA = io.Camera(io.CAMERA, 400, 400)
 
-class ScanApp(with_title(Navigation)):
+class ScanApp(Navigation):
 
     def __init__(self):
         super().__init__()
         self.set_title(i18n.App.scan)
-
 
         self.led = self.add(lv.img)
         self.led.set_src(self.flashlight_img_src)

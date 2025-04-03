@@ -173,7 +173,7 @@ def _wrap_protobuf_load(
 ) -> LoadedMessageType:
     try:
         msg = protobuf.decode(buffer, expected_type, experimental_enabled)
-        if __debug__:
+        if __debug__ and len(buffer) < 1024:
             log.debug(
                 __name__, "received message contents:\n%s", utils.dump_protobuf(msg)
             )

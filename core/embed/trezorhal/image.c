@@ -18,6 +18,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 #include "blake2s.h"
 #include "ed25519-donna/ed25519.h"
@@ -195,8 +196,8 @@ secbool load_vendor_header(const uint8_t *const data, uint8_t key_m,
   }
   blake2s_Final(&ctx, hash, BLAKE2S_DIGEST_LENGTH);
 
-  return sectrue;
-  // TODO: verify firmware signature
+  // return sectrue;
+  // // TODO: verify firmware signature
 
   ed25519_public_key pub;
   if (sectrue != compute_pubkey(key_m, key_n, keys, vhdr->sigmask, pub))

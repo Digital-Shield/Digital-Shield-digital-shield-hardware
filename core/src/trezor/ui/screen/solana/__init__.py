@@ -3,16 +3,16 @@ import lvgl as lv
 from trezor.ui import i18n, theme, colors, font
 from trezor.ui import Continue, Reject
 from trezor.ui.component import HStack, LabeledText
-from trezor.ui.screen import with_title_and_buttons
 from trezor.ui.screen import Modal
 
 
-class TransactionDetail(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class TransactionDetail(Modal):
     def __init__(self, amount: str, from_: str, to: str, total: str | None):
         super().__init__()
         self.set_title(i18n.Title.transaction_detail)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -54,12 +54,13 @@ class TransactionDetail(
         self.close(Continue())
 
 
-class SPLTokenTransactionDetail(
-    with_title_and_buttons(Modal, i18n.Button.continue_, i18n.Button.reject)
-):
+class SPLTokenTransactionDetail(Modal):
     def __init__(self, from_addr: str, to_addr: str, amount: str, source_owner: str, fee_payer: str, token_mint: str = None):
         super().__init__()
         self.set_title(i18n.Title.transaction_detail)
+        self.btn_right.set_text(i18n.Button.continue_)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack

@@ -2,7 +2,7 @@ import lvgl as lv
 from typing import TYPE_CHECKING
 
 from . import *
-from trezor.ui.screen import Navigation, with_title,font
+from trezor.ui.screen import Navigation, font
 
 from storage import device
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from typing import List
     pass
 
-class Device(with_title(Navigation)):
+class Device(Navigation):
     def __init__(self,title):
         super().__init__()
         self.set_title(title)
@@ -24,10 +24,10 @@ class Device(with_title(Navigation)):
 
         # label
         Item(self.content, i18n.Guide.device_label, device.get_label())
-        
+
         # firmware version
         Item(self.content,i18n.Guide.device_title_firmware_version, device.get_firmware_version())
-        
+
         # serial number
         Item(self.content,i18n.Guide.device_title_serial_number, device.get_serial())
 
@@ -46,7 +46,7 @@ class Device(with_title(Navigation)):
         # TODO
         # maybe get from storage is a better way
         Item(self.content, i18n.Guide.bluetooth_version, uart.NRF_VERSION)
-        
+
 
 class Item(HStack):
     def __init__(self, parent,title,desc):
@@ -79,7 +79,7 @@ class Item(HStack):
             view.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
             # view.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
-    
+
     def action(self):
         pass
 

@@ -9,13 +9,11 @@ from trezor.ui.component.container import HStack
 
 counts = [12, 18, 24]
 
-class WordcountScreen(base(Navigation)):
+class WordcountScreen(Navigation):
     def __init__(self):
         super().__init__()
         # self.set_title(i18n.Title.select_word_count, "A:/res/app_security.png")
         self.set_title(i18n.Title.select_word_count)
-
-        self.btn_next.add_flag(lv.obj.FLAG.HIDDEN)
 
         self.create_content(HStack)
         self.content: HStack

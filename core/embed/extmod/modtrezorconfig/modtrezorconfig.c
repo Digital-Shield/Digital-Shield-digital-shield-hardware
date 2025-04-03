@@ -38,7 +38,6 @@
 #include "display.h"
 //#include "emmc.h"
 #include "mini_printf.h"
-//#include "se_atca.h"
 #endif
 
 static secbool wrapped_ui_wait_callback(uint32_t wait, uint32_t progress,

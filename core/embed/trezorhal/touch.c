@@ -27,6 +27,7 @@
 
 #include "display.h"
 #include "touch.h"
+#include <stdio.h>
 
 /// CHSC6540
 // address
@@ -197,14 +198,10 @@ uint32_t touch_read(void) {
 uint32_t touch_click(void) {
   uint32_t r = 0;
   r = touch_read();
-  while (r) {
-    r = touch_read();
-    if ((r & TOUCH_END) == TOUCH_END) {
-      break;
-    }
+  if (r & TOUCH_END) {
+    return r;
   }
-
-  return r;
+  return 0;
 }
 
 uint32_t boot_touch_detect(uint32_t timeout) {

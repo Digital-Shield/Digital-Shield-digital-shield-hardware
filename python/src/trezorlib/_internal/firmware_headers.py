@@ -32,7 +32,7 @@ class Status(Enum):
     VALID = click.style("VALID", fg="green", bold=True)
     INVALID = click.style("INVALID", fg="red", bold=True)
     MISSING = click.style("MISSING", fg="blue", bold=True)
-    DEVEL = click.style("DEVEL", fg="red", bold=True)
+    DEVEL = click.style("DEVEL", fg="yellow", bold=True)
 
     def is_ok(self) -> bool:
         return self is Status.VALID or self is Status.DEVEL

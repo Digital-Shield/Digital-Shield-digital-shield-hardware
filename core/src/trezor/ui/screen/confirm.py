@@ -1,12 +1,12 @@
 import lvgl as lv
 
-from . import Modal, with_title_and_buttons
+from . import Modal
 from trezor import log
 from trezor.ui import i18n, Cancel, events, colors, Style, theme
 from trezor.ui.component import ArcHolder, HStack, VStack
 
 
-class Confirm(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.cancel)):
+class Confirm(Modal):
     """
     Confirm screen have 2 buttons: `cancel` and `ok`
 
@@ -19,6 +19,8 @@ class Confirm(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.can
         # `cancel` and `confirm` buttons
         self.btn_cancel = self.btn_left
         self.btn_confirm = self.btn_right
+        self.btn_cancel.set_text(i18n.Button.cancel)
+        self.btn_confirm.set_text(i18n.Button.confirm)
 
         self.btn_cancel.add_event_cb(
             lambda _: self.on_click_cancel(), lv.EVENT.CLICKED, None
@@ -55,7 +57,7 @@ class SimpleConfirm(Confirm):
         self.content: lv.obj
 
         self.content.add_style(theme.Styles.board, lv.PART.MAIN)
-        
+
 
         self.text = self.add(lv.label)
         self.text.set_long_mode(lv.label.LONG.WRAP)

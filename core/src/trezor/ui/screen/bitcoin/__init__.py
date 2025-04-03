@@ -3,12 +3,13 @@ import lvgl as lv
 from trezor.ui import i18n, theme, log, font, colors, Style
 from trezor.ui import Confirm, Reject
 from trezor.ui.component import HStack, LabeledText
-from trezor.ui.screen import Modal, with_title_and_buttons
+from trezor.ui.screen import Modal
 
-class PublicKey(with_title_and_buttons(Modal, i18n.Button.confirm)):
+class PublicKey(Modal):
     def __init__(self, pubkey: str, path: str, network: str):
         super().__init__()
         self.set_title(i18n.Title.public_key.format(network))
+        self.btn_right.set_text(i18n.Button.confirm)
 
         self.btn_confirm = self.btn_right
         self.btn_confirm.add_event_cb(self.on_click_confirm, lv.EVENT.CLICKED, None)
@@ -39,10 +40,11 @@ class PublicKey(with_title_and_buttons(Modal, i18n.Button.confirm)):
 
 
 # move `xPub` to bitcoin
-class XPub(with_title_and_buttons(Modal, i18n.Button.confirm)):
+class XPub(Modal):
     def __init__(self, xpub: str, path: str, network: str):
         super().__init__()
         self.set_title(i18n.Title.xpub.format(network))
+        self.btn_right.set_text(i18n.Button.confirm)
 
         self.btn_confirm = self.btn_right
         self.btn_confirm.add_event_cb(self.on_click_confirm, lv.EVENT.CLICKED, None)
@@ -70,10 +72,13 @@ class XPub(with_title_and_buttons(Modal, i18n.Button.confirm)):
         if target == self.btn_confirm:
             self.on_click_confirm(e)
 
-class PaymentRequest(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class PaymentRequest(Modal):
     def __init__(self, amount: str, to: str, *, message: str|None = None):
         super().__init__()
         self.set_title(i18n.Title.view_transaction)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -124,10 +129,13 @@ class PaymentRequest(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.But
         self.close(Confirm())
 
 
-class Output(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class Output(Modal):
     def __init__(self, amount: str, to: str):
         super().__init__()
         self.set_title(i18n.Title.view_transaction)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -174,10 +182,12 @@ class Output(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reje
     def on_click_confirm(self, e):
         self.close(Confirm())
 
-class Total(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class Total(Modal):
     def __init__(self, amount: str, fee: str, total: str, coin: str):
         super().__init__()
         self.set_title(i18n.Title.x_transaction.format(coin))
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
 
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
@@ -215,10 +225,12 @@ class Total(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.rejec
     def on_click_confirm(self, e):
         self.close(Confirm())
 
-class JointAmount(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class JointAmount(Modal):
     def __init__(self, amount: str, total: str, coin: str):
         super().__init__()
         self.set_title(i18n.Title.x_joint_transaction.format(coin))
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
 
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
@@ -254,10 +266,13 @@ class JointAmount(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button
         self.close(Confirm())
 
 
-class OutputChange(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class OutputChange(Modal):
     def __init__(self, amount: str, to: str, amount_changed: str, amount_changed_label: str):
         super().__init__()
         self.set_title(i18n.Title.view_transaction)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -308,10 +323,13 @@ class OutputChange(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Butto
     def on_click_confirm(self, e):
         self.close(Confirm())
 
-class FeeChange(with_title_and_buttons(Modal, i18n.Button.confirm, i18n.Button.reject)):
+class FeeChange(Modal):
     def __init__(self, fee: str, fee_changed: str, fee_changed_label: str):
         super().__init__()
         self.set_title(i18n.Title.view_transaction)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)

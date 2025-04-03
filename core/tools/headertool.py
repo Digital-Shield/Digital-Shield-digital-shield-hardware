@@ -22,6 +22,9 @@ PORT = 5001
 def sign_with_privkeys(digest: bytes, privkeys: List[bytes]) -> bytes:
     """Locally produce a CoSi signature."""
     pubkeys = [cosi.pubkey_from_privkey(sk) for sk in privkeys]
+    # for i, pk in enumerate(pubkeys):
+    #     click.echo("Signing with public key #{}: {}".format(i + 1, pk.hex()))
+    #     click.echo("Signing with public key #{}: (const uint8_t *)\"{}".format(i + 1, ''.join([f'\\x{byte:02x}' for byte in pk])))
     nonces = [cosi.get_nonce(sk, digest, i) for i, sk in enumerate(privkeys)]
 
     global_pk = cosi.combine_keys(pubkeys)

@@ -1,5 +1,5 @@
-#ifndef _SE_ATCA_H_
-#define _SE_ATCA_H_
+#ifndef _SE_THD89_H_
+#define _SE_THD89_H_
 
 #include <stdbool.h>
 #include <stdint.h>

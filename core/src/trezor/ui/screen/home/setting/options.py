@@ -2,7 +2,7 @@ import lvgl as lv
 
 from trezor import utils, log
 from trezor.ui import Style, colors, i18n, theme
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 from trezor.ui.component import HStack, VStack
 
 from typing import TYPE_CHECKING
@@ -54,16 +54,14 @@ class Item(VStack):
         elif code == lv.EVENT.DEFOCUSED:
             self.state.set_text("")
 
-class OptionDetails(with_title(Navigation)):
+class OptionDetails(Navigation):
     def __init__(self, title, options: Sequence):
         self.subscriber: lv.obj = None
 
         super().__init__()
-        # self.set_title(title)
-        title_label = lv.label(self)
-        title_label.set_text(title)
-        title_label.align(lv.ALIGN.TOP_MID, 0, 10)  # 让标题居中
-        title_label.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
+        self.set_title(title)
+        self.title.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN)
+
         self.content.set_style_pad_all(16, lv.PART.MAIN)
 
         self.create_content(HStack)
@@ -80,7 +78,7 @@ class OptionDetails(with_title(Navigation)):
         )
 
         self.options = [Item(self.content, self.option_format(o)) for o in options]
-            
+
         for item, o in zip(self.options, options):
             # add time to item as a property
             item.option = o
@@ -88,7 +86,7 @@ class OptionDetails(with_title(Navigation)):
                 Style()
                 .bg_color(lv.color_hex(0x111126))
                 .bg_opa(lv.OPA._90)
-                .radius(16)     
+                .radius(16)
                 .height(72)
                 .width(lv.pct(100))
                 .pad_all(8),
@@ -101,12 +99,12 @@ class OptionDetails(with_title(Navigation)):
 
         # find the current and set focus
         current = self.current()
-        
+
         item = utils.first(self.options, lambda item: item.option == current)
         lv.group_focus_obj(item)
 
         self.group.set_focus_cb(self.on_group_focus_changed)
-    
+
 
     @classmethod
     def option_format(cls, v: T) -> str:
