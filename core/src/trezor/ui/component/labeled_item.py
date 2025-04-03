@@ -39,6 +39,10 @@ class LabeledItem(HStack):
     def set_device_label(self, text: str):
         self.label.set_text(text)
         self.label.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)
+    #加粗26号label
+    def set_label_2(self, text: str):
+        self.label.set_text(text)
+        self.label.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)    
         
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)
@@ -62,3 +66,15 @@ class LabeledText(LabeledItem):
        
     def set_device_text(self, text: str):
         self.item.set_text(text)
+    #加粗30号text
+    def set_text1(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Bold.SCS30, lv.PART.MAIN)
+    #加粗26号text
+    def set_text2(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
+    #常规26号text
+    def set_text3(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN) 
