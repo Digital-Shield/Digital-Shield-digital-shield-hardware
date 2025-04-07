@@ -45,7 +45,7 @@ SUPPORTED_MAX_RESOURCE_SIZE = {
 }
 # FILE_PATH_COMPONENTS = (("wallpapers", "wp"), ("nfts", "nft"))
 NFT_METADATA_ALLOWED_KEYS = ("header", "subheader", "network", "owner")
-REQUEST_CHUNK_SIZE = const(16 * 1024)
+REQUEST_CHUNK_SIZE = const(1 * 1024)
 
 MAX_WP_COUNTER = const(5)
 MAX_NFT_COUNTER = const(24)
@@ -132,7 +132,22 @@ async def upload_res(ctx: wire.Context, msg: ResourceUpload) -> Success:
         file_full_path = f"1:/res/nfts/imgs/{file_name}.{res_ext}"
         zoom_path = f"1:/res/nfts/zooms/zoom-{file_name}.{res_ext}"
         config_path = f"1:/res/nfts/desc/{file_name}.json"
+
     try:
+        if res_type == ResourceType.Nft and config_path:
+            with io.fatfs.open(config_path, "w") as f:
+                assert msg.nft_meta_data
+                f.write(msg.nft_meta_data)
+                f.sync()
+
+        if res_type == ResourceType.Nft:
+            total_size = res_size + res_zoom_size
+            nft = metadata["header"]
+
+            from trezor.ui.screen.management.upload_res import LoadingResource
+            screen = LoadingResource(nft, total_size)
+            await screen.show()
+
         with io.fatfs.open(file_full_path, "w") as f:
             data_left = res_size
             offset = 0
@@ -148,6 +163,8 @@ async def upload_res(ctx: wire.Context, msg: ResourceUpload) -> Success:
                     REQUEST_CHUNK_SIZE if data_left > REQUEST_CHUNK_SIZE else data_left
                 )
                 data_left -= REQUEST_CHUNK_SIZE
+                if res_type == ResourceType.Nft:
+                    screen.update(REQUEST_CHUNK_SIZE)
             # force refresh to disk
             f.sync()
 
@@ -166,13 +183,10 @@ async def upload_res(ctx: wire.Context, msg: ResourceUpload) -> Success:
                     REQUEST_CHUNK_SIZE if data_left > REQUEST_CHUNK_SIZE else data_left
                 )
                 data_left -= REQUEST_CHUNK_SIZE
+                if res_type == ResourceType.Nft:
+                    screen.update(REQUEST_CHUNK_SIZE)
             # force refresh to disk
             f.sync()
-        if res_type == ResourceType.Nft and config_path:
-            with io.fatfs.open(config_path, "w") as f:
-                assert msg.nft_meta_data
-                f.write(msg.nft_meta_data)
-                f.sync()
         if replace:
             name_list.sort(
                 key=lambda name: int(name[5:].split("-")[-1][: -(len(res_ext) + 1)])
@@ -192,6 +206,8 @@ async def upload_res(ctx: wire.Context, msg: ResourceUpload) -> Success:
 
     except BaseException as e:
         raise wire.FirmwareError(f"Failed to write file with error code {e}")
+    finally:
+        screen.close(None)
     if res_type == ResourceType.WallPaper:
         device.set_homescreen(f"A:{file_full_path}")
     return Success(message="Success")
