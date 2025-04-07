@@ -16,6 +16,11 @@ class LanguageScreen(Modal):
         # self.set_title(i18n.Title.select_language, "A:/res/language.png")
         self.set_title(i18n.Title.select_language)
         self.title.set_height(40)  # 设置文本高度为 50 像素
+        # self.title.set_text(i18n.Title.select_language)
+        self.btn_right.set_text(i18n.Button.next)
+        self.btn_next = self.btn_right
+        self.btn_next.add_event_cb(self.on_click_next, lv.EVENT.CLICKED, None)
+
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
