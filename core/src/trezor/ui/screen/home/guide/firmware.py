@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from . import *
 from trezor.ui import Style, font
-from trezor.ui.screen import Navigation, with_title
+from trezor.ui.screen import Navigation
 
 if TYPE_CHECKING:
     from typing import List

@@ -21,7 +21,7 @@ class About(Navigation):
             .pad_right(16),
             0
         )
-        Item(self.content,'Digit Shield','A:/res/web.png',"https://digitshield.com")
+        Item(self.content,'Digit Shield','A:/res/web.png',"https://ds.pro")
         Item(self.content,'Twitter','A:/res/twitter.png',"https://x.com/DigitShield_HQ")
         Item(self.content,'Discord','A:/res/discord.png',"https://discord.gg/wH8HVsHz")
         Item(self.content,'Telegram','A:/res/telegram.png',"https://t.me/digitshield")
