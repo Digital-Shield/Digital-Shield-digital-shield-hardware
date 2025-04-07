@@ -41,8 +41,8 @@ class Guide:
     terms_describe_risks = '暗号通貨と技術的な脆弱性に関連するリスクに注意してください.'
     terms_title_disclaimers = '免責事項'
     terms_describe_disclaimers = '提供される情報は財務アドバイスではありません。決定を下す前に、専門家のアドバイスを求めてください。'
-    terms_title_contact_us = 'お問い合わせ'
-    terms_describe_contact_us = 'ご質問やご不明な点がございましたら、support@digitshield.com までメールをお送りください'
+    terms_title_contact_us = '四、お問い合わせ'
+    terms_describe_contact_us = 'ご質問やご不明な点がございましたら、www.ds.pro@gmail.com までメールをお送りください'
     
     accept_tems = '一、条項の承諾'
     use_range = '1. 適用範囲'
@@ -308,6 +308,7 @@ class Text:
     enable_experiment_mode = "実験モードを有効にしますか？"
     set_as_homescreen = "ホーム画面を変更しますか？"
     replace_homescreen = "ホーム画面を置き換えますか？これにより、最も早くアップロードされた壁紙が削除されます。"
+    confirm_replace_wallpaper = "ホーム画面の壁紙を置き換えますか？"
     get_next_u2f_counter = "次のU2Fカウンターを取得しますか？"
     set_u2f_counter_x = "U2Fカウンターを {} に設定しますか？"
     confirm_entropy = "エントロピーをエクスポートしますか？操作を続行する前に、何をしているかを十分に理解してください！"

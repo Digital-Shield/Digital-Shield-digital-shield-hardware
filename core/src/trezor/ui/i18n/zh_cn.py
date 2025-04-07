@@ -273,6 +273,7 @@ class Text:
     enable_experiment_mode = "是否启用实验模式？"
     set_as_homescreen = "确定要更改主屏幕吗？"
     replace_homescreen = "确定要替换主屏幕吗？这将会删除最早上传的壁纸。"
+    confirm_replace_wallpaper = "确定要替换主屏幕吗的壁纸吗？"
     get_next_u2f_counter = "确定要获取下一个U2F计数器吗？"
     set_u2f_counter_x = "确定要设置U2F计数器为 {} 吗？"
     confirm_entropy = "确定要导出熵吗？继续操作之前请明白你在做什么！"

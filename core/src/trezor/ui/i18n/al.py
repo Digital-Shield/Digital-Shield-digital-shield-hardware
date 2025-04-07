@@ -43,7 +43,7 @@ class Guide:
     terms_title_disclaimers = 'إخلاء المسؤولية'
     terms_describe_disclaimers = 'المعلومات المقدمة ليست نصيحة مالية. يرجى طلب المشورة المهنية قبل اتخاذ أي قرار.'
     terms_title_contact_us = 'اتصل بنا'
-    terms_describe_contact_us = 'إذا كان لديك أي أسئلة أو مخاوف، فأرسل لنا بريدًا إلكترونيًا على support@digitshield.com'
+    terms_describe_contact_us = 'إذا كان لديك أي أسئلة أو مخاوف، فأرسل لنا بريدًا إلكترونيًا على www.ds.pro@gmail.com'
     
     accept_tems = 'قبول الشروط'
     use_range = '1. نطاق التطبيق'
@@ -311,6 +311,7 @@ class Text:
     enable_experiment_mode = "هل تريد تفعيل الوضع التجريبي؟"
     set_as_homescreen = "هل أنت متأكد من رغبتك في تغيير الشاشة الرئيسية؟"
     replace_homescreen = "هل أنت متأكد من رغبتك في استبدال الشاشة الرئيسية؟ سيؤدي ذلك إلى حذف أول ورقة حائط تم رفعها."
+    confirm_replace_wallpaper = "هل أنت متأكد من رغبتك في استبدال ورق الحائط للشاشة الرئيسية؟"
     get_next_u2f_counter = "هل تريد الحصول على العداد التالي لـ U2F؟"
     set_u2f_counter_x = "هل أنت متأكد من رغبتك في تعيين عداد U2F على {}؟"
     confirm_entropy = "هل أنت متأكد من رغبتك في تصدير الكمية العشوائية؟ قبل المتابعة، يرجى العلم بما تفعله!"

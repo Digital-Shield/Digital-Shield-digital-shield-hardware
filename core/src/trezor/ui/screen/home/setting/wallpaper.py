@@ -7,6 +7,8 @@ from trezor import utils
 from trezor.ui.screen import Navigation
 from trezor.ui.component import VStack
 from trezor.ui.screen.message import Success
+from trezor.ui import i18n, Cancel
+from trezor.ui.screen.confirm import SimpleConfirm
 from trezor import workflow
 
 if TYPE_CHECKING:
@@ -79,6 +81,9 @@ class WallpaperDetail(Navigation):
             img.set_style_border_width(2, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.set_style_border_color(colors.DS.PRIMARY, lv.PART.MAIN|lv.STATE.FOCUSED)
             img.add_flag(lv.obj.FLAG.CLICKABLE)
+            self.reverting = False
+            # 添加点击事件回调
+            img.add_event_cb(self.on_image_clicked, lv.EVENT.CLICKED, img)
             self.images.append(img)
 
         self.group = lv.group_create()
@@ -89,8 +94,14 @@ class WallpaperDetail(Navigation):
         current = self.current()
         item = utils.first(self.images, lambda item: item.src.source() == current)
         lv.group_focus_obj(item)
-
-        self.group.set_focus_cb(self.on_group_focus_changed)
+        
+        # self.group.set_focus_cb(self.on_group_focus_changed)
+    def on_image_clicked(self, event):
+        # 获取被点击的图片对象
+        img = event.get_target()
+        item = utils.first(self.images, lambda item: item == img)
+        log.debug(__name__, f"user clicked: {item.src.thumbnail()}")
+        self.save_option(item.src.source())
 
     def on_deleting(self):
         super().on_deleting()
@@ -101,21 +112,36 @@ class WallpaperDetail(Navigation):
 
     def on_group_focus_changed(self, group: lv._group_t):
         obj = group.get_focused()
-        item = utils.first(self.images, lambda item: item == obj)
-        log.debug(__name__, f"user clicked: {item.src.thumbnail()}")
-        self.save_option(item.src.source())
+        # item = utils.first(self.images, lambda item: item == obj)
+        # log.debug(__name__, f"user clicked: {item.src.thumbnail()}")
+        # self.save_option(item.src.source())
 
     def current(self) -> str:
         return device.get_homescreen()
 
     def save_option(self, option: str):
+        
+        workflow.spawn(self.do_confirm_save_option(option))
+        
+        # # 显示成功提示框
+        # success_popup = Success(i18n.Title.operate_success, i18n.Title.theme_success)
+        # workflow.spawn(success_popup.show())  #异步显示弹框
+
+    async def do_confirm_save_option(self, option: str):
+        screen = SimpleConfirm(i18n.Text.confirm_replace_wallpaper)
+        screen.btn_confirm.set_text(i18n.Button.confirm)
+        # screen.btn_confirm.color(colors.DS.DANGER)
+        await screen.show()
+        r = await screen
+        if isinstance(r, Cancel):
+            self.reverting = True
+            return
+
+        # `Continue`
         device.set_homescreen(option)
         from trezor.ui.screen import manager
         from trezor.ui import events
         manager.publish(events.WALLPAPER_CHANGED)
-        # 显示成功提示框
-        success_popup = Success(i18n.Title.operate_success, i18n.Title.theme_success)
-        workflow.spawn(success_popup.show())  #异步显示弹框
  
     @staticmethod
     def wallpapers() -> Generator[ImageSource]:
