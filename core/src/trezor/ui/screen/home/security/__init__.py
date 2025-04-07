@@ -62,16 +62,29 @@ class Item(VStack):
         )
         self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
-        self.icon = lv.img(self)
-        self.icon.set_src(icon)
+        
+        #获取当前语言
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            log.debug(__name__, f"current language--: {cur_language}")
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(text)
+            self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
+            self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
+            self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            self.icon = lv.img(self)
+            self.icon.set_src(icon)
+        else:
+            self.icon = lv.img(self)
+            self.icon.set_src(icon)
 
-        self.label = lv.label(self)
-        self.label.set_flex_grow(1)
-        self.label.set_text(text)
-        self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
-        self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
-
-
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(text)
+            self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
+            self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
+        
 class SampleItem(Item):
     def __init__(self, parent, text, icon):
         super().__init__(parent, text, icon)

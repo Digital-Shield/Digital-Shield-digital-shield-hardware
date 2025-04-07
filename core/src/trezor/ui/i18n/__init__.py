@@ -8,9 +8,9 @@ class Language:
         self.name = name
 
 languages = [
-    Language('en', 'English'),
-    Language('zh_cn', '简体中文'),
+    # Language('zh_cn', '简体中文'),
     Language('zh_hk', '繁體中文'),
+    Language('en', 'English'),
     Language('th','한국어'),
     Language('ja','日本語'),
     Language("al","بالعربية"),
@@ -59,7 +59,7 @@ def change_language(lang: str | Language | None = None):
     del lang_module
 
 # default language,
-_default = 'en' if not device.is_initialized() else None
+_default = 'zh_hk' if not device.is_initialized() else None
 using :Language | None = None
 change_language(_default)
 # now using must not be None

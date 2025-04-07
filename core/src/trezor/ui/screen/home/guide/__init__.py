@@ -87,18 +87,35 @@ class Item(VStack):
         )
         self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
-        # text
-        self.label = lv.label(self)
-        self.label.set_flex_grow(1)
-        self.label.set_text(text)
-        self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
-        self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
-        self.label.add_style(Style().pad_left(10),0)
-        self.add_flag(lv.obj.FLAG.CLICKABLE)
-        # right-arrow
-        self.arrow = lv.label(self)
-        self.arrow.set_text(lv.SYMBOL.RIGHT)
-        self.arrow.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN) # type: ignore
+          #获取当前语言，判断阿拉伯语
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            # right-arrow
+            self.arrow = lv.label(self)
+            self.arrow.set_text(lv.SYMBOL.LEFT)
+            self.arrow.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN) # type: ignore
+            # text
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(text)
+            self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
+            self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
+            self.label.add_style(Style().pad_right(10),0)
+            self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            self.add_flag(lv.obj.FLAG.CLICKABLE)
+        else:
+            # text
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(text)
+            self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
+            self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
+            self.label.add_style(Style().pad_left(10),0)
+            self.add_flag(lv.obj.FLAG.CLICKABLE)
+            # right-arrow
+            self.arrow = lv.label(self)
+            self.arrow.set_text(lv.SYMBOL.RIGHT)
+            self.arrow.set_style_text_color(lv.color_hex(0xffffff), lv.PART.MAIN) # type: ignore
 
         self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
 
@@ -125,15 +142,16 @@ class QrcodeDetail(Navigation):
         self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
         # qrcode
         view = lv.qrcode(contaner, 440, colors.DS.BLACK, colors.DS.WHITE)
-        view.update(qrcode, len(qrcode))
         view.set_style_border_width(5, lv.PART.MAIN)
+        view.set_style_radius(25, lv.PART.MAIN)
+        view.update(qrcode, len(qrcode))
         view.center()
         # text
         label = lv.label(self.content)
         label.set_text(qrcode)
         label.add_style(Style()
-                        .width(lv.pct(100))
                         .text_color(lv.color_hex(0x37b7ae)),
                         0)
+        label.set_width(500)
         label.set_flex_grow(1)
         label.set_long_mode(lv.label.LONG.WRAP)

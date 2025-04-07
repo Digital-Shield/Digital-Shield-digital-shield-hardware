@@ -100,6 +100,7 @@ class PaymentRequest(Modal):
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -110,7 +111,8 @@ class PaymentRequest(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
-
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        
         # reject button
         self.btn_reject = self.btn_left
         self.btn_reject.mode('reject')
@@ -152,6 +154,7 @@ class Output(Modal):
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -162,6 +165,7 @@ class Output(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
         # reject button
         self.btn_reject = self.btn_left
@@ -194,6 +198,7 @@ class Total(Modal):
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
+
             return item
 
         # amount
@@ -236,6 +241,7 @@ class JointAmount(Modal):
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
             return item
 
         # your spend
@@ -289,6 +295,7 @@ class OutputChange(Modal):
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -299,6 +306,7 @@ class OutputChange(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
         # reject button
         self.btn_reject = self.btn_left

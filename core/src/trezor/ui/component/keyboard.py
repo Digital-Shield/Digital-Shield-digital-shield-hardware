@@ -189,6 +189,7 @@ class PinKeyboard(Keyboard):
             tip = f"#{r:06X} {count}#/#{r:06X} {max_count}#"
 
         self.tip.set_text(tip)
+        self.tip.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         self.tip.clear_flag(lv.obj.FLAG.HIDDEN)
 
     @property

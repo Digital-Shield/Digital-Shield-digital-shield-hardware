@@ -45,6 +45,42 @@ class Guide:
     terms_title_contact_us = '聯絡我們'
     terms_describe_contact_us = '如果您有任何疑問或疑慮，請給我們傳送電子郵件至support@digitshield.com'
 
+    accept_tems = '一、接受條款'
+    use_range = '1、適用範圍'
+    range_include = '本條款適用於通過 Digital Shield 錢包提供的所有服務，包括：'
+    range_include_1 = '硬體錢包的購買、激活及售後服務；Digital Shield 移動端應用程式（Android/iOS/Goolg）的下載、安裝及功能使用；固件升級服務（包括安全補丁、功能增強版本）；多鏈數字資產管理（支援 BTC、ETH 等 3000 + 代幣的存儲與轉賬）；技術支援（設備故障排查、交易簽名異常處理等）。'
+    user_qualification = '2、用戶資格'
+    ability_include = '您確認已年滿 18 週歲，並具備完全民事行為能力；'
+    ability_include_1 = '您所在司法轄區未禁止加密貨幣及相關硬體設備的使用（例如中國內地用戶需自行承擔使用風險）；'
+    terms_update_infor = '3、條款更新與通知'
+    update_infor_content = '我們保留單方修改條款的權利，修訂內容通過官網公告欄發佈，生效日期以公告為準； 若您繼續使用服務，視為接受修訂後的條款；若不同意，應在生效日期前書面通知並終止使用。'
+
+    wallet_buy_iterms = '二、硬體錢包購買條款'
+    order_process = '1. 訂單流程'
+    payment_confirmation = '支付確認：訂單支付成功（以區塊鏈網路確認或銀行到賬為準）後，系統將在 24 小時內更新狀態；'
+    inventory_shortage = '庫存缺貨：若庫存不足，用戶可選擇：'
+    inventory_shortage_1 = 'a. 等待補貨（最長 30 日，超期自動退款）；'
+    inventory_shortage_2 = 'b. 全額原路退款（加密貨幣訂單按支付時匯率折算）。'
+    return_and_exchange_policy = '2. 退換政策'
+    return_and_exchange_condi = '退貨條件：'
+    return_and_exchange_condi_con = 'a. 未激活設備需保留原廠密封貼紙（編號與訂單一致）及完整配件（USB 線、說明書、助記詞卡片）； b. 退貨申請需在簽收後 7 日內提交，逾期視為驗收合格； c. 退回運費由用戶承擔（質量問題除外）。'
+    warranty_scope = '保修範圍：'
+    warranty_scope_1 = 'a. 覆蓋安全晶片故障、螢幕顯示異常、按鍵失靈等非人為損壞；'
+    warranty_scope_2 = 'b. 需提供購買憑證（訂單號）及故障證明（視頻需清晰展示設備 SN 碼及異常現象）；'
+    warranty_scope_3 = 'c. 人為損壞（如進水、摔落）不在保修範圍內，可付費維修。'
+
+    disclaimer = '三、免責聲明'
+    product_risk = '1. 產品風險'
+    physical_risk = '物理風險：'
+    physical_risk_1 = 'a. 設備在高溫（>60℃）、高濕（>90% RH）、強磁場（>100mT）環境下可能失效；'
+    physical_risk_2 = 'b. 長期未充電可能導致電池損壞（建議每個月充電一次）。'
+    supply_chain_risk = '供應鏈風險：'
+    supply_chain_risk_1 = 'a. 官網提供防偽驗證工具，掃描設備二維碼可查驗真偽；'
+    supply_chain_risk_2 = 'b. 若懷疑設備被調包，應立即聯繫客服並報警處理。'
+    service_interruption = '2. 服務中斷'
+    service_interruption_1 = '計劃維護將提前 48 小時通過官網公告通知，緊急維護可能無預警暫停服務；'
+    service_interruption_2 = '不可抗力因素導致數據丟失，我們不承擔賠償責任。'
+
     device_label = "設備名称"
     device_title_firmware_version = '韌體版本'
     device_title_serial_number = '序號'
@@ -81,6 +117,8 @@ class Title:
     enter_mnemonic = "請輸入助記詞"
     check_mnemonic = "檢查助記詞"
     success = "成功"
+    operate_success = "操作成功"
+    theme_success = "主題切換成功"
     warning = "警告"
     error = "錯誤"
     verified = "助記詞備份完成"
@@ -147,6 +185,9 @@ class Title:
     import_credential = "導入憑證"
     export_credential = "導出憑證"
     asset = "資產"
+    unimplemented = "未實現"
+    invalid_data="無效的數據格式"
+    low_power = "電量低"
 
 class Text:
     tap_to_unlock = "點擊以解鎖"
@@ -288,6 +329,15 @@ class Text:
     duration = "持續時間"
     lock = "鎖定"
     unlock = "解鎖"
+    all = "全部"
+    source = "來源"
+    tip = "提示"
+    keep_alive = "Keep alive"
+    invalid_ur = "不支援的二維碼類型，請重試"
+    sequence_number = "序號"
+    expiration_time = "過期時間"
+    argument_x = "參數 #{}"
+    low_power_message = "電量還剩餘 {}%\n請充電"
 
 class Tip:
     swipe_down_to_close = "向下滑動以關閉"
@@ -353,10 +403,18 @@ class MnemonicSecurity:
     ]
 
 class PinSecurity:
+    # 定义类属性header，用于描述PIN码的作用和使用提示
     header = "PIN碼是裝置訪問的密碼，用於授權訪問當前裝置。請按照以下提示正確使用PIN碼"
+    # 定义类属性tips，用于存储PIN码使用的具体提示信息
     tips = [
-        "1. 設定或錄入PIN時請檢查環境安全，確保沒有旁觀者或攝像頭",
+        "1. 設定或錄入PIN時請檢查環境安全，確保沒有旁觀者或攝像頭",  # 提示1：设置或输入PIN码时请检查环境安全，确保没有旁观者或摄像头
         "2. 請設定長度為4-16位的高強度的PIN碼，避免使用連續或重複的數字",
         "3. PIN碼的最大重試次數為10次，當錯誤10次後裝置將會被重置",
         "4. 請妥善保管PIN碼，不要和任何人分享您的PIN碼",
     ]
+
+class Solana:
+    ata_reciver = "接收者(關聯代幣帳戶)"
+    ata_sender = "發送者(關聯代幣帳戶)"
+    source_owner = "交易簽署者"
+    fee_payer = "手續費支付者"    

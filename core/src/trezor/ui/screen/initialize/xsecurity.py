@@ -42,6 +42,11 @@ class XSecurity(Modal):
             .text_font(font.Bold.SCS26),
             lv.PART.MAIN,
         )
+        #获取当前语言，判断阿拉伯语
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            header.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
+            header.set_style_text_font(lv.font_scs_reg_26, 0) # 使用支持阿拉伯语的字体
 
         header.set_text(message.header)
 
@@ -57,7 +62,11 @@ class XSecurity(Modal):
                 lv.PART.MAIN,
             )
             tip.set_text(msg)
-
+             #获取当前语言，判断阿拉伯语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "al":
+                tip.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
+                tip.set_style_text_font(lv.font_scs_reg_26, 0) # 使用支持阿拉伯语的字体
 
 class PinSecurity(XSecurity):
 

@@ -58,13 +58,14 @@ class Address(Modal):
         label.set_long_mode(lv.label.LONG.WRAP)
         label.set_width(lv.pct(100))
         label.set_style_text_font(font.mono, lv.PART.MAIN)
+        label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN) #地址白色
         label.add_style(LabeledText.style, lv.PART.MAIN)
 
         def labeled(label: str, text: str):
             item = view.add(LabeledText)
             item.set_label(label)
             item.set_text(text)
-
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN) #地址白色
         # path
         labeled(i18n.Text.path, self.path)
 
@@ -242,6 +243,7 @@ class TransactionOverview(Modal):
         span = spans.new_span()
         span.set_text(i18n.Text.send)
         span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
 
         span = spans.new_span()
         span.set_text(amount)
@@ -252,7 +254,8 @@ class TransactionOverview(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.to)
         item.set_text(to)
-
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        
         # view detail button
         self.btn_detail = lv.btn(self.content)
         self.btn_detail.add_style(

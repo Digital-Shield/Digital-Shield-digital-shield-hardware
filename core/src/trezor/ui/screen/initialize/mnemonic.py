@@ -163,10 +163,20 @@ class MnemonicInput(Navigation):
     def __init__(self, count):
         super().__init__()
         # self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
-        self.set_title(i18n.Title.enter_mnemonic)
-        self.btn_right.set_text(i18n.Button.next)
-        self.btn_next = self.btn_right
-        self.btn_next.add_event_cb(lambda e: self.channel.publish(Done()), lv.EVENT.CLICKED, None)
+        # self.set_title(i18n.Title.enter_mnemonic)
+        self.title = lv.label(self)
+        self.title.set_text(i18n.Title.enter_mnemonic)
+        self.title.set_width(480)  # 设置标签的宽度
+        self.title.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        self.title.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
+        # 设置文字居中对齐
+        self.title.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)
+        # 设置文字颜色为白色
+        self.title.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+         #获取当前语言，判断阿拉伯语
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            self.title.set_style_base_dir(lv.BASE_DIR.RTL, 0)
 
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
@@ -398,6 +408,7 @@ class Input(lv.obj):
         self.set_pos(0, 0)
         self.add_flag(lv.obj.FLAG.CLICKABLE)
         self.add_event_cb(self.on_click_blank, lv.EVENT.CLICKED, None)
+        self.set_style_text_color(colors.DS.BLACK, 0)
 
         self.content = HStack(self)
         self.content.add_style(
@@ -408,6 +419,7 @@ class Input(lv.obj):
             .pad_top(0)
             .width(lv.pct(100))
             .height(lv.SIZE.CONTENT)
+            .text_color(colors.DS.BLACK)  # 设置文本颜色为黑色
             .bg_color(colors.DS.WHITE)
             .bg_opa(),
             lv.PART.MAIN
@@ -423,7 +435,9 @@ class Input(lv.obj):
             .height(80)
             .pad_left(16)
             .pad_right(16)
+            .text_color(colors.DS.BLACK)
             .pad_column(16),
+
             lv.PART.MAIN
         )
         container.set_style_flex_cross_place(lv.FLEX_ALIGN.END, lv.PART.MAIN)
@@ -432,28 +446,40 @@ class Input(lv.obj):
         self.index = lv.label(container)
         self.index.add_style(Styles.title_text, lv.PART.MAIN)
         self.index.set_text(f"#{index + 1}")
-
+        self.index.set_style_text_color(colors.DS.BLACK, 0)
+        
         self.ta = lv.textarea(container)
         self.ta.set_one_line(True)
         self.ta.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)
+        # self.ta.set_style_text_color(colors.DS.BLACK , lv.PART.MAIN)
         self.ta.add_style(
             Style()
             .bg_opa(lv.OPA.TRANSP)
-            .width(300)
-            .height(64)
+            
+            .width(lv.pct(100))  # 使用百分比宽度
+            .height(lv.SIZE.CONTENT)  # 高度自适应内容
             .text_font(font.Bold.SCS38)
             .border_width(0)
             .text_align_center(),
             # .border_width(3)
             # .border_color(colors.DS.BLACK)
-            # .border_side(lv.BORDER_SIDE.BOTTOM),
+            # .border_side(lv.BORDER_SIDE.BOTTOM)
             lv.PART.MAIN,
         )
         self.ta.set_flex_grow(1)
-
         self.kbd = MnemonicKeyboard(self.content)
         self.kbd.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
+        self.kbd.set_width(lv.pct(100))  # 设置键盘宽度为父容器的 100%
+        self.kbd.set_height(300)  # 设置键盘高度为 300 像素
+        self.kbd.add_style(
+            Style()
+            .text_font(font.Bold.SCS38)  # 增大键盘字体
+            .text_color(colors.DS.BLACK),  # 设置字体颜色为黑色
+            lv.PART.MAIN,
+        )
+        # self.kbd.set_style_text_color(colors.DS.BLACK , lv.PART.MAIN)
         self.kbd.textarea = self.ta
+        
 
     def reset(self):
         self.ta.set_text("")

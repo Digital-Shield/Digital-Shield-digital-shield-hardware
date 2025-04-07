@@ -48,6 +48,42 @@ class Guide:
     terms_title_contact_us = 'Contact Us'
     terms_describe_contact_us = 'If you have any questions or concerns, please email us at support@digitshield.com'
 
+    accept_tems = 'I. Acceptance of Terms'
+    use_range = '1. Scope of Application'
+    range_include = 'These terms apply to all services provided through the Digital Shield Wallet, including:'
+    range_include_1 = 'Purchase, activation, and after-sales service of hardware wallets; Download, installation, and use of Digital Shield mobile applications (Android/iOS/Goolg); Firmware upgrade services (including security patches and feature enhancement versions); Multi-chain digital asset management (supporting storage and transfer of over 3000 tokens such as BTC, ETH, etc.); Technical support (device fault troubleshooting, transaction signature anomaly handling, etc.).'
+    user_qualification = '2. User Qualification'
+    ability_include = 'You confirm that you are at least 18 years old and have full civil capacity;'
+    ability_include_1 = 'The jurisdiction where you are located does not prohibit the use of cryptocurrency and related hardware devices (for example, mainland China users need to bear the risk of use themselves);'
+    terms_update_infor = '3. Terms Update and Notification'
+    update_infor_content = 'We reserve the right to unilaterally modify the terms. The revised content will be published in the official website announcement column, and the effective date will be based on the announcement. If you continue to use the services, it is deemed that you accept the revised terms; If you disagree, you should notify in writing and terminate the use before the effective date.'
+
+    wallet_buy_iterms = 'II. Hardware Wallet Purchase Terms'
+    order_process = '1. Order Process'
+    payment_confirmation = 'Payment Confirmation: After the order payment is successful (confirmed by the blockchain network or bank account), the system will update the status within 24 hours;'
+    inventory_shortage = 'Inventory Shortage: If the inventory is insufficient, users can choose:'
+    inventory_shortage_1 = 'a. Wait for restocking (up to 30 days, automatic refund if overdue);'
+    inventory_shortage_2 = 'b. Full refund via the original route (cryptocurrency orders are calculated at the exchange rate at the time of payment).'
+    return_and_exchange_policy = '2. Return and Exchange Policy'
+    return_and_exchange_condi = 'Return Conditions:'
+    return_and_exchange_condi_con = 'a. Unactivated devices need to retain the original factory seal label (number consistent with the order) and complete accessories (USB cable, manual, mnemonic card); b. Return applications must be submitted within 7 days after receipt, overdue will be deemed as qualified acceptance; c. Return shipping costs are borne by the user (except for quality issues).'
+    warranty_scope = 'Warranty Scope:'
+    warranty_scope_1 = 'a. Covers non-human damage such as security chip failure, abnormal screen display, and button malfunction;'
+    warranty_scope_2 = 'b. Purchase certificate (order number) and fault proof (videos must clearly show the device SN code and abnormal phenomena) need to be provided;'
+    warranty_scope_3 = 'c. Human damage (such as water ingress, falling) is not covered by the warranty, paid maintenance is available.'
+
+    disclaimer = 'III. Disclaimer'
+    product_risk = '1. Product Risk'
+    physical_risk = 'Physical Risk:'
+    physical_risk_1 = 'a. The device may fail in environments with high temperatures (>60℃), high humidity (>90% RH), and strong magnetic fields (>100mT);'
+    physical_risk_2 = 'b. Long-term non-charging may cause battery damage (it is recommended to charge once a month).'
+    supply_chain_risk = 'Supply Chain Risk:'
+    supply_chain_risk_1 = 'a. The official website provides anti-counterfeiting verification tools, scanning the device QR code can verify authenticity;'
+    supply_chain_risk_2 = 'b. If you suspect the device has been tampered with, you should immediately contact customer service and report to the police.'
+    service_interruption = '2. Service Interruption'
+    service_interruption_1 = 'Planned maintenance will be notified through the official website announcement 48 hours in advance, emergency maintenance may suspend services without prior notice;'
+    service_interruption_2 = 'We do not assume compensation responsibility for data loss due to force majeure factors.'
+
     device_label = "Label"
     device_title_firmware_version = 'Firmware Version'
     device_title_serial_number = 'Serial Number'
@@ -110,6 +146,8 @@ class Title:
     check_mnemonic = "Check Mnemonic"
     enter_mnemonic = "Enter Mnemonic"
     success = "Success"
+    operate_success = "Operation Successful"
+    theme_success = "Theme Switched Successfully"
     warning = "Warning"
     error = "Error"
     verified = "Verified"
@@ -210,9 +248,9 @@ class Text:
     restarting = "Restarting ..."
     never = "Never"
     second = "second"
-    seconds = "seconds"
-    minute = "minute"
-    minutes = "minutes"
+    seconds = "sec"
+    minute = "min"
+    minutes = "mins"
     changing_language = "You are changing language\n Applying this setting will restart the device"
     change_pin = "Please set a length of 4-16 characters strong PIN code, protect the device"
     wipe_device = "To remove all data from your device, you can reset your device to factory settings."

@@ -43,6 +43,44 @@ class Guide:
     terms_describe_disclaimers = '제공된 정보는 금융 조언이 아닙니다. 결정을 내리기 전에 전문가의 조언을 구하십시오.'
     terms_title_contact_us = '문의하기'
     terms_describe_contact_us = '질문이나 우려 사항이 있으면 support@digitshield.com으로 이메일을 보내주십시오'
+    
+    accept_tems = '약관 동의'
+    use_range = '1. 적용 범위'
+    range_include = '이 약관은 Digital Shield 지갑을 통해 제공되는 모든 서비스에 적용됩니다.'
+    range_include_1 = '하드웨어 지갑의 구매, 활성화, 사후 서비스; Digital Shield 모바일 앱(안드로이드/iOS/Goolg)의 다운로드, 설치, 기능 사용; 펌웨어 업그레이드 서비스(보안 패치, 기능 향상 버전 포함); 다중 체인 디지털 자산 관리(BTC, ETH 등 3000개 이상의 토큰 저장 및 전송 지원); 기술 지원(장치 고장 해결, 트랜잭션 서명 이상 처리 등).'
+    user_qualification = '2. 사용자 자격'
+    ability_include = '귀하는 18세 이상이며 완전한 민사 행위 능력을 가지고 있음을 확인합니다.'
+    ability_include_1 = '귀하가 거주하는 법적 관할 구역에서는 암호화폐 및 관련 하드웨어 장치의 사용이 금지되어 있지 않습니다(예: 중국 본토 사용자는 사용 리스크를 스스로 부담해야 합니다).'
+    terms_update_infor = '3. 약관 업데이트 및 통지'
+    update_infor_content = '회사는 일방적으로 약관을 수정할 권리를 보유합니다. 개정 내용은 공식 웹사이트의 공지판에 게재되며, 효력 발생일은 공지에 따릅니다. 서비스를 계속 사용하는 경우 개정된 약관에 동의한 것으로 간주됩니다. 동의하지 않는 경우 효력 발생일 전에 서면으로 통지하고 사용을 중단해야 합니다.'
+
+    wallet_buy_iterms = '2. 하드웨어 지갑 구매 조항'
+    order_process = '1. 주문 프로세스'
+    payment_confirmation = '주문 결제가 성공한 후(블록체인 네트워크 확인 또는 은행 입금을 기준으로), 시스템은 24시간 이내에 상태를 업데이트합니다.'
+    inventory_shortage = '재고 부족: 재고가 부족한 경우, 사용자는 선택할 수 있습니다.'
+    inventory_shortage_1 = 'a. 재고 보충을 기다립니다(최대 30일, 기간을 초과하면 자동으로 환불됩니다).'
+    inventory_shortage_2 = 'b. 원래 방법으로 전액 환불(암호화폐 주문은 결제 시 환율로 계산됩니다).'
+    return_and_exchange_policy = '2. 반품 및 교환 정책'
+    return_and_exchange_condi = '반품 조건:'
+    return_and_exchange_condi_con = 'a. 활성화되지 않은 장치는 원래 공장 시ール 스티커(주문 번호와 일치) 및 완전한 액세서리(USB 케이블, 설명서, 니모닉 카드)를 보관해야 합니다. b. 반품 신청은 수령 후 7일 이내에 제출해야 하며, 기간을 초과하면 품질 검사 합격으로 간주됩니다. c. 반품 배송비는 사용자가 부담합니다(품질 문제 제외).'
+    warranty_scope = '보증 범위:'
+    warranty_scope_1 = 'a. 안전 칩 고장, 디스플레이 이상, 버튼 기능 상실 등 인위적인 손상이 아닌 문제를 보장합니다.'
+    warranty_scope_2 = 'b. 구매 증명(주문 번호) 및 고장 증명(동영상은 장치의 SN 번호 및 이상 현상을 명확하게 보여야 합니다)을 제공해야 합니다.'
+    warranty_scope_3 = 'c. 인위적인 손상(물에 빠짐, 추락 등)은 보증 범위 밖이며, 유료 수리가 가능합니다.'
+
+    disclaimer = '3. 면책 조항'
+    product_risk = '1. 제품 리스크'
+    physical_risk = '물리적 리스크:'
+    physical_risk_1 = 'a. 장치는 고온(>60℃), 고습도(>90% RH), 강력한 자기장(>100mT)의 환경에서 기능하지 않을 수 있습니다.'
+    physical_risk_2 = 'b. 장기간 충전되지 않은 경우 배터리가 손상될 수 있습니다(매월 1회 충전을 권장합니다).'
+    supply_chain_risk = '공급망 리스크:'
+    supply_chain_risk_1 = 'a. 공식 웹사이트는 위조 방지 검증 도구를 제공하며, 장치의 QR 코드를 스캔하여 진품 여부를 확인할 수 있습니다.'
+    supply_chain_risk_2 = 'b. 장치가 교체된 것으로 의심되는 경우 즉시 고객 서비스에 연락하고 경찰에 신고해야 합니다.'
+    service_interruption = '2. 서비스 중단'
+    service_interruption_1 = '계획된 유지보수는 공식 웹사이트 공지를 통해 48시간 전에 통지됩니다. 긴급 유지보수의 경우 사전 통지 없이 서비스가 일시 중단될 수 있습니다.'
+    service_interruption_2 = '불가항력적인 요인으로 인한 데이터 손실에 대해서는 배상 책임을 지지 않습니다.'
+
+    
     device_label = "장치 이름"
     device_title_firmware_version = '펌웨어 버전'
     device_title_serial_number = '시리얼 번호'
@@ -76,6 +114,8 @@ class Title:
     enter_mnemonic = "니모닉을 입력하십시오"
     check_mnemonic = "니모닉 확인"
     success = "성공"
+    operate_success = "작업 성공"
+    theme_success = "테마 전환 성공"
     warning = "경고"
     error = "오류"
     verified = "니모닉 백업 완료"
@@ -143,6 +183,7 @@ class Title:
     export_credential = "凭据 내보내기"
     asset = "자산"
     unimplemented = "구현되지 않음"
+    low_power = "배터리 부족"
 
 class Text:
     tap_to_unlock = "터치하여 잠금 해제"
@@ -203,8 +244,8 @@ class Text:
     unknown_tx_type = "알려지지 않은 거래 유형, 입력 데이터를 확인하십시오"
     use_app_scan_this_signature = "지갑 앱으로 서명 결과를 스캔하십시오"
     internal_error = "내부 오류"
-    tap_switch_to_airgap = "에어갭 주소를 표시하려면二维码를 터치하십시오"
-    tap_switch_to_receive = "지갑收款 주소를 표시하려면二维码를 터치하십시오"
+    tap_switch_to_airgap = "에어갭 주소를 표시하려면QR코드를 터치하십시오"
+    tap_switch_to_receive = "지갑收款 주소를 표시하려면QR코드를 터치하십시오"
     incorrect_pin_times_left = "PIN 코드가 잘못되었습니다. 남은 시도 횟수: {}"
     incorrect_pin_last_time = "PIN 코드가 잘못되었습니다. 마지막 기회입니다"
     wrong_pin = "잘못된 PIN 코드를 입력했습니다"
@@ -284,6 +325,17 @@ class Text:
     duration = "지속 시간"
     lock = "잠금"
     unlock = "잠금 해제"
+    all = "모두"
+    source = "소스"
+    tip = "팁"
+    keep_alive = "계속 실행"
+    invalid_ur = "지원하지 않는 QR 코드 유형, 다시 시도하세요"
+    sequence_number = "일련 번호"
+    expiration_time = "만료 시간"
+    argument_x = "매개 변수 #{}"
+    unimplemented = "구현되지 않음"
+    invalid_data="유효하지 않은 데이터 형식"
+    low_power_message = "배터리가 {}% 남았습니다.\n충전하세요"
 
 class Tip:
     swipe_down_to_close = "아래로 스와이프하여 닫기"

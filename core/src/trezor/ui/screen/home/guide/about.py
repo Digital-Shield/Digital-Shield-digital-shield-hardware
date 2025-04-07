@@ -21,10 +21,10 @@ class About(Navigation):
             .pad_right(16),
             0
         )
-        Item(self.content,'Digit Shield','A:/res/web.png',"https://digitshield.com")
-        Item(self.content,'Twitter','A:/res/twitter.png',"https://twitter.com/digitshield")
-        Item(self.content,'Discord','A:/res/discord.png',"https://discord.com/digitshield")
-        Item(self.content,'Telegram','A:/res/telegram.png',"https://web.telegram.org/digitshield")
+        Item(self.content,'Digit Shield','A:/res/web.png',"https://ds.pro")
+        Item(self.content,'Twitter','A:/res/twitter.png',"https://x.com/DigitShield_HQ")
+        Item(self.content,'Discord','A:/res/discord.png',"https://discord.gg/wH8HVsHz")
+        Item(self.content,'Telegram','A:/res/telegram.png',"https://t.me/digitshield")
 
 class Item(VStack):
     """
@@ -46,23 +46,45 @@ class Item(VStack):
             .pad_column(16),
             0,
         )
-        self.title = title
-        self.url = url
-        self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
-        self.clear_flag(lv.obj.FLAG.SCROLLABLE)
-        self.icon = lv.img(self)
-        self.icon.set_src(icon)
+        #获取当前语言，判断阿拉伯语
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            # right-qc-code
+            qr = lv.img(self)
+            qr.set_src("A:/res/qr-code-two.png")
+            qr.set_style_img_recolor(lv.color_white(), 0)
 
-        self.label = lv.label(self)
-        self.label.set_flex_grow(1)
-        self.label.set_text(title)
-        self.add_flag(lv.obj.FLAG.CLICKABLE)
-        self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
-        # right-qc-code
-        qr = lv.img(self)
-        qr.set_src("A:/res/qr-code-two.png")
-        qr.set_style_img_recolor(lv.color_white(), 0)
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(title)
+            self.add_flag(lv.obj.FLAG.CLICKABLE)
+            self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
+            self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            # icon
+            self.title = title
+            self.url = url
+            self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
+            self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+            self.icon = lv.img(self)
+            self.icon.set_src(icon)
+        else:
+            self.title = title
+            self.url = url
+            self.add_style(theme.Styles.disabled, lv.PART.MAIN | lv.STATE.DISABLED)
+            self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+            self.icon = lv.img(self)
+            self.icon.set_src(icon)
 
+            self.label = lv.label(self)
+            self.label.set_flex_grow(1)
+            self.label.set_text(title)
+            self.add_flag(lv.obj.FLAG.CLICKABLE)
+            self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
+            # self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            # right-qc-code
+            qr = lv.img(self)
+            qr.set_src("A:/res/qr-code-two.png")
+            qr.set_style_img_recolor(lv.color_white(), 0)
     def action(self):
         from trezor import workflow
         workflow.spawn(QrcodeDetail(self.title,self.url).show())

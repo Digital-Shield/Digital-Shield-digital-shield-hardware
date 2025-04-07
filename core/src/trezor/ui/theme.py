@@ -22,7 +22,7 @@ class DSTheme(lv.theme_t):
                 obj.add_style(Styles.disabled, lv.STATE.DISABLED)
                 return
             if parent.get_class() == lv.textarea_class:
-                obj.add_style(Styles.ta_label, lv.PART.MAIN)
+                obj.add_style(Styles.ta_text, lv.PART.MAIN)
                 return
             obj.add_style(Styles.label, lv.PART.MAIN | lv.STATE.DEFAULT)
             obj.add_style(Styles.label_disabled, lv.PART.MAIN | lv.STATE.DISABLED)
@@ -74,6 +74,7 @@ class Styles:
     label_disabled = Style().text_color(colors.DS.TEXT_DISABLED)
 
     ta_label = Style().text_color(colors.STD.WHITE)
+    ta_text = Style().text_color(colors.STD.BLACK)
 
     button = Style().radius(lv.RADIUS.CIRCLE)
     button_label = (

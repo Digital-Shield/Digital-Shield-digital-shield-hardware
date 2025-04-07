@@ -156,17 +156,17 @@ class DetailBase(Navigation):
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         # self.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
         # self.set_style_pad_bottom(20, lv.PART.MAIN)
-        background = lv.obj(self)
-        background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
-        background.set_width(432)
-        background.set_height(708)
-        background.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
-        # background.set_style_border_color(lv.color_hex(0x000000), lv.PART.MAIN)  # 设置边框颜色为黑色
-        background.set_style_border_width(0, lv.PART.MAIN)  # 设置边框宽度为0
-        background.align(lv.ALIGN.TOP_MID, 0, 25)
-        # 将背景图移动到最底层
-        background.move_background()
-        # self.set_title(self.get_name())
+        # background = lv.obj(self)
+        # # background.set_style_bg_img_src("A:/res/coin_background.png", lv.PART.MAIN)
+        # background.set_width(432)
+        # background.set_height(708)
+        # background.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
+        # # background.set_style_border_color(lv.color_hex(0x000000), lv.PART.MAIN)  # 设置边框颜色为黑色
+        # background.set_style_border_width(0, lv.PART.MAIN)  # 设置边框宽度为0
+        # background.align(lv.ALIGN.TOP_MID, 0, 25)
+        # # 将背景图移动到最底层
+        # background.move_background()
+        self.set_title(self.get_name())
 
         self.create_content(HStack)
         self.content: HStack
@@ -175,16 +175,18 @@ class DetailBase(Navigation):
         # 二维码图片
         self.container = self.add(lv.obj)
         self.container.add_style(theme.Styles.container, 0)
-        self.container.set_height(QRCODE_SIZE + 32)
-        self.container.set_style_pad_bottom(50, lv.PART.MAIN)
+        self.container.set_size(QRCODE_SIZE + 40, QRCODE_SIZE + 40)  # 增加容器的大小
+        self.container.set_height(QRCODE_SIZE + 70)
+        self.container.set_style_pad_bottom(30, lv.PART.MAIN)
         self._qrcode_view: lv.qrcode = None
 
         # address
         self.address_view = self.add(LabeledText)
         self.address_view.set_label(i18n.Text.address)
         self.address_view.set_text("")
-        self.address_view.set_style_align(lv.ALIGN.TOP_LEFT, lv.PART.MAIN)
+        # self.address_view.set_style_align(lv.ALIGN.TOP_LEFT, lv.PART.MAIN)
         self.address_view.set_style_pad_top(0, lv.PART.MAIN)
+        self.address_view.set_style_pad_left(20, lv.PART.MAIN)
         self.address_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
         #self.address_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         # set_text later
@@ -194,6 +196,7 @@ class DetailBase(Navigation):
         path_view.set_label(i18n.Text.path)
         path_view.set_text(self.get_path())
         path_view.set_style_pad_top(0, lv.PART.MAIN)
+        path_view.set_style_pad_left(20, lv.PART.MAIN)
         path_view.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
         path_view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
@@ -210,9 +213,12 @@ class DetailBase(Navigation):
     def qrcode_view(self) -> lv.qrcode:
         if self._qrcode_view:
             return self._qrcode_view
-        self._qrcode_view = lv.qrcode(self.container, 300, colors.DS.BLACK, colors.DS.WHITE)
+        self._qrcode_view = lv.qrcode(self.container, 380, colors.DS.BLACK, colors.DS.WHITE)
         self._qrcode_view.set_style_border_width(16, lv.PART.MAIN)
         self._qrcode_view.set_style_border_color(colors.DS.WHITE, lv.PART.MAIN)
+        self._qrcode_view.set_style_radius(25, lv.PART.MAIN)
+        self._qrcode_view.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 添加这一行来设置背景颜色
+        # self._qrcode_view.set_style_pad_all(20, lv.PART.MAIN)
         # self._qrcode_view.set_style_pad_bottom(20, lv.PART.MAIN)  # 设置下边距为20像素
         self._qrcode_view.center()
         return self._qrcode_view

@@ -44,6 +44,43 @@ class Guide:
     terms_describe_disclaimers = 'Thông tin được cung cấp không phải là tư vấn tài chính. Vui lòng tìm kiếm lời khuyên chuyên nghiệp trước khi đưa ra bất kỳ quyết định nào.'
     terms_title_contact_us = 'Liên hệ chúng tôi'
     terms_describe_contact_us = 'Nếu bạn có bất kỳ câu hỏi hoặc mối quan tâm nào, vui lòng gửi email tới support@digitshield.com'
+    
+    accept_tems = 'Chấp nhận các điều khoản'
+    use_range = '1. Phạm vi áp dụng'
+    range_include = 'Các điều khoản này áp dụng cho tất cả các dịch vụ được cung cấp thông qua ví Digital Shield.'
+    range_include_1 = 'Mua, kích hoạt, dịch vụ sau bán hàng của ví cứng; Tải xuống, cài đặt, sử dụng các tính năng của ứng dụng di động Digital Shield (Android/iOS/Goolg); Dịch vụ nâng cấp phần mềm (bao gồm bản vá bảo mật, bản cập nhật cải thiện tính năng); Quản lý tài sản số đa chuỗi (hỗ trợ lưu trữ và chuyển giao hơn 3000 mã token như BTC, ETH, v.v.); Hỗ trợ kỹ thuật (gỡ lỗi thiết bị, xử lý các trường hợp không khớp chữ ký giao dịch, v.v.).'
+    user_qualification = '2. Đủ điều kiện sử dụng'
+    ability_include = 'Bạn xác nhận rằng bạn đã đủ 18 tuổi và có đầy đủ năng lực hành vi dân sự.'
+    ability_include_1 = 'Vùng pháp lý nơi bạn cư trú không cấm sử dụng tiền điện tử và các thiết bị cứng liên quan (ví dụ: người dùng Trung Quốc đại lục phải tự chịu rủi ro khi sử dụng).'
+    terms_update_infor = '3. Cập nhật và thông báo các điều khoản'
+    update_infor_content = 'Chúng tôi bảo lưu quyền sửa đổi các điều khoản một cách đơn phương. Nội dung sửa đổi sẽ được công bố trên bảng thông báo của trang web chính thức, ngày có hiệu lực sẽ dựa theo thông báo. Nếu bạn tiếp tục sử dụng dịch vụ, điều đó được coi là bạn chấp nhận các điều khoản đã sửa đổi; Nếu bạn không đồng ý, bạn nên thông báo bằng văn bản và ngừng sử dụng trước ngày có hiệu lực.'
+
+    wallet_buy_iterms = '2. Các điều khoản mua ví cứng'
+    order_process = '1. Quy trình đặt hàng'
+    payment_confirmation = 'Sau khi thanh toán đơn hàng thành công (xác nhận bởi mạng lưới blockchain hoặc tiền vào tài khoản ngân hàng), hệ thống sẽ cập nhật trạng thái trong vòng 24 giờ.'
+    inventory_shortage = 'Hết hàng: Nếu hết hàng, người dùng có thể chọn:'
+    inventory_shortage_1 = 'a. Chờ hàng về (tối đa 30 ngày, tự động hoàn tiền nếu quá hạn).'
+    inventory_shortage_2 = 'b. Hoàn tiền toàn bộ theo phương thức gốc (đơn hàng tiền điện tử sẽ được tính theo tỷ giá lúc thanh toán).'
+    return_and_exchange_policy = '2. Chính sách đổi trả'
+    return_and_exchange_condi = 'Điều kiện đổi trả:'
+    return_and_exchange_condi_con = 'a. Thiết bị chưa kích hoạt phải giữ tem niêm phong gốc (số thứ tự trùng khớp với đơn hàng) và phụ kiện đầy đủ (cáp USB, hướng dẫn sử dụng, thẻ ghi nhớ); b. Phải gửi yêu cầu đổi trả trong vòng 7 ngày sau khi nhận hàng, quá hạn sẽ được coi là chấp nhận kiểm tra chất lượng; c. Phí vận chuyển đổi trả do người dùng chịu (trừ trường hợp lỗi chất lượng).'
+    warranty_scope = 'Phạm vi bảo hành:'
+    warranty_scope_1 = 'a. Bao gồm các lỗi không phải do con người gây ra như lỗi chip an ninh, màn hình hiển thị bất thường, mất chức năng nút bấm.'
+    warranty_scope_2 = 'b. Cần cung cấp chứng từ mua hàng (số thứ tự đơn hàng) và bằng chứng lỗi (video phải hiển thị rõ mã số SN của thiết bị và hiện tượng bất thường).'
+    warranty_scope_3 = 'c. Các lỗi do con người gây ra (như ngâm nước, rơi vỡ) không nằm trong phạm vi bảo hành, có thể sửa chữa có phí.'
+
+    disclaimer = '3. Miễn trừ trách nhiệm'
+    product_risk = '1. Rủi ro sản phẩm'
+    physical_risk = 'Rủi ro vật lý:'
+    physical_risk_1 = 'a. Thiết bị có thể không hoạt động trong môi trường nhiệt độ cao (>60℃), độ ẩm cao (>90% RH), trường từ mạnh (>100mT).'
+    physical_risk_2 = 'b. Nếu không sạc trong thời gian dài, pin có thể bị hỏng (khuyên sạc một lần mỗi tháng).'
+    supply_chain_risk = 'Rủi ro chuỗi cung ứng:'
+    supply_chain_risk_1 = 'a. Trang web chính thức cung cấp công cụ xác minh chống giả, quét mã QR của thiết bị để xác minh tính xác thực.'
+    supply_chain_risk_2 = 'b. Nếu nghi ngờ thiết bị bị thay thế, hãy liên hệ ngay với bộ phận chăm sóc khách hàng và báo cảnh sát.'
+    service_interruption = '2. Dừng dịch vụ'
+    service_interruption_1 = 'Bảo trì theo kế hoạch sẽ được thông báo trước 48 giờ thông qua bảng thông báo trên trang web chính thức. Bảo trì khẩn cấp có thể tạm dừng dịch vụ mà không cần thông báo trước.'
+    service_interruption_2 = 'Chúng tôi không chịu trách nhiệm bồi thường cho mất mát dữ liệu do các yếu tố bất khả kháng.'
+    
     device_label = "Tên thiết bị"
     device_title_firmware_version = 'Phiên bản phần mềm'
     device_title_serial_number = 'Số sê-ri'
@@ -77,6 +114,8 @@ class Title:
     enter_mnemonic = "Vui lòng nhập cụm từ ghi nhớ"
     check_mnemonic = "Kiểm tra cụm từ ghi nhớ"
     success = "Thành công"
+    operate_success = "Hoạt động thành công"
+    theme_success = "Chuyển đổi chủ đề thành công"
     warning = "Cảnh báo"
     error = "Lỗi"
     verified = "Đã sao lưu cụm từ ghi nhớ"
@@ -144,8 +183,8 @@ class Title:
     export_credential = "Xuất thông tin xác thực"
     asset = "Tài sản"
     unimplemented = "Chưa thực hiện"
-
-
+    invalid_data="Định dạng dữ liệu không hợp lệ"
+    low_power = "Pin thấp"
 
 
 class Text:
@@ -225,9 +264,9 @@ class Text:
     new_contract = "Hợp đồng mới?"
     bytes_ = "{} byte"
     message = "Tin nhắn:"
-    no_message = "Không包含消息"
-    contains_x_key = "包含 {} 键"
-    array_of_x_type = "数组类型 {} {}"
+    no_message = "Không bao gồm tin nhắn"
+    contains_x_key = "Bao gồm phím {}"
+    array_of_x_type = "Kiểu mảng {} {}"
     do_sign_712_typed_data = "Bạn có muốn ký giao dịch dữ liệu có cấu trúc này không?"
     do_sign_typed_hash = "Bạn có muốn ký giao dịch hash có cấu trúc này không?"
     domain_hash = "Domain hash:"
@@ -289,6 +328,15 @@ class Text:
     duration = "Thời lượng"
     lock = "Khóa"
     unlock = "Mở khóa"
+    all = "Tất cả"
+    source = "Nguồn"
+    tip = "Gợi ý"
+    keep_alive = "Giữ hoạt động"
+    invalid_ur = "Loại mã QR không được hỗ trợ, vui lòng thử lại"
+    sequence_number = "Số thứ tự"
+    expiration_time = "Thời gian hết hạn"
+    argument_x = "Tham số #{}"
+    low_power_message = "Pin còn {}%\nVui lòng sạc"
 
 class Tip:
     swipe_down_to_close = "Vuốt xuống để đóng"

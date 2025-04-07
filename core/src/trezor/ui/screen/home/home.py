@@ -174,19 +174,32 @@ class Item(HStack):
 
         self.set_style_pad_row(0, lv.PART.MAIN)  # 行间距
         self.set_style_pad_column(0, lv.PART.MAIN)
+        
 
         img = lv.img(self)
         img.set_src(icon)
-        img.set_zoom(230)
+        img.set_zoom(225)
         img.clear_flag(lv.obj.FLAG.SCROLLABLE)  # 禁止拖拽
 
         title = lv.label(self)
         title.set_text(label)
         title.set_height(60)
-        # title.set_style_pad_top(12, lv.PART.MAIN)  # 调小此值，减少文字与图片之间的间距
+        title.set_style_pad_top(12, lv.PART.MAIN)  # 调小此值，减少文字与图片之间的间距
         title.align(lv.ALIGN.OUT_BOTTOM_MID, 0, -2)  # 减小 y 轴偏移
         # title.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
         title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
+
+        title.set_width(200)  # 设置标签的宽度
+        title.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)  # 确保文本居中
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            log.debug(__name__, f"current language--: {cur_language}")
+            title.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向为向右
+        else:
+            title.set_style_base_dir(lv.BASE_DIR.LTR, 0)  # 设置滚动方向为向左
+        # 启动滚动
+        title.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        title.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
         self.on_click: Callable[["Item"], None] = None
 
         self.add_event_cb(self.__on_clicked, lv.EVENT.CLICKED, None)

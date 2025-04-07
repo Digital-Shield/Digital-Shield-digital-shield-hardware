@@ -28,7 +28,7 @@ async def request_pin(
 async def request_pin_confirm(ctx: wire.Context, *args: Any, **kwargs: Any) -> str:
     while True:
         pin1 = await request_pin(
-            ctx, i18n.Title.enter_pin, *args, **kwargs
+            ctx, i18n.Title.enter_new_pin, *args, **kwargs
         )
         pin2 = await request_pin(
             ctx, i18n.Title.enter_pin_again, *args, **kwargs
@@ -78,7 +78,7 @@ def _get_last_unlock_time() -> int:
 
 async def verify_user_pin(
     ctx: wire.GenericContext = wire.DUMMY_CONTEXT,
-    prompt: str = "",
+    prompt: str = i18n.Title.enter_pin, #请输入pin码
     allow_cancel: bool = True,
     retry: bool = True,
     cache_time_ms: int = 0,

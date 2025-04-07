@@ -6,6 +6,8 @@ from storage import device, io
 from trezor import utils
 from trezor.ui.screen import Navigation
 from trezor.ui.component import VStack
+from trezor.ui.screen.message import Success
+from trezor import workflow
 
 if TYPE_CHECKING:
     from typing import Generator, List
@@ -18,7 +20,7 @@ class Wallpaper(SampleItem):
         # right-arrow
         self.arrow = lv.label(self)
         self.arrow.set_text(lv.SYMBOL.RIGHT)
-        self.arrow.set_style_text_color(colors.DS.GRAY, lv.PART.MAIN)
+        self.arrow.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
 
     def action(self):
         from trezor import workflow
@@ -111,7 +113,10 @@ class WallpaperDetail(Navigation):
         from trezor.ui.screen import manager
         from trezor.ui import events
         manager.publish(events.WALLPAPER_CHANGED)
-
+        # 显示成功提示框
+        success_popup = Success(i18n.Title.operate_success, i18n.Title.theme_success)
+        workflow.spawn(success_popup.show())  #异步显示弹框
+ 
     @staticmethod
     def wallpapers() -> Generator[ImageSource]:
 

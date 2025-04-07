@@ -54,6 +54,7 @@ class NftApp(Navigation):
         grid.add_style(
             Style()
             .radius(0)
+            .bg_color(lv.color_hex(0x0D0D17))  # 深色背景
             # .pad_right(16)
             # .pad_left(16)
             .border_width(0)

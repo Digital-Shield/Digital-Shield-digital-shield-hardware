@@ -26,12 +26,23 @@ class LabeledItem(HStack):
         self.label = self.add(lv.label)
         self.label.set_text("")
         self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        self.label.set_width(lv.pct(100))
+        self.label.set_long_mode(lv.label.LONG.WRAP)
 
     def set_label(self, text: str):
         self.label.set_text(text)
+        from trezor.ui import i18n
+        #获取当前语言,如果是阿拉伯语则从右到左显示
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            self.label.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置标题文本方向为从右到左
     def set_device_label(self, text: str):
         self.label.set_text(text)
-        self.label.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+        self.label.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)
+    #加粗26号label
+    def set_label_2(self, text: str):
+        self.label.set_text(text)
+        self.label.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)    
         
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)
@@ -55,3 +66,15 @@ class LabeledText(LabeledItem):
        
     def set_device_text(self, text: str):
         self.item.set_text(text)
+    #加粗30号text
+    def set_text1(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Bold.SCS30, lv.PART.MAIN)
+    #加粗26号text
+    def set_text2(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
+    #常规26号text
+    def set_text3(self, text: str):
+        self.item.set_text(text)
+        self.item.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN) 
