@@ -21,11 +21,15 @@ static uint8_t *send_buf = (uint8_t *)0x30040040;
 static int32_t volatile spi_rx_event = 0;
 static int32_t volatile spi_tx_event = 0;
 static int32_t volatile spi_abort_event = 0;
+static secbool volatile spi_rx_complete = secfalse;
 ChannelType host_channel = CHANNEL_NULL;
 
 uint8_t spi_data_in[SPI_BUF_MAX_IN_LEN];
 uint8_t spi_data_out[SPI_BUF_MAX_OUT_LEN];
 
+#define SPI_LOG_DATA 0
+
+#if SPI_LOG_DATA
 static void log_data(char* tag, uint8_t *data, size_t len) {
   printf("%s : \n", tag);
   for (int i = 0; i < len; i++) {
@@ -36,6 +40,7 @@ static void log_data(char* tag, uint8_t *data, size_t len) {
   }
   printf("\n");
 }
+#endif
 
 trans_fifo spi_fifo_in = {0};
 
@@ -73,23 +78,13 @@ int32_t wait_spi_tx_event(int32_t timeout) {
 }
 
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi) {
-  SET_RX_BUS_BUSY();
-  if (spi_rx_event) {
-    spi_rx_event = 0;
-  }
-  if (!fifo_write_no_overflow(&spi_fifo_in, recv_buf, hspi->RxXferSize)) {
-    memset(recv_buf, 0, SPI_PKG_SIZE);
-    printf("spi fifo overflow!!\n");
-  }
-  HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
-  SET_RX_BUS_IDEL();
+  spi_rx_event = 0;
+  spi_rx_complete = sectrue;
 }
 
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
-  if (spi_tx_event) {
-    spi_tx_event = 0;
-  }
-
+  spi_tx_event = 0;
+  memset(recv_buf, 0, SPI_PKG_SIZE);
   HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
 }
 
@@ -145,17 +140,16 @@ int32_t spi_slave_init() {
   __HAL_RCC_SPI1_CLK_ENABLE();
   __HAL_RCC_DMA1_CLK_ENABLE();
 
-  // PA15(NSS)
-  gpio.Mode = GPIO_MODE_INPUT;
-  gpio.Pull = GPIO_NOPULL;
-  gpio.Pin = GPIO_PIN_15;
-  HAL_GPIO_Init(GPIOA, &gpio);
+  /// SPI1
 
-  // SPI1
+  // PA15(NSS)
   gpio.Mode = GPIO_MODE_AF_PP;
   gpio.Pull = GPIO_NOPULL;
+  gpio.Pin = GPIO_PIN_15;
   gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   gpio.Alternate = GPIO_AF5_SPI1;
+
+  HAL_GPIO_Init(GPIOA, &gpio);
 
   // PB3(SCK)
   gpio.Pull = GPIO_PULLDOWN;
@@ -180,7 +174,7 @@ int32_t spi_slave_init() {
   spi.Init.CRCPolynomial = 7;
   spi.Init.DataSize = SPI_DATASIZE_8BIT;
   spi.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  spi.Init.NSS = SPI_NSS_SOFT;
+  spi.Init.NSS = SPI_NSS_HARD_INPUT;
   spi.Init.TIMode = SPI_TIMODE_DISABLE;
   spi.Init.Mode = SPI_MODE_SLAVE;
   spi.Init.FifoThreshold = SPI_FIFO_THRESHOLD_08DATA;
@@ -248,6 +242,7 @@ int32_t spi_slave_init() {
 
   memset(recv_buf, 0, SPI_PKG_SIZE);
   spi_rx_event = 1;
+  spi_rx_complete = secfalse;
   SET_RX_BUS_IDEL();
   /* start SPI receive */
   if (HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE) != HAL_OK) {
@@ -301,47 +296,85 @@ int32_t spi_slave_deinit() {
   return 0;
 }
 
+#define TREZOR_PKG_SIZE 64
+
 int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout) {
-  uint32_t msg_size;
   int32_t ret = 0;
+  if (size != TREZOR_PKG_SIZE) {
+    printf("sending unpack trezor packet, size: %ld!!! \n", size);
+  }
+  #if SPI_LOG_DATA
   log_data("sending", buf, size);
-  msg_size = size < SPI_PKG_SIZE ? SPI_PKG_SIZE : size;
-  memcpy(send_buf, buf, msg_size);
+  #endif
+
+  memset(send_buf, 0, SPI_PKG_SIZE);
+  memcpy(&send_buf[1], buf, size);
+
+  size = ((size + 63)/64)*64;
+  send_buf[0] = size;
   // TODO: 优化这里
-  hal_delay(200);
+  // hal_delay(200);
   spi_abort_event = 1;
   if (HAL_SPI_Abort_IT(&spi) != HAL_OK) {
+    memset(send_buf, 0, SPI_PKG_SIZE);
     printf("spi abort error!!\n");
     return 0;
   }
-  while (spi_abort_event)
-    ;
+  while (spi_abort_event){}
 
+  spi_tx_event = 1;
   if (HAL_SPI_Transmit_DMA(&spi, send_buf, SPI_PKG_SIZE) != HAL_OK) {
     printf("spi dma start send error!!\n");
     goto END;
   }
 
   SET_COMBUS_LOW();
-  spi_tx_event = 1;
-
   if (wait_spi_tx_event(timeout) != 0) {
     printf("spi wait send timeout!!\n");
     goto END;
   }
-  ret = msg_size;
+  ret = size;
 END:
-  if (ret == 0) {
-    HAL_SPI_Abort(&spi);
-    HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
-  }
+  HAL_SPI_Abort(&spi);
+  memset(send_buf, 0, SPI_PKG_SIZE);
+  HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
   SET_COMBUS_HIGH();
 
   return ret;
 }
+static void try_cache_packet(void) {
+  // not read data from spi
+  if (spi_rx_complete != sectrue) {
+    return;
+  }
+  spi_rx_complete = secfalse;
+
+  // packet: L|V
+  volatile size_t block = recv_buf[0];
+
+  volatile size_t free = fifo_free_len(&spi_fifo_in);
+  // not enough buffer for write spi data
+  // Wait for consumers to consume enough data
+  if (block > free) {
+    spi_rx_complete = sectrue;
+    return;
+  }
+
+  // ok, we can cache the packet to fifo buffer
+  // copy data
+  fifo_write_no_overflow(&spi_fifo_in, &recv_buf[1], block);
+  memset(recv_buf, 0, SPI_PKG_SIZE);
+  HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE);
+  SET_RX_BUS_BUSY();
+  hal_delay(1);
+  SET_RX_BUS_IDEL();
+}
 
 uint32_t spi_slave_poll(uint8_t *buf) {
   volatile uint32_t total_len, len, ret;
+
+  // poll spi data to fifo buffer
+  try_cache_packet();
 
   if (buf == NULL) return 0;
 
@@ -349,9 +382,11 @@ uint32_t spi_slave_poll(uint8_t *buf) {
   if (total_len == 0) {
     return 0;
   }
-  len = total_len > SPI_PKG_SIZE ? SPI_PKG_SIZE : total_len;
+  len = total_len > TREZOR_PKG_SIZE ? TREZOR_PKG_SIZE : total_len;
   ret = fifo_read_lock(&spi_fifo_in, buf, len);
+  #if SPI_LOG_DATA
   log_data("reading", buf, ret);
+  #endif
   return ret;
 }
 
