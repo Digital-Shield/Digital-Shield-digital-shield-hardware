@@ -243,7 +243,6 @@ int32_t spi_slave_init() {
   memset(recv_buf, 0, SPI_PKG_SIZE);
   spi_rx_event = 1;
   spi_rx_complete = secfalse;
-  SET_RX_BUS_IDEL();
   /* start SPI receive */
   if (HAL_SPI_Receive_DMA(&spi, recv_buf, SPI_PKG_SIZE) != HAL_OK) {
     return -1;
