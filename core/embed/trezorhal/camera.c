@@ -88,7 +88,7 @@
 
 // the first version of sensor out image need rotate
 // TODO: remove this micro later
-#define SENSOR_OUT_IMAGE_NEED_ROTATE 1
+#define SENSOR_OUT_IMAGE_NEED_ROTATE 0
 
 // camera power module control pin PK2
 #define CAMERA_POWER_GPIO_CLK_ENABLE() __HAL_RCC_GPIOK_CLK_ENABLE()
