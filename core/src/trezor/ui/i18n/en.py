@@ -45,8 +45,8 @@ class Guide:
     terms_title_disclaimers = 'DISCLAIMERS'
     terms_describe_disclaimers = 'The information provided is not financial advice. Seek professional advice before making any decisions.'
 
-    terms_title_contact_us = 'Contact Us'
-    terms_describe_contact_us = 'If you have any questions or concerns, please email us at support@digitshield.com'
+    terms_title_contact_us = 'IV.Contact Us'
+    terms_describe_contact_us = 'If you have any questions or concerns, please email us at www.ds.pro@gmail.com'
 
     accept_tems = 'I. Acceptance of Terms'
     use_range = '1. Scope of Application'
@@ -346,6 +346,7 @@ class Text:
     enable_experimental_features = "Enable experimental features?",
     set_as_homescreen = "Do you want to change the homescreen?"
     replace_homescreen = "Do you want to change the homescreen? This will delete the oldest uploaded wallpaper."
+    confirm_replace_wallpaper = "Are you sure you want to replace the wallpaper of the home screen?"
     get_next_u2f_counter = "Do you want to get the next U2F counter?"
     set_u2f_counter_x = "Do you want to set the U2F counter to {}?"
     confirm_entropy = "Do you want to export entropy? Continue only if you know what you are doing!"

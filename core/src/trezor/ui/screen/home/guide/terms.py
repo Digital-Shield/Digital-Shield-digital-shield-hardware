@@ -94,6 +94,10 @@ class Terms(Navigation):
         view = self.add(Text)
         view.set_label_2(i18n.Guide.service_interruption)
         view.set_text(i18n.Guide.service_interruption_1 + "\n" + i18n.Guide.service_interruption_2)
+        #联系我们
+        view = self.add(Text)
+        view.set_label(i18n.Guide.terms_title_contact_us)
+        view.set_text(i18n.Guide.terms_describe_contact_us)
 class Text(LabeledText):
     def __init__(self, parent):
         super().__init__(parent)

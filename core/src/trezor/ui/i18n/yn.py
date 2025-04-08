@@ -43,7 +43,7 @@ class Guide:
     terms_title_disclaimers = 'Miễn trừ trách nhiệm'
     terms_describe_disclaimers = 'Thông tin được cung cấp không phải là tư vấn tài chính. Vui lòng tìm kiếm lời khuyên chuyên nghiệp trước khi đưa ra bất kỳ quyết định nào.'
     terms_title_contact_us = 'Liên hệ chúng tôi'
-    terms_describe_contact_us = 'Nếu bạn có bất kỳ câu hỏi hoặc mối quan tâm nào, vui lòng gửi email tới support@digitshield.com'
+    terms_describe_contact_us = 'Nếu bạn có bất kỳ câu hỏi hoặc mối quan tâm nào, vui lòng gửi email tới www.ds.pro@gmail.com'
     
     accept_tems = 'Chấp nhận các điều khoản'
     use_range = '1. Phạm vi áp dụng'
@@ -309,6 +309,7 @@ class Text:
     enable_experiment_mode = "Bạn có muốn bật chế độ thử nghiệm không?"
     set_as_homescreen = "Bạn có muốn thay đổi màn hình chính không?"
     replace_homescreen = "Bạn có muốn thay thế màn hình chính không? Điều này sẽ xóa hình nền được tải lên đầu tiên."
+    confirm_replace_wallpaper = "Bạn có chắc chắn muốn thay đổi hình nền màn hình chính không?"
     get_next_u2f_counter = "Bạn có muốn lấy bộ đếm U2F tiếp theo không?"
     set_u2f_counter_x = "Bạn có muốn đặt bộ đếm U2F thành {} không?"
     confirm_entropy = "Bạn có muốn xuất entropy không? Trước khi tiếp tục, vui lòng biết bạn đang làm gì!"

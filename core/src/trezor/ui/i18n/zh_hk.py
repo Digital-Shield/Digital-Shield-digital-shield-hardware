@@ -42,8 +42,8 @@ class Guide:
     terms_describe_risks = '請注意與加密貨幣和技術漏洞相關的風險.'
     terms_title_disclaimers = '免責聲明'
     terms_describe_disclaimers = '提供的訊息不是財務建議。在做出任何決定前，請尋求專業建議。'
-    terms_title_contact_us = '聯絡我們'
-    terms_describe_contact_us = '如果您有任何疑問或疑慮，請給我們傳送電子郵件至support@digitshield.com'
+    terms_title_contact_us = '四、聯絡我們'
+    terms_describe_contact_us = '如果您有任何疑問或疑慮，請給我們傳送電子郵件至www.ds.pro@gmail.com'
 
     accept_tems = '一、接受條款'
     use_range = '1、適用範圍'
@@ -310,6 +310,7 @@ class Text:
     enable_experiment_mode = "是否啟用實驗模式？"
     set_as_homescreen = "確定要更改主屏幕嗎？"
     replace_homescreen = "確定要替換主屏幕嗎？這將會刪除最早上傳的壁紙。"
+    confirm_replace_wallpaper = "確定要替換主屏幕的壁紙嗎？"
     get_next_u2f_counter = "確定要獲取下一個U2F計數器嗎？"
     set_u2f_counter_x = "確定要設定U2F計數器為 {} 嗎？"
     confirm_entropy = "確定要導出熵嗎？繼續操作之前請明白你在做什麼！"

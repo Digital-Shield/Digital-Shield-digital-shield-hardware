@@ -163,21 +163,25 @@ class MnemonicInput(Navigation):
     def __init__(self, count):
         super().__init__()
         # self.set_title(i18n.Title.enter_mnemonic, "A:/res/app_security.png")
-        # self.set_title(i18n.Title.enter_mnemonic)
-        self.title = lv.label(self)
-        self.title.set_text(i18n.Title.enter_mnemonic)
-        self.title.set_width(480)  # 设置标签的宽度
-        self.title.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
-        self.title.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
-        # 设置文字居中对齐
-        self.title.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)
-        # 设置文字颜色为白色
-        self.title.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
-         #获取当前语言，判断阿拉伯语
-        cur_language = i18n.using.code if i18n.using is not None else None
-        if cur_language == "al":
-            self.title.set_style_base_dir(lv.BASE_DIR.RTL, 0)
-
+        self.set_title(i18n.Title.enter_mnemonic)
+        # self.title = lv.label(self)
+        # self.title.set_text(i18n.Title.enter_mnemonic)
+        # self.title.set_width(480)  # 设置标签的宽度
+        # self.title.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        # self.title.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
+        # # 设置文字居中对齐
+        # self.title.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)
+        # # 设置文字颜色为白色
+        # self.title.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
+        #  #获取当前语言，判断阿拉伯语
+        # cur_language = i18n.using.code if i18n.using is not None else None
+        # if cur_language == "al":
+        #     self.title.set_style_base_dir(lv.BASE_DIR.RTL, 0)
+        self.set_title(i18n.Title.check_mnemonic)
+        self.btn_right.set_text(i18n.Button.next)
+        self.btn_next = self.btn_right
+        self.btn_next.add_event_cb(self.on_click_next, lv.EVENT.CLICKED, None)
+        
         self.content.set_style_pad_all(0, 0)
         self.create_content(VStack)
         self.content: VStack
@@ -208,6 +212,9 @@ class MnemonicInput(Navigation):
     def mnemonics(self) -> List[str]:
         return [item.word for item in self.items]
 
+    def on_click_next(self, event):
+        self.channel.publish(self.checked_mnemonic)
+        
     def update_next_btn(self):
         enable = all(item.word is not None for item in self.items)
         if enable:

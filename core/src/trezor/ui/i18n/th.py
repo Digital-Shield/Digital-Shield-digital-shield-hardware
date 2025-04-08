@@ -42,7 +42,7 @@ class Guide:
     terms_title_disclaimers = '면책 조항'
     terms_describe_disclaimers = '제공된 정보는 금융 조언이 아닙니다. 결정을 내리기 전에 전문가의 조언을 구하십시오.'
     terms_title_contact_us = '문의하기'
-    terms_describe_contact_us = '질문이나 우려 사항이 있으면 support@digitshield.com으로 이메일을 보내주십시오'
+    terms_describe_contact_us = '질문이나 우려 사항이 있으면 www.ds.pro@gmail.com으로 이메일을 보내주십시오'
     
     accept_tems = '약관 동의'
     use_range = '1. 적용 범위'
@@ -306,6 +306,7 @@ class Text:
     enable_experiment_mode = "실험 모드를 활성화하시겠습니까?"
     set_as_homescreen = "홈 화면으로 설정하시겠습니까?"
     replace_homescreen = "홈 화면을 교체하시겠습니까? 이 작업은 가장 먼저 업로드한 배경화면을 삭제합니다."
+    confirm_replace_wallpaper = "홈 화면의 배경화면을 교체하시겠습니까?"
     get_next_u2f_counter = "다음 U2F 카운터를 가져오시겠습니까?"
     set_u2f_counter_x = "U2F 카운터를 {}로 설정하시겠습니까?"
     confirm_entropy = "엔트로피를 내보내시겠습니까? 무엇을 하는지 확실하게 이해한 후에 계속하십시오!"
