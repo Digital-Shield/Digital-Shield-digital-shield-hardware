@@ -213,7 +213,7 @@ class MnemonicInput(Navigation):
         return [item.word for item in self.items]
 
     def on_click_next(self, event):
-        self.channel.publish(self.checked_mnemonic)
+        self.channel.publish(self.mnemonics)
         
     def update_next_btn(self):
         enable = all(item.word is not None for item in self.items)
