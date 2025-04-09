@@ -82,6 +82,7 @@ class Item(VStack):
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
         self.icon = lv.img(self)
         self.icon.set_src(icon)
+        
         # self.icon.set_style_img_recolor(lv.color_white(), lv.PART.MAIN)  # 让图标变白
         # self.icon.set_style_img_recolor_opa(lv.OPA.COVER, lv.PART.MAIN)  # 确保颜色覆盖
 
@@ -91,7 +92,9 @@ class Item(VStack):
         self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
         self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
         self.label.set_width(230)  # 设置标签的宽度
-        self.label.set_height(40)  # 设置标签的宽度
+        self.label.set_height(40)  # 设置标签的高度
+        self.label.set_style_pad_top(5, lv.PART.MAIN)  # 增大下边距
+        # self.label.set_style_align(lv.ALIGN.CENTER, lv.PART.MAIN)  # 设置垂直居中对齐
         # 启动滚动
         self.label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
         #获取当前语言
