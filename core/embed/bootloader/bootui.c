@@ -547,6 +547,9 @@ int ui_input_poll(int zones, bool poll) {
   return 0;
 }
 
+
+extern int dev_pwr_source;
+extern int battery_soc;
 void ui_title_update(void) {
   char battery_str[8] = {0};
   uint32_t len = 0;
@@ -557,7 +560,7 @@ void ui_title_update(void) {
   ble_get_dev_info();
   display_bar(0, 0, DISPLAY_RESX, 44, boot_background);
 
-  if (dev_pwr_sta == 1) {
+  if (dev_pwr_source == 1) {
     offset_x += 24;
     display_icon(DISPLAY_RESX - offset_x, offset_y, 24, 32,
                  toi_icon_charging + 12, sizeof(toi_icon_charging) - 12,
@@ -565,14 +568,13 @@ void ui_title_update(void) {
     battery_color = RGB16(0x00, 0xCC, 0x36);
   }
 
-  if (battery_cap <= 100) {
+  if (battery_soc <= 100) {
     offset_x += 34;
-    uint8_t bat_width =
-        (battery_cap * 25 / 100 > 0) ? (battery_cap * 25 / 100) : 1;
+    uint8_t bat_width = battery_soc * 25 / 100;
     display_image(DISPLAY_RESX - offset_x, offset_y, 34, 32,
                   toi_icon_battery + 12, sizeof(toi_icon_battery) - 12);
 
-    if (battery_cap < 20 && dev_pwr_sta != 1) {
+    if (battery_soc < 20 && dev_pwr_source != 1) {
       display_bar(DISPLAY_RESX - offset_x + 3, 10 + offset_y, bat_width, 12,
                   RGB16(0xDF, 0x32, 0x0C));
     } else {
@@ -583,9 +585,9 @@ void ui_title_update(void) {
   } else {
     display_bar(DISPLAY_RESX - 32, offset_y, 32, 32, boot_background);
   }
-  if (battery_cap != 0xFF && dev_pwr_sta == 1) {
+  if (dev_pwr_source == 1) {
     offset_x += 4;
-    mini_snprintf(battery_str, sizeof(battery_str), "%d%%", battery_cap);
+    mini_snprintf(battery_str, sizeof(battery_str), "%d%%", battery_soc);
     len = display_text_width(battery_str, -1, FONT_ROBOT_REGULAR_24);
     offset_x += len;
     display_text(DISPLAY_RESX - offset_x, 24 + offset_y, battery_str, -1,

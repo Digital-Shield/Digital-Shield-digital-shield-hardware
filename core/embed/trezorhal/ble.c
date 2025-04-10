@@ -5,9 +5,8 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "sys.h"
 #include "usart.h"
+#include <stdbool.h>
 
-uint8_t battery_cap = 0xFF;
-uint8_t dev_pwr_sta = 0;
 
 static bool get_ble_name = false;
 static bool get_ble_ver = false;
@@ -22,8 +21,6 @@ static char ble_name[BLE_NAME_LEN + 1] = {0};
 static char ble_ver[6] = {0};
 static char ble_proto_ver[16 + 1] = {0};
 static char ble_boot_ver[6] = {0};
-static uint8_t dev_press_sta = 0;
-static uint8_t dev_pwr = 0;
 
 static uint8_t calXor(uint8_t *buf, uint32_t len) {
   uint8_t tmp = 0;
@@ -64,12 +61,6 @@ bool ble_battery_state(void) { return get_ble_battery; }
 bool ble_switch_state(void) { return get_ble_switch; }
 
 bool ble_charging_state(void) { return get_ble_charging; }
-
-uint32_t ble_power_button_state(void) { return dev_press_sta; }
-
-// Since RELEASED event won't be reported
-// we have to clear this locally cached status
-void ble_power_button_state_clear(void) { dev_press_sta = 0; }
 
 char *ble_get_name(void) { return ble_name; }
 
@@ -145,24 +136,6 @@ void ble_uart_poll(void) {
       memcpy(ble_boot_ver, ble_usart_msg.cmd_vale, 5);
       get_ble_boot_ver = true;
       break;
-    case BLE_CMD_PLUG_STA:
-      get_ble_charging = true;
-      if (ble_usart_msg.cmd_vale[0] == 1 || ble_usart_msg.cmd_vale[0] == 3) {
-        dev_pwr_sta = 1;
-      } else {
-        dev_pwr_sta = 0;
-      }
-      break;
-    case BLE_CMD_EQ:
-      get_ble_battery = true;
-      battery_cap = ble_usart_msg.cmd_vale[0];
-      break;
-    case BLE_CMD_RPESS:
-      dev_press_sta = ble_usart_msg.cmd_vale[0];
-      break;
-    case BLE_CMD_PWR:
-      dev_pwr = ble_usart_msg.cmd_vale[0];
-      break;
     default:
       break;
   }
@@ -217,7 +190,7 @@ void ble_function_on() {
   spi_slave_init();
   ble_usart_init();
   get_ble_switch = true;
-  ble_connect = true;
+  ble_connect = false;
 }
 
 void ble_function_off() {

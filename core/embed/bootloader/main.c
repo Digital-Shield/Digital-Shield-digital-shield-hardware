@@ -34,6 +34,7 @@
 #include "sys.h"
 #include "usart.h"
 #include "usb.h"
+#include <stdint.h>
 #include <stdio.h>
 
 #include "battery.h"
@@ -126,6 +127,14 @@ static void usb_init_all(secbool usb21_landing)
     usb_start();
 }
 
+// 0: by battery, 1: by usb
+int dev_pwr_source = 0;
+int battery_soc = 0;
+static void upate_battery_info(void) {
+    battery_soc = battery_read_SOC();
+    dev_pwr_source = battery_read_current() >= 0 ? 1 : 0;
+}
+
 static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
 { // touch click commented on development board
     // if both are NULL, we don't have a firmware installed
@@ -152,31 +161,16 @@ static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_
                 host_channel = CHANNEL_USB;
                 break;
             }
-            // no packet, check if power button pressed
-            // else if ( ble_power_button_state() == 1 ) // short press
-            else if ( ble_power_button_state() == 2 ) // long press
+
+            ui_bootloader_page_switch(hdr);
+            static uint32_t tickstart = 0;
+            if ( (HAL_GetTick() - tickstart) >= 1000 )
             {
-                // give a way to go back to bootloader home page
-                ble_power_button_state_clear();
-                ui_progress_bar_visible_clear();
-                ui_fadeout();
-                // ui_bootloader_first(NULL);
-                ui_fadein();
-                memzero(buf, USB_PACKET_SIZE);
-                continue;
+                upate_battery_info();
+                ui_title_update();
+                tickstart = HAL_GetTick();
             }
-            // no packet, no pwer button pressed
-            else
-            {
-                ui_bootloader_page_switch(hdr);
-                static uint32_t tickstart = 0;
-                if ( (HAL_GetTick() - tickstart) >= 1000 )
-                {
-                    // ui_title_update();
-                    tickstart = HAL_GetTick();
-                }
-                continue;
-            }
+            continue;
         }
 
         uint16_t msg_id;
@@ -532,6 +526,7 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     // TODO: add boot ui
+    battery_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
     display_clear();
@@ -578,7 +573,7 @@ int main(void)
             vaild_firmware = true;
         }
     }
-    //stay_in_bootloader = sectrue;
+    // stay_in_bootloader = sectrue;
 
     // check all flags
     if ( stay_in_bootloader == sectrue || vaild_firmware == false || serial_set == false ||

@@ -15,10 +15,6 @@
 #define BLE_CMD_FM_VER 0x05
 #define BLE_CMD_PROTO_VER 0x06
 #define BLE_CMD_BOOT_VER 0x07
-#define BLE_CMD_PLUG_STA 0x08
-#define BLE_CMD_EQ 0x09
-#define BLE_CMD_RPESS 0x0A
-#define BLE_CMD_PWR 0x0B
 
 // ST send command
 #define BLE_BT 0x81

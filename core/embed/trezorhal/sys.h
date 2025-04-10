@@ -4,9 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-extern uint8_t battery_cap;
-extern uint8_t dev_pwr_sta;
-
 #define PERIOD_VALUE (uint32_t)(1000 - 1)
 #define PULSE1_VALUE (uint32_t)(PERIOD_VALUE / 2)
 
