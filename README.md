@@ -54,6 +54,14 @@ trezorctl device firmware-update-emmc -p 0:updates/firmware.bin
 trezorctl device bl-reboot
 ```
 
+# 升级bootloader指令
+``` sh
+trezorctl device reboot-to-bootloader
+trezorctl device emmc-dir-make -p 0:boot
+trezorctl device emmc-file-write -l ./core/build/bootloader/bootloader.bin -r 0:boot/bootloader.bin -f -cs 16384
+trezorctl device bl-reboot
+```
+
 # 蓝牙固件升级指令
 ``` sh
 trezorctl device reboot-to-bootloader
