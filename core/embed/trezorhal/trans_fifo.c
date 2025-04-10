@@ -29,6 +29,9 @@ uint32_t fifo_lockdata_len(trans_fifo *p_fifo) {
   }
   return len;
 }
+uint32_t fifo_free_len(trans_fifo *p_fifo) {
+  return p_fifo->buf_size - fifo_lockdata_len(p_fifo);
+}
 
 void fifo_lockpos_set(trans_fifo *p_fifo) {
   p_fifo->lock_pos = p_fifo->write_pos;

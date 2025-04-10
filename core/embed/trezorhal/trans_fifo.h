@@ -17,6 +17,7 @@ typedef struct _trans_fifo {
 void fifo_init(trans_fifo *p_fifo, uint8_t *buf, uint32_t buf_size);
 uint32_t fifo_data_len(trans_fifo *p_fifo);
 uint32_t fifo_lockdata_len(trans_fifo *p_fifo);
+uint32_t fifo_free_len(trans_fifo* p_fifo);
 void fifo_lockpos_set(trans_fifo *p_fifo);
 void fifo_lockpos_set_align(trans_fifo *p_fifo, uint32_t align);
 bool fifo_put_no_overflow(trans_fifo *p_fifo, uint8_t onebyte);

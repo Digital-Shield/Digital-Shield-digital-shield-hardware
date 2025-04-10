@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "trans_fifo.h"
 
-#define SPI_PKG_SIZE 64
+#define SPI_PKG_SIZE (192 + 1)
 #define SPI_BUF_MAX_IN_LEN (16 * 1024)
 #define SPI_BUF_MAX_OUT_LEN (3 * 1024)
 

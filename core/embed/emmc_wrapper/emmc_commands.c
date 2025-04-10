@@ -681,8 +681,7 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         ui_install_ble_confirm();
         ui_fadein();
 
-        // int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
-        int response = INPUT_CONFIRM;
+        int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
         if ( INPUT_CONFIRM != response )
         {
             // We could but should not remove the file if user cancels
@@ -900,8 +899,7 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         }
 
         // ui confirm
-        // TODO: add boot ui
-        if ( 0&& firmware_header_valid == sectrue )
+        if (firmware_header_valid == sectrue )
         {
             ui_fadeout();
             // if ( (wipe_required == sectrue) || (msg_recv.has_force_erase && msg_recv.force_erase) )
