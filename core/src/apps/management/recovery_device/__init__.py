@@ -56,7 +56,9 @@ async def recovery_device(ctx: wire.Context, msg: RecoveryDevice) -> Success:
         if not msg.dry_run:
             if msg.language is not None:
                 i18n.change_language(msg.language)
-            await show_popup(i18n.Text.wiping_device, timeout_ms=2000)
+            await show_popup(
+                i18n.Text.wiping_device, timeout_ms=2000
+            )
             # wipe storage to make sure the device is in a clear state
             storage.reset()
             if msg.language is not None:
@@ -72,20 +74,20 @@ async def recovery_device(ctx: wire.Context, msg: RecoveryDevice) -> Success:
                 storage.device.set_u2f_counter(msg.u2f_counter)
             if msg.label is not None:
                 storage.device.set_label(msg.label)
-
+        
         storage.recovery.set_in_progress(True)
         storage.recovery.set_dry_run(bool(msg.dry_run))
         result = await recovery_process(ctx)
     except BaseException as e:
         raise e
     else:
-        if isinstance(ctx, wire.DummyContext):
-            loop.clear()
         return result
     finally:
         if isinstance(ctx, wire.DummyContext):
             if msg.dry_run:
                 utils.set_up()
+            else:
+                loop.clear()
 
 
 async def recovery_process(ctx: wire.GenericContext) -> Success:
@@ -96,6 +98,9 @@ async def recovery_process(ctx: wire.GenericContext) -> Success:
         dry_run = storage.recovery.is_dry_run()
         if dry_run:
             storage.recovery.end_progress()
+        # else:
+        #     await show_popup(i18n.Text.please_wait)
+        #     storage.wipe()
         raise wire.ActionCancelled
 
 def _validate(msg: RecoveryDevice) -> None:

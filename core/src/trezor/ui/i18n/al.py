@@ -185,6 +185,7 @@ class Title:
     unimplemented = "لم يتم التنفيذ"
     invalid_data="تنسيق البيانات غير صالح"
     low_power = "الطاقة منخفضة"
+    collect_nft = "جمع NFT"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -340,6 +341,8 @@ class Text:
     expiration_time = "وقت الانتهاء"
     argument_x = "المعامل #{}"
     low_power_message = "البطارية المتبقية {}%.\nيرجى الشحن"
+    collect_nft = "هل أنت متأكد من جمع هذه NFT؟"
+    replace_nft = "هل تريد جمع هذه NFT؟ لقد وصلت إلى الحد الأقصى للمخزن، وسيتسبب هذا في إزالة أقدم NFT يتم تحميلها."
 
 class Tip:
     swipe_down_to_close = "اسحب لأسفل للإغلاق"

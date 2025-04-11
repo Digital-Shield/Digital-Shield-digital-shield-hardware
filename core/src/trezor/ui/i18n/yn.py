@@ -185,7 +185,7 @@ class Title:
     unimplemented = "Chưa thực hiện"
     invalid_data="Định dạng dữ liệu không hợp lệ"
     low_power = "Pin thấp"
-
+    collect_nft = "Thu thập NFT"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -338,6 +338,8 @@ class Text:
     expiration_time = "Thời gian hết hạn"
     argument_x = "Tham số #{}"
     low_power_message = "Pin còn {}%\nVui lòng sạc"
+    collect_nft = "Bạn có chắc chắn muốn thu thập NFT này không?"
+    replace_nft = "Bạn có muốn thu thập NFT này không? Bạn đã đạt giới hạn lưu trữ, việc này sẽ xóa NFT được tải lên lâu nhất."
 
 class Tip:
     swipe_down_to_close = "Vuốt xuống để đóng"
