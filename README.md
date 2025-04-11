@@ -90,3 +90,14 @@ https://nix.dev/manual/nix/2.21/installation/uninstall
 #package-mode = false
 ```
 
+# 生产固件签名密钥生成方法
+首先公司中选择三个重要的管理人员并分配“index”，1，2，3
+运行
+```
+poetry run python ./core/tools/gen_keys.py
+```
+脚本会生成一对“固件签名公私钥”和一对“蓝牙签名公私钥”  
+其中“固件签名公私钥”和自己的“index”三个管理人员都需要进行安全的保存，后续发布固件时进行使用。
+其中“蓝牙签名公私钥”只需要一个用来发布蓝牙固件的管理人员安全的保存存，后续发布蓝牙时进行使用。
+
+
