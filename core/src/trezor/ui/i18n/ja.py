@@ -185,6 +185,7 @@ class Title:
     unimplemented = "未実装"
     invalid_data="無効なデータ形式"
     low_power = "電池が低い"
+    collect_nft = "NFT を収集する"
 
 class Text:
     # tap_to_unlock = "Tap to unlock"
@@ -337,6 +338,8 @@ class Text:
     expiration_time = "有効期限"
     argument_x = "引数 #{}"
     low_power_message = "電池が {}% 残っています。\n充電してください"
+    collect_nft = "この NFT を収集することを確認しますか？"
+    replace_nft = "この NFT を収集しますか？ストレージの上限に達しており、最も古いアップロードされた NFT が削除されます。"
 
 class Tip:
     swipe_down_to_close = "スワイプダウンで閉じる"

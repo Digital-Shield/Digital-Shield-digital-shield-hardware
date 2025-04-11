@@ -184,6 +184,7 @@ class Title:
     asset = "자산"
     unimplemented = "구현되지 않음"
     low_power = "배터리 부족"
+    collect_nft = "NFT 수집"
 
 class Text:
     tap_to_unlock = "터치하여 잠금 해제"
@@ -337,6 +338,8 @@ class Text:
     unimplemented = "구현되지 않음"
     invalid_data="유효하지 않은 데이터 형식"
     low_power_message = "배터리가 {}% 남았습니다.\n충전하세요"
+    collect_nft = "이 NFT를 수집하시겠습니까?"
+    replace_nft = "이 NFT를 수집하시겠습니까? 저장 공간이 제한되어 있어 가장 오래된 업로드된 NFT가 제거됩니다."
 
 class Tip:
     swipe_down_to_close = "아래로 스와이프하여 닫기"
