@@ -107,6 +107,10 @@ class Screen(lv.obj):
                 self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
             self._btn_right = self._btn_container.add(Button)
 
+            # Remove the white shadow by setting the shadow width to 0
+            self._btn_right.set_style_shadow_width(0, lv.PART.MAIN)
+            self._btn_right.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+
         return self._btn_right
 
     @property
@@ -123,6 +127,10 @@ class Screen(lv.obj):
                 self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
             self._btn_left = self._btn_container.add(Button)
 
+            # Remove the white shadow by setting the shadow width to 0
+            self._btn_left.set_style_shadow_width(0, lv.PART.MAIN)
+            self._btn_left.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+            
         return self._btn_left
 
     def _create_btn_container(self):
@@ -248,6 +256,7 @@ class Navigation(Screen):
 
         nav = lv.img(obj)
         nav.set_src("A:/res/nav-back.png")
+        nav.set_zoom(350)  # 设置缩放比例，256表示原始大小，512表示放大2倍
         nav.center()
         nav.add_flag(lv.obj.FLAG.CLICKABLE)
         nav.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
