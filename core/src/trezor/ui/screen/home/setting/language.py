@@ -96,7 +96,10 @@ class RestartApp(Modal):
         label.set_text(i18n.Text.restarting)
         label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN) 
         # self.add(lv.label).set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
-
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            log.debug(__name__, f"current language--: {cur_language}")
+            label.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向从右向左
 
         async def restart_delay():
             from trezor import loop

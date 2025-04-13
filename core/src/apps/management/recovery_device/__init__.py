@@ -81,13 +81,14 @@ async def recovery_device(ctx: wire.Context, msg: RecoveryDevice) -> Success:
     except BaseException as e:
         raise e
     else:
-        return result
+        if msg.enforce_wordlist:
+            if isinstance(ctx, wire.DummyContext):
+                loop.clear()
+            return result
     finally:
         if isinstance(ctx, wire.DummyContext):
             if msg.dry_run:
                 utils.set_up()
-            else:
-                loop.clear()
 
 
 async def recovery_process(ctx: wire.GenericContext) -> Success:

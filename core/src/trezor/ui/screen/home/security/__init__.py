@@ -72,7 +72,9 @@ class Item(VStack):
             self.label.set_text(text)
             self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
             self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
-            self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            # self.set_style_text_align(lv.TEXT_ALIGN.RIGHT, lv.PART.MAIN)  # 设置右对齐
+            self.label.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置显示方向为从右向左
+            
             self.icon = lv.img(self)
             self.icon.set_src(icon)
         else:
@@ -84,7 +86,11 @@ class Item(VStack):
             self.label.set_text(text)
             self.label.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)#字体白色
             self.label.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)  # 确保背景透明
-        
+        # 启动滚动
+        self.label.set_width(200)  # 设置标签的宽度
+        self.label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        self.label.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
+
 class SampleItem(Item):
     def __init__(self, parent, text, icon):
         super().__init__(parent, text, icon)

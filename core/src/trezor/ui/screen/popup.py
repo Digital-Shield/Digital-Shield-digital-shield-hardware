@@ -1,6 +1,7 @@
 import lvgl as lv
 
 from . import Modal
+from trezor.ui import i18n
 from trezor.ui.theme import Styles
 from trezor.ui.component.container import HStack
 
@@ -30,6 +31,9 @@ class Popup(Modal):
         self.text.add_style(Styles.popup, lv.PART.MAIN)
         self.text.set_long_mode(lv.label.LONG.WRAP)
         self.text.set_text(operating)
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            self.text.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置显示方向从右向左
         self.text_color(lv.color_hex(0xFFFFFF))  
         # auto close after 1.5 seconds
         self.auto_close_timeout = 2500
