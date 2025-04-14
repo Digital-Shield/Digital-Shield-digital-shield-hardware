@@ -38,23 +38,39 @@ static mp_obj_t mod_trezorio_battery_state_of_charge(mp_obj_t self) {
 
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_state_of_charge_obj, mod_trezorio_battery_state_of_charge);
 
-/// def state_of_current(self) -> int|None:
+/// def current(self) -> int|None:
 ///     """
-///     read (state of current), in 1mA
+///     read (current), in 1mA
 ///
 ///     Returns current in mA, positive in discharging, negative is charging
 ///     """
 
-static mp_obj_t mod_trezorio_battery_state_of_current(mp_obj_t self) {
+static mp_obj_t mod_trezorio_battery_current(mp_obj_t self) {
     int current = battery_read_current();
     return MP_OBJ_NEW_SMALL_INT(current);
 }
 
-static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_state_of_current_obj, mod_trezorio_battery_state_of_current);
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_current_obj, mod_trezorio_battery_current);
+
+/// def voltage(self) -> int:
+///     """
+///     read (voltage), in 1mV
+///
+///     Returns voltage in mV
+///     """
+
+static mp_obj_t mod_trezorio_battery_voltage(mp_obj_t self) {
+    int voltage = battery_read_voltage();
+    return MP_OBJ_NEW_SMALL_INT(voltage);
+}
+
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_voltage_obj, mod_trezorio_battery_voltage);
+
 
 static const mp_rom_map_elem_t mod_trezorio_battery_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_state_of_charge), MP_ROM_PTR(&mod_trezorio_battery_state_of_charge_obj) },
-    { MP_ROM_QSTR(MP_QSTR_state_of_current), MP_ROM_PTR(&mod_trezorio_battery_state_of_current_obj) },
+    { MP_ROM_QSTR(MP_QSTR_current), MP_ROM_PTR(&mod_trezorio_battery_current_obj) },
+    { MP_ROM_QSTR(MP_QSTR_voltage), MP_ROM_PTR(&mod_trezorio_battery_voltage_obj) },
 };
 
 static MP_DEFINE_CONST_DICT(mod_trezorio_battery_locals_dict, mod_trezorio_battery_locals_dict_table);

@@ -14,11 +14,16 @@ class Battery:
         Returns int between 0 and 100
         """
 
-    def state_of_current(self) -> int|None:
+    def current(self) -> int|None:
         """
-        read (state of current), in 1mA
-        
+        read (current), in 1mA
+
         Returns current in mA, positive in charging, negative is discharging
+        """
+    def voltage(self) -> int:
+        """
+        read (voltage), in 1mV
+            Returns voltage in mV
         """
 
 # extmod/modtrezorio/modtrezorio-ble.h

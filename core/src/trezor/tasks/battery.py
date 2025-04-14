@@ -19,11 +19,13 @@ async def updating_battery_state():
         await loop.sleep(1000)
 
         state_of_charge = battery.state_of_charge()
-        # log.debug(__name__, f"state of battery: {state_of_charge}")
-        state_of_current = battery.state_of_current()
-        # log.debug(__name__, f"state of current: {state_of_current}")
+        # log.debug(__name__, f"battery state of charge: {state_of_charge}%%")
+        current = battery.current()
+        # log.debug(__name__, f"battery current: {current}mA")
+        voltage = battery.voltage()
+        # log.debug(__name__, f"battery voltage: {voltage}mV")
 
-        charging = state_of_current >= 0
+        charging = current >= 0
 
         charging_changed = prev_charging != charging
         prev_charging = charging
@@ -63,7 +65,7 @@ async def updating_battery_state():
             # less than 20%, show a message
             if not charging and state_of_charge <= LOW_STATE_OF_CHARGE:
                 await alert(state_of_charge)
-            
+
         # not connect usb, and battery is empty, shut down device
         if not state_of_charge and not charging:
             from trezor.ui.screen.power import ShutingDown
