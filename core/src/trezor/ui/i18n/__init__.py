@@ -46,11 +46,10 @@ def change_language(lang: str | Language | None = None):
         from . import al as lang_module
     elif lang == 'yn':
         from . import yn as lang_module
-   
     else:
         raise ValueError(f"Unsupported language: {lang}")
     global using
-    using = utils.first(languages, lambda l: l.code == lang)
+    using = utils.first(languages, lambda l: l.code == lang) or languages[0]
     for attr in dir(lang_module):
         if attr.startswith('_'):
             continue
