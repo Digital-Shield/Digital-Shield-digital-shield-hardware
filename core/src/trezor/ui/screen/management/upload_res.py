@@ -1,7 +1,9 @@
 import lvgl as lv
 
 from trezor.ui.screen import Modal
-from trezor import log
+from trezor import log, workflow
+
+_RECEIVE_TIMEOUT = 60 * 1000
 
 class LoadingResource(Modal):
     def __init__(self, res: str, total: int):
@@ -24,6 +26,8 @@ class LoadingResource(Modal):
         self.bar.align(lv.ALIGN.BOTTOM_MID, 0, -32)
 
     def update(self, size: int):
+        workflow.idle_timer.set(_RECEIVE_TIMEOUT, self.cancel_transmit)
+
         self.size += size
         log.debug(__name__, f"{self.size}/{self.total}")
         value = (self.size * 100) // self.total
@@ -31,3 +35,13 @@ class LoadingResource(Modal):
             value = 100
         log.debug(__name__, f"uploading: {value}")
         self.bar.set_value(value, lv.ANIM.OFF)
+
+    def close(self, value):
+        workflow.idle_timer.remove(self.cancel_transmit)
+        super().close(value)
+
+    def cancel_transmit(self):
+        # not get message while wait a long time
+        # may bee the app die, or bluetooth disconnect?
+        from trezor import wire
+        wire.signal_ack()
