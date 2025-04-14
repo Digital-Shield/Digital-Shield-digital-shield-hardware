@@ -311,8 +311,7 @@ int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout) {
 
   size = ((size + 63)/64)*64;
   send_buf[0] = size;
-  // TODO: 优化这里
-  // hal_delay(200);
+
   spi_abort_event = 1;
   if (HAL_SPI_Abort_IT(&spi) != HAL_OK) {
     memset(send_buf, 0, SPI_PKG_SIZE);
