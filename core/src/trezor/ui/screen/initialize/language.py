@@ -29,7 +29,9 @@ class LanguageScreen(Modal):
         self.content: HStack
         self.content.add_style(
             Style()
-            .pad_top(25),
+            .pad_top(25)
+            .pad_left(16)
+            .pad_right(16),
             0
         )
 
