@@ -151,7 +151,7 @@ class ImgDetail(Navigation):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16),#.pad_right(16)
+            Style().pad_left(16).pad_right(16),#
             0
         )
         contaner = self.add(lv.obj)
@@ -170,6 +170,7 @@ class ImgDetail(Navigation):
         view = self.add(Text)
         view.set_label(nft_metadata["header"])
         view.set_text(nft_metadata["subheader"])
+        view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
 class Text(LabeledText):
     def __init__(self, parent):

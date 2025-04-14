@@ -21,12 +21,12 @@ class Screen(lv.obj):
 
     def __init__(self):
         super().__init__()
-        self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
-        wallpaper = device.get_homescreen()
-        if wallpaper:  # 判断 `wallpaper` 是否存在
-            self.set_style_bg_img_src(wallpaper, 0)
-        else:
-            self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
+        self.set_style_bg_img_src("A:/res/wallpapers/4.png", 0)  # 使用默认背景
+        # wallpaper = device.get_homescreen()
+        # if wallpaper:  # 判断 `wallpaper` 是否存在
+        #     self.set_style_bg_img_src(wallpaper, 0)
+        # else:
+        #     self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
         # maybe speedup if not use background image
         # if __USE_BACKGROUND_IMAGE__:
         #     self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)

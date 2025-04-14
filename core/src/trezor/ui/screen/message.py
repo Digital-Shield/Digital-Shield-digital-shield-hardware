@@ -40,7 +40,10 @@ class Message(Modal):
             self.text.set_style_text_line_space(8, 0)
             self.text.set_style_text_color(colors.DS.WHITE, 0)
             self.text.set_style_pad_top(15, 0)
-
+            #判断是否阿拉伯语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "al":
+                self.text.set_style_base_dir(lv.BASE_DIR.RTL, lv.PART.MAIN)  # 设置文本显示方向从右到左
         self.btn = self.btn_right
 
         self.btn.add_event_cb(lambda _: self.on_click_ok(), lv.EVENT.CLICKED, None)

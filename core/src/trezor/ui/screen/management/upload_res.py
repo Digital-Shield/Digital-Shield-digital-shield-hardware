@@ -11,6 +11,7 @@ class LoadingResource(Modal):
         label = self.add(lv.label)
         label.center()
         label.set_text(res)
+        label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN | lv.STATE.DEFAULT)
 
         self.total = total
         self.size = 0

@@ -259,7 +259,7 @@ class Text:
         "Data can't be recovered",
         "Have backup mnemonic",
     ]
-    wipe_device_success = "Device wiped successfully\n Restarting the device ..."
+    wipe_device_success = "Device data has been successfully erased\n Please reboot the device ..."
     bluetooth_pair = "Please input the code at your pairing device"
     bluetooth_pair_failed = "Bluetooth pairing failed"
     path = "Path:"

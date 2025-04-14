@@ -223,7 +223,7 @@ class Text:
         "Không thể khôi phục dữ liệu",
         "Bạn đã sao lưu cụm từ ghi nhớ",
     ]
-    wipe_device_success = "Dữ liệu thiết bị đã được xóa sạch thành công\n Đang khởi động lại thiết bị ..."
+    wipe_device_success = "Dữ liệu thiết bị đã được xóa thành công\n Vui lòng khởi động lại thiết bị ..."
     bluetooth_pair = "Vui lòng nhập mã ghép nối trên thiết bị của bạn"
     bluetooth_pair_failed = "Ghép nối Bluetooth thất bại"
     path = "Đường dẫn phân cấp:"

@@ -169,12 +169,14 @@ class Item(HStack):
         self.add_style(Styles.pressed, lv.STATE.PRESSED)
         self.items_center()
         self.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_EVENLY, lv.PART.MAIN)
+        self.set_style_flex_cross_place(lv.FLEX_ALIGN.CENTER, lv.PART.MAIN)  # 垂直方向居中
         self.add_flag(lv.obj.FLAG.CLICKABLE)
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)  # 禁止拖拽
 
         self.set_style_pad_row(0, lv.PART.MAIN)  # 行间距
         self.set_style_pad_column(0, lv.PART.MAIN)
-        
+
+        self.set_ext_click_area(20)  # 扩展点击区域
 
         img = lv.img(self)
         img.set_src(icon)
