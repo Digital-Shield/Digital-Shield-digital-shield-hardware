@@ -105,7 +105,7 @@ def is_usb_connected() -> bool:
     # it not very exactly when not have battery
     from trezor import io
     battery = io.Battery()
-    current = battery.state_of_current()
+    current = battery.current()
     return current >= 0
 
 def turn_on_lcd_if_possible() -> bool:
