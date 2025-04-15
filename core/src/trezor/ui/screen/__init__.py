@@ -1,7 +1,7 @@
 import lvgl as lv
 from storage import device
 from . import manager
-from trezor.ui import Style, font
+from trezor.ui import Style, font, i18n
 from trezor import loop, log
 from trezor.ui import Style, events, theme, colors
 from trezor.ui.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -110,6 +110,12 @@ class Screen(lv.obj):
             # Remove the white shadow by setting the shadow width to 0
             self._btn_right.set_style_shadow_width(0, lv.PART.MAIN)
             self._btn_right.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+            #判断是否阿拉伯语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "al":
+                #增大self._btn_right的宽度
+                # print("阿拉伯语,宽度是--"+str(self._btn_right.get_style_width(lv.PART.MAIN)))
+                self._btn_right.set_style_width(180, lv.PART.MAIN)
 
         return self._btn_right
 

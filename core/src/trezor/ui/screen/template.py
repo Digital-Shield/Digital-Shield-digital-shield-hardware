@@ -41,6 +41,7 @@ class Address(Modal):
 
         # default show address
         self.state: AddressState = "address"
+        
         self.address_view.clear_flag(lv.obj.FLAG.HIDDEN)
 
     @property
@@ -90,16 +91,17 @@ class Address(Modal):
 
     def on_click_toggle(self, e):
         label: lv.label = self.btn_toggle.get_child(0)
-        if self.state == "address":
-            self.state = "qrcode"
-            label.set_text(i18n.Button.address)
-            self.qrcode_view.clear_flag(lv.obj.FLAG.HIDDEN)
-            self.address_view.add_flag(lv.obj.FLAG.HIDDEN)
-        else:
+        # print("address---"+self.state)
+        if self.state == "qrcode":
             self.state = "address"
             label.set_text(i18n.Button.qr_code)
             self.address_view.clear_flag(lv.obj.FLAG.HIDDEN)
             self.qrcode_view.add_flag(lv.obj.FLAG.HIDDEN)
+        else:
+            self.state = "qrcode"
+            label.set_text(i18n.Button.address)
+            self.qrcode_view.clear_flag(lv.obj.FLAG.HIDDEN)
+            self.address_view.add_flag(lv.obj.FLAG.HIDDEN)
 
     def on_click_confirm(self, e):
         log.debug(__name__, "user click confirm")
