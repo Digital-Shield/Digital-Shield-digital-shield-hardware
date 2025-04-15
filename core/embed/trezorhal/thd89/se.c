@@ -1,4 +1,3 @@
-#include "stm32h7xx_hal_spi.h"
 #include STM32_HAL_H
 #include <stdio.h>
 #include <string.h>
@@ -9,7 +8,7 @@
 static SPI_HandleTypeDef hspi5 = {0};
 #define SE_TRANS_TIMEOUT 10000
 
-int32_t se_init(void) {
+int se_spi_init(void) {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /**SPI5 GPIO Configuration
@@ -46,23 +45,23 @@ int32_t se_init(void) {
   HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
 
   // power on
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  // GPIO_InitStruct.Pin = GPIO_PIN_4;
+  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  // GPIO_InitStruct.Pull = GPIO_PULLUP;
+  // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  // HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   // se hand
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+  // GPIO_InitStruct.Pin = GPIO_PIN_5;
+  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  // GPIO_InitStruct.Pull = GPIO_PULLUP;
+  // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  // HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
 
   // se power off
   // SE_POWER_OFF();
   // se power on
-  SE_POWER_ON();
+  // SE_POWER_ON();
 
   /* SPI5 parameter configuration*/
   hspi5.Instance = SPI5;
@@ -76,16 +75,16 @@ int32_t se_init(void) {
   hspi5.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi5.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi5.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi5.Init.CRCPolynomial = 10;
-  hspi5.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  // hspi5.Init.CRCPolynomial = 10;
+  // hspi5.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
   hspi5.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
   hspi5.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-  hspi5.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi5.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi5.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
-  hspi5.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
-  hspi5.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
-  hspi5.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
+  // hspi5.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi5.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+  // hspi5.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
+  // hspi5.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
+  // hspi5.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
+  // hspi5.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
   hspi5.Init.IOSwap = SPI_IO_SWAP_DISABLE;
 
   HAL_SPI_DeInit(&hspi5);
@@ -99,6 +98,8 @@ int32_t se_init(void) {
 }
 
 int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
+  // 由于测试代码没有握手线，我们延迟500ms slave 里面有打印数据的操作，很费时
+  HAL_Delay(500);
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
   memcpy(buf, frame, frame_size);
   int ret = HAL_SPI_Transmit(&hspi5, buf, sizeof(buf), timeout);
@@ -111,6 +112,8 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
 }
 
 int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
+  // 由于测试代码没有握手线，我们延迟500ms slave 里面有打印数据的操作，很费时
+  HAL_Delay(500);
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
   int ret = HAL_SPI_Receive(&hspi5, buf, sizeof(buf), timeout);
   if (ret == HAL_TIMEOUT) {

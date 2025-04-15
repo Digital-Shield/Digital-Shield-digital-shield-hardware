@@ -550,6 +550,9 @@ int main(void)
 
     SystemCoreClockUpdate();
 
+    extern void thd89_test(void);
+    thd89_test();
+
     /* Enable the CPU Cache */
     cpu_cache_enable();
 
