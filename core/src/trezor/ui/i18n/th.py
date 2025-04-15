@@ -221,7 +221,7 @@ class Text:
         "데이터를 복구할 수 없습니다",
         "니모닉을 백업했습니다",
     ]
-    wipe_device_success = "장치 데이터가 성공적으로 지워졌습니다\n 장치를 재시작하는 중 ..."
+    wipe_device_success = "기기 데이터가 성공적으로 삭제되었습니다\n 기기를 재부팅하세요..."
     bluetooth_pair = "장치에서 페어링 코드를 입력하십시오"
     bluetooth_pair_failed = "블루투스 페어링 실패"
     path = "파생 경로:"

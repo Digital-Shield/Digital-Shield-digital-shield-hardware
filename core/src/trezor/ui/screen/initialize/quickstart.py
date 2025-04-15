@@ -16,6 +16,11 @@ class Quickstart(Navigation):
 
         self.create_content(HStack)
         self.content: HStack
+        self.content.set_style_align(lv.ALIGN.CENTER, lv.PART.MAIN)
+        self.content.set_flex_flow(lv.FLEX_FLOW.COLUMN)  # 设置为列布局，居中对齐
+        self.content.set_style_pad_left(16, lv.PART.MAIN)  # 设置左边距为0
+        self.content.set_style_pad_right(16, lv.PART.MAIN)  # 设置右边距为0
+        
 
         # create new wallet
         create = Item(
@@ -68,12 +73,11 @@ class Item(VStack):
     def __init__(self, parent, title, icon):
         super().__init__(parent)
         self.items_center()
-        # self.add_style(item_style, 0)
         self.add_style(
             Style()
             .radius(16)
             .bg_opa(lv.OPA.COVER)
-            .width(432) #lv.pct(100)
+            .width(lv.pct(100))  # 432
             .height(80)
             .pad_right(32)
             .bg_color(lv.color_hex(0x111126)),

@@ -1,7 +1,7 @@
 import lvgl as lv
 from storage import device
 from . import manager
-from trezor.ui import Style, font
+from trezor.ui import Style, font, i18n
 from trezor import loop, log
 from trezor.ui import Style, events, theme, colors
 from trezor.ui.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -21,12 +21,12 @@ class Screen(lv.obj):
 
     def __init__(self):
         super().__init__()
-        self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
-        wallpaper = device.get_homescreen()
-        if wallpaper:  # 判断 `wallpaper` 是否存在
-            self.set_style_bg_img_src(wallpaper, 0)
-        else:
-            self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
+        self.set_style_bg_img_src("A:/res/wallpapers/4.png", 0)  # 使用默认背景
+        # wallpaper = device.get_homescreen()
+        # if wallpaper:  # 判断 `wallpaper` 是否存在
+        #     self.set_style_bg_img_src(wallpaper, 0)
+        # else:
+        #     self.set_style_bg_img_src("A:/res/background_six.png", 0)  # 使用默认背景
         # maybe speedup if not use background image
         # if __USE_BACKGROUND_IMAGE__:
         #     self.set_style_bg_img_src("A:/res/background_six.png", lv.PART.MAIN)
@@ -107,6 +107,16 @@ class Screen(lv.obj):
                 self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
             self._btn_right = self._btn_container.add(Button)
 
+            # Remove the white shadow by setting the shadow width to 0
+            self._btn_right.set_style_shadow_width(0, lv.PART.MAIN)
+            self._btn_right.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+            #判断是否阿拉伯语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "al":
+                #增大self._btn_right的宽度
+                # print("阿拉伯语,宽度是--"+str(self._btn_right.get_style_width(lv.PART.MAIN)))
+                self._btn_right.set_style_width(180, lv.PART.MAIN)
+
         return self._btn_right
 
     @property
@@ -123,6 +133,10 @@ class Screen(lv.obj):
                 self._btn_container.set_style_flex_main_place(lv.FLEX_ALIGN.SPACE_BETWEEN, lv.PART.MAIN)
             self._btn_left = self._btn_container.add(Button)
 
+            # Remove the white shadow by setting the shadow width to 0
+            self._btn_left.set_style_shadow_width(0, lv.PART.MAIN)
+            self._btn_left.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+            
         return self._btn_left
 
     def _create_btn_container(self):
@@ -248,6 +262,7 @@ class Navigation(Screen):
 
         nav = lv.img(obj)
         nav.set_src("A:/res/nav-back.png")
+        nav.set_zoom(350)  # 设置缩放比例，256表示原始大小，512表示放大2倍
         nav.center()
         nav.add_flag(lv.obj.FLAG.CLICKABLE)
         nav.add_flag(lv.obj.FLAG.EVENT_BUBBLE)

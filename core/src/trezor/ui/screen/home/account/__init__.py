@@ -74,7 +74,7 @@ class Item(VStack):
             Style()
             .radius(16)
             .bg_opa(lv.OPA.COVER)
-            .width(432) #lv.pct(100)
+            .width(lv.pct(100)) #432
             .height(80)
             .pad_right(32)
             .pad_column(16)

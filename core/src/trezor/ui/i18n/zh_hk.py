@@ -225,7 +225,7 @@ class Text:
         "數據將無法恢復",
         "已經備份了助記詞",
     ]
-    wipe_device_success = "裝置已成功清除數據\n 正在重啟裝置 ..."
+    wipe_device_success = "裝置已成功清除數據\n 請重啟裝置 ..."
     bluetooth_pair = "請在您的裝置上輸入配對碼"
     bluetooth_pair_failed = "藍牙配對失敗"
     path = "派生路徑:"

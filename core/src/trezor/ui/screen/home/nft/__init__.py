@@ -14,16 +14,15 @@ class NftApp(Navigation):
 
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
-        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
-
+        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)  # 设置背景颜色
 
         # use HStack as content
         self.create_content(HStack)
         self.content: HStack
-        self.content.set_style_pad_left(16, lv.PART.MAIN)
-        self.content.set_style_pad_right(16, lv.PART.MAIN)
+        self.content.set_style_pad_left(0, lv.PART.MAIN)
+        self.content.set_style_pad_right(0, lv.PART.MAIN)
         self.content.set_style_pad_top(15, lv.PART.MAIN)  # 设置顶部填充
-        # self.set_scrollbar_mode(lv.SCROLLBAR_MODE.OFF)
+
         nft_counts = 0
         file_name_list = []
         for size, _, name in io.fatfs.listdir("1:/res/nfts/zooms"):
@@ -39,34 +38,35 @@ class NftApp(Navigation):
                 )
             )
         rows_num = math.ceil(nft_counts / 2)
-        row_dsc = [224] * rows_num
+        row_dsc = [210] * rows_num
         row_dsc.append(lv.GRID_TEMPLATE.LAST)
         # 2 columns
         col_dsc = [
-            224,
-            224,
+            210,
+            210,
             lv.GRID_TEMPLATE.LAST,
         ]
         grid = lv.obj(self)
         grid.align_to(self.content, lv.ALIGN.TOP_LEFT, 0, 0)
-        grid.set_size(448, 700)
+        grid.set_size(470, 700)
         grid.set_layout(lv.LAYOUT_GRID.value)
         grid.add_style(
             Style()
             .radius(0)
             .bg_color(lv.color_hex(0x0D0D17))  # 深色背景
-            # .pad_right(16)
-            # .pad_left(16)
             .border_width(0)
             .grid_column_dsc_array(col_dsc)
-            .grid_row_dsc_array(row_dsc),
+            .grid_row_dsc_array(row_dsc)
+            .pad_row(10)  # 设置行间距为 20
+            .pad_column(30),  # 设置列间距为 20
             0,
         )
         grid.set_grid_align(lv.GRID_ALIGN.SPACE_AROUND, lv.GRID_ALIGN.START)
 
         for i, file_name in enumerate(file_name_list):
             path_dir = "A:1:/res/nfts/zooms/"
-            ImgGridItem(grid,file_name,path_dir,(i) % 2,(i) // 2)
+            ImgGridItem(grid, file_name, path_dir, (i) % 2, (i) // 2)
+
 
 class ImgGridItem(lv.img):
     """Img Grid Item"""
@@ -77,8 +77,6 @@ class ImgGridItem(lv.img):
         path_dir: str,
         col_num,
         row_num
-        # img_path_other: str = "A:/res/checked-solid.png",
-        # is_internal: bool = False,
     ):
         super().__init__(parent)
         self.set_grid_cell(
@@ -86,10 +84,27 @@ class ImgGridItem(lv.img):
         )
         self.file_name = file_name
         self.zoom_path = path_dir + file_name
-        self.set_src(self.zoom_path)
-        self.set_size(224, 224)
-        self.add_flag(lv.obj.FLAG.CLICKABLE)
-        self.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
+        # 设置单元格背景为白色
+        style = Style().bg_color(lv.color_hex(0xFFFFFF)).bg_opa(lv.OPA.TRANSP).border_width(0)
+        if col_num == 0:  # 如果是第一列，设置左右侧外边距
+            style.pad_left(10)
+            style.pad_right(20)
+        if col_num == 1:  # 如果是第二列，设置左侧外边距
+            style.pad_left(10)
+        if row_num > 0:  # 如果是大于第一行，设置上侧外边距
+            style.pad_top(10)    
+        self.add_style(style, lv.PART.MAIN)
+
+        # 添加图片到单元格
+        img = lv.img(self)
+        img.set_src(self.zoom_path)
+        img.set_size(210, 210)
+
+        # 图片靠左对齐
+        img.set_style_align(lv.ALIGN.LEFT_MID, lv.PART.MAIN)
+        img.add_flag(lv.obj.FLAG.CLICKABLE)
+        img.add_event_cb(lambda _: self.action(), lv.EVENT.CLICKED, None)
+
     def action(self):
         log.debug(__name__, self.file_name)
         if utils.lcd_resume():
@@ -121,7 +136,7 @@ class ImgGridItem(lv.img):
                     ):
                         metadata = metadata_load
         print(metadata)
-        workflow.spawn(ImgDetail(self.file_name,"A:1:/res/nfts/zooms/",metadata).show())
+        workflow.spawn(ImgDetail(self.file_name, "A:1:/res/nfts/zooms/", metadata).show())
 
 class ImgDetail(Navigation):
     """Img Item"""
@@ -136,7 +151,7 @@ class ImgDetail(Navigation):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(
-            Style().pad_left(16).pad_right(16),
+            Style().pad_left(16).pad_right(16),#
             0
         )
         contaner = self.add(lv.obj)
@@ -155,6 +170,7 @@ class ImgDetail(Navigation):
         view = self.add(Text)
         view.set_label(nft_metadata["header"])
         view.set_text(nft_metadata["subheader"])
+        view.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
 class Text(LabeledText):
     def __init__(self, parent):
