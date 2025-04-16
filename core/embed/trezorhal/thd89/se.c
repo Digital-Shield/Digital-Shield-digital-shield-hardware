@@ -1,3 +1,5 @@
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_gpio.h"
 #include STM32_HAL_H
 #include <stdio.h>
 #include <string.h>
@@ -51,12 +53,13 @@ int se_spi_init(void) {
   // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   // HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  // se hand
-  // GPIO_InitStruct.Pin = GPIO_PIN_5;
-  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  // GPIO_InitStruct.Pull = GPIO_PULLUP;
-  // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  // HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+  // se handshake
+  GPIO_InitStruct.Pin = SE_COMBUS_GPIO_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Mode = 0;
+  HAL_GPIO_Init(SE_COMBUS_GPIO_PORT, &GPIO_InitStruct);
 
   // se power off
   // SE_POWER_OFF();
@@ -97,9 +100,40 @@ int se_spi_init(void) {
   return 0;
 }
 
+static void log_data(uint8_t* data, size_t data_size) {
+  #define __FRAME_LINE__ 16
+    uint8_t count = 0;
+    while (data_size--) {
+      count++;
+      printf("%02x ", *data++);
+      if (count == __FRAME_LINE__) {
+        printf("\n");
+        count = 0;
+      }
+    }
+    printf("\n");
+  }
+  static void log_frame(uint8_t frame[SEC_MAX_FRAME_SIZE]) {
+    uint8_t fctr = frame[0];
+    size_t len = frame[1];
+    len <<= 8;
+    len |= frame[2];
+
+    size_t frame_size = len + 5;
+    uint8_t* p = frame + 3;
+
+    printf("raw frame: \n");
+    log_data(frame, frame_size);
+    printf("frame: %02x,  len: %d(%02x%02x), crc: %02x%02x\n", fctr, len,
+           frame[1], frame[2], frame[frame_size - 2], frame[frame_size - 1]);
+
+    log_data(p, len);
+  }
+
 int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
-  // 由于测试代码没有握手线，我们延迟500ms slave 里面有打印数据的操作，很费时
-  HAL_Delay(500);
+  // wait for slave idle
+  while(HAL_GPIO_ReadPin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN) != GPIO_PIN_RESET);
+  HAL_Delay(1);
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
   memcpy(buf, frame, frame_size);
   int ret = HAL_SPI_Transmit(&hspi5, buf, sizeof(buf), timeout);
@@ -108,12 +142,16 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
   } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
+  printf("APP ==> SE\n");
+  log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;
 }
 
 int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
-  // 由于测试代码没有握手线，我们延迟500ms slave 里面有打印数据的操作，很费时
-  HAL_Delay(500);
+  // wait for slave data processed
+  while(HAL_GPIO_ReadPin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN) != GPIO_PIN_RESET);
+  // delay a short time
+  HAL_Delay(1);
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
   int ret = HAL_SPI_Receive(&hspi5, buf, sizeof(buf), timeout);
   if (ret == HAL_TIMEOUT) {
@@ -129,6 +167,8 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   }
   // add overhead
   memcpy(frame, buf, len+5);
+  printf("SE ==> APP\n");
+  log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;
 }
 
