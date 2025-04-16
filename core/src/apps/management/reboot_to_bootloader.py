@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 async def reboot_to_bootloader(ctx: wire.Context, msg: RebootToBootloader) -> NoReturn:
     from trezor.ui import i18n
+    from trezor import io
 
     await confirm_action(
         ctx,
@@ -21,5 +22,8 @@ async def reboot_to_bootloader(ctx: wire.Context, msg: RebootToBootloader) -> No
     await ctx.write(Success(message="Rebooting"))
     # make sure the outgoing USB buffer is flushed
     await loop.wait(ctx.wire.iface.iface_num() | io.POLL_WRITE)
+    # create a flag file
+    with io.fatfs.open("0:/.stay_in_bootloader", "w"):
+        pass
     utils.reboot_to_bootloader()
     raise RuntimeError

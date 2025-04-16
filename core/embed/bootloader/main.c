@@ -22,6 +22,7 @@
 #include "common.h"
 #include "display.h"
 #include "emmc_commands.h"
+#include "emmc_fs.h"
 #include "ff.h"
 #include "flash.h"
 #include "image.h"
@@ -464,9 +465,26 @@ static secbool validate_firmware_code(vendor_header* const vhdr, image_header* c
     return result;
 }
 
+static secbool need_stay_in_bootloader(void) {
+    volatile secbool boot = secfalse;
+    if (*STAY_IN_FLAG_ADDR == STAY_IN_BOOTLOADER_FLAG) {
+        boot = sectrue;
+
+        // clear flag
+        *STAY_IN_FLAG_ADDR = 0;
+    }
+
+    if (emmc_fs_path_exist("0:/.stay_in_bootloader")) {
+        boot = sectrue;
+        // clear flag
+        emmc_fs_file_delete("0:/.stay_in_bootloader");
+    }
+
+    return boot;
+}
+
 int main(void)
 {
-    volatile uint32_t stay_in_bootloader_flag = *STAY_IN_FLAG_ADDR;
     bool serial_set = false, cert_set = false, res_set = false, vaild_firmware = false;
 
     // use log
@@ -554,13 +572,6 @@ int main(void)
     BLE_CTL_PIN_INIT();
     ble_function_on();
 
-    secbool stay_in_bootloader = secfalse; // flag to stay in bootloader
-    if ( stay_in_bootloader_flag == STAY_IN_BOOTLOADER_FLAG )
-    {
-        *STAY_IN_FLAG_ADDR = 0;
-        stay_in_bootloader = sectrue;
-    }
-
     vendor_header vhdr;
     image_header hdr;
 
@@ -573,6 +584,8 @@ int main(void)
             vaild_firmware = true;
         }
     }
+
+    secbool stay_in_bootloader = need_stay_in_bootloader();
     // stay_in_bootloader = sectrue;
 
     // check all flags
