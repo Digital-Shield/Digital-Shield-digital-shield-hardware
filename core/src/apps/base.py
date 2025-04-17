@@ -104,8 +104,8 @@ def get_features() -> Features:
         ]
 
     # Other models are not capable of PassphraseEntry
-    if utils.MODEL in ("T",):
-        f.capabilities.append(Capability.PassphraseEntry)
+    # if utils.MODEL in ("T",):
+    #     f.capabilities.append(Capability.PassphraseEntry)
 
     f.sd_card_present = sdcard.is_present()
     f.initialized = storage.device.is_initialized()
