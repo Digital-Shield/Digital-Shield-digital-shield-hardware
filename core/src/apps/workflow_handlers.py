@@ -169,6 +169,14 @@ def find_message_handler_module(msg_type: int) -> str:
         if msg_type == MessageType.PolkadotSignTx:
             return "apps.polkadot.sign_tx"
 
+        # ton
+        if msg_type == MessageType.TonGetAddress:
+            return "apps.ton.get_address"
+        if msg_type == MessageType.TonSignMessage:
+            return "apps.ton.sign_message"
+        if msg_type == MessageType.TonSignProof:
+            return "apps.ton.sign_proof"
+        
         # tron
         if msg_type == MessageType.TronGetAddress:
             return "apps.tron.get_address"

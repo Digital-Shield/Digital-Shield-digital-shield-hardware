@@ -323,6 +323,7 @@ class Text:
     device_already_registered_x = "Device Registered {}"
     device_verify_user = "Device-Verified User"
     fee_is_unexpectedly_high = "Unexpectedly High Transaction Fee"
+    too_many_change_outputs= "There are too many change outputs"
     change_count = "Change Output Count"
     locktime_will_have_no_effect = "Locktime Will Have No Effect"
     confirm_locktime_for_this_transaction = "Confirm Transaction Locktime"
