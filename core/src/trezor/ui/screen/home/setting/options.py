@@ -134,14 +134,25 @@ class OptionDetails(Navigation):
             lv.event_send(self.subscriber, __OPTION_VALUE_CHANGED, None)
 
 def _time_format(t: int) -> str:
+    #当前语言
+    cur_language = i18n.using.code if i18n.using is not None else None
     if t < 0:
         return i18n.Text.never
     elif t < 60:
-        return f"{t} {i18n.Text.seconds}"
+        if cur_language == "al":  # 阿拉伯语 (Arabic)
+            return f"{i18n.Text.seconds} {t}"
+        else:
+            return f"{t} {i18n.Text.seconds}"
     elif t == 60:
-        return f"{t // 60} {i18n.Text.minute}"
+        if cur_language == "al":  # 阿拉伯语 (Arabic)
+            return f"{i18n.Text.minute} {t // 60}"
+        else:
+            return f"{t // 60} {i18n.Text.minute}"
     else:
-        return f"{t // 60} {i18n.Text.minutes}"
+        if cur_language == "al":  # 阿拉伯语 (Arabic)
+            return f"{i18n.Text.minutes} {t // 60}"
+        else:
+            return f"{t // 60} {i18n.Text.minutes}"
 
 class TimeOptionDetails(OptionDetails):
     def __init__(self, title, times: List[int]):

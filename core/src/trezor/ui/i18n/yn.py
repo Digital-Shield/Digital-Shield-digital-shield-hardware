@@ -91,6 +91,9 @@ class Guide:
     firmware_title_3 = '3. Nhấp vào "Cập nhật phần mềm"'
     firmware_title_caution = 'Cảnh báo'
     firmware_describe_caution = 'Trong quá trình cập nhật, vui lòng đảm bảo kết nối USB ổn định'
+    equipment_info = 'Thông tin thiết bị'
+    equipment_name = 'Tên thiết bị'
+    equipment_version = 'Phiên bản thiết bị'
 
 class Nft:
     nft_item ="{} mục"
@@ -158,6 +161,10 @@ class Title:
     fido2_register = "Đăng ký FIDO2"
     fido2_unregister = "Hủy đăng ký FIDO2"
     fido2_authenticate = "Xác thực FIDO2"
+    finalize_transaction = "Hoàn tất giao dịch"
+    meld_transaction = "Hợp nhất giao dịch"
+    update_transaction = "Cập nhật giao dịch"
+    high_fee = "Phí cao"
     fee_is_high = "Phí quá cao"
     confirm_locktime = "Xác nhận thời gian khóa"
     view_transaction = "Xem giao dịch"
@@ -188,10 +195,8 @@ class Title:
     collect_nft = "Thu thập NFT"
 
 class Text:
-    # tap_to_unlock = "Tap to unlock"
     tap_to_unlock = "Nhấn để mở khóa"
     unlocking = "Đang mở khóa thiết bị..."
-    # str_words = "#18794E {}# từ"
     str_words = "#FFFFFF {}# từ"
     backup_manual = "Viết cụm từ ghi nhớ ra giấy và lưu ở nơi an toàn"
     check_manual = "Nhấn vào các từ dưới đây theo thứ tự"
@@ -237,6 +242,8 @@ class Text:
     max_fee = "Phí tối đa"
     max_priority_fee_per_gas = "Phí ưu tiên tối đa mỗi gas"
     max_fee_per_gas = "Phí giao dịch tối đa mỗi gas"
+    max_gas_limit = "Giới hạn khí tối đa:"
+    gas_unit_price = "Giá đơn vị khí:"
     gas_price = "Giá gas"
     total = "Tổng cộng"
     do_sign_this_transaction = "Bạn có muốn ký giao dịch này {} không?"
@@ -245,6 +252,7 @@ class Text:
     public_key = "Khóa công khai:"
     xpub = "XPub:"
     unknown_tx_type = "Loại giao dịch không xác định, vui lòng kiểm tra dữ liệu nhập"
+    unknown_function = "Hàm không xác định:"
     use_app_scan_this_signature = "Vui lòng sử dụng ứng dụng ví để quét kết quả ký"
     internal_error = "Lỗi nội bộ"
     tap_switch_to_airgap = "Nhấn vào mã QR để chuyển sang hiển thị địa chỉ Airgap"
@@ -283,10 +291,8 @@ class Text:
     fido2_verify_user = "Xác minh người dùng FIDO2"
     device_already_registered_x = "Thiết bị đã đăng ký {}"
     device_verify_user = "Xác minh người dùng trên thiết bị"
-    finalize_transaction = "Hoàn tất giao dịch"
-    meld_transaction = "Hợp nhất giao dịch"
-    update_transaction = "Cập nhật giao dịch"
     fee_is_unexpectedly_high = "Phí bất ngờ cao"
+    too_many_change_outputs = "Quá nhiều đầu ra tiền thối"
     change_count = "Số lượng thay đổi"
     locktime_will_have_no_effect = "Thời gian khóa sẽ không có tác dụng"
     confirm_locktime_for_this_transaction = "Xác nhận thời gian khóa cho giao dịch này"

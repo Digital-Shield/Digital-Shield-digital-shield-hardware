@@ -67,6 +67,10 @@ class SimpleConfirm(Confirm):
         self.text.set_style_text_color(colors.DS.WHITE, 0)
         self.text.set_style_text_line_space(8, 0)
         self.text.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
+        cur_language = i18n.using.code if i18n.using is not None else None
+        #阿拉伯语情况下
+        if cur_language == "al":
+            self.text.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置显示方向为从右向左
         self.text.center()
 
     def text_color(self, color):

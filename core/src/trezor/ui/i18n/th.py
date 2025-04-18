@@ -91,6 +91,9 @@ class Guide:
     firmware_title_3 = '3. "펌웨어 업데이트"를 클릭하십시오'
     firmware_title_caution = '경고'
     firmware_describe_caution = '업그레이드 중에는 USB 연결이 안정되어 있는지 확인하십시오'
+    equipment_info = '장비 정보'
+    equipment_name = '장비 이름'
+    equipment_version = '장비 버전'
 
 class Nft:
     nft_item ="{} 항목"
@@ -158,6 +161,10 @@ class Title:
     fido2_register = "FIDO2 등록"
     fido2_unregister = "FIDO2 등록 해제"
     fido2_authenticate = "FIDO2 인증"
+    finalize_transaction = "거래 완료"
+    meld_transaction = "거래 병합"
+    update_transaction = "거래 업데이트"
+    high_fee = "높은 요금"
     fee_is_high = "수수료가 높습니다"
     confirm_locktime = "잠금 시간 확인"
     view_transaction = "거래 보기"
@@ -183,13 +190,13 @@ class Title:
     export_credential = "凭据 내보내기"
     asset = "자산"
     unimplemented = "구현되지 않음"
+    invalid_data="유효하지 않은 데이터 형식"
     low_power = "배터리 부족"
     collect_nft = "NFT 수집"
 
 class Text:
     tap_to_unlock = "터치하여 잠금 해제"
     unlocking = "장치를 해제하는 중..."
-    # str_words = "#18794E {}# 개의 단어"
     str_words = "#FFFFFF {}# 개의 단어"
     backup_manual = "니모닉을 종이에 적어 안전한 곳에 보관하십시오"
     check_manual = "아래 단어를 순서대로 클릭하십시오"
@@ -235,6 +242,8 @@ class Text:
     max_fee = "최대 수수료"
     max_priority_fee_per_gas = "가스당 최대 우선 순위 수수료"
     max_fee_per_gas = "가스당 거래 수수료 상한"
+    max_gas_limit = "Giới hạn khí tối đa:"
+    gas_unit_price = "Giá đơn vị khí:"
     gas_price = "가스 가격"
     total = "총액"
     do_sign_this_transaction = "이 {} 거래에 서명하시겠습니까?"
@@ -243,6 +252,7 @@ class Text:
     public_key = "공개키:"
     xpub = "XPub:"
     unknown_tx_type = "알려지지 않은 거래 유형, 입력 데이터를 확인하십시오"
+    unknown_function = "알 수 없는 함수:"
     use_app_scan_this_signature = "지갑 앱으로 서명 결과를 스캔하십시오"
     internal_error = "내부 오류"
     tap_switch_to_airgap = "에어갭 주소를 표시하려면QR코드를 터치하십시오"
@@ -281,10 +291,8 @@ class Text:
     fido2_verify_user = "FIDO2 사용자 인증"
     device_already_registered_x = "장치 이미 등록됨 {}"
     device_verify_user = "장치 사용자 인증"
-    finalize_transaction = "거래 완료"
-    meld_transaction = "거래 통합"
-    update_transaction = "거래 업데이트"
     fee_is_unexpectedly_high = "수수료가 예상보다 높습니다"
+    too_many_change_outputs = "잔돈 출력이 너무 많습니다"
     change_count = "잔돈 수량"
     locktime_will_have_no_effect = "잠금 시간은 영향을 미치지 않습니다"
     confirm_locktime_for_this_transaction = "이 거래의 잠금 시간을 확인하십시오"
@@ -335,8 +343,6 @@ class Text:
     sequence_number = "일련 번호"
     expiration_time = "만료 시간"
     argument_x = "매개 변수 #{}"
-    unimplemented = "구현되지 않음"
-    invalid_data="유효하지 않은 데이터 형식"
     low_power_message = "배터리가 {}% 남았습니다.\n충전하세요"
     collect_nft = "이 NFT를 수집하시겠습니까?"
     replace_nft = "이 NFT를 수집하시겠습니까? 저장 공간이 제한되어 있어 가장 오래된 업로드된 NFT가 제거됩니다."

@@ -56,11 +56,11 @@ async def get_address(
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)
         ctx.primary_color, ctx.icon_path = lv.color_hex(PRIMARY_COLOR), ICON
-        # await show_address(
-        #     ctx,
-        #     address=address,
-        #     path=path,
-        #     network="TON",
-        # )
+        await show_address(
+            ctx,
+            address=address,
+            path=path,
+            network="TON",
+        )
 
     return TonAddress(public_key=public_key, address=address)

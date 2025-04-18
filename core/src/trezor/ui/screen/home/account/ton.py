@@ -32,7 +32,7 @@ class Ton(DetailBase):
             # print("address_n--"+str(parser_path(cls.get_path())))
             # step 2: get address
             req = TonGetAddress(address_n=parser_path(cls.get_path()),wallet_version=3, workchain=0, is_bounceable=False, 
-                                is_testnet_only=False, wallet_id=698983191, show_display=True)
+                                is_testnet_only=False, wallet_id=698983191, show_display=False)
             
             resp = await get_address(ctx, req)
 

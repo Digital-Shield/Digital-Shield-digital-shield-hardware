@@ -91,6 +91,9 @@ class Guide:
     firmware_title_3 = '3.「ファームウェアアップグレ\nード」をクリックしてください'
     firmware_title_caution = '警告'
     firmware_describe_caution = 'アップデート中は、USB接続が安定していることを確認してください'
+    equipment_info = '機器情報'
+    equipment_name = '機器名'
+    equipment_version = '機器バージョン'
 
 class Nft:
     nft_item ="{} アイテム"
@@ -158,6 +161,10 @@ class Title:
     fido2_register = "FIDO2 登録"
     fido2_unregister = "FIDO2 登録解除"
     fido2_authenticate = "FIDO2 認証"
+    finalize_transaction = "取引を完了"
+    meld_transaction = "取引を統合"
+    update_transaction = "取引を更新"
+    high_fee = "高い料金"
     fee_is_high = "手数料が高すぎます"
     confirm_locktime = "ロックタイムを確認"
     view_transaction = "取引を表示"
@@ -188,10 +195,8 @@ class Title:
     collect_nft = "NFT を収集する"
 
 class Text:
-    # tap_to_unlock = "Tap to unlock"
     tap_to_unlock = "クリックしてロックを解除"
     unlocking = "デバイスのロックを解除しています..."
-    # str_words = "#18794E {}# 個の単語"
     str_words = "#FFFFFF {}# 個の単語"
     backup_manual = "ニモニックを手動で記録し、安全な場所に保管してください"
     check_manual = "以下の単語を順番にクリックしてください"
@@ -237,6 +242,8 @@ class Text:
     max_fee = "最大手数料"
     max_priority_fee_per_gas = "最大優先手数料"
     max_fee_per_gas = "ガス当たりの取引手数料上限"
+    max_gas_limit = "最大ガス制限:"
+    gas_unit_price = "ガス単価:"
     gas_price = "ガス価格"
     total = "合計金額"
     do_sign_this_transaction = "この{}取引に署名しますか？"
@@ -245,6 +252,7 @@ class Text:
     public_key = "公開鍵:"
     xpub = "XPub:"
     unknown_tx_type = "不明な取引タイプ、入力データを確認してください"
+    unknown_function = "未知の関数:"
     use_app_scan_this_signature = "ウォレットアプリで署名結果をスキャンしてください"
     internal_error = "内部エラー"
     tap_switch_to_airgap = "QRコードをタップしてAirgapアドレスを表示"
@@ -283,10 +291,8 @@ class Text:
     fido2_verify_user = "FIDO2 ユーザー認証"
     device_already_registered_x = "デバイスはすでに登録されています {}"
     device_verify_user = "デバイスユーザー認証"
-    finalize_transaction = "取引を完了"
-    meld_transaction = "取引を統合"
-    update_transaction = "取引を更新"
     fee_is_unexpectedly_high = "手数料が予想外に高すぎます"
+    too_many_change_outputs = "釣り銭の出力が多すぎます"
     change_count = "おつり数量"
     locktime_will_have_no_effect = "ロックタイムは影響しません"
     confirm_locktime_for_this_transaction = "この取引のロックタイムを確認してください"

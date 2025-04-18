@@ -95,6 +95,9 @@ class Guide:
     firmware_title_3 = "3.Click 'Firmware Update'"
     firmware_title_caution = 'Warning'
     firmware_describe_caution = 'Maintain USB connection during update'
+    equipment_info = 'Equipment information'
+    equipment_name = 'Equipment name'
+    equipment_version = 'Equipment version'
 #### nft App
 class Nft:
     nft_item ="{} item"
@@ -194,6 +197,7 @@ class Title:
     meld_transaction = "Merge Transaction"
     update_transaction = "Update Transaction"
     high_fee = "High Fee"
+    fee_is_high = "The handling fee is too high" 
     confirm_locktime = "Confirm Locktime"
     view_transaction = "View Transaction"
     x_confirm_payment = "{} Confirm Payment"
@@ -227,7 +231,6 @@ class Tip:
 class Text:
     tap_to_unlock = "Tap to Unlock"
     unlocking = "Unlocking device..."
-    # str_words = "#18794E {}# words"
     str_words = "#FFFFFF {}# words"
     backup_manual = "Manually write down recovery phrase and store securely"
     check_manual = "Tap words below in correct order"

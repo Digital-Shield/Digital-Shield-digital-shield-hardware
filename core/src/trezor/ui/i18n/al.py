@@ -91,6 +91,9 @@ class Guide:
     firmware_title_3 = '3. انقر فوق "تحديث البرنامج الثابت"'
     firmware_title_caution = 'تحذير'
     firmware_describe_caution = 'خلال التحديث، يرجى التأكد من توصيل USB'
+    equipment_info = 'معلومات الجهاز'
+    equipment_name = 'اسم الجهاز'
+    equipment_version = 'نسخة الجهاز'
 
 class Nft:
     nft_item ="عنصر {}"
@@ -158,6 +161,10 @@ class Title:
     fido2_register = "تسجيل FIDO2"
     fido2_unregister = "إلغاء تسجيل FIDO2"
     fido2_authenticate = "مصادقة FIDO2"
+    finalize_transaction = "إكمال الصفقة"
+    meld_transaction = "دمج الصفقة"
+    update_transaction = "تحديث الصفقة"
+    high_fee = "رسوم عالية"
     fee_is_high = "رسوم عالية"
     confirm_locktime = "تأكيد وقت القفل"
     view_transaction = "عرض الصفقة"
@@ -188,10 +195,8 @@ class Title:
     collect_nft = "جمع NFT"
 
 class Text:
-    # tap_to_unlock = "Tap to unlock"
     tap_to_unlock = "انقر للفتح"
     unlocking = "جاري فتح الجهاز..."
-    # str_words = "#18794E {}# words"
     str_words = "#FFFFFF {}# كلمات"
     backup_manual = "اكتب الكلمات المميزة يدويًا واحتفظ بها في مكان آمن"
     check_manual = "انقر على الكلمات أدناه بالترتيب"
@@ -237,6 +242,8 @@ class Text:
     max_fee = "الرسوم القصوى"
     max_priority_fee_per_gas = "الرسوم القصوى للغاز"
     max_fee_per_gas = "الحد الأقصى لرسوم الغاز لكل وحدة غاز"
+    max_gas_limit = "حد أقصى للغاز:"
+    gas_unit_price = "سعر وحدة الغاز:"
     max_gas_limit = "الحد الأقصى لكمية الغاز"
     gas_unit_price= "سعر وحدة الغاز"
     gas_price = "سعر الوقود"
@@ -286,10 +293,8 @@ class Text:
     fido2_verify_user = "تحقق من المستخدم FIDO2"
     device_already_registered_x = "الجهاز مسجل {}"
     device_verify_user = "تحقق من المستخدم الجهاز"
-    finalize_transaction = "إكمال الصفقة"
-    meld_transaction = "دمج الصفقة"
-    update_transaction = "تحديث الصفقة"
     fee_is_unexpectedly_high = "الرسوم مرتفعة للغاية"
+    too_many_change_outputs = "هناك الكثير من مخرجات الصرف"
     change_count = "عدد الفكة"
     locktime_will_have_no_effect = "لن يكون لوقت القفل أي تأثير"
     confirm_locktime_for_this_transaction = "تأكيد وقت القفل لهذه الصفقة"
@@ -374,12 +379,28 @@ class Button:
     view_data = "عرض البيانات"
     view_more = "عرض المزيد"
 class WalletSecurity:
-    header = "الكلمات المفردة هي مجموعة من الكلمات تستخدم لاستعادة أصول المحفظة، امتلاك الكلمات المفردة يعني أنه يمكنك استخدام أصولك، احفظها جيدًا"
-
+    header = "اكتب كلمات المساعدة الخاصة بك على ورقة واجعلها في مكان آمن"
     tips = [
-        "1. يرجى فحص سلامة البيئة، التأكد من عدم وجود مراقبين أو كاميرات",
-        "2. يرجى نسخ الكلمات المفردة بالترتيب الصحيح، ولا تشارك الكلمات المفردة مع أي شخص",
-        "3. يرجى حفظ الكلمات المفردة في مكان آمن دون اتصال بالإنترنت، لا تقم بنسخ الكلمات المفردة إلكترونيًا، ولا تقم بتحميلها على الإنترنت",
+        {
+            "level": "info",
+            "msgs": [
+                "#00001F يجب حفظ كلمات المساعدة في مكان آمن#",
+                "#18794E * احفظها في خزنة مصرفية#",
+                "#18794E * احفظها في صندوق حصانة#",
+                "#18794E * احفظها في أماكن سرية متعددة#",
+            ]
+        },
+        {
+            "level": "warning",
+            "msgs": [
+                "#00001F لابد أن تحذر#",
+                "#CD2B31 * اطمئن إلى حفظ كلمات المساعدة#",
+                "#CD2B31 * لا تفقدها#",
+                "#CD2B31 * لا تخبر أي شخص آخر بها#",
+                "#CD2B31 * لا تخزنها على الإنترنت#",
+                "#CD2B31 * لا تخزنها على الكمبيوتر#",
+            ]
+        },
     ]
 
 class MnemonicSecurity:
