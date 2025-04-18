@@ -5,7 +5,7 @@ from trezor import io, utils, loop, log
 from trezor.ui.screen.statusbar import StatusBar
 battery = io.Battery()
 
-LOW_STATE_OF_CHARGE = 50
+LOW_STATE_OF_CHARGE = 20
 
 
 async def updating_battery_state():
