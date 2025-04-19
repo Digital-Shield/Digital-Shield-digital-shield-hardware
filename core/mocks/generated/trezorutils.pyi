@@ -101,12 +101,6 @@ def usb_data_connected() -> bool:
     Returns whether USB has been enumerated/configured
     (and is not just connected by cable without data pins)
     """
-
-def power_off() -> None:
-    """
-    Power off the device.
-    """
-
 SCM_REVISION: bytes
 BUILD_ID: bytes
 VERSION_MAJOR: int
