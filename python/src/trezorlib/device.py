@@ -429,3 +429,9 @@ def emmc_dir_make(client: "TrezorClient", path_dir: str) -> "MessageType":
 def emmc_dir_remove(client: "TrezorClient", path_dir: str) -> "MessageType":
     resp = client.call(messages.EmmcDirRemove(path=path_dir))
     return resp
+
+# EmmcDirRemove
+@session
+def write_sn(client: "TrezorClient", sn: str) -> "MessageType":
+    resp = client.call(messages.DeviceInfoSettings(serial_no=sn))
+    return resp

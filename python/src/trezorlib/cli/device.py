@@ -758,3 +758,12 @@ def emmc_dir_make(client: "TrezorClient", path: str) -> None:
 @with_client
 def emmc_dir_remove(client: "TrezorClient", path: str) -> None:
     device.emmc_dir_remove(client, path)
+
+# write-sn
+@cli.command()
+# fmt: off
+@click.argument("sn")
+# fmt: on
+@with_client
+def write_sn(client: "TrezorClient", sn: str) -> None:
+    device.write_sn(client, sn)
