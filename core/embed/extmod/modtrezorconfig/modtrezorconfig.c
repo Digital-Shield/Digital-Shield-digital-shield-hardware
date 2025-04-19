@@ -534,19 +534,20 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorconfig_se_export_mnemonic_obj,
 ///     """
 STATIC mp_obj_t mod_trezorconfig_get_serial(void) {
   mp_obj_t res;
-
-  // a mock serial number,
-  char *dev_serial = "DS2401310001";
-  res = mp_obj_new_str_copy(&mp_type_bytes, (const uint8_t *)dev_serial,
+  char* dev_serial = NULL;
+  if (device_get_serial(&dev_serial)) {
+    res = mp_obj_new_str_copy(&mp_type_bytes, (const uint8_t *)dev_serial,
                               strlen(dev_serial));
-  // if (device_get_serial(&dev_serial)) {
-  //   res = mp_obj_new_str_copy(&mp_type_bytes, (const uint8_t *)dev_serial,
-  //                             strlen(dev_serial));
-  // } else {
-  //   res = mp_obj_new_str_copy(&mp_type_bytes, (const uint8_t *)"NULL",
-  //                             strlen("NULL"));
-  // }
-
+  } else {
+#if !PRODUCTION
+    // a mock serial number,
+    dev_serial = "DS2401310001";
+#else
+    dev_serial = "NULL";
+#endif
+    res = mp_obj_new_str_copy(&mp_type_bytes, (const uint8_t *)dev_serial,
+                                strlen(dev_serial));
+  }
   return res;
 }
 
