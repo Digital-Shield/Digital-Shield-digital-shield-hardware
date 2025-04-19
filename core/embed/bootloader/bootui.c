@@ -443,8 +443,8 @@ void ui_screen_done(int restart_seconds, secbool full_redraw) {
   if (sectrue == full_redraw) {
     display_clear();
     ui_title_update();
-    display_image(203, 56, 74, 74, toi_icon_74x74 + 12,
-                  sizeof(toi_icon_74x74) - 12);
+    display_image(203, 56, 74, 74, toi_icon_logo + 12,
+                  sizeof(toi_icon_logo) - 12);
   }
   // display_loader(1000, false, -20, COLOR_BL_DONE, COLOR_BL_BG, toi_icon_done,
   //                sizeof(toi_icon_done), COLOR_BL_BG);
@@ -803,8 +803,8 @@ void ui_bootloader_second(const image_header *const hdr) {
 }
 
 void ui_bootloader_factory(void) {
-  display_image(203, 108, 74, 74, toi_icon_74x74 + 12,
-                sizeof(toi_icon_74x74) - 12);
+  display_image(203, 108, 74, 74, toi_icon_logo + 12,
+                sizeof(toi_icon_logo) - 12);
   display_text_center(DISPLAY_RESX / 2, 277, "Factory Mode", -1,
                       FONT_PJKS_BOLD_38, COLOR_BL_FG, COLOR_BL_BG);
 }

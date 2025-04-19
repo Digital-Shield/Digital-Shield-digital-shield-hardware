@@ -30,7 +30,7 @@
 #include "mipi_lcd.h"
 #include "mpu.h"
 #include "sdram.h"
-#include "se.h"
+#include "se_thd89.h"
 #include "spi.h"
 #include "sys.h"
 #include "usart.h"
@@ -306,6 +306,18 @@ static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_
         case MSG_NAME_TO_ID(EmmcDirRemove): // EmmcDirRemove
             process_msg_EmmcDirRemove(USB_IFACE_NUM, msg_size, buf);
             break;
+        case MSG_NAME_TO_ID(ReadSEPublicKey): // ReadSEPublicKey
+            process_msg_ReadSEPublicKey(USB_IFACE_NUM, msg_size, buf);
+            break;
+        case MSG_NAME_TO_ID(WriteSEPublicCert): // WriteSEPublicCert
+            process_msg_WriteSEPublicCert(USB_IFACE_NUM, msg_size, buf);
+            break;
+        case MSG_NAME_TO_ID(ReadSEPublicCert): // ReadSEPublicCert
+            process_msg_ReadSEPublicCert(USB_IFACE_NUM, msg_size, buf);
+            break;
+        case MSG_NAME_TO_ID(SESignMessage): // SESignMessage
+            process_msg_SESignMessage(USB_IFACE_NUM, msg_size, buf);
+            break;
         default:
             process_msg_unknown(USB_IFACE_NUM, msg_size, buf);
             break;
@@ -559,7 +571,8 @@ int main(void)
         serial_set = true; // TODO: need debug.
     }
 
-    // se_init();
+    se_init();
+
     if ( !cert_set )
     {                    // if se certificate is not set
                          //   uint32_t cert_len = 0;

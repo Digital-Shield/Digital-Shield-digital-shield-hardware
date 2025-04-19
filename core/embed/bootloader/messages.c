@@ -1032,13 +1032,13 @@ void process_msg_GetDeviceInfo(uint8_t iface_num, uint32_t msg_size,
 
 void process_msg_ReadSEPublicKey(uint8_t iface_num, uint32_t msg_size,
                                  uint8_t *buf) {
-  uint8_t pubkey[64] = {0};
+  uint8_t pubkey[65] = {0};
   MSG_RECV_INIT(ReadSEPublicKey);
   MSG_RECV(ReadSEPublicKey);
 
   MSG_SEND_INIT(SEPublicKey);
   if (se_get_pubkey(pubkey)) {
-    MSG_SEND_ASSIGN_REQUIRED_BYTES(public_key, pubkey, 64);
+    MSG_SEND_ASSIGN_REQUIRED_BYTES(public_key, pubkey, 65);
     MSG_SEND(SEPublicKey);
   } else {
     send_failure(iface_num, FailureType_Failure_ProcessError,

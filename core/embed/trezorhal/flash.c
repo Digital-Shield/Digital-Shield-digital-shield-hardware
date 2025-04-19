@@ -166,6 +166,10 @@ const uint8_t STORAGE_SECTORS[STORAGE_SECTORS_COUNT] = {
     FLASH_SECTOR_STORAGE_2,
 };
 
+const uint8_t SE_STORAGE_SECTORES[SE_STORAGE_SECTORS_COUNT] = {
+    FLASH_SECTOR_SE_STORAGE,
+};
+
 secbool flash_unlock_write(void) {
   HAL_FLASH_Unlock();
 #if defined(STM32H747xx)
@@ -214,6 +218,12 @@ const void *flash_get_address(uint8_t sector, uint32_t offset, uint32_t size) {
                           (sector - FLASH_SECTOR_STORAGE_1) *
                               FLASH_STORAGE_SECTOR_SIZE +
                           offset);
+  } else if (sector == FLASH_SECTOR_SE_STORAGE) {
+    if (offset + size > FLASH_SE_STORAGE_SECTOR_SIZE) {
+      return NULL;
+    }
+    return (const void *)(QSPI_FLASH_BASE_ADDRESS + QSPI_FLASH_DEVICE_CERT_OFFSET +
+                          offset);
   }
   return NULL;
 }
@@ -238,6 +248,8 @@ secbool flash_erase_sectors(const uint8_t *sectors, int len,
       qspi_flash_erase_block_64k((sectors[i] - FLASH_SECTOR_STORAGE_1) *
                                      QSPI_SECTOR_SIZE +
                                  QSPI_FLASH_STORAG_OFFSET);
+    } else if (sectors[i] == FLASH_SECTOR_SE_STORAGE) {
+      qspi_flash_erase_block_64k(QSPI_FLASH_DEVICE_CERT_OFFSET);
     } else {
       ensure(flash_unlock_write(), NULL);
       FLASH_EraseInitTypeDef EraseInitStruct;
@@ -388,7 +400,10 @@ uint32_t flash_sector_size(uint8_t sector) {
   } else if (sector >= FLASH_SECTOR_STORAGE_1 &&
              sector <= FLASH_SECTOR_STORAGE_2) {
     return FLASH_STORAGE_SECTOR_SIZE;
+  } else if (sector == FLASH_SECTOR_SE_STORAGE) {
+    return QSPI_SECTOR_SIZE;
   }
+
   return 0;
 }
 

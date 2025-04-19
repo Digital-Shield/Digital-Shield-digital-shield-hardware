@@ -221,6 +221,7 @@ class Title:
     invalid_data = "Invalid Data Format"
     low_power = "Low Battery"
     collect_nft = "Collect NFT"
+    verify_device ="Verify device"
 
 class Tip:
     swipe_down_to_close = "Swipe Down to Close"
@@ -376,6 +377,7 @@ class Text:
     low_power_message = "Battery at {}%\nPlease charge"
     collect_nft = "Are you sure collect the NFT?"
     replace_nft = "Do you want to collect this NFT? You have reach the storage limit, this will remove the oldest uploaded NFT."
+    verify_device = "Are you sure to authenticate your device with the DigitShield server? Tap confirm to check whether your device is genuine and without tampered."
 
 class WalletSecurity:
     header = "Write recovery phrase on paper and store securely"

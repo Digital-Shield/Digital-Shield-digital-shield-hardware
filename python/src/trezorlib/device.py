@@ -245,6 +245,10 @@ def se_read_cert(client: "TrezorClient") -> "MessageType":
     out = client.call(messages.ReadSEPublicCert())
     return out
 
+@expect(messages.SEPublicKey)
+def se_read_public_key(client: "TrezorClient") -> "MessageType":
+    out = client.call(messages.ReadSEPublicKey())
+    return out
 
 @session
 def upload_res(

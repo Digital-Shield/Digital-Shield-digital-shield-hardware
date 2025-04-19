@@ -171,6 +171,9 @@ async def confirm_collect_nft(ctx, replace: bool = False):
         msg,
     )
 
+async def confirm_verify_device(ctx):
+    await confirm_action(ctx, i18n.Title.verify_device, i18n.Text.verify_device)
+
 ## wipe device
 async def confirm_wipe_device(ctx: wire.GenericContext):
     from trezor.ui.screen.confirm import SimpleConfirm
