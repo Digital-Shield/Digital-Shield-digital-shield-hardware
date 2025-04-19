@@ -124,7 +124,13 @@ def get_features() -> Features:
         f.wipe_code_protection = config.has_wipe_code()
         f.passphrase_always_on_device = storage.device.get_passphrase_always_on_device()
         f.safety_checks = safety_checks.read_setting()
-        f.auto_lock_delay_ms = storage.device.get_autolock_delay_ms()
+        auto_lock_delay = storage.device.get_autolock_delay_ms()
+
+        # `auto_lock_delay_ms` is uint32 in `Features`
+        # we use -1 as never, but can't encode to uint32, we change it to MAX_INT
+        if auto_lock_delay < 0:
+            auto_lock_delay = 0xFFFFFFFF
+        f.auto_lock_delay_ms = auto_lock_delay
         f.display_rotation = storage.device.get_rotation()
         f.experimental_features = storage.device.get_experimental_features()
 
