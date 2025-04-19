@@ -1,5 +1,5 @@
 #include "emmc_commands.h"
-#include "embed/bootloader/bootui.h"
+#include "bootui.h"
 #include "emmc_commands_macros.h"
 
 #include "supervise.h"
