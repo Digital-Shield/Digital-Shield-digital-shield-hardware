@@ -13,3 +13,5 @@ $BINCTL -D vendorheader_unsafe_signed_dev.bin
 
 cp -a vendorheader_digitshield_test_unsigned.bin vendorheader_digitshield_test_signed.bin
 $BINCTL -D vendorheader_digitshield_test_signed.bin
+
+cp -a vendorheader_digitshield_unsigned.bin vendorheader_digitshield_signed.bin
