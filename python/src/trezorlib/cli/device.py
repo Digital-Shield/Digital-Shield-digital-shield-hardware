@@ -342,6 +342,20 @@ def se_read_public_key(obj: "TrezorConnection") -> dict:
         }
 
 @cli.command()
+@click.pass_obj
+@click.argument("message")
+def se_sign_message(obj: "TrezorConnection", message: str) -> dict:
+    """Get device se public key.
+
+    Used in device verify.
+    """
+    with obj.client_context() as client:
+        sig = device.se_sign_message(client, message.encode()).signature
+        return {
+            "signature": sig.hex()
+        }
+
+@cli.command()
 # fmt: off
 @click.option("-f", "--fullpath", help="The full path of the file to upload")
 @click.option("-z", "--zoompath", help="The zoom file of the image to upload")
