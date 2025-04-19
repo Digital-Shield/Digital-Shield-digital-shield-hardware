@@ -511,7 +511,7 @@ int main(void)
     SystemCoreClockUpdate();
 
     /* Enable the CPU Cache */
-    // cpu_cache_enable();
+    cpu_cache_enable();
 
     mpu_config_bootloader();
 
@@ -558,13 +558,13 @@ int main(void)
 
     // bus_fault_disable();
     // /* Initialize the LCD */
-    // TODO: add boot ui
+    sdram_init();
+
     battery_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
-    display_clear();
 
-    // device_para_init(); // TODO: need debug.
+    device_para_init();
     if ( !serial_set )
     {
         serial_set = device_serial_set();
@@ -609,6 +609,7 @@ int main(void)
          cert_set == false || res_set == false )
     {
         display_clear();
+        ui_fadein();
         ui_bootloader_first(NULL);
         if ( bootloader_usb_loop(NULL, NULL) != sectrue )
         {

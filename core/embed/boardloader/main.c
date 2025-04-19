@@ -409,12 +409,11 @@ int main(void) {
   emmc_init();
   fatfs_init();
 
-
-
   lcd_init(DISPLAY_RESX, DISPLAY_RESY, LCD_PIXEL_FORMAT_RGB565);
   lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
   display_clear();
   lcd_pwm_init();
+  display_backlight(0);
 
   if (startup_mode_flag != STAY_IN_BOARDLOADER_FLAG &&
       startup_mode_flag != STAY_IN_BOOTLOADER_FLAG) {
@@ -427,7 +426,7 @@ int main(void) {
   if (startup_mode_flag == STAY_IN_BOARDLOADER_FLAG) {
     mode = BOARD_MODE;
     *STAY_IN_FLAG_ADDR = 0;
-  } 
+  }
   if (startup_mode_flag == STAY_IN_BOOTLOADER_FLAG) {
     mode = BOOT_MODE;
   }
@@ -435,6 +434,7 @@ int main(void) {
 #if !PRODUCTION
   if (mode == BOARD_MODE) {
     //如果是指令强制进boardloader，加载U盘模式
+    display_backlight(80);
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");
@@ -447,7 +447,7 @@ int main(void) {
     }
   }
 #endif
-  
+
 
   if (mode == BOOT_MODE) {
     *STAY_IN_FLAG_ADDR = STAY_IN_BOOTLOADER_FLAG;
@@ -486,6 +486,7 @@ int main(void) {
   //boot_present = sectrue;  //调试bootloader的时候才打开
   if (boot_present == secfalse) {
     //如果Flash上面没有Boot，同时emmc上面也没有可用于升级的boot，则加载U盘模式
+    display_backlight(80);
     display_printf(BOARD_VERSION);
     display_printf("USB Mass Storage Mode\n");
     display_printf("======================\n\n");

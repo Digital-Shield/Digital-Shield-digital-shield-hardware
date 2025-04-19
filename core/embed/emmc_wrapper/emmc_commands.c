@@ -1,4 +1,5 @@
 #include "emmc_commands.h"
+#include "embed/bootloader/bootui.h"
 #include "emmc_commands_macros.h"
 
 #include "supervise.h"
@@ -700,6 +701,8 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         // hal_delay(50);
 
         // ui start install
+        ui_bootloader_ble_name_reset();
+        ui_bootloader_moding();
         ui_fadeout();
         ui_screen_progress_bar_prepare("Installing", NULL);
         ui_fadein();

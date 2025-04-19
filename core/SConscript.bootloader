@@ -166,6 +166,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/uart_log.c',
     'embed/trezorhal/lowlevel.c',
     'embed/trezorhal/touch.c',
+    'embed/trezorhal/sdram.c',
 ]
 
 # emmc wrapper

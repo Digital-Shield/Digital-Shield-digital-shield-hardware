@@ -45,10 +45,11 @@
 #include "image.h"
 #include "sys.h"
 #include "usb.h"
+#include "stdio.h"
 extern secbool load_vendor_header_keys(const uint8_t *const data,
                                        vendor_header *const vhdr);
 
-#define BACKLIGHT_NORMAL 150
+#define BACKLIGHT_NORMAL 80
 
 #define COLOR_BL_BG COLOR_BLACK                    // background
 #define COLOR_BL_FG COLOR_WHITE                    // foreground
@@ -713,6 +714,10 @@ void ui_bootloader_first(const image_header *const hdr) {
                       FONT_PJKS_BOLD_26, COLOR_BL_FG, COLOR_BL_ICON);
 }
 
+void ui_bootloader_ble_name_reset(void) {
+  ble_name_show = false;
+}
+
 void ui_bootloader_second(const image_header *const hdr) {
   ui_bootloader_page_current = 1;
 
@@ -800,6 +805,10 @@ void ui_bootloader_second(const image_header *const hdr) {
   display_bar(241, 694, 231, 98, COLOR_BL_ICON);
   display_text_center(DISPLAY_RESX - DISPLAY_RESX / 4, 755, "Restart", -1,
                       FONT_PJKS_BOLD_26, COLOR_BL_DONE, COLOR_BL_ICON);
+}
+
+void ui_bootloader_moding(void){
+  ui_bootloader_page_current = 0xFF;
 }
 
 void ui_bootloader_factory(void) {
