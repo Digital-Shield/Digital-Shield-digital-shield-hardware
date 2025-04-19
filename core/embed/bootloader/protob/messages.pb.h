@@ -300,7 +300,7 @@ typedef struct _ReadSEPublicKey {
     char dummy_field;
 } ReadSEPublicKey;
 
-typedef PB_BYTES_ARRAY_T(64) SEPublicKey_public_key_t;
+typedef PB_BYTES_ARRAY_T(65) SEPublicKey_public_key_t;
 typedef struct _SEPublicKey {
     SEPublicKey_public_key_t public_key;
 } SEPublicKey;
