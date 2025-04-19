@@ -37,7 +37,6 @@
 #include "ports/stm32/pendsv.h"
 
 #include "button.h"
-#include "bl_check.h"
 #include "board_capabilities.h"
 #include "common.h"
 #include "compiler_traits.h"
@@ -138,9 +137,6 @@ int main(void) {
   // #if !defined TREZOR_MODEL_1
   //   parse_boardloader_capabilities();
 
-#if PRODUCTION
-  check_and_replace_bootloader();
-#endif
   // #endif
 
   // Init peripherals

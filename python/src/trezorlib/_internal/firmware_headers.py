@@ -210,7 +210,14 @@ class VendorHeader(SignableImage):
     def __init__(self, fw: c.Container) -> None:
         super().__init__(fw)
         self.header = fw.vendor_header
-        self.public_keys = firmware.V2_BOOTLOADER_KEYS
+        self._identify_dev_keys()
+
+    def _identify_dev_keys(self) -> None:
+        # try checking signature with dev keys first
+        self.public_keys = firmware.V2_BOOTLOADER_DEV_KEYS
+        if not self.check_signature().is_ok():
+            # validation with dev keys failed, use production keys
+            self.public_keys = firmware.V2_BOOTLOADER_KEYS
 
     def check_signature(self) -> Status:
         return _check_signature_any(

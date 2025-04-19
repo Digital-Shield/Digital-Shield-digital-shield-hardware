@@ -48,8 +48,8 @@
 
 // TODO: change verification policy
 #if PRODUCTION
-const uint8_t BOARDLOADER_KEY_M = 4;
-const uint8_t BOARDLOADER_KEY_N = 7;
+const uint8_t BOARDLOADER_KEY_M = 2;
+const uint8_t BOARDLOADER_KEY_N = 3;
 #else
 const uint8_t BOARDLOADER_KEY_M = 2;
 const uint8_t BOARDLOADER_KEY_N = 3;
@@ -58,6 +58,9 @@ const uint8_t BOARDLOADER_KEY_N = 3;
 // TODO add our own keys to verify firmware
 static const uint8_t * const BOARDLOADER_KEYS[] = {
 #if PRODUCTION
+(const uint8_t *)"\xEE\xD4\xE5\x12\x3D\x60\x81\x4F\x2D\xD6\x86\x6A\x68\x86\x2F\x24\xE9\x38\x78\x34\x3E\x69\x60\xD2\x52\x25\x69\x51\x12\xCA\xA3\x77",
+(const uint8_t *)"\x30\x37\x00\xC4\x5C\xAD\x09\xD3\xDA\xBE\x17\x6E\x16\xEC\x24\xF0\xA6\xA8\x56\x80\x9F\x5E\x8E\x09\x57\x92\x57\x09\x10\x16\xF8\xCF",
+(const uint8_t *)"\x24\xED\x84\xE2\x66\x73\x5D\x7C\x7A\x44\xE4\x66\xE6\xAA\xD4\x43\xA5\x5E\x6A\xD7\x50\x41\x46\x71\x00\x6A\xF0\xD0\x16\xC7\x63\x42",
 #else
 // Digitalshield dev_key
 (const uint8_t

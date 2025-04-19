@@ -1,6 +1,6 @@
 #include "uart_log.h"
 
-#if defined (UART_LOG)
+#if !PRODUCTION
 #include "stm32h7xx_hal_uart.h"
 static UART_HandleTypeDef uart;
 
@@ -131,5 +131,10 @@ int _write(int file, char *ptr, int len) {
     return len;
 }
 
+#else 
+int uart_log_init(void) {
+  return 0;
+}
+size_t uart_print(const char *str, size_t len) {(void)str;return len;}
 
-#endif // endif UART_LOG
+#endif // endif PRODUCTION

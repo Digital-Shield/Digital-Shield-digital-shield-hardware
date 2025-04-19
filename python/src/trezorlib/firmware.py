@@ -43,7 +43,9 @@ V1_BOOTLOADER_KEYS = [
 V2_BOARDLOADER_KEYS = [
     bytes.fromhex(key)
     for key in (
-        # add user keys
+    "eed4e5123d60814f2dd6866a68862f24e93878343e6960d25225695112caa377",
+    "303700c45cad09d3dabe176e16ec24f0a6a856809f5e8e09579257091016f8cf",
+    "24ed84e266735d7c7a44e466e6aad443a55e6ad750414671006af0d016c76342",
     )
 ]
 
@@ -55,12 +57,21 @@ V2_BOARDLOADER_DEV_KEYS = [
     )
 ]
 
-V2_BOOTLOADER_KEYS = [
+V2_BOOTLOADER_DEV_KEYS = [
     bytes.fromhex(key)
     for key in (
         "d759793bbc13a2819a827c76adb6fba8a49aee007f49f2d0992d99b825ad2c48",
         "6355691c178a8ff91007a7478afb955ef7352c63e7b25703984cf78b26e21a56",
         "b8307a71f552c60a4cbb317ff48b82cdbf6b6bb5f04c920fec7badf017883751",
+    )
+]
+
+V2_BOOTLOADER_KEYS = [
+    bytes.fromhex(key)
+    for key in (
+        "eed4e5123d60814f2dd6866a68862f24e93878343e6960d25225695112caa377",
+        "303700c45cad09d3dabe176e16ec24f0a6a856809f5e8e09579257091016f8cf",
+        "24ed84e266735d7c7a44e466e6aad443a55e6ad750414671006af0d016c76342",
     )
 ]
 
