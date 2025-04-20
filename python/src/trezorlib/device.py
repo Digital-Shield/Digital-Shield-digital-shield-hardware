@@ -239,6 +239,9 @@ def unlock_path(client: "TrezorClient", n: "Address") -> "MessageType":
 def reboot(client: "TrezorClient", boot: bool=True) -> "MessageType":
     return client.call(messages.RebootToBootloader() if boot else messages.RebootToBoardloader())
 
+def se_write_cert(client: "TrezorClient", cert: str) -> "MessageType":
+    out = client.call(messages.WriteSEPublicCert(public_cert=cert.encode()))
+    return out
 
 @expect(messages.SEPublicCert)
 def se_read_cert(client: "TrezorClient") -> "MessageType":

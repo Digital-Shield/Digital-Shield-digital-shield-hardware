@@ -316,6 +316,18 @@ def reboot_to_boardloader(obj: "TrezorConnection") -> str:
             click.echo(f"Reboot to boardloader is not support on Digitshield {client.features.model}")
         return device.reboot(client, False)
 
+@cli.command()
+@click.pass_obj
+@click.argument("cert")
+def se_write_cert(obj: "TrezorConnection", cert: str) -> None:
+    """Get device se cert.
+
+    Used in device verify.
+    """
+    with obj.client_context() as client:
+        cert_bytes = device.se_write_cert(client, cert)
+        return cert_bytes
+
 
 @cli.command()
 @click.pass_obj
