@@ -46,7 +46,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_thd89_get_public_key_obj,
 ///     Read device certificate.
 ///     """
 STATIC mp_obj_t mod_thd89_read_certificate(void) {
-  uint8_t cert[1024];
+  uint8_t cert[2048];
   uint32_t cert_len = sizeof(cert);
   if (!se_read_certificate(cert, &cert_len)) {
     mp_raise_ValueError("read certificate failed");

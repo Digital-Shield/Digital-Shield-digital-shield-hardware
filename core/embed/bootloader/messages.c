@@ -1066,7 +1066,7 @@ void process_msg_ReadSEPublicCert(uint8_t iface_num, uint32_t msg_size,
   MSG_RECV(ReadSEPublicCert);
 
   uint32_t cert_len = 0;
-  uint8_t cert[416] = {0};
+  uint8_t cert[2048] = {0};
 
   MSG_SEND_INIT(SEPublicCert);
   if (se_read_certificate(cert, &cert_len)) {
