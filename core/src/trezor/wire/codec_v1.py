@@ -39,9 +39,9 @@ async def read_message(iface: Interface, buffer: utils.BufferType) -> Message:
     # wait for initial report
     report = await iface.read()
 
-    if __debug__:
-        log.debug(__name__, "got message")
-        log.debug(__name__, f"message: {binascii.hexlify(report)}")
+    # if __debug__:
+    #     log.debug(__name__, "got message")
+    #     log.debug(__name__, f"message: {binascii.hexlify(report)}")
 
     # if the screen is turn off then turn on it
     if not ui.display.backlight():
@@ -72,8 +72,8 @@ async def read_message(iface: Interface, buffer: utils.BufferType) -> Message:
     while nread < msize:
         # wait for continuation report
         report = await iface.read()
-        if __debug__:
-            log.debug(__name__, f"message: {binascii.hexlify(report)}")
+        # if __debug__:
+        #     log.debug(__name__, f"message: {binascii.hexlify(report)}")
         if report[0] != _REP_MARKER:
             raise CodecError("Invalid magic")
 
@@ -99,9 +99,9 @@ async def write_message(iface: Interface, mtype: int, mdata: bytes) -> None:
     ustruct.pack_into(
         _REP_INIT, report, 0, _REP_MARKER, _REP_MAGIC, _REP_MAGIC, mtype, msize
     )
-    if __debug__:
-        log.debug(__name__, "writing message")
-        log.debug(__name__, f"message: {binascii.hexlify(report)}")
+    # if __debug__:
+    #     log.debug(__name__, "writing message")
+    #     log.debug(__name__, f"message: {binascii.hexlify(report)}")
     nwritten = 0
     while True:
         # copy as much as possible to the report buffer
