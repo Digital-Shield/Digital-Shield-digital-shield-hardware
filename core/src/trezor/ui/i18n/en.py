@@ -126,6 +126,7 @@ class Button:
     view_full_message = "View Full Message"
     view_data = "View Data"
     view_more = "View More"
+    update = "Update"
 
 class Title:
     enter_old_pin = "Enter Current PIN"
@@ -222,6 +223,8 @@ class Title:
     low_power = "Low Battery"
     collect_nft = "Collect NFT"
     verify_device ="Verify device"
+    update_bootloader = "Update bootloader"
+    update_resource = "Update resource"
 
 class Tip:
     swipe_down_to_close = "Swipe Down to Close"
@@ -378,6 +381,8 @@ class Text:
     collect_nft = "Are you sure collect the NFT?"
     replace_nft = "Do you want to collect this NFT? You have reach the storage limit, this will remove the oldest uploaded NFT."
     verify_device = "Are you sure to authenticate your device with the DigitShield server? Tap confirm to check whether your device is genuine and without tampered."
+    update_bootloader = "Do you want to update bootloader?"
+    update_resource = "Do you want to update device resource?"
 
 class WalletSecurity:
     header = "Write recovery phrase on paper and store securely"
