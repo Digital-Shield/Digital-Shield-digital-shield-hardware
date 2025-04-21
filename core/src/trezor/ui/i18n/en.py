@@ -46,7 +46,7 @@ class Guide:
     terms_describe_disclaimers = 'This information is not financial advice. Seek professional advice before making decisions.'
 
     terms_title_contact_us = 'Contact Us'
-    terms_describe_contact_us = 'For questions or concerns, email us at support@digitshield.com'
+    terms_describe_contact_us = 'For questions or concerns, email us at www.ds.pro@gmail.com'
 
     accept_tems = 'I. Acceptance of Terms'
     use_range = '1. Scope of Application'

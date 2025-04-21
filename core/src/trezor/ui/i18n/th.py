@@ -24,27 +24,27 @@ class Security:
     change_pin = "PIN 코드 변경"
     backup_mnemonic = "니모닉 백업"
     check_mnemonic = "니모닉 확인"
-    wipe_device = "장치 지우기"
+    wipe_device = "기기 초기화"
 
 #### guide App
 class Guide:
     about = "Digit Shield 정보"
-    terms_of_use = '이용 약관'
-    device_info = '장치 정보'
+    terms_of_use = '이용약관'
+    device_info = '기기 정보'
     firmware_update = '펌웨어 업데이트'
-    terms_title_terms_us = 'Digit Shield 이용 약관'
-    terms_describe_terms_us = '전체 버전의 이용 약관에 액세스하려면 다음 링크를 방문하십시오:\n http://digitshield.com/terms'
+    terms_title_terms_us = 'Digit Shield 이용약관'
+    terms_describe_terms_us = '이용약관 전문을 보시려면 아래 링크를 방문해 주세요:\n http://digitshield.com/terms'
 
     terms_title_product_services = 'Digit Shield 제품 및 서비스'
-    terms_describe_product_services = '우리의 하드웨어 지갑은 암호화폐를 안전하게 관리합니다'
-    terms_title_risks = '위험'
-    terms_describe_risks = '암호화폐와 기술적 취약점과 관련된 위험에 주의하십시오.'
-    terms_title_disclaimers = '면책 조항'
-    terms_describe_disclaimers = '제공된 정보는 금융 조언이 아닙니다. 결정을 내리기 전에 전문가의 조언을 구하십시오.'
+    terms_describe_product_services = '당사의 하드웨어 지갑은 암호화폐를 안전하게 관리합니다'
+    terms_title_risks = '위험 안내'
+    terms_describe_risks = '암호화폐 및 기술적 취약성과 관련된 위험에 유의하십시오.'
+    terms_title_disclaimers = '면책조항'
+    terms_describe_disclaimers = '제공되는 정보는 재무적 조언이 아닙니다. 결정을 내리기 전에 전문가의 조언을 구하십시오.'
     terms_title_contact_us = '문의하기'
-    terms_describe_contact_us = '질문이나 우려 사항이 있으면 www.ds.pro@gmail.com으로 이메일을 보내주십시오'
+    terms_describe_contact_us = '궁금한 사항이 있으면 www.ds.pro@gmail.com으로 이메일을 보내주세요.'
     
-    accept_tems = '약관 동의'
+    accept_tems = '1. 약관 동의'
     use_range = '1. 적용 범위'
     range_include = '이 약관은 Digital Shield 지갑을 통해 제공되는 모든 서비스에 적용됩니다.'
     range_include_1 = '하드웨어 지갑의 구매, 활성화, 사후 서비스; Digital Shield 모바일 앱(안드로이드/iOS/Goolg)의 다운로드, 설치, 기능 사용; 펌웨어 업그레이드 서비스(보안 패치, 기능 향상 버전 포함); 다중 체인 디지털 자산 관리(BTC, ETH 등 3000개 이상의 토큰 저장 및 전송 지원); 기술 지원(장치 고장 해결, 트랜잭션 서명 이상 처리 등).'
@@ -81,78 +81,78 @@ class Guide:
     service_interruption_2 = '불가항력적인 요인으로 인한 데이터 손실에 대해서는 배상 책임을 지지 않습니다.'
 
     
-    device_label = "장치 이름"
+    device_label = "장비 이름"
     device_title_firmware_version = '펌웨어 버전'
     device_title_serial_number = '시리얼 번호'
     bluetooth_name = "블루투스 이름"
     bluetooth_version = "블루투스 버전"
-    firmware_title_1 = '1. 장치의 배터리가 20% 이상인지 확인하십시오'
-    firmware_title_2 = '2. USB-C 케이블로 장치를 컴퓨터에 연결하십시오'
-    firmware_title_3 = '3. "펌웨어 업데이트"를 클릭하십시오'
+    firmware_title_1 = '1. 장치의 배터리가 20% 이상인지 확인하세요'
+    firmware_title_2 = '2. USB-C 케이블로 장치를 컴퓨터에 연결하세요'
+    firmware_title_3 = '3. 「펌웨어 업그레이드」를 클릭하세요'
     firmware_title_caution = '경고'
-    firmware_describe_caution = '업그레이드 중에는 USB 연결이 안정되어 있는지 확인하십시오'
+    firmware_describe_caution = '업그레이드 중에는 USB 연결이 유지되도록 하세요'
     equipment_info = '장비 정보'
     equipment_name = '장비 이름'
     equipment_version = '장비 버전'
 
 class Nft:
-    nft_item ="{} 항목"
-    nft_items ="{} 항목"
+    nft_item ="{} 아이템"
+    nft_items ="{} 아이템들"
 class Title:
-    enter_old_pin = "이전 PIN 코드를 입력하십시오"
-    enter_new_pin = "새 PIN 코드를 입력하십시오"
-    enter_pin = "PIN 코드를 입력하십시오"
-    enter_pin_again = "다시 PIN 코드를 입력하십시오"
-    select_language = "언어 선택"
+    enter_old_pin = "기존 PIN 코드를 입력하세요"
+    enter_new_pin = "새 PIN 코드를 입력하세요"
+    enter_pin = "PIN 코드를 입력하세요"
+    enter_pin_again = "PIN 코드를 다시 입력하세요"
+    select_language = "언어"
     create_wallet = "지갑 생성"
     wallet = "지갑"
     import_wallet = "지갑 가져오기"
-    restore_wallet = "지갑 복원"
-    wallet_is_ready = "지갑이 준비되었습니다"
-    select_word_count = "단어 수 선택"
+    restore_wallet = "지갑 복구"
+    wallet_is_ready = "지갑 준비 완료"
+    select_word_count = "단어 개수 선택"
     wallet_security = "지갑 보안"
-    pin_security = "PIN 보안 힌트"
-    mnemonic_security = "니모닉 보안 힌트"
+    pin_security = "PIN 보안 안내"
+    mnemonic_security = "니모닉 보안 안내"
     backup_mnemonic = "니모닉 백업"
-    enter_mnemonic = "니모닉을 입력하십시오"
+    enter_mnemonic = "니모닉을 입력하세요"
     check_mnemonic = "니모닉 확인"
     success = "성공"
     operate_success = "작업 성공"
-    theme_success = "테마 전환 성공"
+    theme_success = "테마 변경 성공"
     warning = "경고"
     error = "오류"
     verified = "니모닉 백업 완료"
-    invalid_mnemonic = "잘못된 니모닉"
-    pin_not_match = "PIN 코드가 일치하지 않습니다"
-    check_recovery_mnemonic = "복원 니모닉 확인"
-    mnemonic_not_match = "니모닉이 일치하지 않습니다"
+    invalid_mnemonic = "유효하지 않은 니모닉"
+    pin_not_match = "PIN 불일치"
+    check_recovery_mnemonic = "복구 니모닉 확인"
+    mnemonic_not_match = "니모닉 불일치"
     power_off = "전원 끄기"
     restart = "재시작"
     change_language = "언어 변경"
-    wipe_device = "장치 지우기"
+    wipe_device = "기기 초기화"
     bluetooth_pairing = "블루투스 페어링"
     address="{} 주소"
     public_key = "{} 공개키"
     xpub = "{} XPub"
-    transaction = "{} 거래"
-    transaction_detail = "거래 상세"
-    confirm_transaction = "거래 확인"
+    transaction = "{} 트랜잭션"
+    transaction_detail = "트랜잭션 상세정보"
+    confirm_transaction = "트랜잭션 확인"
     confirm_message = "메시지 확인"
     signature = "서명 결과"
-    wrong_pin = "잘못된 PIN 코드"
-    pin_changed = "PIN 코드가 변경되었습니다"
-    pin_enabled = "PIN 코드가 활성화되었습니다"
-    pin_disabled = "PIN 코드가 비활성화되었습니다"
-    unknown_token = "알려지지 않은 토큰"
+    wrong_pin = "PIN 오류"
+    pin_changed = "PIN 변경됨"
+    pin_enabled = "PIN 활성화됨"
+    pin_disabled = "PIN 비활성화됨"
+    unknown_token = "알 수 없는 토큰"
     view_data = "데이터 보기"
     sign_message = "{} 메시지 서명"
     verify_message = "{} 메시지 검증"
-    typed_data = "{} 구조화된 데이터"
-    typed_hash = "{} 구조화된 해시"
+    typed_data = "{} 구조화 데이터"
+    typed_hash = "{} 구조화 해시"
     system_update = "시스템 업데이트"
-    entering_boardloader = "보드로더 진입"
-    remove_credential = "凭据 삭제"
-    list_credentials = "凭据 목록"
+    entering_boardloader = "보드로더 진입 중"
+    remove_credential = "인증서 삭제"
+    list_credentials = "인증서 목록"
     authorize_coinjoin = "CoinJoin 승인"
     multisig_address_m_of_n = "{} 다중서명 주소\n({} of {})"
     u2f_register = "U2F 등록"
@@ -162,140 +162,140 @@ class Title:
     fido2_unregister = "FIDO2 등록 해제"
     fido2_authenticate = "FIDO2 인증"
     finalize_transaction = "거래 완료"
-    meld_transaction = "거래 병합"
+    meld_transaction = "거래 통합"
     update_transaction = "거래 업데이트"
     high_fee = "높은 요금"
-    fee_is_high = "수수료가 높습니다"
+    fee_is_high = "수수료 과다"
     confirm_locktime = "잠금 시간 확인"
-    view_transaction = "거래 보기"
+    view_transaction = "거래 확인"
     x_confirm_payment = "{} 결제 확인"
-    confirm_replacement = "교체 거래 확인"
+    confirm_replacement = "거래 대체 확인"
     x_transaction = "{} 거래"
     x_joint_transaction = "{} 공동 거래"
-    change_label = "장치 이름 변경"
+    change_label = "기기 이름 변경"
     enable_passphrase = "Passphrase 활성화"
     disable_passphrase = "Passphrase 비활성화"
     passphrase_source = "Passphrase 입력 설정"
-    enable_safety_checks ="안전 확인 활성화"
-    disable_safety_checks ="안전 확인 비활성화"
+    enable_safety_checks ="안전 검사 활성화"
+    disable_safety_checks ="안전 검사 비활성화"
     experiment_mode = "실험 모드"
-    set_as_homescreen = "홈 화면으로 설정"
-    get_next_u2f_counter = "다음 U2F 카운터 가져오기"
+    set_as_homescreen = "홈화면으로 설정"
+    get_next_u2f_counter = "U2F 카운터 가져오기"
     set_u2f_counter = "U2F 카운터 설정"
     encrypt_value = "데이터 암호화"
     decrypt_value = "데이터 복호화"
-    confirm_entropy = "엔트로피 내보내기"
+    confirm_entropy = "엔트로피 추출"
     memo = "메모"
-    import_credential = "凭据 가져오기"
-    export_credential = "凭据 내보내기"
+    import_credential = "인증서 가져오기"
+    export_credential = "인증서 내보내기"
     asset = "자산"
     unimplemented = "구현되지 않음"
-    invalid_data="유효하지 않은 데이터 형식"
+    invalid_data="잘못된 데이터 형식"
     low_power = "배터리 부족"
     collect_nft = "NFT 수집"
 
 class Text:
-    tap_to_unlock = "터치하여 잠금 해제"
-    unlocking = "장치를 해제하는 중..."
-    str_words = "#FFFFFF {}# 개의 단어"
-    backup_manual = "니모닉을 종이에 적어 안전한 곳에 보관하십시오"
-    check_manual = "아래 단어를 순서대로 클릭하십시오"
-    backup_verified = "니모닉 백업이 완료되었습니다. 다른 사람과 공유하지 마십시오"
-    backup_invalid = "입력한 니모닉이 올바르지 않습니다. 백업한 니모닉을 확인하고 다시 시도하십시오"
-    pin_not_match = "입력한 PIN 코드가 올바르지 않습니다. 다시 시도하십시오"
-    please_wait = "잠시 기다리십시오"
-    wiping_device = "장치 데이터를 지우는 중..."
-    create_wallet = "새로운 니모닉을 생성하여 지갑을 만듭니다"
-    restore_wallet = "백업한 니모닉에서 지갑을 복원합니다"
-    restore_mnemonic_match = "니모닉이 일치합니다. 백업이 올바릅니다"
-    restore_success = "지갑 복원 성공"
-    create_success = "니모닉이 성공적으로 백업되었으며 지갑이 생성되었습니다"
-    check_recovery_mnemonic = "니모닉이 완전히 일치하는지 확인하십시오"
-    invalid_recovery_mnemonic = "입력한 니모닉이 유효하지 않습니다. 니모닉을 확인하고 다시 시도하십시오"
-    check_recovery_not_match = "입력한 니모닉은 유효하지만 장치의 니모닉과 일치하지 않습니다"
+    tap_to_unlock = "잠금 해제를 터치하세요"
+    unlocking = "기기 잠금 해제 중..."
+    str_words = "#FFFFFF {}# 단어"
+    backup_manual = "니모닉을 수동으로 기록하여 안전한 장소에 보관하세요"
+    check_manual = "아래 단어들을 순서대로 터치해주세요"
+    backup_verified = "니모닉 백업이 완료되었습니다. 안전하게 보관하고 누구와도 공유하지 마세요"
+    backup_invalid = "입력한 니모닉이 올바르지 않습니다. 백업한 니모닉을 확인 후 다시 시도해주세요"
+    pin_not_match = "입력한 PIN 코드가 올바르지 않습니다. 다시 시도해주세요"
+    please_wait = "잠시만 기다려주세요"
+    wiping_device = "기기 데이터 삭제 중..."
+    create_wallet = "새 니모닉 생성으로 지갑 만들기"
+    restore_wallet = "백업한 니모닉으로 지갑 복구하기"
+    restore_mnemonic_match = "니모닉이 일치합니다. 백업이 정확하게 이루어졌습니다"
+    restore_success = "지갑 복구 성공"
+    create_success = "니모닉 백업이 완료되었으며 지갑이 생성되었습니다"
+    check_recovery_mnemonic = "니모닉을 확인하고 완전히 일치하는지 확인해주세요"
+    invalid_recovery_mnemonic = "입력한 니모닉이 유효하지 않습니다. 니모닉을 확인 후 다시 시도해주세요"
+    check_recovery_not_match = "입력한 니모닉은 유효하지만, 기기에 저장된 니모닉과 일치하지 않습니다"
     shutting_down = "전원을 끄는 중..."
     restarting = "재시작하는 중..."
-    never = "안 함"
+    never = "사용 안 함"
     second = "초"
     seconds = "초"
     minute = "분"
     minutes = "분"
-    changing_language = "언어를 변경하고 있습니다\n이 설정을 적용하면 장치가 다시 시작됩니다"
-    change_pin = "장치를 보호하기 위해 4~16자리의 PIN 코드를 설정하십시오"
-    wipe_device = "장치를 공장 출고 상태로 복원합니다.\n경고: 이 작업은 장치의 모든 데이터를 지웁니다."
+    changing_language = "언어를 변경합니다\n이 설정을 적용하면 기기가 재시작됩니다"
+    change_pin = "4~16자리 PIN 코드를 설정하여 기기를 보호하세요"
+    wipe_device = "기기를 공장 초기 상태로 복구합니다.\n경고: 기기의 모든 데이터가 삭제됩니다"
     wipe_device_check = [
-        "장치를 지우면 모든 데이터가清除됩니다",
-        "데이터를 복구할 수 없습니다",
+        "기기 초기화 시 모든 데이터가 삭제됩니다",
+        "삭제된 데이터는 복구할 수 없습니다",
         "니모닉을 백업했습니다",
     ]
-    wipe_device_success = "기기 데이터가 성공적으로 삭제되었습니다\n 기기를 재부팅하세요..."
-    bluetooth_pair = "장치에서 페어링 코드를 입력하십시오"
+    wipe_device_success = "기기 데이터 삭제 완료\n기기를 재시작하는 중..."
+    bluetooth_pair = "기기에 페어링 코드를 입력하세요"
     bluetooth_pair_failed = "블루투스 페어링 실패"
     path = "파생 경로:"
     chain_id = "체인 ID:"
-    send = "보내기"
-    to = "받는 사람"
+    send = "전송"
+    to = "수신처"
     amount = "금액"
-    from_ = "보내는 사람"
-    receiver = "받는 사람"
+    from_ = "발신처"
+    receiver = "수신자"
     fee = "수수료"
     max_fee = "최대 수수료"
-    max_priority_fee_per_gas = "가스당 최대 우선 순위 수수료"
-    max_fee_per_gas = "가스당 거래 수수료 상한"
+    max_priority_fee_per_gas = "최대 우선순위 수수료"
+    max_fee_per_gas = "Gas 당 최대 수수료"
     max_gas_limit = "Giới hạn khí tối đa:"
     gas_unit_price = "Giá đơn vị khí:"
     gas_price = "가스 가격"
     total = "총액"
     do_sign_this_transaction = "이 {} 거래에 서명하시겠습니까?"
-    transaction_signed = "거래가 서명되었습니다"
+    transaction_signed = "거래 서명 완료"
     address = '주소:'
     public_key = "공개키:"
     xpub = "XPub:"
-    unknown_tx_type = "알려지지 않은 거래 유형, 입력 데이터를 확인하십시오"
+    unknown_tx_type = "알 수 없는 거래 유형입니다. 입력 데이터를 확인하세요"
     unknown_function = "알 수 없는 함수:"
-    use_app_scan_this_signature = "지갑 앱으로 서명 결과를 스캔하십시오"
+    use_app_scan_this_signature = "지갑 앱으로 서명 결과를 스캔하세요"
     internal_error = "내부 오류"
-    tap_switch_to_airgap = "에어갭 주소를 표시하려면QR코드를 터치하십시오"
-    tap_switch_to_receive = "지갑收款 주소를 표시하려면QR코드를 터치하십시오"
-    incorrect_pin_times_left = "PIN 코드가 잘못되었습니다. 남은 시도 횟수: {}"
-    incorrect_pin_last_time = "PIN 코드가 잘못되었습니다. 마지막 기회입니다"
-    wrong_pin = "잘못된 PIN 코드를 입력했습니다"
-    seedless = "시드가 없습니다"
+    tap_switch_to_airgap = "QR 코드를 탭하여 에어갭 주소 표시로 전환"
+    tap_switch_to_receive = "QR 코드를 탭하여 수신 주소 표시로 전환"
+    incorrect_pin_times_left = "PIN 오류, {}회 남았습니다"
+    incorrect_pin_last_time = "PIN 오류, 마지막 기회입니다"
+    wrong_pin = "잘못된 PIN 코드입니다"
+    seedless = "시드 없음"
     backup_failed = "백업 실패!"
-    need_backup = "백업이 필요합니다!"
-    pin_not_set = "PIN 코드가 설정되지 않았습니다!"
+    need_backup = "백업 필요!"
+    pin_not_set = "PIN 미설정!"
     experimental_mode = "실험 모드"
-    pin_change_success = "PIN 코드가 성공적으로 변경되었습니다"
-    pin_enable_success = "PIN 코드가 성공적으로 활성화되었습니다"
-    pin_disable_success = "PIN 코드가 성공적으로 비활성화되었습니다"
-    contract = "계약:"
-    new_contract = "새 계약?"
+    pin_change_success = "PIN 코드 변경 성공"
+    pin_enable_success = "PIN 코드 활성화 성공"
+    pin_disable_success = "PIN 코드 비활성화 성공"
+    contract = "컨트랙트:"
+    new_contract = "새 컨트랙트?"
     bytes_ = "{} 바이트"
     message = "메시지:"
-    no_message = "메시지를 포함하지 않음"
+    no_message = "메시지 없음"
     contains_x_key = "{} 키 포함"
-    array_of_x_type = "타입 {}의 배열 {}"
-    do_sign_712_typed_data = "이 구조화된 데이터 거래에 서명하시겠습니까?"
-    do_sign_typed_hash = "이 구조화된 해시 거래에 서명하시겠습니까?"
+    array_of_x_type = "{} {} 배열"
+    do_sign_712_typed_data = "이 구조화 데이터 거래에 서명하시겠습니까?"
+    do_sign_typed_hash = "이 구조화 해시 거래에 서명하시겠습니까?"
     domain_hash = "도메인 해시:"
     message_hash = "메시지 해시:"
     switch_to_update_mode = "업데이트 모드로 전환"
-    switch_to_boardloader = "보드로더 모드로 전환"
-    list_credentials = "이 장치에 저장된凭据 정보를 내보내시겠습니까?"
-    coinjoin_at_x = "다음 Coinjoin 거래에 참여하시겠습니까?:\n{}"
-    signature_is_valid = "서명이 유효합니다"
-    signature_is_invalid = "서명이 유효하지 않습니다"
+    switch_to_boardloader = "보드 로더 모드로 전환"
+    list_credentials = "이 기기에 저장된 인증서 정보를 내보내시겠습니까?"
+    coinjoin_at_x = "다음 Coinjoin 거래에 참여하시겠습니까?\n{}"
+    signature_is_valid = "서명 유효"
+    signature_is_invalid = "서명 무효"
     u2f_already_registered = "U2F 이미 등록됨"
-    u2f_not_registered = "U2F 등록되지 않음"
-    fido2_already_registered_x = "FIDO2 이미 등록됨 {}"
+    u2f_not_registered = "U2F 미등록"
+    fido2_already_registered_x = "FIDO2 {} 등록 완료"
     fido2_verify_user = "FIDO2 사용자 인증"
-    device_already_registered_x = "장치 이미 등록됨 {}"
-    device_verify_user = "장치 사용자 인증"
-    fee_is_unexpectedly_high = "수수료가 예상보다 높습니다"
+    device_already_registered_x = "기기 {} 등록 완료"
+    device_verify_user = "기기 사용자 인증"
+    fee_is_unexpectedly_high = "수수료 과다"
     too_many_change_outputs = "잔돈 출력이 너무 많습니다"
-    change_count = "잔돈 수량"
-    locktime_will_have_no_effect = "잠금 시간은 영향을 미치지 않습니다"
-    confirm_locktime_for_this_transaction = "이 거래의 잠금 시간을 확인하십시오"
+    change_count = "잔돈 개수"
+    locktime_will_have_no_effect = "잠금 시간 영향 없음"
+    confirm_locktime_for_this_transaction = "이 거래의 잠금 시간 확인"
     block_height = "블록 높이"
     time = "시간"
     amount_increased = "금액 증가"
@@ -303,61 +303,61 @@ class Text:
     fee_unchanged = "수수료 변경 없음"
     fee_increased = "수수료 증가"
     fee_decreased = "수수료 감소"
-    your_spend = "지출 금액"
+    your_spend = "사용 금액"
     change_label_to_x = "라벨을 {}로 변경"
     enable_passphrase = "Passphrase 암호화를 활성화하시겠습니까?"
     disable_passphrase = "Passphrase 암호화를 비활성화하시겠습니까?"
-    enable_passphrase_always = "항상 기기에서 Passphrase를 입력하시겠습니까?"
-    revoke_enable_passphrase_always = "항상 기기에서 Passphrase를 입력하는 설정을 취소하시겠습니까?"
-    auto_lock_x = "{} 후 자동 잠금하시겠습니까?"
-    enable_safety_checks = "엄격한 안전 확인을 실행하시겠습니까? 이는 더 포괄적인 보안 보호를 제공합니다."
-    disable_safety_checks = "안전 확인을 비활성화하시겠습니까? 계속하기 전에 이 작업의 잠재적인 보안 위험을 이해하십시오."
+    enable_passphrase_always = "항상 이 기기에서 Passphrase를 입력하시겠습니까?"
+    revoke_enable_passphrase_always = "기기에서 항상 Passphrase 입력 설정을 취소하시겠습니까?"
+    auto_lock_x = "{} 후 자동 잠금을 설정하시겠습니까?"
+    enable_safety_checks = "엄격한 안전 검사를 실행하시겠습니까? 더 포괄적인 보안이 제공됩니다."
+    disable_safety_checks = "안전 검사를 비활성화하시겠습니까? 계속하기 전에 잠재적 보안 위험을 숙지하세요."
     enable_experiment_mode = "실험 모드를 활성화하시겠습니까?"
-    set_as_homescreen = "홈 화면으로 설정하시겠습니까?"
-    replace_homescreen = "홈 화면을 교체하시겠습니까? 이 작업은 가장 먼저 업로드한 배경화면을 삭제합니다."
+    set_as_homescreen = "홈 화면을 변경하시겠습니까?"
+    replace_homescreen = "홈 화면을 교체하시겠습니까? 가장 오래된 배경화면이 삭제됩니다."
     confirm_replace_wallpaper = "홈 화면의 배경화면을 교체하시겠습니까?"
     get_next_u2f_counter = "다음 U2F 카운터를 가져오시겠습니까?"
     set_u2f_counter_x = "U2F 카운터를 {}로 설정하시겠습니까?"
-    confirm_entropy = "엔트로피를 내보내시겠습니까? 무엇을 하는지 확실하게 이해한 후에 계속하십시오!"
+    confirm_entropy = "엔트로피를 추출하시겠습니까? 진행 전에 작업 내용을 반드시 확인하세요!"
     bandwidth = "대역폭"
     energy = "에너지"
-    sender = "보내는 사람"
-    recipient = "받는 사람"
+    sender = "송신자"
+    recipient = "수신자"
     resource = "자원"
-    frozen_balance = "동결된 잔액"
-    unfrozen_balance = "해동된 잔액"
-    delegated_balance = "위임된 잔액"
-    undelegated_balance = "위임 해지된 잔액"
-    you_are_freezing = "자산을 동결하고 있습니다"
-    you_are_unfreezing = "자산을 해동하고 있습니다"
-    you_are_delegating = "자산을 위임하고 있습니다"
-    you_are_undelegating = "자산의 위임을 해지하고 있습니다"
+    frozen_balance = "동결 금액"
+    unfrozen_balance = "해제 금액"
+    delegated_balance = "위임 금액"
+    undelegated_balance = "위임 취소 금액"
+    you_are_freezing = "자산을 동결하는 중입니다"
+    you_are_unfreezing = "자산을 해제하는 중입니다"
+    you_are_delegating = "자산을 위임하는 중입니다"
+    you_are_undelegating = "위임을 취소하는 중입니다"
     duration = "지속 시간"
     lock = "잠금"
-    unlock = "잠금 해제"
-    all = "모두"
-    source = "소스"
+    unlock = "해제"
+    all = "전체"
+    source = "출처"
     tip = "팁"
-    keep_alive = "계속 실행"
-    invalid_ur = "지원하지 않는 QR 코드 유형, 다시 시도하세요"
-    sequence_number = "일련 번호"
+    keep_alive = "연결 유지"
+    invalid_ur = "지원되지 않는 QR 코드 유형입니다. 다시 시도하세요"
+    sequence_number = "일련번호"
     expiration_time = "만료 시간"
-    argument_x = "매개 변수 #{}"
-    low_power_message = "배터리가 {}% 남았습니다.\n충전하세요"
+    argument_x = "인수 #{}"
+    low_power_message = "배터리 {}% 남음\n충전이 필요합니다"
     collect_nft = "이 NFT를 수집하시겠습니까?"
     replace_nft = "이 NFT를 수집하시겠습니까? 저장 공간이 제한되어 있어 가장 오래된 업로드된 NFT가 제거됩니다."
 
 class Tip:
-    swipe_down_to_close = "아래로 스와이프하여 닫기"
+    swipe_down_to_close = "닫으려면 아래로 스와이프하세요"
 
 class Button:
     done = "완료"
     ok = "확인"
-    confirm = "확인"
-    reject = "거부"
+    confirm = "승인"
+    reject = "거절"
     next = "다음"
     cancel = "취소"
-    redo = "재생성"
+    redo = "다시 생성"
     continue_ = "계속"
     try_again = "재시도"
     power_off = "전원 끄기"
@@ -365,10 +365,10 @@ class Button:
     hold = "길게 누르기"
     address = "주소"
     qr_code = "QR 코드"
-    view_detail = "상세 정보 보기"
-    hold_to_sign = "길게 누르고 서명"
-    hold_to_wipe = "길게 누르고 지우기"
-    receive = "받기 주소"
+    view_detail = "상세 보기"
+    hold_to_sign = "서명하려면 길게 누르세요"
+    hold_to_wipe = "초기화하려면 길게 누르세요"
+    receive = "수신 주소"
     airgap = "에어갭"
     sign = "서명"
     verify = "검증"
@@ -376,55 +376,53 @@ class Button:
     view_full_struct = "전체 구조 보기"
     view_full_message = "전체 메시지 보기"
     view_data = "데이터 보기"
-    view_more = "更多 보기"
+    view_more = "더 보기"
 
 class WalletSecurity:
-    header = "니모닉을 종이에 적어 안전한 곳에 보관하십시오"
+    header = "종이에 니모닉을 적어 안전한 곳에 보관하세요"
     tips = [
         {
             "level": "info",
             "msgs": [
-                "#00001F 니모닉은 안전하게 보관해야 합니다#",
+                "#00001F  니모닉은 안전하게 보관해야 합니다#",
                 "#18794E * 은행 금고에 보관#",
-                "#18794E * 보험箱에 보관#",
-                "#18794E * 여러 비밀 장소에 보관#",
+                "#18794E * 안전 금고에 보관#",
+                "#18794E * 여러 비밀 장소에 분산 보관#",
             ]
         },
         {
             "level": "warning",
             "msgs": [
-                "#00001F 주의해야 합니다#",
-                "#CD2B31 * 니모닉을 기억하세요#",
-                "#CD2B31 *丧失하지 마십시오#",
-                "#CD2B31 * 다른 사람에게 알리지 마십시오#",
-                "#CD2B31 * 온라인에 저장하지 마십시오#",
-                "#CD2B31 * 컴퓨터에 저장하지 마십시오#",
+                "#00001F 반드시 주의하세요#",
+                "#CD2B31 * 니모닉 백업을 꼭 기억하세요#",
+                "#CD2B31 * 분실하지 마세요#",
+                "#CD2B31 * 타인에게 알려주지 마세요#",
+                "#CD2B31 * 인터넷에 저장하지 마세요#",
+                "#CD2B31 * 컴퓨터에 저장하지 마세요#",
             ]
         },
     ]
 
 class MnemonicSecurity:
-    header = "니모닉은 지갑 자산을 복원하는 일련의 문구입니다. 니모닉을 소유하면 자산을 사용할 수 있습니다. 잘 관리하십시오"
+    header = "니모닉은 지갑 자산을 복구하기 위한 단어 조합입니다. 니모닉을 소유한다는 것은 자산을 사용할 수 있다는 의미이므로 안전하게 보관하세요."
 
     tips = [
-        "1. 환경의 안전을 확인하고 관찰자나 카메라가 없는지 확인하십시오",
-        "2. 문구의 올바른 순서대로 니모닉을 백업하고 다른 사람과 공유하지 마십시오",
-        "3. 안전한 곳에서 오프라인으로 니모닉을 보관하십시오. 전자 방식으로 백업하지 마십시오. 인터넷에 올리지 마십시오",
+        "1. 주변 환경이 안전한지 확인하고, 주변에 다른 사람이나 카메라가 없는지 확인하세요",
+        "2. 단어의 정확한 순서대로 니모닉을 백업하고, 절대 누구와도 공유하지 마세요",
+        "3. 안전한 장소에 오프라인으로 보관하세요. 전자 방식으로 백업하거나 인터넷에 업로드하지 마세요",
     ]
 
 class PinSecurity:
-    header = "PIN 코드는 현재 장치에 액세스하기 위한 비밀번호입니다. 다음 지침에 따라 PIN 코드를 올바르게 사용하십시오"
+    header = "PIN 코드는 기기 접근을 위한 비밀번호로, 현재 기기의 접근 권한을 부여합니다. 아래 안내에 따라 올바르게 사용하세요."
     tips = [
-        "1. PIN 코드를 설정하거나 입력할 때 환경의 안전을 확인하고 관찰자나 카메라가 없는지 확인하십시오",
-        "2. 4-16자리의 강력한 PIN 코드를 설정하십시오. 연속 또는 반복되는 숫자를 사용하지 마십시오",
-        "3. PIN 코드의 최대 재시도 횟수는 10회이며, 10회 연속으로 잘못 입력하면 장치가 재설정됩니다",
-        "4. PIN 코드를 안전하게 보관하십시오. 다른 사람에게 알리지 마십시오",
+        "1. PIN 설정/입력 시 주변 안전 확인 - 주변에 타인이나 카메라 없는지 확인",
+        "2. 보안 강한 4~16자리 PIN 설정 (연속/반복 숫자 사용 금지)",
+        "3. PIN 오류 10회 시 기기 초기화 조치됨", 
+        "4. PIN 코드 절대 타인과 공유 금지",
     ]
 
 class Solana:
-    ata_reciver = "받는 사람(연결된 토큰 계정)"
-    ata_sender = "보내는 사람(연결된 토큰 계정)"
+    ata_reciver = "수신자(연동 토큰 계정)"
+    ata_sender = "송신자(연동 토큰 계정)"
     source_owner = "거래 서명자"
-    fee_payer = "수수료 지불자"
-   
-
+    fee_payer = "수수료 납부자"

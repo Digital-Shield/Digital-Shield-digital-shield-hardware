@@ -13,9 +13,9 @@ class Setting:
     language = "Ngôn ngữ"
     vibration = "Phản hồi chạm"
     brightness = "Độ sáng màn hình"
-    auto_lock = "Khóa tự động"
-    auto_shutdown = "Tắt máy tự động"
-    animation = "Hoạt hình chuyển đổi"
+    auto_lock = "Tự động khóa"
+    auto_shutdown = "Tự động tắt nguồn"
+    animation = "Hiệu ứng chuyển cảnh"
     wallpaper = "Hình nền"
     power_off = "Tắt máy"
     restart = "Khởi động lại"
@@ -23,29 +23,30 @@ class Setting:
 #### Security App
 class Security:
     change_pin = "Thay đổi mã PIN"
-    backup_mnemonic = "Sao lưu cụm từ ghi nhớ"
-    check_mnemonic = "Kiểm tra cụm từ ghi nhớ"
-    wipe_device = "Xóa sạch thiết bị"
+    backup_mnemonic = "Sao lưu cụm từ khôi phục"
+    check_mnemonic = "Kiểm tra cụm từ khôi phục"
+    wipe_device = "Xóa dữ liệu thiết bị"
 
 #### guide App
 class Guide:
-    about = "Giới thiệu về Digit Shield"
+    about = "Về Digit Shield"
     terms_of_use = 'Điều khoản sử dụng'
     device_info = 'Thông tin thiết bị'
-    firmware_update = 'Cập nhật phần mềm'
+    firmware_update = 'Nâng cấp firmware'
     terms_title_terms_us = 'Điều khoản sử dụng Digit Shield'
-    terms_describe_terms_us = 'Để truy cập bản đầy đủ các điều khoản sử dụng, vui lòng truy cập liên kết sau:\n http://digitshield.com/terms'
+    terms_describe_terms_us = 'Để xem toàn bộ điều khoản sử dụng, vui lòng truy cập liên kết sau:\n http://digitshield.com/terms'
 
-    terms_title_product_services = 'Sản phẩm và dịch vụ của Digit Shield'
-    terms_describe_product_services = 'Ví phần cứng của chúng tôi quản lý tiền mã hóa một cách an toàn'
+    terms_title_product_services = 'Sản phẩm và dịch vụ Digit Shield'
+    terms_describe_product_services = 'Ví cứng của chúng tôi giúp quản lý tiền mã hóa một cách an toàn'
     terms_title_risks = 'Rủi ro'
-    terms_describe_risks = 'Vui lòng lưu ý các rủi ro liên quan đến tiền mã hóa và các lỗ hổng kỹ thuật.'
-    terms_title_disclaimers = 'Miễn trừ trách nhiệm'
-    terms_describe_disclaimers = 'Thông tin được cung cấp không phải là tư vấn tài chính. Vui lòng tìm kiếm lời khuyên chuyên nghiệp trước khi đưa ra bất kỳ quyết định nào.'
+    terms_describe_risks = 'Xin luru y các rüi ro lien quan den tien ma hóa và ló hóng cóng nghê.'
+    terms_title_disclaimers = 'Tuyên bố miễn trừ trách nhiệm'
+
+    terms_describe_disclaimers = 'Thông tin cung cấp không phải là lời khuyên tài chính. Vui lòng tham khảo ý kiến chuyên gia trước khi đưa ra quyết định.'
     terms_title_contact_us = 'Liên hệ chúng tôi'
-    terms_describe_contact_us = 'Nếu bạn có bất kỳ câu hỏi hoặc mối quan tâm nào, vui lòng gửi email tới www.ds.pro@gmail.com'
-    
-    accept_tems = 'Chấp nhận các điều khoản'
+    terms_describe_contact_us = 'Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào, vui lòng gửi email cho chúng tôi tại www.ds.pro@gmail.com'
+
+    accept_tems = '1. Chấp nhận các điều khoản'
     use_range = '1. Phạm vi áp dụng'
     range_include = 'Các điều khoản này áp dụng cho tất cả các dịch vụ được cung cấp thông qua ví Digital Shield.'
     range_include_1 = 'Mua, kích hoạt, dịch vụ sau bán hàng của ví cứng; Tải xuống, cài đặt, sử dụng các tính năng của ứng dụng di động Digital Shield (Android/iOS/Goolg); Dịch vụ nâng cấp phần mềm (bao gồm bản vá bảo mật, bản cập nhật cải thiện tính năng); Quản lý tài sản số đa chuỗi (hỗ trợ lưu trữ và chuyển giao hơn 3000 mã token như BTC, ETH, v.v.); Hỗ trợ kỹ thuật (gỡ lỗi thiết bị, xử lý các trường hợp không khớp chữ ký giao dịch, v.v.).'
@@ -82,15 +83,15 @@ class Guide:
     service_interruption_2 = 'Chúng tôi không chịu trách nhiệm bồi thường cho mất mát dữ liệu do các yếu tố bất khả kháng.'
     
     device_label = "Tên thiết bị"
-    device_title_firmware_version = 'Phiên bản phần mềm'
-    device_title_serial_number = 'Số sê-ri'
+    device_title_firmware_version = 'Phiên bản firmware'
+    device_title_serial_number = 'Số serial'
     bluetooth_name = "Tên Bluetooth"
     bluetooth_version = "Phiên bản Bluetooth"
-    firmware_title_1 = '1. Vui lòng đảm bảo rằng pin thiết bị trên 20%'
+    firmware_title_1 = '1. Đảm bảo thiết bị có pin trên 20%'
     firmware_title_2 = '2. Kết nối thiết bị với máy tính bằng cáp USB-C'
-    firmware_title_3 = '3. Nhấp vào "Cập nhật phần mềm"'
+    firmware_title_3 = '3. Nhấp vào "Nâng cấp firmware"'
     firmware_title_caution = 'Cảnh báo'
-    firmware_describe_caution = 'Trong quá trình cập nhật, vui lòng đảm bảo kết nối USB ổn định'
+    firmware_describe_caution = 'Trong quá trình nâng cấp, hãy đảm bảo kết nối USB ổn định'
     equipment_info = 'Thông tin thiết bị'
     equipment_name = 'Tên thiết bị'
     equipment_version = 'Phiên bản thiết bị'
@@ -99,62 +100,62 @@ class Nft:
     nft_item ="{} mục"
     nft_items ="{} mục"
 class Title:
-    enter_old_pin = "Vui lòng nhập mã PIN cũ"
-    enter_new_pin = "Vui lòng nhập mã PIN mới"
-    enter_pin = "Vui lòng nhập mã PIN"
-    enter_pin_again = "Vui lòng nhập lại mã PIN"
-    select_language = "Chọn ngôn ngữ"
+    enter_old_pin = "Nhập mã PIN cũ"
+    enter_new_pin = "Nhập mã PIN mới"
+    enter_pin = "Nhập mã PIN"
+    enter_pin_again = "Nhập lại mã PIN"
+    select_language = "Ngôn ngữ"
     create_wallet = "Tạo ví"
-    wallet = "Ví tiền"
-    import_wallet = "Ví nhập khẩu"
-    restore_wallet = "Phục hồi ví"
+    wallet = "Ví"
+    import_wallet = "Nhập ví"
+    restore_wallet = "Khôi phục ví"
     wallet_is_ready = "Ví đã sẵn sàng"
     select_word_count = "Chọn số lượng từ"
     wallet_security = "Bảo mật ví"
-    pin_security = "Mẹo bảo mật mã PIN"
-    mnemonic_security = "Mẹo bảo mật cụm từ ghi nhớ"
-    backup_mnemonic = "Sao lưu cụm từ ghi nhớ"
-    enter_mnemonic = "Vui lòng nhập cụm từ ghi nhớ"
-    check_mnemonic = "Kiểm tra cụm từ ghi nhớ"
+    pin_security = "Lưu ý bảo mật PIN"
+    mnemonic_security = "Lưu ý bảo mật cụm từ khôi phục"
+    backup_mnemonic = "Sao lưu cụm từ khôi phục"
+    enter_mnemonic = "Nhập cụm từ khôi phục"
+    check_mnemonic = "Kiểm tra cụm từ khôi phục"
     success = "Thành công"
-    operate_success = "Hoạt động thành công"
-    theme_success = "Chuyển đổi chủ đề thành công"
+    operate_success = "Thao tác thành công"
+    theme_success = "Đổi chủ đề thành công"
     warning = "Cảnh báo"
     error = "Lỗi"
-    verified = "Đã sao lưu cụm từ ghi nhớ"
-    invalid_mnemonic = "Cụm từ ghi nhớ không hợp lệ"
-    pin_not_match = "Mã PIN không khớp"
-    check_recovery_mnemonic = "Kiểm tra cụm từ ghi nhớ phục hồi"
-    mnemonic_not_match = "Cụm từ ghi nhớ không khớp"
-    power_off = "Tắt máy"
+    verified = "Đã sao lưu cụm từ khôi phục"
+    invalid_mnemonic = "Cụm từ khôi phục không hợp lệ"
+    pin_not_match = "PIN không khớp"
+    check_recovery_mnemonic = "Kiểm tra cụm từ khôi phục"
+    mnemonic_not_match = "Cụm từ khôi phục không khớp"
+    power_off = "Tắt nguồn"
     restart = "Khởi động lại"
     change_language = "Thay đổi ngôn ngữ"
-    wipe_device = "Xóa sạch thiết bị"
-    bluetooth_pairing = "Kết nối Bluetooth"
-    address="{} Địa chỉ"
-    public_key = "{} Khóa công khai"
-    xpub = "{} XPub"
-    transaction = "{} Giao dịch"
+    wipe_device = "Xóa thiết bị"
+    bluetooth_pairing = "Ghép nối Bluetooth"
+    address="Địa chỉ {}"
+    public_key = "Khóa công khai {}"
+    xpub = "XPub {}"
+    transaction = "Giao dịch {}"
     transaction_detail = "Chi tiết giao dịch"
     confirm_transaction = "Xác nhận giao dịch"
-    confirm_message = "Xác nhận tin nhắn"
-    signature = "Kết quả ký"
-    wrong_pin = "Mã PIN sai"
-    pin_changed = "Mã PIN đã thay đổi"
-    pin_enabled = "Mã PIN đã bật"
-    pin_disabled = "Mã PIN đã tắt"
-    unknown_token = "Mã thông báo không xác định"
+    confirm_message = "Xác nhận thông điệp"
+    signature = "Kết quả chữ ký"
+    wrong_pin = "Sai PIN"
+    pin_changed = "Đã thay đổi PIN"
+    pin_enabled = "Đã bật PIN"
+    pin_disabled = "Đã tắt PIN"
+    unknown_token = "Token không xác định"
     view_data = "Xem dữ liệu"
-    sign_message = "{} Ký tin nhắn"
-    verify_message = "{} Xác minh tin nhắn"
-    typed_data = "{} Dữ liệu có cấu trúc"
-    typed_hash = "{} Hash có cấu trúc"
-    system_update = "Cập nhật hệ thống"
-    entering_boardloader = "Vào Boardloader"
-    remove_credential = "Xóa thông tin xác thực"
-    list_credentials = "Liệt kê thông tin xác thực"
+    sign_message = "Ký thông điệp {}"
+    verify_message = "Xác minh thông điệp {}"
+    typed_data = "Dữ liệu có cấu trúc {}"
+    typed_hash = "Hash có cấu trúc {}"
+    system_update = "Nâng cấp hệ thống"
+    entering_boardloader = "Đang vào Boardloader"
+    remove_credential = "Xóa chứng chỉ"
+    list_credentials = "Liệt kê chứng chỉ"
     authorize_coinjoin = "Ủy quyền CoinJoin"
-    multisig_address_m_of_n = "{} Địa chỉ đa chữ ký\n({} of {})"
+    multisig_address_m_of_n = "Địa chỉ đa chữ ký {}\n({} trên {})"
     u2f_register = "Đăng ký U2F"
     u2f_unregister = "Hủy đăng ký U2F"
     u2f_authenticate = "Xác thực U2F"
@@ -162,20 +163,20 @@ class Title:
     fido2_unregister = "Hủy đăng ký FIDO2"
     fido2_authenticate = "Xác thực FIDO2"
     finalize_transaction = "Hoàn tất giao dịch"
-    meld_transaction = "Hợp nhất giao dịch"
+    meld_transaction = "Giao dịch Meld"
     update_transaction = "Cập nhật giao dịch"
     high_fee = "Phí cao"
-    fee_is_high = "Phí quá cao"
+    fee_is_high = "Phí giao dịch quá cao"
     confirm_locktime = "Xác nhận thời gian khóa"
     view_transaction = "Xem giao dịch"
-    x_confirm_payment = "{} Xác nhận thanh toán"
+    x_confirm_payment = "Xác nhận thanh toán {}"
     confirm_replacement = "Xác nhận thay thế giao dịch"
-    x_transaction = "{} Giao dịch"
-    x_joint_transaction = "{} Giao dịch chung"
+    x_transaction = "Giao dịch {}"
+    x_joint_transaction = "Giao dịch liên hợp {}"
     change_label = "Thay đổi tên thiết bị"
-    enable_passphrase = "Bật mật khẩu"
-    disable_passphrase = "Tắt mật khẩu"
-    passphrase_source = "Cài đặt nhập mật khẩu"
+    enable_passphrase = "Bật Passphrase"
+    disable_passphrase = "Tắt Passphrase"
+    passphrase_source = "Cài đặt nhập Passphrase"
     enable_safety_checks ="Bật kiểm tra an toàn"
     disable_safety_checks ="Tắt kiểm tra an toàn"
     experiment_mode = "Chế độ thử nghiệm"
@@ -186,34 +187,34 @@ class Title:
     decrypt_value = "Giải mã dữ liệu"
     confirm_entropy = "Xuất entropy"
     memo = "Ghi chú"
-    import_credential = "Nhập thông tin xác thực"
-    export_credential = "Xuất thông tin xác thực"
+    import_credential = "Nhập chứng chỉ"
+    export_credential = "Xuất chứng chỉ"
     asset = "Tài sản"
-    unimplemented = "Chưa thực hiện"
+    unimplemented = "Chưa triển khai"
     invalid_data="Định dạng dữ liệu không hợp lệ"
-    low_power = "Pin thấp"
+    low_power = "Pin yếu"
     collect_nft = "Thu thập NFT"
 
 class Text:
-    tap_to_unlock = "Nhấn để mở khóa"
+    tap_to_unlock = "Chạm để mở khóa"
     unlocking = "Đang mở khóa thiết bị..."
     str_words = "#FFFFFF {}# từ"
-    backup_manual = "Viết cụm từ ghi nhớ ra giấy và lưu ở nơi an toàn"
-    check_manual = "Nhấn vào các từ dưới đây theo thứ tự"
-    backup_verified = "Bạn đã sao lưu cụm từ ghi nhớ, vui lòng lưu giữ cẩn thận, đừng chia sẻ với bất kỳ ai"
-    backup_invalid = "Cụm từ ghi nhớ bạn nhập không chính xác, vui lòng kiểm tra cụm từ ghi nhớ đã sao lưu và thử lại"
-    pin_not_match = "Mã PIN bạn nhập không chính xác, vui lòng thử lại"
-    please_wait = "Vui lòng đợi"
-    wiping_device = "Đang xóa sạch dữ liệu thiết bị..."
-    create_wallet = "Tạo một ví mới bằng cách sinh một cụm từ ghi nhớ mới"
-    restore_wallet = "Phục hồi ví từ cụm từ ghi nhớ đã sao lưu"
-    restore_mnemonic_match = "Cụm từ ghi nhớ khớp, bản sao lưu cụm từ ghi nhớ chính xác"
-    restore_success = "Phục hồi ví thành công"
-    create_success = "Cụm từ ghi nhớ đã được sao lưu thành công, ví đã được tạo"
-    check_recovery_mnemonic = "Vui lòng kiểm tra cụm từ ghi nhớ, xác nhận xem chúng có khớp hoàn toàn không"
-    invalid_recovery_mnemonic = "Cụm từ ghi nhớ bạn nhập không hợp lệ, vui lòng kiểm tra cụm từ ghi nhớ và thử lại"
-    check_recovery_not_match = "Cụm từ ghi nhớ bạn nhập là hợp lệ, nhưng không khớp với cụm từ ghi nhớ trong thiết bị"
-    shutting_down = "Đang tắt máy..."
+    backup_manual = "Ghi lại cụm từ khôi phục thủ công và lưu trữ ở nơi an toàn"
+    check_manual = "Nhấn vào các từ theo đúng thứ tự"
+    backup_verified = "Bạn đã hoàn thành sao lưu cụm từ khôi phục. Hãy lưu giữ cẩn thận và không chia sẻ với bất kỳ ai"
+    backup_invalid = "Cụm từ khôi phục bạn nhập không chính xác. Vui lòng kiểm tra và thử lại"
+    pin_not_match = "Mã PIN bạn nhập không chính xác. Vui lòng thử lại"
+    please_wait = "Vui lòng chờ"
+    wiping_device = "Đang xóa dữ liệu thiết bị..."
+    create_wallet = "Tạo cụm từ khôi phục mới để thiết lập ví"
+    restore_wallet = "Khôi phục ví từ cụm từ khôi phục đã sao lưu"
+    restore_mnemonic_match = "Cụm từ khôi phục của bạn khớp. Bạn đã sao lưu chính xác"
+    restore_success = "Khôi phục ví thành công"
+    create_success = "Bạn đã sao lưu cụm từ khôi phục thành công. Ví đã được tạo"
+    check_recovery_mnemonic = "Vui lòng kiểm tra cụm từ khôi phục để xác nhận khớp hoàn toàn"
+    invalid_recovery_mnemonic = "Cụm từ khôi phục bạn nhập không hợp lệ. Vui lòng kiểm tra và thử lại"
+    check_recovery_not_match = "Cụm từ khôi phục bạn nhập hợp lệ nhưng không khớp với thiết bị",
+    shutting_down = "Đang tắt nguồn..."
     restarting = "Đang khởi động lại..."
     never = "Không bao giờ"
     second = "giây"
@@ -221,129 +222,127 @@ class Text:
     minute = "phút"
     minutes = "phút"
     changing_language = "Bạn đang thay đổi ngôn ngữ\nÁp dụng cài đặt này sẽ khởi động lại thiết bị"
-    change_pin = "Đặt mã PIN dài từ 4~16 chữ số để bảo vệ thiết bị của bạn"
-    wipe_device = "Khôi phục thiết bị về trạng thái gốc.\nCảnh báo: Điều này sẽ xóa tất cả dữ liệu trên thiết bị của bạn."
+    change_pin = "Đặt mã PIN từ 4-16 chữ số để bảo vệ thiết bị của bạn"
+    wipe_device = "Khôi phục thiết bị về trạng thái ban đầu.\nCảnh báo: Thao tác này sẽ xóa mọi dữ liệu trên thiết bị của bạn"
     wipe_device_check = [
-        "Xóa sạch thiết bị sẽ xóa tất cả dữ liệu",
-        "Không thể khôi phục dữ liệu",
-        "Bạn đã sao lưu cụm từ ghi nhớ",
+        "Xóa thiết bị sẽ xóa tất cả dữ liệu",
+        "Dữ liệu không thể khôi phục",
+        "Đã sao lưu cụm từ khôi phục"
     ]
-    wipe_device_success = "Dữ liệu thiết bị đã được xóa thành công\n Vui lòng khởi động lại thiết bị ..."
+    wipe_device_success = "Thiết bị đã xóa dữ liệu thành công\nĐang khởi động lại thiết bị..."
     bluetooth_pair = "Vui lòng nhập mã ghép nối trên thiết bị của bạn"
     bluetooth_pair_failed = "Ghép nối Bluetooth thất bại"
-    path = "Đường dẫn phân cấp:"
+    path = "Đường dẫn:"
     chain_id = "Chain ID:"
     send = "Gửi"
-    to = "Tới"
-    amount = "Số tiền"
-    from_ = "Người gửi"
+    to = "đến"
+    amount = "Số lượng"
+    from_ = "Từ"
     receiver = "Người nhận"
     fee = "Phí"
     max_fee = "Phí tối đa"
-    max_priority_fee_per_gas = "Phí ưu tiên tối đa mỗi gas"
-    max_fee_per_gas = "Phí giao dịch tối đa mỗi gas"
-    max_gas_limit = "Giới hạn khí tối đa:"
-    gas_unit_price = "Giá đơn vị khí:"
-    gas_price = "Giá gas"
+    max_priority_fee_per_gas = "Phí ưu tiên tối đa trên mỗi Gas"
+    max_fee_per_gas = "Giới hạn phí giao dịch trên mỗi Gas"
+    gas_price = "Giá Gas"
     total = "Tổng cộng"
-    do_sign_this_transaction = "Bạn có muốn ký giao dịch này {} không?"
+    do_sign_this_transaction = "Xác nhận ký giao dịch {} này"
     transaction_signed = "Giao dịch đã được ký"
     address = 'Địa chỉ:'
     public_key = "Khóa công khai:"
     xpub = "XPub:"
     unknown_tx_type = "Loại giao dịch không xác định, vui lòng kiểm tra dữ liệu nhập"
     unknown_function = "Hàm không xác định:"
-    use_app_scan_this_signature = "Vui lòng sử dụng ứng dụng ví để quét kết quả ký"
+    use_app_scan_this_signature = "Vui lòng dùng ứng dụng ví quét kết quả chữ ký"
     internal_error = "Lỗi nội bộ"
-    tap_switch_to_airgap = "Nhấn vào mã QR để chuyển sang hiển thị địa chỉ Airgap"
-    tap_switch_to_receive = "Nhấn vào mã QR để chuyển sang hiển thị địa chỉ nhận tiền ví"
-    incorrect_pin_times_left = "Mã PIN không chính xác, số lần thử còn lại {}"
-    incorrect_pin_last_time = "Mã PIN không chính xác, đây là lần thử cuối cùng"
-    wrong_pin = "Mã PIN bạn nhập không chính xác"
-    seedless = "Thiếu hạt giống"
+    tap_switch_to_airgap = "Chạm để chuyển sang hiển thị địa chỉ Airgap"
+    tap_switch_to_receive = "Chạm để chuyển sang hiển thị địa chỉ nhận tiền"
+    incorrect_pin_times_left = "Sai PIN, còn lại {} lần thử"
+    incorrect_pin_last_time = "Sai PIN, còn 1 lần thử cuối"
+    wrong_pin = "Mã PIN không chính xác"
+    seedless = "Không có seed"
     backup_failed = "Sao lưu thất bại!"
     need_backup = "Cần sao lưu!"
-    pin_not_set = "Chưa đặt mã PIN!"
+    pin_not_set = "Chưa đặt PIN!"
     experimental_mode = "Chế độ thử nghiệm"
-    pin_change_success = "Mã PIN đã thay đổi thành công"
-    pin_enable_success = "Mã PIN đã bật thành công"
-    pin_disable_success = "Mã PIN đã tắt thành công"
+    pin_change_success = "Đã thay đổi PIN thành công"
+    pin_enable_success = "Đã bật PIN thành công"
+    pin_disable_success = "Đã tắt PIN thành công"
     contract = "Hợp đồng:"
     new_contract = "Hợp đồng mới?"
-    bytes_ = "{} byte"
-    message = "Tin nhắn:"
-    no_message = "Không bao gồm tin nhắn"
-    contains_x_key = "Bao gồm phím {}"
-    array_of_x_type = "Kiểu mảng {} {}"
-    do_sign_712_typed_data = "Bạn có muốn ký giao dịch dữ liệu có cấu trúc này không?"
-    do_sign_typed_hash = "Bạn có muốn ký giao dịch hash có cấu trúc này không?"
-    domain_hash = "Domain hash:"
-    message_hash = "Message hash:"
+    bytes_ = "{} bytes"
+    message = "Thông điệp:"
+    no_message = "Không chứa thông điệp"
+    contains_x_key = "Chứa {} khóa"
+    array_of_x_type = "Mảng kiểu {} {}"
+    do_sign_712_typed_data = "Xác nhận ký giao dịch dữ liệu có cấu trúc này?"
+    do_sign_typed_hash = "Xác nhận ký giao dịch hash có cấu trúc này?"
+    domain_hash = "Hash domain:"
+    message_hash = "Hash thông điệp:"
     switch_to_update_mode = "Chuyển sang chế độ cập nhật"
-    switch_to_boardloader = "Chuyển sang chế độ Boardloader"
-    list_credentials = "Bạn có muốn xuất thông tin xác thực được lưu trữ trên thiết bị này không?"
-    coinjoin_at_x = "Bạn có muốn tham gia giao dịch Coinjoin sau đây không?:\n{}"
+    switch_to_boardloader = "Chuyển sang chế độ board loader"
+    list_credentials = "Xuất thông tin chứng chỉ lưu trữ trên thiết bị?"
+    coinjoin_at_x = "Tham gia giao dịch Coinjoin sau:\n{}"
     signature_is_valid = "Chữ ký hợp lệ"
     signature_is_invalid = "Chữ ký không hợp lệ"
     u2f_already_registered = "U2F đã đăng ký"
     u2f_not_registered = "U2F chưa đăng ký"
     fido2_already_registered_x = "FIDO2 đã đăng ký {}"
-    fido2_verify_user = "Xác minh người dùng FIDO2"
+    fido2_verify_user = "FIDO2 xác thực người dùng"
     device_already_registered_x = "Thiết bị đã đăng ký {}"
-    device_verify_user = "Xác minh người dùng trên thiết bị"
-    fee_is_unexpectedly_high = "Phí bất ngờ cao"
+    device_verify_user = "Thiết bị xác thực người dùng"
+    fee_is_unexpectedly_high = "Phí giao dịch quá cao"
     too_many_change_outputs = "Quá nhiều đầu ra tiền thối"
-    change_count = "Số lượng thay đổi"
-    locktime_will_have_no_effect = "Thời gian khóa sẽ không có tác dụng"
+    change_count = "Số lượng tiền thừa"
+    locktime_will_have_no_effect = "Thời gian khóa sẽ không có hiệu lực"
     confirm_locktime_for_this_transaction = "Xác nhận thời gian khóa cho giao dịch này"
-    block_height = "Chiều cao khối"
+    block_height = "Độ cao khối"
     time = "Thời gian"
     amount_increased = "Số tiền tăng"
     amount_decreased = "Số tiền giảm"
     fee_unchanged = "Phí không thay đổi"
     fee_increased = "Phí tăng"
     fee_decreased = "Phí giảm"
-    your_spend = "Bạn đã chi"
-    change_label_to_x = "Thay đổi nhãn thành {}"
-    enable_passphrase = "Bạn có muốn bật mật khẩu không?"
-    disable_passphrase = "Bạn có muốn tắt mật khẩu không?"
-    enable_passphrase_always = "Bạn có muốn luôn nhập mật khẩu trên thiết bị này không?"
-    revoke_enable_passphrase_always = "Bạn có muốn thu hồi cài đặt luôn nhập mật khẩu trên thiết bị này không?"
-    auto_lock_x = "Bạn có muốn tự động khóa thiết bị sau {} không?"
-    enable_safety_checks = "Bạn có muốn thực hiện kiểm tra an toàn nghiêm ngặt không? Điều này sẽ cung cấp bảo vệ an toàn toàn diện hơn."
-    disable_safety_checks = "Bạn có muốn tắt kiểm tra an toàn không? Trước khi tiếp tục, vui lòng biết rủi ro tiềm ẩn liên quan đến hành vi này."
-    enable_experiment_mode = "Bạn có muốn bật chế độ thử nghiệm không?"
-    set_as_homescreen = "Bạn có muốn thay đổi màn hình chính không?"
-    replace_homescreen = "Bạn có muốn thay thế màn hình chính không? Điều này sẽ xóa hình nền được tải lên đầu tiên."
+    your_spend = "Khoản chi của bạn"
+    change_label_to_x = "Đổi nhãn thành {}"
+    enable_passphrase = "Bật mã hóa Passphrase?"
+    disable_passphrase = "Tắt mã hóa Passphrase?"
+    enable_passphrase_always = "Luôn nhập Passphrase trên thiết bị?"
+    revoke_enable_passphrase_always = "Hủy bỏ cài đặt luôn nhập Passphrase trên thiết bị?"
+    auto_lock_x = "Tự động khóa thiết bị sau {}?"
+    enable_safety_checks = "Bật kiểm tra an toàn nghiêm ngặt? Tính năng này cung cấp bảo vệ an toàn toàn diện hơn."
+    disable_safety_checks = "Tắt kiểm tra an toàn? Vui lòng hiểu rõ các rủi ro bảo mật tiềm ẩn trước khi tiếp tục."
+    enable_experiment_mode = "Bật chế độ thử nghiệm?"
+    set_as_homescreen = "Đặt làm màn hình chính?"
+    replace_homescreen = "Thay thế màn hình chính? Hành động này sẽ xóa hình nền được tải lên đầu tiên."
     confirm_replace_wallpaper = "Bạn có chắc chắn muốn thay đổi hình nền màn hình chính không?"
-    get_next_u2f_counter = "Bạn có muốn lấy bộ đếm U2F tiếp theo không?"
-    set_u2f_counter_x = "Bạn có muốn đặt bộ đếm U2F thành {} không?"
-    confirm_entropy = "Bạn có muốn xuất entropy không? Trước khi tiếp tục, vui lòng biết bạn đang làm gì!"
+    get_next_u2f_counter = "Lấy bộ đếm U2F tiếp theo?"
+    set_u2f_counter_x = "Đặt bộ đếm U2F thành {}?"
+    confirm_entropy = "Xuất entropy? Hãy chắc chắn bạn hiểu mình đang làm gì trước khi tiếp tục!"
     bandwidth = "Băng thông"
     energy = "Năng lượng"
     sender = "Người gửi"
     recipient = "Người nhận"
     resource = "Tài nguyên"
     frozen_balance = "Số dư bị đóng băng"
-    unfrozen_balance = "Số dư không bị đóng băng"
-    delegated_balance = "Số dư được ủy quyền"
-    undelegated_balance = "Số dư không được ủy quyền"
+    unfrozen_balance = "Số dư được mở khóa"
+    delegated_balance = "Số dư ủy quyền"
+    undelegated_balance = "Số dư hủy ủy quyền"
     you_are_freezing = "Bạn đang đóng băng tài sản"
-    you_are_unfreezing = "Bạn đang bỏ đóng băng tài sản"
+    you_are_unfreezing = "Bạn đang mở khóa tài sản"
     you_are_delegating = "Bạn đang ủy quyền tài sản"
-    you_are_undelegating = "Bạn đang bỏ ủy quyền tài sản"
+    you_are_undelegating = "Bạn đang hủy ủy quyền"
     duration = "Thời lượng"
     lock = "Khóa"
     unlock = "Mở khóa"
     all = "Tất cả"
     source = "Nguồn"
-    tip = "Gợi ý"
-    keep_alive = "Giữ hoạt động"
-    invalid_ur = "Loại mã QR không được hỗ trợ, vui lòng thử lại"
+    tip = "Mẹo"
+    keep_alive = "Giữ kết nối"
+    invalid_ur = "Loại QR code không được hỗ trợ, vui lòng thử lại"
     sequence_number = "Số thứ tự"
     expiration_time = "Thời gian hết hạn"
     argument_x = "Tham số #{}"
-    low_power_message = "Pin còn {}%\nVui lòng sạc"
+    low_power_message = "Pin còn {}%\nVui lòng sạc pin"
     collect_nft = "Bạn có chắc chắn muốn thu thập NFT này không?"
     replace_nft = "Bạn có muốn thu thập NFT này không? Bạn đã đạt giới hạn lưu trữ, việc này sẽ xóa NFT được tải lên lâu nhất."
 
@@ -352,15 +351,15 @@ class Tip:
 
 class Button:
     done = "Xong"
-    ok = "OK"
+    ok = "Đồng ý"
     confirm = "Xác nhận"
     reject = "Từ chối"
-    next = "Tiếp"
+    next = "Tiếp theo"
     cancel = "Hủy"
-    redo = "Làm lại"
+    redo = "Tạo lại"
     continue_ = "Tiếp tục"
     try_again = "Thử lại"
-    power_off = "Tắt máy"
+    power_off = "Tắt nguồn"
     restart = "Khởi động lại"
     hold = "Giữ"
     address = "Địa chỉ"
@@ -379,50 +378,50 @@ class Button:
     view_more = "Xem thêm"
 
 class WalletSecurity:
-    header = "Viết cụm từ ghi nhớ ra giấy và lưu ở nơi an toàn"
+    header = "Ghi lại cụm từ khôi phục của bạn trên giấy và lưu trữ ở nơi an toàn"
     tips = [
         {
             "level": "info",
             "msgs": [
-                "#00001F Cụm từ ghi nhớ cần được lưu trữ an toàn#",
-                "#18794E * Lưu trong két an toàn ngân hàng#",
-                "#18794E * Lưu trong tủ#",
-                "#18794E * Lưu ở nhiều nơi bí mật#",
+                "#00001F Cụm từ khôi phục cần được lưu trữ an toàn#",
+                "#18794E * Trong két an toàn ngân hàng#",
+                "#18794E * Trong hộp khóa an toàn#",
+                "#18794E * Tại nhiều địa điểm bí mật#",
             ]
         },
         {
             "level": "warning",
             "msgs": [
-                "#00001F Cần phải chú ý#",
-                "#CD2B31 * Nhớ cụm từ ghi nhớ#",
-                "#CD2B31 * Không để mất#",
-                "#CD2B31 * Không chia sẻ với người khác#",
+                "#00001F CẢNH BÁO QUAN TRỌNG#",
+                "#CD2B31 * Ghi nhớ cụm từ khôi phục#",
+                "#CD2B31 * Không được làm mất#",
+                "#CD2B31 * Không tiết lộ cho bất kỳ ai#",
                 "#CD2B31 * Không lưu trữ trực tuyến#",
-                "#CD2B31 * Không lưu trữ trên máy tính#",
+                "#CD2B31 * Không lưu trên máy tính#",
             ]
         },
     ]
 
 class MnemonicSecurity:
-    header = "Cụm từ ghi nhớ là một loạt các từ dùng để phục hồi tài sản ví, sở hữu cụm từ ghi nhớ có nghĩa là bạn có thể sử dụng tài sản của mình, vui lòng lưu giữ cẩn thận"
+    header = "Cụm từ khôi phục là tập hợp các từ ngắn dùng để khôi phục tài sản trong ví. Ai có cụm từ này có thể sử dụng tài sản của bạn, vui lòng bảo quản cẩn thận"
 
     tips = [
-        "1. Vui lòng kiểm tra an toàn môi trường, đảm bảo không có người quan sát hoặc máy quay",
-        "2. Vui lòng sao lưu cụm từ ghi nhớ theo thứ tự chính xác, đừng chia sẻ cụm từ ghi nhớ của bạn với bất kỳ ai",
-        "3. Vui lòng lưu trữ cụm từ ghi nhớ ở nơi an toàn ngoại tuyến, đừng sao lưu cụm từ ghi nhớ bằng phương thức điện tử, đừng tải lên mạng",
+        "1. Kiểm tra môi trường xung quanh, đảm bảo không có người xem hoặc camera",
+        "2. Sao lưu cụm từ khôi phục theo đúng thứ tự, tuyệt đối không chia sẻ với bất kỳ ai",
+        "3. Lưu trữ cụm từ khôi phục ngoại tuyến tại nơi an toàn, không sử dụng phương thức điện tử để sao lưu và không tải lên mạng",
     ]
 
 class PinSecurity:
-    header = "Mã PIN là mật khẩu để truy cập thiết bị, dùng để ủy quyền truy cập thiết bị hiện tại. Vui lòng sử dụng mã PIN một cách chính xác theo các mẹo sau"
+    header = "Mã PIN là mật khẩu truy cập thiết bị, dùng để ủy quyền truy cập thiết bị hiện tại. Vui lòng sử dụng mã PIN đúng cách theo hướng dẫn sau"
     tips = [
-        "1. Vui lòng kiểm tra an toàn môi trường khi đặt hoặc nhập mã PIN, đảm bảo không có người quan sát hoặc máy quay",
-        "2. Vui lòng đặt mã PIN dài từ 4~16 chữ số mạnh, tránh sử dụng các chữ số liên tiếp hoặc lặp lại",
-        "3. Số lần thử tối đa của mã PIN là 10 lần, khi sai 10 lần liên tiếp thiết bị sẽ được đặt lại",
-        "4. Vui lòng lưu giữ mã PIN cẩn thận, đừng chia sẻ mã PIN của bạn với bất kỳ ai",
+        "1. Kiểm tra môi trường an toàn khi đặt hoặc nhập mã PIN, đảm bảo không có người xem hoặc camera",
+        "2. Đặt mã PIN mạnh từ 4-16 ký tự, tránh dùng các số liên tiếp hoặc lặp lại",
+        "3. Số lần nhập sai mã PIN tối đa là 10 lần, sau đó thiết bị sẽ tự động thiết lập lại",
+        "4. Bảo quản mã PIN cẩn thận, không chia sẻ với bất kỳ ai",
     ]
 
 class Solana:
-    ata_reciver = "Người nhận (tài khoản tiền tệ liên kết)"
-    ata_sender = "Người gửi (tài khoản tiền tệ liên kết)"
+    ata_reciver = "Người nhận (Tài khoản token liên kết)"
+    ata_sender = "Người gửi (Tài khoản token liên kết)"
     source_owner = "Người ký giao dịch"
     fee_payer = "Người trả phí"
