@@ -498,6 +498,45 @@ static secbool need_stay_in_bootloader(void) {
     return boot;
 }
 
+static void low_power_detect(void) {
+    hal_delay(10);
+    int current = battery_read_current();
+    // usb connect, no need check
+    if (current >= 0) {
+        return;
+    }
+
+    int soc = battery_read_SOC();
+    if (soc) {
+        // not empty
+        return;
+    }
+
+    // lowlevel
+    // draw a empty battery
+#define B_COLOR  RGB16(0xCD, 0x2B, 0x31)
+#define B_WIDTH 80
+#define B_HIGHT 180
+#define B_X1 (480-B_WIDTH)/2
+#define B_X2 (B_X1 + B_WIDTH)
+#define B_Y1 (800-B_HIGHT)/2
+#define B_Y2 (B_Y1+B_HIGHT)
+
+    ui_fadein();
+    fb_fill_rect(B_X1 + 20, B_Y1-7, 40, 7, B_COLOR);
+    fb_draw_vline(B_X1, B_Y1, B_HIGHT, B_COLOR);
+    fb_draw_vline(B_X2, B_Y1, B_HIGHT, B_COLOR);
+    fb_draw_hline(B_X1, B_Y1, B_WIDTH, B_COLOR);
+    fb_draw_hline(B_X1, B_Y2, B_WIDTH, B_COLOR);
+    fb_fill_rect(B_X1, B_Y2, B_WIDTH, 5, B_COLOR);
+
+    hal_delay(500);
+    // pull down system power pin
+    // when user release power button, the device will shut down
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    while (1);
+}
+
 int main(void)
 {
     bool serial_set = false, cert_set = false, res_set = false, vaild_firmware = false;
@@ -532,19 +571,6 @@ int main(void)
     HAL_GPIO_Init(GPIOC, &sys_power_on);
     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
 
-    // read PJ4 GPIO state, if high, device is powered by battery, otherwise powered by USB
-    // __HAL_RCC_GPIOJ_CLK_ENABLE();
-    // GPIO_InitTypeDef power_key;
-    // power_key.Pin = GPIO_PIN_4;
-    // power_key.Mode = GPIO_MODE_INPUT;
-    // power_key.Pull = GPIO_NOPULL;
-    // power_key.Speed = GPIO_SPEED_FREQ_LOW;
-    // HAL_GPIO_Init(GPIOJ, &power_key);
-    // if ( HAL_GPIO_ReadPin(GPIOJ, GPIO_PIN_4) != GPIO_PIN_RESET )
-    // {
-    //     // here can test battery state of charge, if low battery can shutdown immediately
-    // }
-    // HAL_GPIO_DeInit(GPIOJ, GPIO_PIN_4);
 
     bus_fault_enable();
     /* Initialize the QSPI */
@@ -563,6 +589,7 @@ int main(void)
     battery_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
+    low_power_detect();
 
     device_para_init();
     if ( !serial_set )
