@@ -36,6 +36,9 @@ class LockScreen(Screen):
         tip = lv.label(self.content)
         tip.set_text(i18n.Text.tap_to_unlock)
         tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            tip.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置显示方向为从右向左
         self.add_event_cb(self.on_click, lv.EVENT.CLICKED, None)
 
 

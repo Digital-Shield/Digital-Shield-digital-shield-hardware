@@ -49,6 +49,10 @@ class AccountApp(Navigation):
         from .solana import Solana
         Coin(self.content, Solana)
 
+        #ton
+        from .ton import Ton
+        Coin(self.content, Ton)
+
         # tron
         from .tron import Tron
         Coin(self.content, Tron)

@@ -299,6 +299,13 @@ if TYPE_CHECKING:
         ConfluxSignMessage = 10117
         ConfluxSignMessageCIP23 = 10118
         ConfluxMessageSignature = 10119
+        TonGetAddress = 11901
+        TonAddress = 11902
+        TonSignMessage = 11903
+        TonSignedMessage = 11904
+        TonSignProof = 11905
+        TonSignedProof = 11906
+        TonTxAck = 11907
         TronGetAddress = 10501
         TronAddress = 10502
         TronSignTx = 10503
@@ -653,6 +660,13 @@ if TYPE_CHECKING:
         Yay = 0
         Nay = 1
         Pass = 2
+        
+    class TonWalletVersion(IntEnum):
+        V4R2 = 3
+
+    class TonWorkChain(IntEnum):
+        BASECHAIN = 0
+        MASTERCHAIN = 1
 
     class TronResourceCode(IntEnum):
         BANDWIDTH = 0

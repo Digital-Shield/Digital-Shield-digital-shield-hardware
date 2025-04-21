@@ -21,7 +21,13 @@ class Screen(lv.obj):
 
     def __init__(self):
         super().__init__()
-        self.set_style_bg_img_src("A:/res/wallpapers/4.png", 0)  # 使用默认背景
+        # Set the default background image
+        self.set_style_bg_img_src("A:/res/wallpapers/4.png", 0)
+
+        # Create a GIF object and set it as the background
+        
+        # gif.set_style_bg_opa(lv.OPA.COVER, 0)  # Ensure the background covers the screen
+        
         # wallpaper = device.get_homescreen()
         # if wallpaper:  # 判断 `wallpaper` 是否存在
         #     self.set_style_bg_img_src(wallpaper, 0)
@@ -36,6 +42,8 @@ class Screen(lv.obj):
         # default content is self
         self._content: lv.obj = self
 
+        # gif = lv.gif(self.content)
+        # gif.set_src("A:/res/wallpapers/136.gif")
         # lazy initialize components
         self._title: Title|None = None
         self._btn_container: VStack|None = None
@@ -253,7 +261,7 @@ class Navigation(Screen):
         # navigation icon container
         # global ui component, not belong to `content`
         obj = lv.obj(self)
-        obj.set_size(64, 64)
+        obj.set_size(160, 160)
         obj.add_style(Style().bg_opa(lv.OPA.TRANSP).border_width(0), lv.PART.MAIN)
         obj.add_flag(lv.obj.FLAG.CLICKABLE)
         # position is relative to the `content` area, `content` is padded top 64
@@ -263,7 +271,7 @@ class Navigation(Screen):
         nav = lv.img(obj)
         nav.set_src("A:/res/nav-back.png")
         nav.set_zoom(350)  # 设置缩放比例，256表示原始大小，512表示放大2倍
-        nav.center()
+        # nav.center()
         nav.add_flag(lv.obj.FLAG.CLICKABLE)
         nav.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
 
