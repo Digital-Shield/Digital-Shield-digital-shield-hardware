@@ -15,6 +15,7 @@ languages = [
     Language('ja','日本語'),
     Language("al","بالعربية"),
     Language('yn','Tiếng Việt'),
+    Language('de','Deutsch'),
 ]
 
 
@@ -46,6 +47,8 @@ def change_language(lang: str | Language | None = None):
         from . import al as lang_module
     elif lang == 'yn':
         from . import yn as lang_module
+    elif lang == 'de':
+        from . import de as lang_module
     else:
         raise ValueError(f"Unsupported language: {lang}")
     global using
