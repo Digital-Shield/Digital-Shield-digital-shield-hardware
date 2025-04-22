@@ -1516,12 +1516,13 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
     MSG_INIT(msg_recv, EmmcDirList);
     MSG_RECV_RET_ON_ERR(msg_recv, EmmcDirList);
 
-    const size_t max_list_len = 8192;
+    const size_t max_list_len = 16 * 1024;
+    const size_t max_subdir_len = 1024;
 
     typedef struct
     {
         // both are '\n' seprated multiline strings
-        char list_subdirs[max_list_len];
+        char list_subdirs[max_subdir_len];
         char list_files[max_list_len];
     } lists_struct;
 
@@ -1530,7 +1531,7 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
 
     ExecuteCheck_MSGS_ADV(
         emmc_fs_dir_list(
-            msg_recv.path, temp_buf->list_subdirs, max_list_len, temp_buf->list_files, max_list_len
+            msg_recv.path, temp_buf->list_subdirs, max_subdir_len, temp_buf->list_files, max_list_len
         ),
         true,
         {
@@ -1552,7 +1553,7 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
 
     nanopb_callback_args cb_args_send_subdirs = {
         .buffer = (uint8_t*)temp_buf->list_subdirs,
-        .buffer_size = max_list_len,
+        .buffer_size = max_subdir_len,
         .payload_size = strlen(temp_buf->list_subdirs),
     };
     nanopb_callback_args cb_args_send_files = {
