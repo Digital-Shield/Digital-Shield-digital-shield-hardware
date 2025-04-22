@@ -190,9 +190,10 @@ void reset_flags_reset(void) {
 #if PRODUCTION
 #error "!!!Chip protection for testing production, please remove this line manually!!!"
 #error "!!!Please remove this line manually, and check the production level!!!"
-// chip protection for testing production, change it when test complete
+// chip protection for testing production, change it when test complete, and use `PRODUCTION protection`
 #define WANT_RDP_LEVEL (OB_RDP_LEVEL_0)
 #define WANT_WRP_SECTORS (0)
+// chip protection for testing production end
 
 // PRODUCTION protection
 // #define WANT_RDP_LEVEL (OB_RDP_LEVEL_2)
