@@ -193,6 +193,9 @@ class Title:
     invalid_data="無効なデータ形式"
     low_power = "バッテリー残量が少ない"
     collect_nft = "NFT を収集する"
+    verify_device = "デバイスを検証する"
+    update_bootloader = "ブートローダーを更新する"
+    update_resource = "リソースを更新する"
 
 class Text:
     tap_to_unlock = "タップしてロック解除"
@@ -346,6 +349,9 @@ class Text:
     low_power_message = "バッテリー残量 {}%\n充電してください"
     collect_nft = "この NFT を収集することを確認しますか？"
     replace_nft = "この NFT を収集しますか？ストレージの上限に達しており、最も古いアップロードされた NFT が削除されます。"
+    verify_device = "DigitShieldサーバーでデバイスを認証してもよろしいですか？ 確認をタップして、デバイスが本物で改竄されていないことを確認してください。"
+    update_bootloader = "ブートローダーを更新しますか？"
+    update_resource = "デバイスのリソースを更新しますか？"
 
 class Tip:
     swipe_down_to_close = "下にスワイプして閉じる"

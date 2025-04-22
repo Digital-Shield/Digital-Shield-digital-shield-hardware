@@ -193,6 +193,9 @@ class Title:
     invalid_data="Ungültiges Datenformat"
     low_power = "Akku schwach"
     collect_nft = "NFT sammeln"
+    verify_device = "Gerät verifizieren"
+    update_bootloader = "Bootloader aktualisieren"
+    update_resource = "Ressourcen aktualisieren"
 
 class Text:
     tap_to_unlock = "Zum Entsperren tippen"
@@ -344,7 +347,9 @@ class Text:
     low_power_message = "Akku: {}% verbleibend\nBitte aufladen"
     collect_nft = "Sind Sie sicher, dass Sie dieses NFT sammeln möchten?"
     replace_nft = "Möchten Sie dieses NFT sammeln? Sie haben das Speicherlimit erreicht, dies wird das älteste hochgeladene NFT entfernen."
-
+    verify_device = "Sind Sie sicher, dass Sie Ihr Gerät mit dem DigitShield-Server authentifizieren möchten? Tippen Sie auf Bestätigen, um zu prüfen, ob Ihr Gerät original und nicht manipuliert ist."
+    update_bootloader = "Möchten Sie den Bootloader aktualisieren?"
+    update_resource = "Möchten Sie die Geräteressourcen aktualisieren?"
 class Tip:
     swipe_down_to_close = "Zum Schließen nach unten wischen"
 

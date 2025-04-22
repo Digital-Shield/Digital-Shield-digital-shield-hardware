@@ -193,6 +193,9 @@ class Title:
     invalid_data="無效的數據格式"
     low_power = "電量低"
     collect_nft = "收集 NFT"
+    verify_device = "驗證裝置"
+    update_bootloader = "更新引導加載程序"
+    update_resource = "更新資源"
 
 class Text:
     tap_to_unlock = "點擊以解鎖"
@@ -346,6 +349,9 @@ class Text:
     low_power_message = "電量還剩餘 {}%\n請充電"
     collect_nft = "你確定要收集此 NFT 嗎？"
     replace_nft = "你想要收集此 NFT 嗎？你已達到存儲上限，這將移除最早上傳的 NFT。"
+    verify_device = "你確定要使用DigitShield伺服器驗證你的裝置嗎？點擊確認以檢查你的裝置是否為原裝且未被篡改。"
+    update_bootloader = "你想更新引導加載程序嗎？"
+    update_resource = "你想更新裝置資源嗎？"
 
 class Tip:
     swipe_down_to_close = "向下滑動以關閉"
