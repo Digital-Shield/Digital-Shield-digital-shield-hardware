@@ -596,16 +596,21 @@ int main(void)
     if ( !serial_set )
     {
         serial_set = device_serial_set();
+#if !PRODUCTION
         serial_set = true; // TODO: need debug.
+#endif
     }
 
     se_init();
 
     if ( !cert_set )
-    {                    // if se certificate is not set
-                         //   uint32_t cert_len = 0;
-                         //   cert_set = se_get_certificate_len(&cert_len);
+    {
+        // if se certificate is not set
+        uint32_t cert_len = 0;
+        cert_set = se_get_certificate_len(&cert_len);
+#if !PRODUCTION
         cert_set = true; // TODO: need debug.
+#endif
     }
 
     if ( emmc_fs_path_exist("0:/res/.DIGITSHIELD_RESOURCE") == true )
