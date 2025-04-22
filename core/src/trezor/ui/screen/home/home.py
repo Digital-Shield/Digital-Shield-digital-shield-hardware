@@ -44,6 +44,13 @@ class HomeScreen(Screen):
         self.set_style_pad_top(64, lv.PART.MAIN)
         tip = lv.label(self)
         tip.set_text(i18n.Tip.swipe_down_to_close)
+        tip.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)  # 确保文本居中
+        tip.set_width(500)  # 设置标签的宽度
+        cur_language = i18n.using.code if i18n.using is not None else None
+        if cur_language == "al":
+            tip.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向为向右
+        # 启动滚动
+        tip.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
         tip.align(lv.ALIGN.TOP_MID, 0, -32)
         tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
 

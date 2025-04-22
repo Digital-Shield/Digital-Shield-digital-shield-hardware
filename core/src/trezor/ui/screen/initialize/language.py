@@ -51,6 +51,7 @@ class LanguageScreen(Modal):
             {"title" : "日本語", "icon" : None},
             {"title" : "بالعربية", "icon" : None},
             {"title" : "Tiếng Việt", "icon" : None},
+            {"title" : "Deutsch", "icon" : None},
         ]
 
         self.languages = [Item(parent=self.content, **lang) for lang in langs]

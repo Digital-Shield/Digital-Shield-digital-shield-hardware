@@ -7,6 +7,7 @@ langs = [
     ("ja", "日本語"),
     ("al", "بالعربية"),
     ("yn", "Tiếng Việt"),
+    ("de", "Deutsch"),
     #("ko", "한국어"),
     #("fr", "Français"),
     #("de", "Deutsch"),

@@ -660,7 +660,7 @@ if TYPE_CHECKING:
         Yay = 0
         Nay = 1
         Pass = 2
-        
+
     class TonWalletVersion(IntEnum):
         V4R2 = 3
 
