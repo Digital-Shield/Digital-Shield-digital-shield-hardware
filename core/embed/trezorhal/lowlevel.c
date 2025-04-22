@@ -188,8 +188,15 @@ void reset_flags_reset(void) {
 #elif defined(STM32H747xx)
 
 #if PRODUCTION
-#define WANT_RDP_LEVEL (OB_RDP_LEVEL_2)
-#define WANT_WRP_SECTORS (OB_WRP_SECTOR_0)
+#error "!!!Chip protection for testing production, please remove this line manually!!!"
+#error "!!!Please remove this line manually, and check the production level!!!"
+// chip protection for testing production, change it when test complete
+#define WANT_RDP_LEVEL (OB_RDP_LEVEL_0)
+#define WANT_WRP_SECTORS (0)
+
+// PRODUCTION protection
+// #define WANT_RDP_LEVEL (OB_RDP_LEVEL_2)
+// #define WANT_WRP_SECTORS (OB_WRP_SECTOR_0)
 #else
 #define WANT_RDP_LEVEL (OB_RDP_LEVEL_0)
 #define WANT_WRP_SECTORS (0)
@@ -413,27 +420,28 @@ void flash_option_bytes_init(void) {
 
   HAL_FLASHEx_OBGetConfig(&ob_config);
 
-  if (ob_config.RDPLevel != OB_RDP_LEVEL_2) {
-    // if ((ob_config.USERConfig & OB_BCM4_ENABLE) != OB_BCM4_DISABLE) {
-    //   ob_config.OptionType |= OPTIONBYTE_USER;
-    //   ob_config.USERType |= OB_USER_BCM4;
-    //   ob_config.USERConfig &= ~OB_BCM4_ENABLE;
+  // if (ob_config.RDPLevel != OB_RDP_LEVEL_2) {
+    // not use CM4 in this project
+    if ((ob_config.USERConfig & OB_BCM4_ENABLE) != OB_BCM4_DISABLE) {
+      ob_config.OptionType |= OPTIONBYTE_USER;
+      ob_config.USERType |= OB_USER_BCM4;
+      ob_config.USERConfig &= ~OB_BCM4_ENABLE;
 
-    //   HAL_FLASH_Unlock();
-    //   HAL_FLASH_OB_Unlock();
+      HAL_FLASH_Unlock();
+      HAL_FLASH_OB_Unlock();
 
-    //   if (HAL_FLASHEx_OBProgram(&ob_config) != HAL_OK) {
-    //     ensure(secfalse, "HAL_FLASHEx_OBProgram failed");
-    //   }
+      if (HAL_FLASHEx_OBProgram(&ob_config) != HAL_OK) {
+        ensure(secfalse, "HAL_FLASHEx_OBProgram failed");
+      }
 
-    //   if (HAL_FLASH_OB_Launch() != HAL_OK) {
-    //     ensure(secfalse, "HAL_FLASH_OB_Launch failed");
-    //   }
+      if (HAL_FLASH_OB_Launch() != HAL_OK) {
+        ensure(secfalse, "HAL_FLASH_OB_Launch failed");
+      }
 
-    //   HAL_FLASH_OB_Lock();
-    //   HAL_FLASH_Lock();
-    // }
-  }
+      HAL_FLASH_OB_Lock();
+      HAL_FLASH_Lock();
+    }
+  // }
 
   if (ob_config.RDPLevel != WANT_RDP_LEVEL) {
     ob_config.OptionType |=
@@ -445,12 +453,12 @@ void flash_option_bytes_init(void) {
         OB_USER_IWDG1_SW | OB_USER_IWDG2_SW | OB_USER_NRST_STOP_D1 |
         OB_USER_NRST_STOP_D2 | OB_USER_NRST_STDBY_D1 | OB_USER_NRST_STDBY_D2 |
         OB_USER_IWDG_STOP | OB_USER_IWDG_STDBY | OB_USER_IOHSLV |
-        OB_USER_SWAP_BANK | OB_USER_SECURITY | OB_USER_BCM4;
+        OB_USER_SWAP_BANK | OB_USER_SECURITY; //| OB_USER_BCM4;
     ob_config.USERConfig =
         OB_IWDG1_SW | OB_IWDG2_SW | OB_STOP_NO_RST_D1 | OB_STOP_NO_RST_D2 |
         OB_STDBY_NO_RST_D1 | OB_STDBY_NO_RST_D2 | OB_IWDG_STOP_FREEZE |
         OB_IWDG_STDBY_FREEZE | OB_IOHSLV_ENABLE | OB_SWAP_BANK_DISABLE |
-        OB_SECURITY_DISABLE | OB_BCM4_ENABLE;
+        OB_SECURITY_DISABLE; // | OB_BCM4_ENABLE;
 
     HAL_FLASH_Unlock();
     HAL_FLASH_OB_Unlock();
