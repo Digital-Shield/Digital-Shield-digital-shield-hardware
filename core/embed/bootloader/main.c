@@ -507,8 +507,9 @@ static void low_power_detect(void) {
     }
 
     int soc = battery_read_SOC();
-    if (soc) {
-        // not empty
+
+    // almost empty
+    if (soc <= 1) {
         return;
     }
 
