@@ -300,12 +300,12 @@ typedef struct _ReadSEPublicKey {
     char dummy_field;
 } ReadSEPublicKey;
 
-typedef PB_BYTES_ARRAY_T(64) SEPublicKey_public_key_t;
+typedef PB_BYTES_ARRAY_T(65) SEPublicKey_public_key_t;
 typedef struct _SEPublicKey {
     SEPublicKey_public_key_t public_key;
 } SEPublicKey;
 
-typedef PB_BYTES_ARRAY_T(416) WriteSEPublicCert_public_cert_t;
+typedef PB_BYTES_ARRAY_T(2048) WriteSEPublicCert_public_cert_t;
 typedef struct _WriteSEPublicCert {
     WriteSEPublicCert_public_cert_t public_cert;
 } WriteSEPublicCert;
@@ -314,7 +314,7 @@ typedef struct _ReadSEPublicCert {
     char dummy_field;
 } ReadSEPublicCert;
 
-typedef PB_BYTES_ARRAY_T(416) SEPublicCert_public_cert_t;
+typedef PB_BYTES_ARRAY_T(2048) SEPublicCert_public_cert_t;
 typedef struct _SEPublicCert {
     SEPublicCert_public_cert_t public_cert;
 } SEPublicCert;

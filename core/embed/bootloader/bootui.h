@@ -91,10 +91,12 @@ int ui_user_input(int zones);
 int ui_input_poll(int zones, bool poll);
 void ui_bootloader_first(const image_header* const hdr);
 void ui_bootloader_second(const image_header* const hdr);
+void ui_bootloader_moding(void);
 void ui_wipe_confirm(const image_header* const hdr);
 void ui_install_confirm(image_header* current_hdr,
                         const image_header* const new_hdr);
 void ui_install_ble_confirm(void);
+void ui_bootloader_ble_name_reset(void);
 void ui_install_progress(image_header* current_hdr,
                          const image_header* const new_hdr);
 void ui_bootloader_page_switch(const image_header* const hdr);

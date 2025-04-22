@@ -59,6 +59,8 @@ def find_message_handler_module(msg_type: int) -> str:
         return "apps.management.reboot_to_boardloader"
     elif msg_type == MessageType.ReadSEPublicCert:
         return "apps.management.se_read_cert"
+    elif msg_type == MessageType.ReadSEPublicKey:
+        return "apps.management.se_read_public_key"
 
     if utils.MODEL in ("T",) and msg_type == MessageType.SdProtect:
         return "apps.management.sd_protect"

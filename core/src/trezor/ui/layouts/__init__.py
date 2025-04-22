@@ -171,6 +171,24 @@ async def confirm_collect_nft(ctx, replace: bool = False):
         msg,
     )
 
+async def confirm_verify_device(ctx):
+    await confirm_action(ctx, i18n.Title.verify_device, i18n.Text.verify_device)
+
+async def confirm_update_res(ctx, update_boot:bool):
+    if update_boot:
+        title = i18n.Title.update_bootloader
+        msg = i18n.Text.update_bootloader
+    else:
+        title = i18n.Title.update_resource
+        msg = i18n.Text.update_resource
+
+    from trezor.ui.screen.confirm import SimpleConfirm
+    screen = SimpleConfirm(msg)
+    screen.title.set_text(title)
+    screen.btn_right.set_text(i18n.Button.update)
+    await screen.show()
+    await raise_if_cancelled(interact(ctx, screen))
+
 ## wipe device
 async def confirm_wipe_device(ctx: wire.GenericContext):
     from trezor.ui.screen.confirm import SimpleConfirm

@@ -37,7 +37,6 @@
 #include "ports/stm32/pendsv.h"
 
 #include "button.h"
-#include "bl_check.h"
 #include "board_capabilities.h"
 #include "common.h"
 #include "compiler_traits.h"
@@ -62,6 +61,7 @@
 #include "supervise.h"
 #include "timer.h"
 #include "touch.h"
+#include "se_thd89.h"
 #include "uart_log.h"
 #ifdef USE_SECP256K1_ZKP
 #include "zkp_context.h"
@@ -134,13 +134,10 @@ int main(void) {
   enable_systemview();
 #endif
 
-
+  se_init();
   // #if !defined TREZOR_MODEL_1
   //   parse_boardloader_capabilities();
 
-#if PRODUCTION
-  check_and_replace_bootloader();
-#endif
   // #endif
 
   // Init peripherals

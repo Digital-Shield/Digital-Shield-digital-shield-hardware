@@ -11,14 +11,11 @@ async def se_sign_message(ctx: wire.Context, msg: SESignMessage) -> SEMessageSig
     if utils.EMULATOR:
         raise wire.ProcessError("Not support by emulator.")
 
-    from trezor.ui.layouts.lvgl import confirm_security_check
+    from trezor.ui.layouts import confirm_verify_device
 
-    await confirm_security_check(ctx)
+    await confirm_verify_device(ctx)
 
-    import atca  # type: ignore[Import "atca" could not be resolved]
+    import thd89
 
-    signature = bytes(64)
-    if atca.se_sign_message(msg.message, len(msg.message), signature):
-        return SEMessageSignature(signature=signature)
-    else:
-        raise wire.ProcessError("se sign failed")
+    sig = thd89.sign_message(msg.message)
+    return SEMessageSignature(signature=sig)

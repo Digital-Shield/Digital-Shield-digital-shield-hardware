@@ -21,6 +21,7 @@ CPPDEFINES_MOD += [
     'AES_192',
     'USE_KECCAK',
     'ED25519_NO_PRECOMP',
+    ('USE_PRECOMPUTED_CP', 0),
 ]
 SOURCE_MOD += [
     'embed/extmod/modtrezorcrypto/rand.c',
@@ -36,6 +37,12 @@ SOURCE_MOD += [
     'vendor/trezor-crypto/memzero.c',
     'vendor/trezor-crypto/rand.c',
     'vendor/trezor-crypto/sha2.c',
+    'vendor/trezor-crypto/bignum.c',
+    'vendor/trezor-crypto/curves.c',
+    'vendor/trezor-crypto/ecdsa.c',
+    'vendor/trezor-crypto/nist256p1.c',
+    'vendor/trezor-crypto/rfc6979.c',
+    'vendor/trezor-crypto/hmac_drbg.c',
 ]
 
 # modtrezorui
@@ -81,10 +88,9 @@ SOURCE_STMHAL = [
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sdram.c',
-    'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sd.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sram.c',
-    'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c',
-    'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c',
+    # 'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c',
+    # 'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma2d.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_qspi.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c',
@@ -93,7 +99,6 @@ SOURCE_STMHAL = [
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dsi.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c',
-    'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_jpeg.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_fmc.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c',
     'embed/BSP_drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c',
@@ -155,13 +160,13 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/fatfs/ff.c',
     'embed/trezorhal/fatfs/ffunicode.c',
     'embed/trezorhal/fatfs/diskio_emmc.c',
-    'embed/trezorhal/jpeg_dma.c',
     'embed/trezorhal/util.s',
     'embed/trezorhal/vectortable.s',
     'embed/trezorhal/i2c.c',
     'embed/trezorhal/uart_log.c',
     'embed/trezorhal/lowlevel.c',
     'embed/trezorhal/touch.c',
+    'embed/trezorhal/sdram.c',
 ]
 
 # emmc wrapper

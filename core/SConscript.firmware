@@ -215,6 +215,11 @@ SOURCE_MOD += [
     'embed/extmod/modutime.c',
 ]
 
+# modthd89
+SOURCE_MOD += [
+    'embed/extmod/modthd89/modthd89.c',
+]
+
 SOURCE_MICROPYTHON = [
     'vendor/micropython/extmod/modubinascii.c',
     'vendor/micropython/extmod/moductypes.c',
@@ -413,7 +418,6 @@ SOURCE_STMHAL = [
 ]
 
 SOURCE_FIRMWARE = [
-    'embed/firmware/bl_check.c',
     'embed/firmware/delay.c',
     'embed/firmware/header.S',
     'embed/firmware/main.c',
@@ -875,7 +879,7 @@ if PRODUCTION_MODEL == 'H':
         '$OBJCOPY -O binary -j .vendorheader -j .header -j .flash -j .data --pad-to 0x081E0000 $SOURCE build/firmware/firmware.p1.bin',
         '$OBJCOPY -O binary -j .flash2 $SOURCE build/firmware/firmware.p2.bin',
         '$CAT build/firmware/firmware.p1.bin build/firmware/firmware.p2.bin > $TARGET',
-        '$HEADERTOOL -h $TARGET ' + ('-D' if ARGUMENTS.get('PRODUCTION', '0') == '0' else ''),  
+        '$HEADERTOOL -h $TARGET ' + ('-D' if ARGUMENTS.get('PRODUCTION', '0') == '0' else ''),
         '$DD if=$TARGET of=build/firmware/firmware.p1.bin skip=0 bs=128k count=12',
     ]
 

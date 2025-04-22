@@ -328,6 +328,32 @@ def se_read_cert(obj: "TrezorConnection") -> bytes:
         cert_bytes = device.se_read_cert(client).public_cert
         return cert_bytes
 
+@cli.command()
+@click.pass_obj
+def se_read_public_key(obj: "TrezorConnection") -> dict:
+    """Get device se public key.
+
+    Used in device verify.
+    """
+    with obj.client_context() as client:
+        pk = device.se_read_public_key(client).public_key
+        return {
+            "public key": pk.hex()
+        }
+
+@cli.command()
+@click.pass_obj
+@click.argument("message")
+def se_sign_message(obj: "TrezorConnection", message: str) -> dict:
+    """Get device se public key.
+
+    Used in device verify.
+    """
+    with obj.client_context() as client:
+        sig = device.se_sign_message(client, message.encode()).signature
+        return {
+            "signature": sig.hex()
+        }
 
 @cli.command()
 # fmt: off

@@ -1,15 +1,18 @@
 from typing import *
 
+
 # extmod/modtrezorio/modtrezorio-battery.h
 class Battery:
     """
     """
-    def __init__(self): ...
+
+    def __init__(self):
+        """
+        """
 
     def state_of_charge(self) -> int|None:
         """
         read SOC (state of charge), in percent
-
         Returns None if the battery is not present
         Returns int between 0 and 100
         """
@@ -17,14 +20,15 @@ class Battery:
     def current(self) -> int|None:
         """
         read (current), in 1mA
-
-        Returns current in mA, positive in charging, negative is discharging
+        Returns current in mA, positive in discharging, negative is charging
         """
+
     def voltage(self) -> int:
         """
         read (voltage), in 1mV
-            Returns voltage in mV
+        Returns voltage in mV
         """
+
 
 # extmod/modtrezorio/modtrezorio-ble.h
 class BLE:
@@ -41,14 +45,64 @@ class BLE:
         """
         Send command to the BLE.
         """
+
     def power_on() -> None:
         """
         Turn on the BLE.
         """
+
     def power_off() -> None:
         """
         Turn off the BLE.
         """
+
+
+# extmod/modtrezorio/modtrezorio-camera.h
+class Camera:
+    """
+    Camera configuration.
+    """
+    NONE: int = 0
+    INIT: int = 1
+    STOPPED: int = 2
+    SUSPENDED: int = 3
+    CAPTURING: int = 4
+    def __init__(self, iface_num: int, width: int, height: int) -> None:
+        ...
+    def iface_num(self) -> int:
+        ...
+    def init(self) -> None:
+        ...
+    def deinit(self) -> None:
+        ...
+    def start(self) -> None:
+        ...
+    def stop(self) -> None:
+        ...
+    def suspend(self) -> None:
+        ...
+    def resume(self) -> None:
+        ...
+    def hide(self) -> None:
+        ...
+    def show(self) -> None:
+        ...
+    def led_on(self) -> None:
+        ...
+    def led_off(self) -> None:
+        ...
+    def led_toggle(self) -> None:
+        ...
+    def led_state(self) -> int:
+        ...
+    def buffer(self) -> bytes:
+        ...
+    def state(self) -> int:
+        ...
+    def width(self) -> int:
+        ...
+    def height(self) -> int:
+        ...
 
 
 # extmod/modtrezorio/modtrezorio-flash.h
@@ -129,9 +183,9 @@ class MOTOR:
         """
         """
 
-    def ctrl(self, cmd: int) -> None:
+    def ctrl(self, start: bool) -> None:
         """
-        Control the motor.
+        Control the motor start or stop
         """
 
 
@@ -146,6 +200,7 @@ def poll(ifaces: Iterable[int], list_ref: list, timeout_ms: int) -> bool:
                   - for button event (T1), tuple of:
                     (event type, button number)
                   - for USB read event, received bytes
+                  - for Camera scan event, scanned bytes
     If timeout occurs, False is returned, True otherwise.
     """
 
@@ -285,106 +340,9 @@ class WebUSB:
         """
         Sends message using USB WebUSB (device) or UDP (emulator).
         """
-
-class Camera:
-    NONE: int = 0
-    INIT: int = 1
-    STOPPED: int = 2
-    SUSPENDED: int = 3
-    CAPTURING: int = 4
-    LED_OFF: int = 0  # camera LED is off
-    LED_ON: int = 1  # camera LED is on
-
-    def __init__(self, iface_num: int, width: int, height: int) -> None:
-        """
-        """
-
-    def iface_num(self) -> int:
-        """
-        Returns the configured number of this interface.
-        """
-
-    def init(self) -> None:
-        """
-        Power on the camera.
-        """
-
-    def deinit(self) -> None:
-        """
-        Power off the camera.
-        """
-
-    def start(self) -> None:
-        """
-        Start the camera.
-        """
-
-    def stop(self) -> None:
-        """
-        Stop the camera.
-        """
-
-    def suspend(self) -> None:
-        """
-        Suspend the camera.
-        """
-
-    def resume(self) -> None:
-        """
-        Resume the camera.
-        """
-    def hide(self) -> None:
-        """
-        Hide the camera image.
-        """
-    def show(self) -> None:
-        """
-        Show the camera image.
-        """
-
-    def led_on(self) -> None:
-        """
-        Turn on the camera LED.
-        """
-
-    def led_off(self) -> None:
-        """
-        Turn off the camera LED.
-        """
-
-    def led_toggle(self) -> None:
-        """
-        Toggle the camera LED.
-        """
-
-    def state(self) -> int:
-        """
-        Returns the current camera state.
-        """
-    def led_state(self) -> int:
-        """
-        Returns the current camera LED state.
-        """
-    def width(self) -> int:
-        """
-        Returns the camera image width.
-        """
-
-    def height(self) -> int:
-        """
-        Returns the camera image height.
-        """
-
-    def buffer(self) -> bytearray:
-        """
-        Returns the camera image buffer.
-        """
-
-
 from . import fatfs, sdcard
 POLL_READ: int  # wait until interface is readable and return read data
 POLL_WRITE: int  # wait until interface is writable
-CAMERA: int  # interface id of the camera events
 TOUCH: int  # interface id of the touch events
 TOUCH_START: int  # event id of touch start event
 TOUCH_MOVE: int  # event id of touch move event

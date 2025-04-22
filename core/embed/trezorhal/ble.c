@@ -6,6 +6,7 @@
 #include "sys.h"
 #include "usart.h"
 #include <stdbool.h>
+#include "memzero.h"
 
 
 static bool get_ble_name = false;
@@ -190,13 +191,27 @@ void ble_function_on() {
   spi_slave_init();
   ble_usart_init();
   get_ble_switch = true;
+}
+
+static void ble_state_reset(void) {
+  get_ble_name = false;
+  get_ble_ver = false;
+  get_ble_proto_ver = false;
+  get_ble_boot_ver = false;
+  get_ble_battery = false;
+  get_ble_charging = false;
   ble_connect = false;
+  ble_switch = false;
+  get_ble_switch = false;
+  memzero(ble_name, sizeof(ble_name));
+  memzero(ble_ver, sizeof(ble_ver));
+  memzero(ble_proto_ver, sizeof(ble_ver));
+  memzero(ble_boot_ver, sizeof(ble_boot_ver));
 }
 
 void ble_function_off() {
   BLE_POWER_OFF();
   spi_slave_deinit();
   ble_usart_deinit();
-  get_ble_switch = true;
-  ble_connect = false;
+  ble_state_reset();
 }

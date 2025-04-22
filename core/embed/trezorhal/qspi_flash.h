@@ -21,6 +21,7 @@
 
 #define QSPI_FLASH_BASE_ADDRESS (0x90000000)
 #define QSPI_FLASH_STORAG_OFFSET (3 * 1024 * 1024)
+#define QSPI_FLASH_DEVICE_CERT_OFFSET (3 * 1024 * 1024 + 2 * 64 * 1024)
 
 typedef struct {
   uint8_t uniq_id[8];

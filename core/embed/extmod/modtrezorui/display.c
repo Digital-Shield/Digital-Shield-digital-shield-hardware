@@ -20,6 +20,7 @@
 #define _GNU_SOURCE
 
 #include "qr-code-generator/qrcodegen.h"
+#include "stdio.h"
 
 #include "uzlib.h"
 
@@ -756,6 +757,7 @@ void display_text_center(int x, int y, const char *text, int textlen, int font,
   x += DISPLAY_OFFSET.x;
   y += DISPLAY_OFFSET.y;
   int w = display_text_width(text, textlen, font);
+  hal_delay(10); // 不要删
   display_text_render(x - w / 2, y, text, textlen, font, fgcolor, bgcolor);
 }
 
