@@ -325,7 +325,7 @@ def se_write_cert(obj: "TrezorConnection", cert: str) -> None:
     Used in device verify.
     """
     with obj.client_context() as client:
-        cert_bytes = device.se_write_cert(client, cert)
+        cert_bytes = device.se_write_cert(client, cert.strip('"'))
         return cert_bytes
 
 
