@@ -193,6 +193,9 @@ class Title:
     invalid_data="잘못된 데이터 형식"
     low_power = "배터리 부족"
     collect_nft = "NFT 수집"
+    verify_device = "장치 검증"
+    update_bootloader = "부트로더 업데이트"
+    update_resource = "리소스 업데이트"
 
 class Text:
     tap_to_unlock = "잠금 해제를 터치하세요"
@@ -346,6 +349,9 @@ class Text:
     low_power_message = "배터리 {}% 남음\n충전이 필요합니다"
     collect_nft = "이 NFT를 수집하시겠습니까?"
     replace_nft = "이 NFT를 수집하시겠습니까? 저장 공간이 제한되어 있어 가장 오래된 업로드된 NFT가 제거됩니다."
+    verify_device = "DigitShield 서버로 기기를 인증하시겠습니까? 확인을 탭하여 기기가 정품이며 변조되지 않았는지 확인하세요."
+    update_bootloader = "부트로더를 업데이트하시겠습니까?"
+    update_resource = "기기 리소스를 업데이트하시겠습니까?"
 
 class Tip:
     swipe_down_to_close = "닫으려면 아래로 스와이프하세요"

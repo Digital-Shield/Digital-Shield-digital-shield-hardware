@@ -194,6 +194,9 @@ class Title:
     invalid_data="Định dạng dữ liệu không hợp lệ"
     low_power = "Pin yếu"
     collect_nft = "Thu thập NFT"
+    verify_device = "Xác minh thiết bị"
+    update_bootloader = "Cập nhật trình引导 (bootloader)"
+    update_resource = "Cập nhật tài nguyên"
 
 class Text:
     tap_to_unlock = "Chạm để mở khóa"
@@ -345,6 +348,9 @@ class Text:
     low_power_message = "Pin còn {}%\nVui lòng sạc pin"
     collect_nft = "Bạn có chắc chắn muốn thu thập NFT này không?"
     replace_nft = "Bạn có muốn thu thập NFT này không? Bạn đã đạt giới hạn lưu trữ, việc này sẽ xóa NFT được tải lên lâu nhất."
+    verify_device = "Bạn có chắc chắn muốn xác thực thiết bị của mình với máy chủ DigitShield không? Nhấn xác nhận để kiểm tra xem thiết bị của bạn có phải là chính hãng và không bị篡改 không."
+    update_bootloader = "Bạn có muốn cập nhật trình引导 (bootloader) không?"
+    update_resource = "Bạn có muốn cập nhật tài nguyên thiết bị không?"
 
 class Tip:
     swipe_down_to_close = "Vuốt xuống để đóng"

@@ -193,6 +193,9 @@ class Title:
     invalid_data="تنسيق بيانات غير صالح"
     low_power = "بطارية منخفضة"
     collect_nft = "جمع NFT"
+    verify_device = "تحقق من الجهاز"
+    update_bootloader = "تحديث برنامج التحميل الأولي"
+    update_resource = "تحديث الموارد"
 
 class Text:
     tap_to_unlock = "اضغط لفتح القفل"
@@ -348,6 +351,9 @@ class Text:
     low_power_message = "تبقى {}% من البطارية\nيرجى الشحن"
     collect_nft = "هل أنت متأكد من جمع هذه NFT؟"
     replace_nft = "هل تريد جمع هذه NFT؟ لقد وصلت إلى الحد الأقصى للمخزن، وسيتسبب هذا في إزالة أقدم NFT يتم تحميلها."
+    verify_device = "هل أنت متأكد من مصادقة جهازك على خادم DigitShield؟ اضغط على تأكيد للتحقق مما إذا كان جهازك أصيل وغير مزعوم."
+    update_bootloader = "هل تريد تحديث برنامج التحميل الأولي؟"
+    update_resource = "هل تريد تحديث موارد الجهاز؟"
 
 class Tip:
     swipe_down_to_close = "اسحب لأسفل للإغلاق"
