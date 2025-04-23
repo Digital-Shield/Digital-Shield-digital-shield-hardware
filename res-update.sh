@@ -63,8 +63,13 @@ for file in $changed_files; do
     # 检查文件是否存在（防止因历史提交删除导致文件不存在）
     if [ -f "$file" ]; then
         echo "Copying $file"
-        # 只保留到 res 目录
-        cp "$file" "$output_directory/"
+        # 移除 core/src/trezor/res 前缀
+        relative_path="${file#$input_directory/}"
+        # 创建目标目录（如果不存在）
+        mkdir -p "$output_directory/$(dirname "$relative_path")"
+        # 复制文件到目标目录
+        cp "$file" "$output_directory/$relative_path"
+        echo "Copied $file to $output_directory/$relative_path"
     else
         echo "Warning: $file does not exist in the current working tree. Skipping."
     fi
