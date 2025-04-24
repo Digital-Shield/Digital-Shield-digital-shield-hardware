@@ -422,6 +422,8 @@ enum MessageType {
     MessageType_TonSignProof = 11905 [(wire_in) = true];
     MessageType_TonSignedProof = 11906 [(wire_out) = true];
     MessageType_TonTxAck = 11907 [(wire_in) = true];
+    MessageType_TonSignTx = 11908 [(wire_in) = true];
+    MessageType_TonSignedTx = 11909 [(wire_out) = true];
 
     // tron
     MessageType_TronGetAddress = 10501 [(wire_in) = true];

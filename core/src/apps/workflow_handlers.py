@@ -178,6 +178,8 @@ def find_message_handler_module(msg_type: int) -> str:
             return "apps.ton.sign_message"
         if msg_type == MessageType.TonSignProof:
             return "apps.ton.sign_proof"
+        if msg_type == MessageType.TonSignTx:
+            return "apps.ton.sign_message"
         
         # tron
         if msg_type == MessageType.TronGetAddress:
