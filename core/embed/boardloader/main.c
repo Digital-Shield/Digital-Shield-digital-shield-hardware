@@ -472,6 +472,7 @@ int main(void) {
   }
 
   if (sectrue == check_emmc(&hdr_sd)) {
+    display_backlight(80);
     //EMMC上面找到了更高版本bootloader，进行升级
     if (sectrue == boot_hdr) { // trigger system reset
       if (memcmp(&hdr_sd.version, &hdr_inner.version, 4) >= 0) {
