@@ -83,6 +83,19 @@ void emmc_init(void) {
   if (HAL_MMC_ConfigSpeedBusOperation(&hmmc1, SDMMC_SPEED_MODE_DDR) != HAL_OK) {
     ensure(0, "mmc speed set fail");
   }
+
+#if 0
+  HAL_MMC_CardCIDTypeDef cid = {0};
+  if (HAL_MMC_GetCardCID(&hmmc1, &cid) == HAL_OK) {
+    char name[6] = {0};
+    name[0] = (cid.ProdName1 >> 24);
+    name[1] = (cid.ProdName1 >> 16) & 0xFF;
+    name[2] = (cid.ProdName1 >> 8) & 0xFF;
+    name[3] = (cid.ProdName1 >> 0) & 0xFF;
+    name[4] = cid.ProdName2;
+    printf("EMMC: %s\n", name);
+  }
+#endif
 }
 void emmc_reset(void) {
   __HAL_RCC_GPIOI_CLK_ENABLE();
