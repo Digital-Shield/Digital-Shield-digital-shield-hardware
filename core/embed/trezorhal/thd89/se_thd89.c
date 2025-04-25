@@ -167,7 +167,7 @@ static void se_storage_init(void) {
     obj->tag[2] = 0;
     obj->tag[3] = 0;
     obj->length = 65;
-    ecdsa_get_public_key65(&nist256p1, sk, obj->data);
+    ecdsa_get_public_key65(&nist256p1, sk+8, obj->data);
     se_storage_write_pk(pk, sizeof(pk));
 }
 
@@ -244,7 +244,7 @@ bool se_sign_message(uint8_t *msg, uint32_t msg_len, uint8_t *signature) {
     }
 
     // 2. sign
-    ecdsa_sign_digest(&nist256p1, digest, obj->data, signature, NULL, NULL);
+    ecdsa_sign_digest(&nist256p1, obj->data, digest, signature, NULL, NULL);
     return true;
 }
 
