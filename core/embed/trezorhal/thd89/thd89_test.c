@@ -55,10 +55,29 @@ void test_echo(void) {
   }
 }
 
+void test_block(void) {
+  uint8_t byte = 0;
+  while (1)
+  {
+    uint8_t data[16] = {0};
+    memset(data, byte, sizeof(data));
+    for (int i = 0; i < sizeof(data); i++) {
+      data[i] += i;
+    }
+    byte += 0x10;
+    se_send(data, sizeof(data), 1000);
+    HAL_Delay(1000);
+    se_recv(data, sizeof(data), 1000);
+    HAL_Delay(1000);
+  }
+}
+
 void thd89_test(void) {
   se_spi_init();
-  thd89_init();
-  test_frame_ping();
-  test_handshake();
-  test_echo();
+  HAL_Delay(1000);
+  test_block();
+  // thd89_init();
+  // test_frame_ping();
+  // test_handshake();
+  // test_echo();
 }
