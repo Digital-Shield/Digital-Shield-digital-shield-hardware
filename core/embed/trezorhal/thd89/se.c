@@ -62,13 +62,12 @@ int se_spi_init(void) {
   SE_COMBUS_HIGH();
 
   // power on
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  gpio.Pin = GPIO_PIN_4;
+  gpio.Pin = SE_POWER_GPIO_PIN;
   gpio.Mode = GPIO_MODE_OUTPUT_PP;
   gpio.Pull = GPIO_PULLUP;
   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
   gpio.Alternate = 0;
-  HAL_GPIO_Init(GPIOD, &gpio);
+  HAL_GPIO_Init(SE_POWER_GPIO_PORT, &gpio);
 
   // se power off
   // SE_POWER_OFF();

@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define SE_POWER_GPIO_PORT GPIOD
+#define SE_POWER_GPIO_PIN GPIO_PIN_4
+
 #define SE_POWER_ON() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET)
 #define SE_POWER_OFF() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_RESET)
 
@@ -20,6 +23,7 @@ PJ10     ------> SPI5_MOSI
 
 #define SPI_GPIO_CLK_ENABLE()     \
   do {                            \
+    __HAL_RCC_GPIOD_CLK_ENABLE(); \
     __HAL_RCC_GPIOF_CLK_ENABLE(); \
     __HAL_RCC_GPIOK_CLK_ENABLE(); \
     __HAL_RCC_GPIOJ_CLK_ENABLE(); \
