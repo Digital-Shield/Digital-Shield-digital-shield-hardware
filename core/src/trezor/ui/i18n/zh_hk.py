@@ -354,6 +354,9 @@ class Text:
     verify_device = "你確定要使用DigitShield伺服器驗證你的裝置嗎？點擊確認以檢查你的裝置是否為原裝且未被篡改。"
     update_bootloader = "你想更新引導加載程序嗎？"
     update_resource = "你想更新裝置資源嗎？"
+    need_input_tips = "請輸入完成所有助記詞以後再點擊下一步"
+    need_select_tips = "請按助記詞順序點擊選擇完成以後再點擊下一步"
+    return_check_mnemonic = "查看助記詞"
 
 class Tip:
     swipe_down_to_close = "向下滑動以關閉"

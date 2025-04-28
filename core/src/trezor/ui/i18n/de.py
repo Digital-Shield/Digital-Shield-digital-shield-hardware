@@ -350,6 +350,10 @@ class Text:
     verify_device = "Sind Sie sicher, dass Sie Ihr Gerät mit dem DigitShield-Server authentifizieren möchten? Tippen Sie auf Bestätigen, um zu prüfen, ob Ihr Gerät original und nicht manipuliert ist."
     update_bootloader = "Möchten Sie den Bootloader aktualisieren?"
     update_resource = "Möchten Sie die Geräteressourcen aktualisieren?"
+    need_input_tips = "Bitte geben Sie alle Mnemonikwörter ein, bevor Sie auf den nächsten Schritt klicken."
+    need_select_tips = "Bitte klicken Sie und wählen Sie in der Reihenfolge der Mnemonikwörter aus und klicken Sie dann auf den nächsten Schritt, nachdem Sie fertig sind."
+    return_check_mnemonic = "Prüfen Sie die Mnemonikwörter."
+
 class Tip:
     swipe_down_to_close = "Zum Schließen nach unten wischen"
 

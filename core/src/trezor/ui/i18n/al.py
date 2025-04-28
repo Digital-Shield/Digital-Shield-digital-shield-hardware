@@ -196,6 +196,9 @@ class Title:
     verify_device = "تحقق من الجهاز"
     update_bootloader = "تحديث برنامج التحميل الأولي"
     update_resource = "تحديث الموارد"
+    need_input_tips = "يرجى إدخال كافة كلمات التذكير قبل النقر فوق الإ 단계 التالي"
+    need_select_tips = "يرجى النقر واختيار بالترتيب للكلمات التذكير، ثم النقر فوق الخطوة التالية بعد الانتهاء."
+    return_check_mnemonic = "التحقق من كلمات التذكير"
 
 class Text:
     tap_to_unlock = "اضغط لفتح القفل"

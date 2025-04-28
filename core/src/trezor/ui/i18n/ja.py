@@ -196,7 +196,10 @@ class Title:
     verify_device = "デバイスを検証する"
     update_bootloader = "ブートローダーを更新する"
     update_resource = "リソースを更新する"
-
+    need_input_tips = "すべてのメモニックワードを入力してから、次のステップをクリックしてください。"
+    need_select_tips = "メモニックワードの順番でクリックして選択し、完了したら次のステップをクリックしてください。"
+    return_check_mnemonic = "メモニックワードを確認する"
+    
 class Text:
     tap_to_unlock = "タップしてロック解除"
     unlocking = "デバイスのロック解除中..."

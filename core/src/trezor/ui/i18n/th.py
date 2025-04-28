@@ -196,7 +196,10 @@ class Title:
     verify_device = "장치 검증"
     update_bootloader = "부트로더 업데이트"
     update_resource = "리소스 업데이트"
-
+    need_input_tips = "모든 보안어를 입력한 후 다음 단계를 클릭하십시오."
+    need_select_tips = "보안어 순서대로 클릭하여 선택한 후 완료되면 다음 단계를 클릭하십시오."
+    return_check_mnemonic = "보안어 확인하기"
+    
 class Text:
     tap_to_unlock = "잠금 해제를 터치하세요"
     unlocking = "기기 잠금 해제 중..."

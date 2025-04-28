@@ -7,6 +7,9 @@ from trezor.ui.screen import Modal, Navigation
 from trezor.ui.theme import Styles
 from trezor.ui.component import HStack, VStack
 from trezor.ui.component import MnemonicKeyboard
+from trezor.ui import i18n, Cancel, Confirm
+from trezor.ui.screen.confirm import SimpleConfirm
+from trezor import workflow
 
 from trezor.ui.types import *
 
@@ -83,10 +86,29 @@ class MnemonicCheck(Navigation):
         self.content.set_style_pad_row(16, lv.PART.MAIN)
 
         self.content.add_event_cb(self.click_mnemonic, lv.EVENT.CLICKED, None)
-        self.btn_next.add_state(lv.STATE.DISABLED)
+        # self.btn_next.add_state(lv.STATE.DISABLED)
 
     def on_click_next(self, event):
-        self.channel.publish(self.checked_mnemonic)
+        #判断是否有所有助记词点击选择完成
+        enable = all(item.index is not None for item in self.items)
+        if enable:
+            self.channel.publish(self.checked_mnemonic)
+        else:
+            log.debug(__name__, "Not all mnemonics have been clicked.")
+            workflow.spawn(self.do_confirm_save_option0())
+            
+    async def do_confirm_save_option0(self):
+        screen = SimpleConfirm(i18n.Text.need_select_tips)
+        screen.btn_confirm.delete()
+        screen.btn_cancel.set_text(i18n.Text.return_check_mnemonic)
+        await screen.show()
+        r = await screen
+        if isinstance(r, Cancel):
+            # log.debug(__name__, "Confirm 1 click cancel")
+            # self.channel.publish(Redo())
+            from trezor.ui import NavigationBack
+            self.channel.publish(NavigationBack())
+            return
 
     def update_mnemonics(self, mnemonics: Sequence[str]):
         self.items: List[Item] = []
@@ -205,7 +227,7 @@ class MnemonicInput(Navigation):
         for item in self.items:
             item.clickable = True
         self.content.add_event_cb(self.on_click_item, lv.EVENT.CLICKED, None)
-        self.btn_next.add_state(lv.STATE.DISABLED)
+        # self.btn_next.add_state(lv.STATE.DISABLED)
         self.input = None
 
     @property
@@ -213,8 +235,25 @@ class MnemonicInput(Navigation):
         return [item.word for item in self.items]
 
     def on_click_next(self, event):
+        #判断是否有输入完成所有助记词
+        if all(item.word is not None for item in self.items):
+            self.channel.publish(self.mnemonics)
+        else:
+            log.debug(__name__, "Not all mnemonics have been entered.")
+            workflow.spawn(self.do_confirm_save_option())
+            
+    async def do_confirm_save_option(self):
+        screen = SimpleConfirm(i18n.Text.need_input_tips)
+        screen.btn_confirm.delete()
+        screen.btn_cancel.set_text(i18n.Button.confirm)
+        await screen.show()
+        r = await screen
+        if isinstance(r, Cancel):
+            return
+
+        # `Continue`
         self.channel.publish(self.mnemonics)
-        
+
     def update_next_btn(self):
         enable = all(item.word is not None for item in self.items)
         if enable:
