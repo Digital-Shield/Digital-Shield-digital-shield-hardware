@@ -29,7 +29,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "Về Digit Shield"
+    about = "Về Digital Shield"
     terms_of_use = 'Điều khoản sử dụng'
     device_info = 'Thông tin thiết bị'
     firmware_update = 'Nâng cấp firmware'

@@ -43,7 +43,7 @@ DISABLE_ANIMATION = 0
 BLE_CONNECTED: bool | None = None
 BATTERY_CAP: int | None = None
 SHORT_AUTO_LOCK_TIME_MS = 10 * 1000
-DEFAULT_LABEL = "Digitshield"
+DEFAULT_LABEL = "Digital Shield"
 _SHOW_APP_GUIDE = False
 if __debug__:
     if EMULATOR:

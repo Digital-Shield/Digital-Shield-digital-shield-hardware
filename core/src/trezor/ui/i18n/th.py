@@ -28,7 +28,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "Digit Shield 정보"
+    about = "Digital Shield 정보"
     terms_of_use = '이용약관'
     device_info = '기기 정보'
     firmware_update = '펌웨어 업데이트'

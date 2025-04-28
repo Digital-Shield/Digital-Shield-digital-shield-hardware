@@ -21,13 +21,13 @@ class About(Navigation):
             .pad_right(16),
             0
         )
-        Item(self.content,'Digit Shield','A:/res/web.png',"https://ds.pro")
+        Item(self.content,'Digital Shield','A:/res/web.png',"https://ds.pro")
         Item(self.content,'Twitter','A:/res/twitter.png',"https://x.com/DigitShield_HQ")
         Item(self.content,'Discord','A:/res/discord.png',"https://discord.com/invite/y3MrZejP")
         Item(self.content,'Telegram','A:/res/telegram.png',"https://t.me/digitshield")
-        Item(self.content,'Ins','A:/res/discord.png',"https://www.instagram.com/digital.shield.wallet")
+        Item(self.content,'Instagram','A:/res/discord.png',"https://www.instagram.com/digital.shield.wallet")
         Item(self.content,'Facebook','A:/res/web.png',"https://www.facebook.com/profile.php?id=61571313262914")
-        Item(self.content,'Ytb','A:/res/telegram.png',"https://www.youtube.com/@DigitalShield-s6j")
+        Item(self.content,'Youtube','A:/res/telegram.png',"https://www.youtube.com/@DigitalShield-s6j")
 class Item(VStack):
     """
     Item with an icon and text

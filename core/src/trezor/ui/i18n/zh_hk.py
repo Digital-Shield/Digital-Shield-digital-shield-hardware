@@ -29,7 +29,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "關於Digit Shield"
+    about = "關於Digital Shield"
     terms_of_use = '使用條款'
     device_info = '裝置資訊'
     firmware_update = '韌體升級'
@@ -196,6 +196,8 @@ class Title:
     verify_device = "驗證裝置"
     update_bootloader = "更新引導加載程序"
     update_resource = "更新資源"
+    directions = "方向"
+    send_amount = "send\n{}"
 
 class Text:
     tap_to_unlock = "點擊以解鎖"
