@@ -28,7 +28,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "About Digit Shield"
+    about = "About Digital Shield"
     terms_of_use = 'Terms of Service'
     device_info = 'Device Info'
     firmware_update = 'Firmware Update'
@@ -229,6 +229,8 @@ class Title:
     verify_device ="Verify device"
     update_bootloader = "Update bootloader"
     update_resource = "Update resource"
+    directions = "direction"
+    send_amount = "send\n{}"
 
 class Tip:
     swipe_down_to_close = "Swipe Down to Close"

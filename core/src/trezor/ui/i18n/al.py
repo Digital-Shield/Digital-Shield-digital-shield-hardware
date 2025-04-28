@@ -29,7 +29,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "عن Digit Shield"
+    about = "عن Digital Shield"
     terms_of_use = 'شروط الاستخدام'
     device_info = 'معلومات الجهاز'
     firmware_update = 'ترقية البرنامج الثابت'

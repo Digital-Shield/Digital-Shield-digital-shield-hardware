@@ -29,7 +29,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "Über Digit Shield"
+    about = "Über Digital Shield"
     terms_of_use = 'Nutzungsbedingungen'
     device_info = 'Geräteinformationen'
     firmware_update = 'Firmware-Update'

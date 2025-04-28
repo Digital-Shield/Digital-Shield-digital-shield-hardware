@@ -12,7 +12,7 @@ languages = [
     Language('zh_hk', '繁體中文'),
     Language('en', 'English'),
     Language('th','한국어'),
-    Language('ja','日本語'),
+    Language('ja','日語'),
     Language("al","بالعربية"),
     Language('yn','Tiếng Việt'),
     Language('de','Deutsch'),

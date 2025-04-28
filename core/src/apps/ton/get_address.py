@@ -52,7 +52,8 @@ async def get_address(
         is_bounceable=msg.is_bounceable,
         is_test_only=msg.is_testnet_only,
     )
-    #print("address=",address)
+    print("address=",address)
+    # address =  "tryrtytryuuroweiureweoir"
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)
         ctx.primary_color, ctx.icon_path = lv.color_hex(PRIMARY_COLOR), ICON
@@ -63,4 +64,4 @@ async def get_address(
             network="TON",
         )
 
-    return TonAddress(public_key=public_key, address=address)
+    return TonAddress(address=address)
