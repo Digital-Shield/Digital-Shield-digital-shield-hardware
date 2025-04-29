@@ -389,7 +389,10 @@ class Text:
     verify_device = "Are you sure to authenticate your device with the DigitShield server? Tap confirm to check whether your device is genuine and without tampered."
     update_bootloader = "Do you want to update bootloader?"
     update_resource = "Do you want to update device resource?"
-
+    need_input_tips = "Please enter all the mnemonic words before clicking the next step"
+    need_select_tips = "Please click and select in the order of the mnemonic words, and then click the next step after completion."
+    return_check_mnemonic = "Check the mnemonic words"
+    
 class WalletSecurity:
     header = "Write recovery phrase on paper and store securely"
     tips = [

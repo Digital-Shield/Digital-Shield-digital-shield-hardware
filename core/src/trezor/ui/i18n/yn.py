@@ -197,7 +197,10 @@ class Title:
     verify_device = "Xác minh thiết bị"
     update_bootloader = "Cập nhật trình引导 (bootloader)"
     update_resource = "Cập nhật tài nguyên"
-
+    nedd_input_tips = "Vui lòng nhập tất cả các từ nhắc nỡ trước khi nhấp vào bước tiếp theo."
+    need_select_tips = "Vui lòng nhấp và chọn theo thứ tự các từ nhắc nỡ, sau đó nhấp vào bước tiếp theo sau khi hoàn thành."
+    return_check_mnemonic = "Kiểm tra các từ nhắc nỡ"
+    
 class Text:
     tap_to_unlock = "Chạm để mở khóa"
     unlocking = "Đang mở khóa thiết bị..."
