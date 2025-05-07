@@ -24,17 +24,19 @@ class LockScreen(Screen):
         self.content.set_style_pad_top(32, lv.PART.MAIN)
         self.content.set_style_pad_bottom(32, lv.PART.MAIN)
 
-        # lock icon
-        icon = lv.img(self.content)
-        icon.set_src("A:/res/lock_two.png")
+        # # lock icon
+        # icon = lv.img(self.content)
+        # icon.set_src("A:/res/lock_two.png")
 
-        # logo icon
-        logo = lv.img(self.content)
-        logo.set_src("A:/res/logo_two.png")
+        # # # logo icon
+        # logo = lv.img(self.content)
+        # logo.set_src("A:/res/logo_two.png")
 
         # tip
         tip = lv.label(self.content)
         tip.set_text(i18n.Text.tap_to_unlock)
+        #tip并不显示在垂直的中央，向下偏移300高度
+        tip.set_style_pad_top(300, lv.PART.MAIN)
         tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         cur_language = i18n.using.code if i18n.using is not None else None
         if cur_language == "al":

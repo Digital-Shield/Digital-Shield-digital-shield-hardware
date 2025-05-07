@@ -22,8 +22,7 @@ class Screen(lv.obj):
     def __init__(self):
         super().__init__()
         # Set the default background image
-        self.set_style_bg_img_src("A:/res/wallpapers/4.png", 0)
-
+        self.set_style_bg_img_src("A:/res/bootGifs/qingmiao_48.png", 0)
         # Create a GIF object and set it as the background
         
         # gif.set_style_bg_opa(lv.OPA.COVER, 0)  # Ensure the background covers the screen
@@ -43,7 +42,9 @@ class Screen(lv.obj):
         self._content: lv.obj = self
 
         # gif = lv.gif(self.content)
-        # gif.set_src("A:/res/wallpapers/136.gif")
+        # gif.set_src("A:/res/wallpapers/988.gif")
+    
+
         # lazy initialize components
         self._title: Title|None = None
         self._btn_container: VStack|None = None
@@ -68,7 +69,6 @@ class Screen(lv.obj):
         )
         self.add_event_cb(lambda _: self.on_unloaded(), lv.EVENT.SCREEN_UNLOADED, None)
         self.add_event_cb(lambda _: self.on_deleting(), lv.EVENT.DELETE, None)
-
 
     def create_content(self, cls: Type[Widget]):
         """
