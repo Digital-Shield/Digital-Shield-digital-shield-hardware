@@ -49,11 +49,13 @@ class ShutingDown(Modal):
         self.content.items_center()
         self.content.center()
 
-        self.add(lv.img).set_src("A:/res/logo_two.png")
+        # self.add(lv.img).set_src("A:/res/logo_two.png")
         # self.add(lv.label).set_text(i18n.Text.shutting_down)
         # 添加文本并设置颜色
         label = self.add(lv.label)
         label.set_text(i18n.Text.shutting_down)
+         #label并不显示在垂直的中央，向下偏移300高度
+        label.set_style_pad_top(300, lv.PART.MAIN)
         label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         async def shutdown_delay():
