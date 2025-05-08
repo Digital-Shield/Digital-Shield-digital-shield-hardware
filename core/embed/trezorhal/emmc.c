@@ -29,7 +29,7 @@ void emmc_init(void) {
   PC9     ------> SDMMC1_D1
   PC7     ------> SDMMC1_D7
   PC6     ------> SDMMC1_D6
-  PI14     ------> SDMMC1_RST */
+  PI15     ------> SDMMC1_RST */
   GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_8 |
                         GPIO_PIN_9 | GPIO_PIN_7 | GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -53,7 +53,7 @@ void emmc_init(void) {
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
-  // emmc_reset();
+  emmc_reset();
   hmmc1.Instance = SDMMC1;
   hmmc1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
   hmmc1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
@@ -101,15 +101,15 @@ void emmc_reset(void) {
   __HAL_RCC_GPIOI_CLK_ENABLE();
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_PIN_14;
+  GPIO_InitStruct.Pin = GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_14, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_15, GPIO_PIN_RESET);
   HAL_Delay(5);
-  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_14, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_15, GPIO_PIN_SET);
   HAL_Delay(5);
 }
 uint8_t emmc_get_card_state(void) {
