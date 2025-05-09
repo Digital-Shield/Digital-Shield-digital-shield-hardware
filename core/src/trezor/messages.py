@@ -7967,16 +7967,16 @@ if TYPE_CHECKING:
 
     class TonSignTx(protobuf.MessageType):
         address_n: "list[int]"
-        destination: "str"
+        address: "str"
         jetton_master_address: "str | None"
         jetton_wallet_address: "str | None"
-        ton_amount: "int"
+        amount: "int"
         jetton_amount: "int | None"
         fwd_fee: "int"
         comment: "str | None"
         is_raw_data: "bool"
         mode: "int"
-        seqno: "int"
+        seqno: "int | None"
         valid_until: "int"
         wallet_version: "TonWalletVersion"
         wallet_id: "int"
@@ -7990,20 +7990,18 @@ if TYPE_CHECKING:
         init_data_initial_chunk: "bytes | None"
         init_data_length: "int | None"
         signing_message_repr: "bytes | None"
-        messages: "list[TonMessages]"
 
         def __init__(
             self,
             *,
-            destination: "str",
-            ton_amount: "int",
-            seqno: "int",
+            address: "str",
+            amount: "int",
+            seqno: "int | None" = 0,
             valid_until: "int",
             address_n: "list[int] | None" = None,
             ext_destination: "list[str] | None" = None,
             ext_ton_amount: "list[int] | None" = None,
             ext_payload: "list[str] | None" = None,
-            messages: "list[TonMessages] | None" = None,
             jetton_master_address: "str | None" = None,
             jetton_wallet_address: "str | None" = None,
             jetton_amount: "int | None" = None,
@@ -8029,14 +8027,14 @@ if TYPE_CHECKING:
 
     class TonSignedTx(protobuf.MessageType):
         signature: "bytes | None"
-        signning_message: "bytes | None"
+        serialized_tx: "bytes | None"
         init_data_length: "int | None"
 
         def __init__(
             self,
             *,
             signature: "bytes | None" = None,
-            signning_message: "bytes | None" = None,
+            serialized_tx: "bytes | None" = None,
             init_data_length: "int | None" = None,
         ) -> None:
             pass
@@ -8101,24 +8099,6 @@ if TYPE_CHECKING:
 
         @classmethod
         def is_type_of(cls, msg: Any) -> TypeGuard["TonSignedProof"]:
-            return isinstance(msg, cls)
-
-    class TonMessages(protobuf.MessageType):
-        address: "str | None"
-        amount: "str | None"
-        payload: "str | None"
-
-        def __init__(
-            self,
-            *,
-            address: "str | None" = None,
-            amount: "str | None" = None,
-            payload: "str | None" = None,
-        ) -> None:
-            pass
-
-        @classmethod
-        def is_type_of(cls, msg: Any) -> TypeGuard["TonMessages"]:
             return isinstance(msg, cls)
 
     class TronGetAddress(protobuf.MessageType):

@@ -11,6 +11,7 @@ from trezor.ui.screen.confirm import HolderConfirm
 
 # import TransactionOverview in `ethereum` namespace
 from trezor.ui.screen.template import TransactionOverview
+from trezor.ui.screen.template import TransactionOverviewTon
 
 if TYPE_CHECKING:
     from typing import Literal, Iterable

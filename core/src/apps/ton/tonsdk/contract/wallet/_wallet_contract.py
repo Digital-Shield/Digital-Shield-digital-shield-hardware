@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List, Union
 from ...boc import Cell
 from ...utils import Address
 from .. import Contract
-
+# import base64
 if TYPE_CHECKING:
     from enum import IntEnum
 else:
@@ -74,9 +74,11 @@ class WalletContract(Contract):
 
         state_init_cell = None
         if state_init:
+            print("state_start: ", Cell.REACH_BOC_MAGIC_PREFIX)
             if state_init.startswith(Cell.REACH_BOC_MAGIC_PREFIX):
                 state_init_cell = Cell.one_from_boc(state_init)
             else:
+                # state_init_cell = state_init
                 raise ValueError("Invalid state init")
         order = Contract.create_common_msg_info(
             order_header, state_init_cell, payload_cell
@@ -125,6 +127,7 @@ class WalletContract(Contract):
                 signing_message.bits.write_uint8(send_mode)
                 signing_message.refs.append(ext_order)
 
-        boc = bytes(signing_message.to_boc())
-
+        boc = signing_message.to_boc()#bytes()#)base64.b64encode().decode('utf-8')
+        # boc = base64.b64encode(boc).decode('utf-8')
+        #好像这儿这个库不支持，我先返回转二进制之前的，然后去另一个程序里转
         return signing_message.bytes_hash(), boc
