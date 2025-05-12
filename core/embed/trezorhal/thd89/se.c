@@ -148,6 +148,7 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
 int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   // wait combus pull down, SE have processed data
   while(SE_COMBUS_IS_HIGH());
+  HAL_Delay(1);
   // delay a short time
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
   int ret = HAL_SPI_Receive(&hspi5, buf, sizeof(buf), timeout);
@@ -172,6 +173,7 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
 int se_send(uint8_t *buf, size_t size, uint32_t timeout) {
   // wait combus pull up, SE is IDLE
   while (SE_COMBUS_IS_LOW());
+  HAL_Delay(1);
   printf("SE sending: \n");
   log_data(buf, size);
   if (HAL_SPI_Transmit(&hspi5, buf, size, timeout) != HAL_OK) {
