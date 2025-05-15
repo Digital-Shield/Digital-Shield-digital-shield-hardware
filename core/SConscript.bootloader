@@ -152,7 +152,6 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/usbd_msc_scsi.c',
     'embed/trezorhal/usbd_msc_storage.c',
     'embed/trezorhal/usbd_desc.c',
-    'embed/trezorhal/thd89/se_thd89.c',
     'embed/trezorhal/trans_fifo.c',
     'embed/trezorhal/battery.c',
     'embed/trezorhal/spi.c',
@@ -173,7 +172,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/touch.c',
     # se files
     'embed/trezorhal/thd89/se.c',
-    'embed/trezorhal/thd89/test_data.c',
+    'embed/trezorhal/thd89/se_spi.c',
     'embed/trezorhal/thd89/thd89.c',
     'embed/trezorhal/thd89/thd89_test.c',
 

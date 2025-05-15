@@ -471,6 +471,19 @@ thd89_result_t thd89_ping(void) {
   return THD89_SUCCESS;
 }
 
+thd89_result_t thd89_reset(void) {
+  thd89_result_t ret = thd89_send_reset(FCTR_TYPE_CONTROL | SEQCTR_RESET);
+  if (ret) {
+    return ret;
+  }
+  uint8_t fctr;
+  thd89_read_reset(&fctr);
+  if (fctr != (FCTR_TYPE_CONTROL | SEQCTR_RESET)) {
+    return THD89_ERR_UNEXPECTED;
+  }
+  return THD89_SUCCESS;
+}
+
 thd89_result_t thd89_handshake(uint8_t* secret, size_t secret_size) {
   // step1. Send `Handshake.Hello` message
   // use pre shared secret key agreement

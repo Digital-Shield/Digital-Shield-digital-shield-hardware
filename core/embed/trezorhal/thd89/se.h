@@ -1,56 +1,46 @@
-#ifndef _SE_H_
-#define _SE_H_
+#ifndef _SE_THD89_H_
+#define _SE_THD89_H_
 
+#include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h>
 
-#define SE_POWER_GPIO_PORT GPIOD
-#define SE_POWER_GPIO_PIN GPIO_PIN_4
+#define se_sync_session_key(void) NULL
+#define se_setNeedsBackup(needs_backup) true
 
-#define SE_POWER_ON() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET)
-#define SE_POWER_OFF() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_RESET)
+char *se_get_version(void);
+bool se_get_sn(char **serial);
 
-// use PK5 as handshake pin
-#define SE_COMBUS_GPIO_PORT GPIOK
-#define SE_COMBUS_GPIO_PIN GPIO_PIN_5
+bool se_setSeedStrength(uint32_t strength);
+bool se_getSeedStrength(uint32_t *strength);
+bool se_importSeed(uint8_t *seed);
+bool se_export_seed(uint8_t *seed);
+void se_get_status(void);
+bool se_hasPin(void);
+bool se_verifyPin(const char *pin);
+bool se_setPin(const char *pin);
+bool se_changePin(const char *old_pin, const char *new_pin);
+bool se_reset_pin(void);
+bool se_isInitialized(void);
+bool se_is_wiping(void);
+void se_set_wiping(bool flag);
+void se_reset_state(void);
+void se_reset_storage(void);
+uint32_t se_pinFailedCounter(void);
+bool se_device_init(uint8_t mode, const char *passphrase);
 
-/**SPI5 GPIO Configuration
-PK0     ------> SPI5_SCK
-PK1     ------> SPI5_NSS  --> se_cs
-PF8     ------> SPI5_MISO
-PJ10     ------> SPI5_MOSI
-*/
+bool se_get_pubkey(uint8_t pubkey[65]);
+bool se_write_certificate(const uint8_t *cert, uint32_t cert_len);
+bool se_get_certificate_len(uint32_t *cert_len);
+bool se_read_certificate(uint8_t *cert, uint32_t *cert_len);
+bool se_sign_message(uint8_t *msg, uint32_t msg_len, uint8_t *signature);
+void se_init(void);
 
-#define SPI_GPIO_CLK_ENABLE()     \
-  do {                            \
-    __HAL_RCC_GPIOD_CLK_ENABLE(); \
-    __HAL_RCC_GPIOF_CLK_ENABLE(); \
-    __HAL_RCC_GPIOK_CLK_ENABLE(); \
-    __HAL_RCC_GPIOJ_CLK_ENABLE(); \
-  } while (0)
-
-// CLK
-#define SPI_CLK_GPIO_PORT GPIOK
-#define SPI_CLK_GPIO_PIN GPIO_PIN_0
-// NSS
-#define SPI_NSS_GPIO_PORT GPIOK
-#define SPI_NSS_GPIO_PIN GPIO_PIN_1
-// MISO
-#define SPI_MISO_GPIO_PORT GPIOF
-#define SPI_MISO_GPIO_PIN GPIO_PIN_8
-// MOSI
-#define SPI_MOSI_GPIO_PORT GPIOJ
-#define SPI_MOSI_GPIO_PIN GPIO_PIN_10
-
-#define SE_COMBUS_HIGH() HAL_GPIO_WritePin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN, GPIO_PIN_SET)
-#define SE_COMBUS_LOW() HAL_GPIO_WritePin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN, GPIO_PIN_RESET)
-#define SE_COMBUS_IS_HIGH() (HAL_GPIO_ReadPin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN) == GPIO_PIN_SET)
-#define SE_COMBUS_IS_LOW() (HAL_GPIO_ReadPin(SE_COMBUS_GPIO_PORT, SE_COMBUS_GPIO_PIN) == GPIO_PIN_RESET)
-
-#if !EMULATOR
-int se_spi_init(void);
-int se_send(uint8_t *buf, size_t size, uint32_t timeout);
-int se_recv(uint8_t *buf, size_t size, uint32_t timeout);
-#endif
+// for gem_mpy function pointer
+typedef struct {
+  int x;
+  int y;
+  void (*ptr_func)(void);
+} func_pointer;
+void fake_func(func_pointer func_p);
 
 #endif

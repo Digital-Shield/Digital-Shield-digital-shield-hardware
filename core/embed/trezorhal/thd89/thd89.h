@@ -16,6 +16,8 @@ typedef enum {
 
 thd89_result_t thd89_init(void);
 void thd89_deinit(void);
+thd89_result_t thd89_ping(void);
+thd89_result_t thd89_reset(void);
 thd89_result_t thd89_handshake(uint8_t* secret, size_t secret_size);
 thd89_result_t thd89_execute_command(const uint8_t* command,
                                      size_t command_size, uint8_t* response,

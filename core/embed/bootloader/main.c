@@ -30,7 +30,7 @@
 #include "mipi_lcd.h"
 #include "mpu.h"
 #include "sdram.h"
-#include "se_thd89.h"
+#include "thd89/se.h"
 #include "spi.h"
 #include "sys.h"
 #include "usart.h"
@@ -550,8 +550,11 @@ int main(void)
 
     SystemCoreClockUpdate();
 
-    extern void thd89_test(void);
-    thd89_test();
+    // extern void thd89_test(void);
+    // thd89_test();
+    extern void se_test(void);
+    se_test();
+    while (1);
 
     /* Enable the CPU Cache */
     cpu_cache_enable();

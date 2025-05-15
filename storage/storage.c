@@ -33,7 +33,7 @@
 #include "sha2.h"
 #include "storage.h"
 #ifndef TREZOR_EMULATOR
-#include "se_thd89.h"
+#include "thd89/se.h"
 #endif
 
 #define LOW_MASK 0x55555555

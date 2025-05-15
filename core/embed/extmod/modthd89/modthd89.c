@@ -20,8 +20,7 @@
 #include "py/objstr.h"
 #include "py/runtime.h"
 
-#include "se_thd89.h"
-#include "thd89/se_thd89.h"
+#include "thd89/se.h"
 
 /// package: thd89
 

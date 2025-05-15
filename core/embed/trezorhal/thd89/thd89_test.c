@@ -1,7 +1,6 @@
 #include "stm32h7xx_hal.h"
 #include "thd89.h"
-#include "test_data.h"
-#include "se.h"
+#include "se_spi.h"
 
 #include <stdio.h>
 #include <memory.h>
@@ -17,6 +16,7 @@ void test_frame_ping(void) {
   }
 }
 void test_handshake(void) {
+  uint8_t SECRET[16] = {0};
   thd89_result_t ret = thd89_handshake(SECRET, sizeof(SECRET));
   if (ret != THD89_SUCCESS) {
     printf("handshake failed: %d\n", ret);
