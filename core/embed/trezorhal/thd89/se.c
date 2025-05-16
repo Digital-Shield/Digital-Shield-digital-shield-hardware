@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "stm32h7xx_hal.h"
 #include "thd89.h"
 #include "se_spi.h"
 #include "alignment.h"
@@ -343,7 +344,7 @@ bool se_sign_message(uint8_t *msg, uint32_t msg_len, uint8_t *signature) {
 
 void se_init(void) {
     // Empty implementation
-    (void) se_storage_init();
+    (void) se_storage_init;
     se_spi_init();
     thd89_init();
     // reset thd89 connection
@@ -352,6 +353,10 @@ void se_init(void) {
 
 void se_test(void) {
     se_init();
-    char* version = se_get_version();
-    printf("version: %s\n", version);
+    while (1) {
+        HAL_Delay(1000);
+        char* version = se_get_version();
+        printf("version: %s\n", version);
+    }
+
 }

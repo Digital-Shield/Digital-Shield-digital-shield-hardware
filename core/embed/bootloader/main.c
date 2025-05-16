@@ -552,17 +552,15 @@ int main(void)
 
     // extern void thd89_test(void);
     // thd89_test();
-    extern void se_test(void);
-    se_test();
-    while (1);
 
     /* Enable the CPU Cache */
     cpu_cache_enable();
 
-    extern void thd89_test(void);
-    thd89_test();
-
     mpu_config_bootloader();
+
+    extern void se_test(void);
+    se_test();
+    while (1);
 
     random_delays_init();
     motor_init();

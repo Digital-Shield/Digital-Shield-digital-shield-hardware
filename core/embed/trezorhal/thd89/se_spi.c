@@ -3,13 +3,11 @@
 #include "stm32h7xx_hal_spi.h"
 #include <stdio.h>
 #include <string.h>
-#include "common.h"
 #include "se_spi.h"
 #include "sec_trans.h"
 
 static SPI_HandleTypeDef hspi5 = {0};
 #define SE_TRANS_TIMEOUT 10000
-
 int se_spi_init(void) {
   GPIO_InitTypeDef gpio = {0};
 
@@ -55,11 +53,10 @@ int se_spi_init(void) {
 
   gpio.Pin = SE_COMBUS_GPIO_PIN;
   gpio.Mode = GPIO_MODE_INPUT;
-  gpio.Pull = GPIO_PULLUP;
-  gpio.Speed = GPIO_SPEED_FREQ_LOW;
+  gpio.Pull = GPIO_NOPULL;
+  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
   gpio.Alternate = 0;
   HAL_GPIO_Init(SE_COMBUS_GPIO_PORT, &gpio);
-  SE_COMBUS_HIGH();
 
   // power on
   gpio.Pin = SE_POWER_GPIO_PIN;
@@ -90,6 +87,7 @@ int se_spi_init(void) {
   hspi5.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
   hspi5.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
   hspi5.Init.IOSwap = SPI_IO_SWAP_DISABLE;
+  hspi5.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_08CYCLE;
   HAL_SPI_DeInit(&hspi5);
   if (HAL_SPI_Init(&hspi5) != HAL_OK) {
     return -1;
@@ -120,8 +118,6 @@ static void log_data(uint8_t* data, size_t data_size) {
     size_t frame_size = len + 5;
     uint8_t* p = frame + 3;
 
-    printf("raw frame: \n");
-    log_data(frame, frame_size);
     printf("frame: %02x,  len: %d(%02x%02x), crc: %02x%02x\n", fctr, len,
            frame[1], frame[2], frame[frame_size - 2], frame[frame_size - 1]);
 
@@ -132,9 +128,9 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
   // wait combus pull up, SE is IDLE
   while(SE_COMBUS_IS_LOW());
   HAL_Delay(1);
-  uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
-  memcpy(buf, frame, frame_size);
-  int ret = HAL_SPI_Transmit(&hspi5, buf, sizeof(buf), timeout);
+  uint8_t se_cache_buf[SEC_MAX_FRAME_SIZE] = {0};
+  memcpy(se_cache_buf, frame, frame_size);
+  int ret = HAL_SPI_Transmit(&hspi5, se_cache_buf, sizeof(se_cache_buf), timeout);
   if (ret == HAL_TIMEOUT) {
     return SEC_TRANS_ERR_TIMEOUT;
   } else if (ret != HAL_OK) {
@@ -154,7 +150,7 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   int ret = HAL_SPI_Receive(&hspi5, buf, sizeof(buf), timeout);
   if (ret == HAL_TIMEOUT) {
     return SEC_TRANS_ERR_TIMEOUT;
-    } else if (ret != HAL_OK) {
+  } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
   size_t len = buf[1];
