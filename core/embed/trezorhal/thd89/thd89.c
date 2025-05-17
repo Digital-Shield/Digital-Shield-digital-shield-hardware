@@ -211,10 +211,10 @@ static uint16_t calc_crc(uint8_t* data, size_t data_size) {
 }
 
 static thd89_result_t thd89_write(const uint8_t* frame, size_t frame_size) {
-  return sec_trans_write(frame, frame_size, 0xFFFFFFFF);
+  return sec_trans_write(frame, frame_size, 1000);
 }
 static thd89_result_t thd89_read(uint8_t* frame, size_t frame_buf_size) {
-  return sec_trans_read(frame, frame_buf_size, 0xFFFFFFFF);
+  return sec_trans_read(frame, frame_buf_size, 1000);
 }
 
 static thd89_result_t thd89_send_frame_control(uint8_t fctr) {
