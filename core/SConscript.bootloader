@@ -47,6 +47,7 @@ SOURCE_MOD += [
     'vendor/trezor-crypto/curves.c',
     'vendor/trezor-crypto/ecdsa.c',
     'vendor/trezor-crypto/nist256p1.c',
+    'vendor/trezor-crypto/secp256k1.c',
     'vendor/trezor-crypto/rfc6979.c',
     'vendor/trezor-crypto/hmac_drbg.c',
 ]
@@ -173,6 +174,7 @@ SOURCE_TREZORHAL = [
     # se files
     'embed/trezorhal/thd89/se.c',
     'embed/trezorhal/thd89/se_spi.c',
+    'embed/trezorhal/thd89/se_factory.c',
     'embed/trezorhal/thd89/thd89.c',
     'embed/trezorhal/thd89/thd89_test.c',
 

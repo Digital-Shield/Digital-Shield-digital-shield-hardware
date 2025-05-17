@@ -1,46 +1,58 @@
 #ifndef _SE_THD89_H_
 #define _SE_THD89_H_
-
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
-#define se_sync_session_key(void) NULL
-#define se_setNeedsBackup(needs_backup) true
+/// life cycle object states
+typedef enum {
+  LCS_FACTORY = 0,
+  LCS_USER = 1,
 
-char *se_get_version(void);
-bool se_get_sn(char **serial);
+  LCS_UNKNOWN = 0xFF,
+}life_cycle_t;
 
-bool se_setSeedStrength(uint32_t strength);
-bool se_getSeedStrength(uint32_t *strength);
-bool se_importSeed(uint8_t *seed);
-bool se_export_seed(uint8_t *seed);
-void se_get_status(void);
-bool se_hasPin(void);
-bool se_verifyPin(const char *pin);
-bool se_setPin(const char *pin);
-bool se_changePin(const char *old_pin, const char *new_pin);
-bool se_reset_pin(void);
-bool se_isInitialized(void);
-bool se_is_wiping(void);
-void se_set_wiping(bool flag);
-void se_reset_state(void);
-void se_reset_storage(void);
-uint32_t se_pinFailedCounter(void);
-bool se_device_init(uint8_t mode, const char *passphrase);
+/// which state runing
+typedef enum {
+  STATE_BOOTLOADER,
+  STATE_APP,
+}se_state_t;
 
-bool se_get_pubkey(uint8_t pubkey[65]);
-bool se_write_certificate(const uint8_t *cert, uint32_t cert_len);
-bool se_get_certificate_len(uint32_t *cert_len);
-bool se_read_certificate(uint8_t *cert, uint32_t *cert_len);
-bool se_sign_message(uint8_t *msg, uint32_t msg_len, uint8_t *signature);
 void se_init(void);
+int se_get_life_cycle(life_cycle_t *life_cycle);
+int se_get_version(char version[17]);
+int se_get_sn(char serial[33]);
+int se_get_running_state(se_state_t *state);
+int se_reboot_to(se_state_t state);
 
-// for gem_mpy function pointer
-typedef struct {
-  int x;
-  int y;
-  void (*ptr_func)(void);
-} func_pointer;
-void fake_func(func_pointer func_p);
+int se_get_dev_pubkey(uint8_t pubkey[65]);
+int se_get_certificate_len(size_t *cert_len);
+int se_read_certificate(uint8_t *cert, size_t *cert_len);
+int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature);
+
+// se factory function
+int se_erase_storage(void);
+int se_switch_life_cycle(void);
+int se_set_sn(const uint8_t *sn, size_t sn_len);
+int se_set_sheared_key(const uint8_t *key, size_t key_len);
+int se_gen_dev_keypair(void);
+int se_write_certificate(const uint8_t *cert, size_t cert_len);
+
+
+// helper function
+static inline bool se_is_running_bootloader(void) {
+  se_state_t state;
+  if (0 != se_get_running_state(&state)) {
+    return false;
+  }
+  return state == STATE_BOOTLOADER;
+}
+static inline bool se_is_running_app(void) {
+  se_state_t state;
+  if (0 != se_get_running_state(&state)) {
+    return false;
+  }
+  return state == STATE_APP;
+}
 
 #endif

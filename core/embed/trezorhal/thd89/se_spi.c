@@ -1,4 +1,3 @@
-#include "stm32h747xx.h"
 #include STM32_HAL_H
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_spi.h"
@@ -97,7 +96,7 @@ int se_spi_init(void) {
   return 0;
 }
 
-static void log_data(uint8_t* data, size_t data_size) {
+void log_data(uint8_t* data, size_t data_size) {
   #define __FRAME_LINE__ 16
     uint8_t count = 0;
     while (data_size--) {

@@ -939,9 +939,6 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         // selectively wipe user data and reset se
         if ( sectrue == wipe_required )
         {
-            // not supported
-            // se_set_wiping(true);
-            // se_reset_storage();
 
             // erease with retry, max 10 retry allowed, 10ms delay in between
             ExecuteCheck_MSGS_ADV_RETRY_DELAY(

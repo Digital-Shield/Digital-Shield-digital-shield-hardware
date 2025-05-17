@@ -613,8 +613,8 @@ int main(void)
     if ( !cert_set )
     {
         // if se certificate is not set
-        uint32_t cert_len = 0;
-        cert_set = se_get_certificate_len(&cert_len);
+        size_t cert_len = 0;
+        cert_set = se_get_certificate_len(&cert_len) == 0;
 #if !PRODUCTION
         cert_set = true; // TODO: need debug.
 #endif

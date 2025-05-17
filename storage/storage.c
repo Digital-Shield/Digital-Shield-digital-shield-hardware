@@ -1528,10 +1528,6 @@ void storage_wipe(void) {
 #ifdef TREZOR_EMULATOR
   _storage_wipe();
 #else
-  se_set_wiping(true);
-  se_reset_storage();
-  _storage_wipe();
-  se_reset_state();
 #endif
 }
 
