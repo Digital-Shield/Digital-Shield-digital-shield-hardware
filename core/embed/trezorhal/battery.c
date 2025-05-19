@@ -4,13 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static I2C_HandleTypeDef hi2c1 = {0};
-#define I2C_TRANSMIT_TIMEOUT 10000
+#include "i2c.h"
 
-/* I2C TIMING Register define when I2C clock source is HSI*/
-/* I2C TIMING is calculated in case of the I2C Clock source is the HSI = 16 MHz */
-/* This example use TIMING to 0x0020098E to reach 400Khz speed (Rise time = 50ns, Fall time = 10ns) */
-#define I2C_TIMING             0x70B03140 // 0x70B03140 0x00200817
 #define RT9426_ADDR            0x55 << 1
 #define MASK_REG_FLAG3_BSC_ACS 0x01
 #define SWVER                  0x02 // update this ver when change rt9426 initialize code
@@ -60,44 +55,33 @@ static I2C_HandleTypeDef hi2c1 = {0};
     while ( 0 )
 
 #define delay(x) HAL_Delay(x)
-int i2c_master_write(uint8_t addr, uint8_t* buf, uint8_t len)
+static inline int battery_write_register(uint8_t Reg_Addr, uint16_t data)
 {
-  if ( HAL_I2C_Master_Transmit(&hi2c1, addr, (uint8_t*)buf, len, I2C_TRANSMIT_TIMEOUT) != HAL_OK )
-  {
-    return -1;
-  }
-
-  return 0;
-}
-int i2c_master_read(uint8_t addr, uint8_t* buf, uint8_t len)
-{
-  if ( HAL_I2C_Master_Receive(&hi2c1, addr, (uint8_t*)buf, len, I2C_TRANSMIT_TIMEOUT) != HAL_OK )
-  {
+  // LE encoding, we can just use &
+  // uint8_t buffer[2] = {0};
+  // buffer[1] = (uint8_t)data;
+  // buffer[2] = (uint8_t)(data >> 8);
+  if (i2c1_write_reg(RT9426_ADDR, Reg_Addr, (uint8_t*)&data, 2) != HAL_OK) {
     return -1;
   }
   return 0;
 }
-int battery_write_register(uint8_t Reg_Addr, uint16_t data)
+
+static inline int battery_read_register(uint8_t Reg_Addr, int16_t* data)
 {
-  uint8_t buffer[8] = {0};
 
-  buffer[0] = Reg_Addr;
-  buffer[1] = (unsigned char)data;
-  buffer[2] = (unsigned char)(data >> 8);
-  return i2c_master_write(RT9426_ADDR, buffer, 3);
-}
-
-int battery_read_register(uint8_t Reg_Addr, int16_t* data)
-{
-  uint8_t buf[8] = {0};
-  int result;
-
-  buf[0] = Reg_Addr;
-  result = i2c_master_write(RT9426_ADDR, buf, 1);
-  OP_CHECK(result);
-  result = i2c_master_read(RT9426_ADDR, buf, 2);
-  OP_CHECK(result);
-  *data = buf[1] << 8 | buf[0];
+  // uint8_t buf[8] = {0};
+  // int result;
+  // buf[0] = Reg_Addr;
+  // result = i2c_master_write(RT9426_ADDR, buf, 1);
+  // OP_CHECK(result);
+  // result = i2c_master_read(RT9426_ADDR, buf, 2);
+  // OP_CHECK(result);
+  // *data = buf[1] << 8 | buf[0];
+  // LE encoding just use
+  if (i2c1_read_reg(RT9426_ADDR, Reg_Addr, (uint8_t*) data, 2)) {
+    return -1;
+  }
   return 0;
 }
 
@@ -624,68 +608,13 @@ int RT9426_Initial(void)
   return 0;
 }
 
-int battery_i2c_master_init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStructure;
-
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
-  GPIO_InitStructure.Pin = BATTERY_I2C_SCL_PIN | BATTERY_I2C_SDA_PIN;
-  HAL_GPIO_Init(BATTERY_I2C_PORT, &GPIO_InitStructure);
-
-  __HAL_RCC_I2C1_CLK_ENABLE();
-  __HAL_RCC_I2C1_FORCE_RESET();
-  __HAL_RCC_I2C1_RELEASE_RESET();
-
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = I2C_TIMING;
-  hi2c1.Init.OwnAddress1 = 0; // master
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
-
-  if ( HAL_OK != HAL_I2C_Init(&hi2c1) )
-  {
-    return -1;
-  }
-
-  /** Configure Analogue filter
-  */
-  if ( HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK )
-  {
-    return -1;
-  }
-  /** Configure Digital filter
-  */
-  if ( HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK )
-  {
-    return -1;
-  }
-  return 0;
-}
-
-void battery_i2c_deinit(void)
-{
-  if ( hi2c1.Instance )
-  {
-    HAL_I2C_DeInit(&hi2c1);
-    hi2c1.Instance = NULL;
-  }
-}
 int battery_init(void)
 {
   int result = 0;
   uint16_t count = 0;
   int16_t regval = 0;
 
-  result = battery_i2c_master_init();
-  OP_CHECK(result);
+  i2c1_init();
     /*-----------------------Standard initial-----------------------*/
     while(1)
     {
