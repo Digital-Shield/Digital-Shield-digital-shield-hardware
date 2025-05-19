@@ -1,8 +1,10 @@
 #include STM32_HAL_H
+#include "stm32h7xx_hal_gpio.h"
 
 #include "mipi_lcd.h"
 #include "stddef.h"
 #include "gc9503v.h"
+#include "device.h"
 
 static int DISPLAY_BACKLIGHT = -1;
 static int DISPLAY_ORIENTATION = -1;
@@ -510,21 +512,31 @@ int display_orientation(int degrees) {
 void lcd_reset(void) {
   // RESET PIN
   GPIO_InitTypeDef gpio_init_structure;
+  GPIO_TypeDef* port;
+  uint32_t pin;
 
-  __HAL_RCC_GPIOG_CLK_ENABLE();
+  if (PCB_IS_V10()) {
+    LCD_RESET_CLK_ENABLE();
+    port = LCD_RESET_GPIO_PORT;
+    pin = LCD_RESET_PIN;
+  } else if (PCB_IS_V11()) {
+    V11_LCD_RESET_CLK_ENABLE();
+    port = V11_LCD_RESET_GPIO_PORT;
+    pin = V11_LCD_RESET_PIN;
+  }
 
   /* Configure the GPIO Reset pin */
-  gpio_init_structure.Pin = LCD_RESET_PIN;
+  gpio_init_structure.Pin = pin;
   gpio_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
   gpio_init_structure.Pull = GPIO_PULLUP;
   gpio_init_structure.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LCD_RESET_GPIO_PORT, &gpio_init_structure);
+  HAL_GPIO_Init(port, &gpio_init_structure);
 
   /* Activate XRES active low */
-  HAL_GPIO_WritePin(LCD_RESET_GPIO_PORT, LCD_RESET_PIN, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);
   HAL_Delay(20);
   /* Deactivate XRES */
-  HAL_GPIO_WritePin(LCD_RESET_GPIO_PORT, LCD_RESET_PIN, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
   HAL_Delay(10);
 }
 
