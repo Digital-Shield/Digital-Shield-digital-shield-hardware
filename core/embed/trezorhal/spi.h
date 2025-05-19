@@ -5,6 +5,7 @@
 #include <secbool.h>
 #include <stdint.h>
 
+#include STM32_HAL_H
 #include "stm32h7xx_hal_gpio.h"
 #include "trans_fifo.h"
 

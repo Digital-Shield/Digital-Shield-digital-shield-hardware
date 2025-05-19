@@ -112,8 +112,8 @@ void emmc_reset(void) {
   }
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_TypeDef* port;
-  uint32_t pin;
+  GPIO_TypeDef* port = NULL;
+  uint32_t pin = 0;
   if (PCB_IS_V10()) {
     port = GPIOI;
     pin = GPIO_PIN_15;

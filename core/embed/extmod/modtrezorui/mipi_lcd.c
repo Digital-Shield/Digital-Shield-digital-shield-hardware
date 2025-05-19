@@ -512,8 +512,8 @@ int display_orientation(int degrees) {
 void lcd_reset(void) {
   // RESET PIN
   GPIO_InitTypeDef gpio_init_structure;
-  GPIO_TypeDef* port;
-  uint32_t pin;
+  GPIO_TypeDef* port = NULL;
+  uint32_t pin = 0;
 
   if (PCB_IS_V10()) {
     LCD_RESET_CLK_ENABLE();

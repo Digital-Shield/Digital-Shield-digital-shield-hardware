@@ -101,8 +101,8 @@ void SPI5_IRQHandler(void) { HAL_SPI_IRQHandler(&spi); }
 
 void control_pin_init(void) {
   GPIO_InitTypeDef gpio;
-  GPIO_TypeDef* port;
-  uint32_t pin;
+  GPIO_TypeDef* port = NULL;
+  uint32_t pin = 0;
   if (PCB_IS_V10()) {
     BLE_CTRL_PIN_CLK_ENABLE();
     port = BLE_CTRL_PIN_GPIO_PORT;

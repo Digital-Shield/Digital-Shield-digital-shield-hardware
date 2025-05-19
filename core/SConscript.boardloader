@@ -127,6 +127,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/fatfs/diskio_emmc.c',
     'embed/trezorhal/i2c.c',
     'embed/trezorhal/uart_log.c',
+    'embed/trezorhal/device.c',
 ]
 env = Environment(ENV=os.environ, CFLAGS='%s -DPRODUCTION=%s' % (ARGUMENTS.get('CFLAGS', ''), ARGUMENTS.get('PRODUCTION', '0')))
 

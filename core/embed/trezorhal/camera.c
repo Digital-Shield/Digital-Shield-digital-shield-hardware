@@ -289,8 +289,8 @@ secbool camera_is_captured(void) { return qr_status == QR_GRAYSCALE; }
 /// local functions
 void camera_hardware_reset(void) {
   GPIO_InitTypeDef gpio;
-  GPIO_TypeDef* port;
-  uint32_t pin;
+  GPIO_TypeDef* port = NULL;
+  uint32_t pin = 0;
   if (PCB_IS_V10()) {
     CAMERA_HW_RESET_GPIO_CLK_ENABLE();
     port = CAMERA_HW_RESET_GPIO_PORT;
