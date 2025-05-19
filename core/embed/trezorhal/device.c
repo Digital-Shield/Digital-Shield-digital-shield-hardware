@@ -2,6 +2,8 @@
 
 #include "device.h"
 #include <stdio.h>
+#include <stdint.h>
+
 #include "common.h"
 #include "display.h"
 #include "emmc.h"
@@ -728,4 +730,22 @@ void device_power_off(void) {
   printf("power off ...\n");
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
   printf("power off end ...\n");
+}
+
+void device_set_pcb_version(pcb_version_t version) {
+  // have set
+  if (flash_otp_is_locked(FLASH_OTP_PCB_VERSION)) {
+    return;
+  }
+  uint8_t buf[FLASH_OTP_BLOCK_SIZE] = {0};
+  memset(buf, 0xFF, FLASH_OTP_BLOCK_SIZE);
+  buf[0] = version;
+  ensure(flash_otp_write(FLASH_OTP_PCB_VERSION, 0, buf, FLASH_OTP_BLOCK_SIZE),
+         NULL);
+  ensure(flash_otp_lock(FLASH_OTP_PCB_VERSION), NULL);
+}
+
+pcb_version_t device_get_pcb_version(void) {
+  uint8_t* addr = flash_otp_data->flash_otp[FLASH_OTP_PCB_VERSION];
+  return (pcb_version_t)*addr;
 }
