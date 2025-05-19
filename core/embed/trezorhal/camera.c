@@ -17,6 +17,7 @@
 #include "secbool.h"
 #include "gc0308.h"
 #include "i2c.h"
+#include "device.h"
 
 #include "quirc.h"
 
@@ -103,18 +104,25 @@
 #define CAMERA_WORK_STATE_GPIO_PORT GPIOJ
 #define CAMERA_WORK_STATE_GPIO_PIN GPIO_PIN_14
 
-// camera hard reset pin PJ7
+// pcb v1.0 camera hard reset pin PJ7
 #define CAMERA_HW_RESET_GPIO_CLK_ENABLE() __HAL_RCC_GPIOJ_CLK_ENABLE()
 #define CAMERA_HW_RESET_GPIO_PORT GPIOJ
 #define CAMERA_HW_RESET_GPIO_PIN GPIO_PIN_7
 
-// camera led pin PJ6
+// pcb v1.0 camera hard reset pin PE2
+#define V11_CAMERA_HW_RESET_GPIO_CLK_ENABLE() __HAL_RCC_GPIOE_CLK_ENABLE()
+#define V11_CAMERA_HW_RESET_GPIO_PORT GPIOE
+#define V11_CAMERA_HW_RESET_GPIO_PIN GPIO_PIN_2
+
+// pcb v1.0 camera led pin PJ6
 #define CAMERA_LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOJ_CLK_ENABLE()
 #define CAMERA_LED_GPIO_PORT GPIOJ
 #define CAMERA_LED_GPIO_PIN GPIO_PIN_6
 
-#define CAMERA_LED_ON() HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_SET)
-#define CAMERA_LED_OFF() HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_RESET)
+// pcb v1.1 camera led pin PD5
+#define V11_CAMERA_LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+#define V11_CAMERA_LED_GPIO_PORT GPIOD
+#define V11_CAMERA_LED_GPIO_PIN GPIO_PIN_5
 
 #define CAMERA_CAPTURE_BUFFER 0x30020000 // sram2 in D2
 
@@ -259,12 +267,20 @@ void camera_show(void) {
 void camera_led_on(void) {
     // camera led on
   camera_led_init();
-  CAMERA_LED_ON();
+  if (PCB_IS_V10()) {
+    HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_SET);
+  } else if(PCB_IS_V11()){
+    HAL_GPIO_WritePin(V11_CAMERA_LED_GPIO_PORT, V11_CAMERA_LED_GPIO_PIN, GPIO_PIN_SET);
+  }
 }
 
 void camera_led_off(void) {
   // camera led off
-  CAMERA_LED_OFF();
+  if (PCB_IS_V10()) {
+    HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_RESET);
+  } else if(PCB_IS_V11()){
+    HAL_GPIO_WritePin(V11_CAMERA_LED_GPIO_PORT, V11_CAMERA_LED_GPIO_PIN, GPIO_PIN_RESET);
+  }
 }
 
 secbool camera_is_power_on(void) { return camera_power; }
@@ -273,20 +289,29 @@ secbool camera_is_captured(void) { return qr_status == QR_GRAYSCALE; }
 /// local functions
 void camera_hardware_reset(void) {
   GPIO_InitTypeDef gpio;
+  GPIO_TypeDef* port;
+  uint32_t pin;
+  if (PCB_IS_V10()) {
+    CAMERA_HW_RESET_GPIO_CLK_ENABLE();
+    port = CAMERA_HW_RESET_GPIO_PORT;
+    pin = CAMERA_HW_RESET_GPIO_PIN;
+  } else if (PCB_IS_V11()) {
+    V11_CAMERA_HW_RESET_GPIO_CLK_ENABLE();
+    port = V11_CAMERA_HW_RESET_GPIO_PORT;
+    pin = V11_CAMERA_HW_RESET_GPIO_PIN;
+  }
 
-  CAMERA_HW_RESET_GPIO_CLK_ENABLE();
-
-  gpio.Pin = CAMERA_HW_RESET_GPIO_PIN;
   gpio.Mode = GPIO_MODE_OUTPUT_PP;
   gpio.Pull = GPIO_PULLUP;
   gpio.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(CAMERA_HW_RESET_GPIO_PORT, &gpio);
+  gpio.Pin = pin;
+  HAL_GPIO_Init(port, &gpio);
 
   // hard reset camera
-  HAL_GPIO_WritePin(CAMERA_HW_RESET_GPIO_PORT, CAMERA_HW_RESET_GPIO_PIN, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   // release reset
-  HAL_GPIO_WritePin(CAMERA_HW_RESET_GPIO_PORT, CAMERA_HW_RESET_GPIO_PIN, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
   HAL_Delay(10);
 }
 
@@ -627,12 +652,19 @@ void camera_power_init(void) {
 
 void camera_led_init(void) {
   GPIO_InitTypeDef gpio;
-  CAMERA_LED_GPIO_CLK_ENABLE();
-  gpio.Pin = CAMERA_LED_GPIO_PIN;
   gpio.Mode = GPIO_MODE_OUTPUT_PP;
   gpio.Pull = GPIO_PULLDOWN;
   gpio.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(CAMERA_LED_GPIO_PORT, &gpio);
+
+  if (PCB_V1_0 == device_get_pcb_version()) {
+    CAMERA_LED_GPIO_CLK_ENABLE();
+    gpio.Pin = CAMERA_LED_GPIO_PIN;
+    HAL_GPIO_Init(CAMERA_LED_GPIO_PORT, &gpio);
+  } else if(PCB_V1_1 == device_get_pcb_version()) {
+    V11_CAMERA_LED_GPIO_CLK_ENABLE();
+    gpio.Pin = V11_CAMERA_LED_GPIO_PIN;
+    HAL_GPIO_Init(V11_CAMERA_LED_GPIO_PORT, &gpio);
+  }
 }
 
 
