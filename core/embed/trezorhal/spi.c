@@ -1,3 +1,4 @@
+#include "device.h"
 #include STM32_HAL_H
 
 #include "stm32h7xx_hal_gpio.h"
@@ -100,18 +101,38 @@ void SPI5_IRQHandler(void) { HAL_SPI_IRQHandler(&spi); }
 
 void control_pin_init(void) {
   GPIO_InitTypeDef gpio;
+  GPIO_TypeDef* port;
+  uint32_t pin;
+  if (PCB_IS_V10()) {
+    BLE_CTRL_PIN_CLK_ENABLE();
+    port = BLE_CTRL_PIN_GPIO_PORT;
+    pin = BLE_CTRL_PIN_GPIO_PIN;
+  } else if (PCB_IS_V11()) {
+    V11_BLE_CTRL_PIN_CLK_ENABLE();
+    port = V11_BLE_CTRL_PIN_GPIO_PORT;
+    pin = V11_BLE_CTRL_PIN_GPIO_PIN;
+  }
+
   // BLE SHAKE PIN
   gpio.Mode = GPIO_MODE_OUTPUT_PP;
   gpio.Pull = GPIO_PULLUP;
   gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-  gpio.Pin = GPIO_PIN_2;
-  HAL_GPIO_Init(GPIOE, &gpio);
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
+  gpio.Pin = pin;
+  HAL_GPIO_Init(port, &gpio);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
 
   // POWER UP BLE
   gpio.Pin = GPIO_PIN_6;
   HAL_GPIO_Init(GPIOD, &gpio);
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+}
+
+void control_pin_write(GPIO_PinState state) {
+  if (PCB_IS_V10()) {
+    HAL_GPIO_WritePin(BLE_CTRL_PIN_GPIO_PORT, BLE_CTRL_PIN_GPIO_PIN, state);
+  } else if (PCB_IS_V11()) {
+    HAL_GPIO_WritePin(V11_BLE_CTRL_PIN_GPIO_PORT, V11_BLE_CTRL_PIN_GPIO_PIN, state);
+  }
 }
 
 int32_t spi_slave_init() {

@@ -1,26 +1,38 @@
 #ifndef _SPI_H_
 #define _SPI_H_
 
+
 #include <secbool.h>
 #include <stdint.h>
+
+#include "stm32h7xx_hal_gpio.h"
 #include "trans_fifo.h"
 
 #define SPI_PKG_SIZE (192 + 1)
 #define SPI_BUF_MAX_IN_LEN (16 * 1024)
 #define SPI_BUF_MAX_OUT_LEN (3 * 1024)
 
+// pcb v1.0 use PE2 as handshake pin
+#define BLE_CTRL_PIN_CLK_ENABLE() __HAL_RCC_GPIOE_CLK_ENABLE()
+#define BLE_CTRL_PIN_GPIO_PORT GPIOE
+#define BLE_CTRL_PIN_GPIO_PIN GPIO_PIN_2
+// pcb v1.1 use PD4 as handshake pin
+#define V11_BLE_CTRL_PIN_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
+#define V11_BLE_CTRL_PIN_GPIO_PORT GPIOD
+#define V11_BLE_CTRL_PIN_GPIO_PIN GPIO_PIN_4
+
+// the handshake pin is control pin
 #define BLE_CTL_PIN_INIT() control_pin_init()
+#define SET_COMBUS_HIGH() control_pin_write(GPIO_PIN_SET)
+#define SET_COMBUS_LOW() control_pin_write(GPIO_PIN_RESET)
+#define SET_RX_BUS_IDEL() control_pin_write(GPIO_PIN_SET)
+#define SET_RX_BUS_BUSY() control_pin_write(GPIO_PIN_RESET)
+
 #define BLE_RST_PIN_HIGH() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_SET)
 #define BLE_RST_PIN_LOW() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_RESET)
 
 #define BLE_POWER_ON() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET)
 #define BLE_POWER_OFF() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET)
-
-// use GPIOE 2 as handshake pin
-#define SET_COMBUS_HIGH() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET)
-#define SET_COMBUS_LOW() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET)
-#define SET_RX_BUS_IDEL() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET)
-#define SET_RX_BUS_BUSY() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET)
 
 /* Definition for SPIx's DMA */
 #define SPIx_TX_DMA_STREAM DMA1_Stream3
@@ -52,6 +64,7 @@ int32_t wait_spi_rx_event(int32_t timeout);
 int32_t wait_spi_tx_event(int32_t timeout);
 int32_t spi_slave_send(uint8_t *buf, uint32_t size, int32_t timeout);
 void control_pin_init();
+void control_pin_write(GPIO_PinState state);
 int32_t spi_slave_init();
 int32_t spi_slave_deinit();
 uint32_t spi_slave_poll(uint8_t *buf);
