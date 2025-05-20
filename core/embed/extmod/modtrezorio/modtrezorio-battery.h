@@ -1,4 +1,6 @@
 #include "battery.h"
+#include "device.h"
+#include "power_manager.h"
 #include "embed/extmod/trezorobj.h"
 
 /// package: trezorio.__init__
@@ -19,6 +21,34 @@ STATIC mp_obj_t mod_trezorio_battery_make_new(const mp_obj_type_t *type, size_t 
     o->base.type = type;
     return MP_OBJ_FROM_PTR(o);
 }
+
+/// def exist(self) -> bool
+///     """
+///     check weather battery is present
+///     """
+static mp_obj_t mod_trezorio_battery_is_exist(mp_obj_t self) {
+    if (PCB_IS_V10()) {
+        return battery_is_exist() ? mp_const_true : mp_const_false;
+    } else {
+        return pm_battery_exist() ? mp_const_true : mp_const_false;
+    }
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_exist_obj, mod_trezorio_battery_is_exist);
+
+/// def charging(self) -> bool
+///     """
+///     check weather battery is charging
+///     """
+static mp_obj_t mod_trezorio_battery_is_charging(mp_obj_t self) {
+    if (PCB_IS_V10()) {
+        return battery_read_current() >= 0 ? mp_const_true : mp_const_false;
+    } else if (PCB_IS_V11()) {
+        return pm_get_power_source() == POWER_SOURCE_USB ? mp_const_true : mp_const_false;
+    }
+
+    return false;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_charging_obj, mod_trezorio_battery_is_charging);
 
 /// def state_of_charge(self) -> int|None:
 ///     """
@@ -68,6 +98,8 @@ static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_voltage_obj, mod_trezorio_
 
 
 static const mp_rom_map_elem_t mod_trezorio_battery_locals_dict_table[] = {
+    { MP_ROM_QSTR(MP_QSTR_exist), MP_ROM_PTR(&mod_trezorio_battery_is_exist_obj)},
+    { MP_ROM_QSTR(MP_QSTR_charging), MP_ROM_PTR(&mod_trezorio_battery_is_charging_obj)},
     { MP_ROM_QSTR(MP_QSTR_state_of_charge), MP_ROM_PTR(&mod_trezorio_battery_state_of_charge_obj) },
     { MP_ROM_QSTR(MP_QSTR_current), MP_ROM_PTR(&mod_trezorio_battery_current_obj) },
     { MP_ROM_QSTR(MP_QSTR_voltage), MP_ROM_PTR(&mod_trezorio_battery_voltage_obj) },

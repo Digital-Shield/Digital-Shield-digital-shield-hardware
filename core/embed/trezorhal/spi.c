@@ -121,10 +121,12 @@ void control_pin_init(void) {
   HAL_GPIO_Init(port, &gpio);
   HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
 
-  // POWER UP BLE
-  gpio.Pin = GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOD, &gpio);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+  if (PCB_IS_V10()) {
+    // POWER UP BLE
+    gpio.Pin = GPIO_PIN_6;
+    HAL_GPIO_Init(GPIOD, &gpio);
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET);
+  }
 }
 
 void control_pin_write(GPIO_PinState state) {

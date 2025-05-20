@@ -167,6 +167,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/lowlevel.c',
     'embed/trezorhal/touch.c',
     'embed/trezorhal/sdram.c',
+    'embed/trezorhal/power_manager.c',
 ]
 
 # emmc wrapper

@@ -63,6 +63,7 @@
 #include "touch.h"
 #include "se_thd89.h"
 #include "uart_log.h"
+#include "power_manager.h"
 #ifdef USE_SECP256K1_ZKP
 #include "zkp_context.h"
 #endif
@@ -99,6 +100,7 @@ int main(void) {
   printf("Hello, world!\n");
 
   battery_init();
+  pm_init();
 
   // emmc fat file system
   emmc_init();

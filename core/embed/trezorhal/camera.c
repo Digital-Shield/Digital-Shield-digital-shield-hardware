@@ -18,6 +18,7 @@
 #include "gc0308.h"
 #include "i2c.h"
 #include "device.h"
+#include "power_manager.h"
 
 #include "quirc.h"
 
@@ -96,9 +97,20 @@
 #define CAMERA_POWER_GPIO_PORT GPIOK
 #define CAMERA_POWER_GPIO_PIN GPIO_PIN_2
 
-#define CAMERA_POWER_ON() HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_SET)
-#define CAMERA_POWER_OFF() HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_RESET)
-
+#define CAMERA_POWER_ON() do {                                                      \
+  if (PCB_IS_V10()) {                                                               \
+    HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_SET); \
+  } else if (PCB_IS_V11()) {                                                        \
+    pm_power_up(POWER_MODULE_CAMERA);                                               \
+  }                                                                                 \
+}while(0)
+#define CAMERA_POWER_OFF() do {                                                      \
+  if (PCB_IS_V10()) {                                                                \
+    HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_RESET); \
+  } else if (PCB_IS_V11()) {                                                          \
+    pm_power_down(POWER_MODULE_CAMERA);                                               \
+  }                                                                                   \
+}while(0)
 // camera  work state pin PJ14
 #define CAMERA_WORK_STATE_GPIO_CLK_ENABLE() __HAL_RCC_GPIOJ_CLK_ENABLE()
 #define CAMERA_WORK_STATE_GPIO_PORT GPIOJ
@@ -200,7 +212,9 @@ secbool camera_init(int width, int height) {
   // make camera in normal mode
   camera_work_normal();
   // power on camera module
-  camera_power_init();
+  if (PCB_IS_V10()) {
+    camera_power_init();
+  }
   CAMERA_POWER_ON();
   // hardware reset
   camera_hardware_reset();

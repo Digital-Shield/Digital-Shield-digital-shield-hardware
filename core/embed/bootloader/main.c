@@ -47,6 +47,8 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_rcc.h"
 #include "uart_log.h"
+#include "device.h"
+#include "power_manager.h"
 
 #define MSG_NAME_TO_ID(x)         MessageType_MessageType_##x
 
@@ -498,16 +500,21 @@ static secbool need_stay_in_bootloader(void) {
     return boot;
 }
 
+static inline bool is_usb_connect(void){
+    if(PCB_IS_V10()) {
+        return battery_read_current() >= 0;
+    } else if (PCB_IS_V11()) {
+        return pm_get_power_source() == POWER_SOURCE_USB;
+    }
+    return true;
+}
+
 static void low_power_detect(void) {
     hal_delay(10);
-    int current = battery_read_current();
-    // usb connect, no need check
-    if (current >= 0) {
+    if (is_usb_connect()) {
         return;
     }
-
     int soc = battery_read_SOC();
-
     // have power
     if (soc > 1) {
         return;
@@ -588,6 +595,7 @@ int main(void)
     sdram_init();
 
     battery_init();
+    pm_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
     low_power_detect();

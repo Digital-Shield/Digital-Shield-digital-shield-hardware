@@ -608,6 +608,10 @@ int RT9426_Initial(void)
   return 0;
 }
 
+bool battery_is_exist(void){
+  return battery_read_SOC() >= 0;
+}
+
 int battery_init(void)
 {
   int result = 0;

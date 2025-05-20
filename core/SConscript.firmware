@@ -467,6 +467,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/sbu.c',
     'embed/trezorhal/touch.c',
     'embed/trezorhal/button.c',
+    'embed/trezorhal/power_manager.c',
 ]
 
 SOURCE_NANOPB = [

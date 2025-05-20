@@ -8,6 +8,8 @@
 #include STM32_HAL_H
 #include "stm32h7xx_hal_gpio.h"
 #include "trans_fifo.h"
+#include "device.h"
+#include "power_manager.h"
 
 #define SPI_PKG_SIZE (192 + 1)
 #define SPI_BUF_MAX_IN_LEN (16 * 1024)
@@ -32,8 +34,21 @@
 #define BLE_RST_PIN_HIGH() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_SET)
 #define BLE_RST_PIN_LOW() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_RESET)
 
-#define BLE_POWER_ON() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET)
-#define BLE_POWER_OFF() HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET)
+#define BLE_POWER_ON() do {                             \
+  if (PCB_IS_V10()) {                                   \
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET); \
+  } else if (PCB_IS_V11()) {                            \
+    pm_power_up(POWER_MODULE_BLUETOOTH);                \
+  }                                                     \
+} while (0)
+
+#define BLE_POWER_OFF() do {                              \
+  if (PCB_IS_V10()) {                                     \
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET); \
+  } else if (PCB_IS_V11()) {                              \
+    pm_power_down(POWER_MODULE_BLUETOOTH);                \
+  }                                                       \
+} while (0)
 
 /* Definition for SPIx's DMA */
 #define SPIx_TX_DMA_STREAM DMA1_Stream3
