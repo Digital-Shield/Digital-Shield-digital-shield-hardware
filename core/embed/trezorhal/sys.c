@@ -6,7 +6,7 @@
 #include "power_manager.h"
 
 void motor_init(void) {
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     GPIO_InitTypeDef gpio;
 
     __HAL_RCC_GPIOJ_CLK_ENABLE();
@@ -22,13 +22,13 @@ void motor_init(void) {
 }
 
 void motor_ctrl(bool on) {
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     if (on) {
       HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_8, GPIO_PIN_SET);
     } else {
       HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_8, GPIO_PIN_RESET);
     }
-  } else if (PCB_IS_V11()){
+  } else if (PCB_IS_V1_1()){
     if (on) {
       pm_power_up(POWER_MODULE_MOTOR);
     } else {

@@ -103,11 +103,11 @@ void control_pin_init(void) {
   GPIO_InitTypeDef gpio;
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     BLE_CTRL_PIN_CLK_ENABLE();
     port = BLE_CTRL_PIN_GPIO_PORT;
     pin = BLE_CTRL_PIN_GPIO_PIN;
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     V11_BLE_CTRL_PIN_CLK_ENABLE();
     port = V11_BLE_CTRL_PIN_GPIO_PORT;
     pin = V11_BLE_CTRL_PIN_GPIO_PIN;
@@ -121,7 +121,7 @@ void control_pin_init(void) {
   HAL_GPIO_Init(port, &gpio);
   HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
 
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     // POWER UP BLE
     gpio.Pin = GPIO_PIN_6;
     HAL_GPIO_Init(GPIOD, &gpio);
@@ -130,9 +130,9 @@ void control_pin_init(void) {
 }
 
 void control_pin_write(GPIO_PinState state) {
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     HAL_GPIO_WritePin(BLE_CTRL_PIN_GPIO_PORT, BLE_CTRL_PIN_GPIO_PIN, state);
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     HAL_GPIO_WritePin(V11_BLE_CTRL_PIN_GPIO_PORT, V11_BLE_CTRL_PIN_GPIO_PIN, state);
   }
 }

@@ -35,17 +35,17 @@
 #define BLE_RST_PIN_LOW() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_RESET)
 
 #define BLE_POWER_ON() do {                             \
-  if (PCB_IS_V10()) {                                   \
+  if (PCB_IS_V1_0()) {                                   \
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET); \
-  } else if (PCB_IS_V11()) {                            \
+  } else if (PCB_IS_V1_1()) {                            \
     pm_power_up(POWER_MODULE_BLUETOOTH);                \
   }                                                     \
 } while (0)
 
 #define BLE_POWER_OFF() do {                              \
-  if (PCB_IS_V10()) {                                     \
+  if (PCB_IS_V1_0()) {                                     \
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET); \
-  } else if (PCB_IS_V11()) {                              \
+  } else if (PCB_IS_V1_1()) {                              \
     pm_power_down(POWER_MODULE_BLUETOOTH);                \
   }                                                       \
 } while (0)

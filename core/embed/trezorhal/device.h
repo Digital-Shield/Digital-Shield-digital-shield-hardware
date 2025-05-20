@@ -51,6 +51,6 @@ void device_power_off(void);
 
 void device_set_pcb_version(pcb_version_t version);
 pcb_version_t device_get_pcb_version(void);
-#define PCB_IS_V10() (device_get_pcb_version() == PCB_V1_0)
-#define PCB_IS_V11() (device_get_pcb_version() == PCB_V1_1)
+#define PCB_IS_V1_0() (device_get_pcb_version() == PCB_V1_0)
+#define PCB_IS_V1_1() (device_get_pcb_version() == PCB_V1_1)
 #endif

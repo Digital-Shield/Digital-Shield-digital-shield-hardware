@@ -515,11 +515,11 @@ void lcd_reset(void) {
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
 
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     LCD_RESET_CLK_ENABLE();
     port = LCD_RESET_GPIO_PORT;
     pin = LCD_RESET_PIN;
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     V11_LCD_RESET_CLK_ENABLE();
     port = V11_LCD_RESET_GPIO_PORT;
     pin = V11_LCD_RESET_PIN;

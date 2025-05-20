@@ -105,19 +105,19 @@ void emmc_reset(void) {
     PI15     ------> SDMMC1_RST // pcb v1.0
     PK4     ------> SDMMC1_RST  // pcb v1.1
   */
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     __HAL_RCC_GPIOI_CLK_ENABLE(); // RST PIN control
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     __HAL_RCC_GPIOK_CLK_ENABLE(); // RST PIN control
   }
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     port = GPIOI;
     pin = GPIO_PIN_15;
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     port = GPIOK;
     pin = GPIO_PIN_4;
   }

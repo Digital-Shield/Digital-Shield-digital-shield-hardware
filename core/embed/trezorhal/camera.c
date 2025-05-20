@@ -98,16 +98,16 @@
 #define CAMERA_POWER_GPIO_PIN GPIO_PIN_2
 
 #define CAMERA_POWER_ON() do {                                                      \
-  if (PCB_IS_V10()) {                                                               \
+  if (PCB_IS_V1_0()) {                                                               \
     HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_SET); \
-  } else if (PCB_IS_V11()) {                                                        \
+  } else if (PCB_IS_V1_1()) {                                                        \
     pm_power_up(POWER_MODULE_CAMERA);                                               \
   }                                                                                 \
 }while(0)
 #define CAMERA_POWER_OFF() do {                                                      \
-  if (PCB_IS_V10()) {                                                                \
+  if (PCB_IS_V1_0()) {                                                                \
     HAL_GPIO_WritePin(CAMERA_POWER_GPIO_PORT, CAMERA_POWER_GPIO_PIN, GPIO_PIN_RESET); \
-  } else if (PCB_IS_V11()) {                                                          \
+  } else if (PCB_IS_V1_1()) {                                                          \
     pm_power_down(POWER_MODULE_CAMERA);                                               \
   }                                                                                   \
 }while(0)
@@ -212,7 +212,7 @@ secbool camera_init(int width, int height) {
   // make camera in normal mode
   camera_work_normal();
   // power on camera module
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     camera_power_init();
   }
   CAMERA_POWER_ON();
@@ -281,18 +281,18 @@ void camera_show(void) {
 void camera_led_on(void) {
     // camera led on
   camera_led_init();
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_SET);
-  } else if(PCB_IS_V11()){
+  } else if(PCB_IS_V1_1()){
     HAL_GPIO_WritePin(V11_CAMERA_LED_GPIO_PORT, V11_CAMERA_LED_GPIO_PIN, GPIO_PIN_SET);
   }
 }
 
 void camera_led_off(void) {
   // camera led off
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     HAL_GPIO_WritePin(CAMERA_LED_GPIO_PORT, CAMERA_LED_GPIO_PIN, GPIO_PIN_RESET);
-  } else if(PCB_IS_V11()){
+  } else if(PCB_IS_V1_1()){
     HAL_GPIO_WritePin(V11_CAMERA_LED_GPIO_PORT, V11_CAMERA_LED_GPIO_PIN, GPIO_PIN_RESET);
   }
 }
@@ -305,11 +305,11 @@ void camera_hardware_reset(void) {
   GPIO_InitTypeDef gpio;
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
-  if (PCB_IS_V10()) {
+  if (PCB_IS_V1_0()) {
     CAMERA_HW_RESET_GPIO_CLK_ENABLE();
     port = CAMERA_HW_RESET_GPIO_PORT;
     pin = CAMERA_HW_RESET_GPIO_PIN;
-  } else if (PCB_IS_V11()) {
+  } else if (PCB_IS_V1_1()) {
     V11_CAMERA_HW_RESET_GPIO_CLK_ENABLE();
     port = V11_CAMERA_HW_RESET_GPIO_PORT;
     pin = V11_CAMERA_HW_RESET_GPIO_PIN;
