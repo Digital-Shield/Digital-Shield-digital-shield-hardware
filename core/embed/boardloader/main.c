@@ -29,6 +29,7 @@
 #include "mipi_lcd.h"
 #include "qspi_flash.h"
 #include "rng.h"
+#include "device.h"
 
 #ifdef TREZOR_MODEL_T
 #include "sdram.h"
@@ -381,6 +382,16 @@ void show_poweron_bar(void) {
                      COLOR_BLACK, 2);
 }
 
+static inline void set_pcb_version(void) {
+  pcb_version_t v;
+#ifdef PCB_VERSION_1_0
+  v = PCB_V1_0;
+#else
+  v = PCB_V1_1;
+#endif
+  device_set_pcb_version(v);
+}
+
 int main(void) {
   volatile uint32_t startup_mode_flag = *STAY_IN_FLAG_ADDR;
   reset_flags_reset();
@@ -391,6 +402,7 @@ int main(void) {
   cpu_cache_enable();
 
   system_clock_config();
+  set_pcb_version();
 
   rng_init();
 
