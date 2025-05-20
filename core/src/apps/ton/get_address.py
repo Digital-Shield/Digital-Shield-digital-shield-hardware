@@ -26,7 +26,6 @@ async def get_address(
 ) -> TonAddress:
     #打印Keychain
     # print("keychain--"+str(keychain))
-    # print("address_n--in--"+str(msg.address_n))
     # await paths.validate_path(ctx, keychain, msg.address_n)
 
     node = keychain.derive(msg.address_n)
@@ -40,8 +39,6 @@ async def get_address(
     else:
         raise wire.DataError("Invalid wallet version.")
     #打印public_key=public_key, wallet_id=msg.wallet_id, wc=workchain这些内容
-    # print("public_key=",public_key)
-    # print("wallet_id=",msg.wallet_id)
     # print("wc=",workchain)
     wallet = Wallets.ALL[wallet_version](
         public_key=public_key, wallet_id=msg.wallet_id, wc=workchain
@@ -52,7 +49,6 @@ async def get_address(
         is_bounceable=msg.is_bounceable,
         is_test_only=msg.is_testnet_only,
     )
-    print("address=",address)
     # address =  "tryrtytryuuroweiureweoir"
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)

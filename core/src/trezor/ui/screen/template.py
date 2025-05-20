@@ -123,9 +123,10 @@ class Blob(Modal):
         super().__init__()
 
         self.set_title(title)
-        self.btn_right.set_text(i18n.Button.continue_)
-        self.btn_right.set_text(i18n.Button.cancel)
-
+        # self.btn_right.set_text(i18n.Button.continue_)
+        # self.btn_right.set_text(i18n.Button.cancel)
+        self.btn_right.set_text(i18n.Button.continue_)  # 设置“继续”按钮
+        self.btn_left.set_text(i18n.Button.cancel)      # 设置“取消”按钮
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
