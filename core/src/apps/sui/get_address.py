@@ -25,13 +25,14 @@ async def get_address(
     node = keychain.derive(msg.address_n)
     pub_key_bytes = seed.remove_ed25519_prefix(node.public_key())
     address = sui_address_from_pubkey(pub_key_bytes)
-
+    print(paths.address_n_to_str(msg.address_n))
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)
         await show_address(
             ctx,
             address=address,
-            address_n=path,
+            # address_n=path,
+            path = path,
             network="SUI",
         )
 
