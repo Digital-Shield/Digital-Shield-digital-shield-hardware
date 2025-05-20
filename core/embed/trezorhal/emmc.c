@@ -107,7 +107,7 @@ void emmc_reset(void) {
   */
   if (PCB_IS_V1_0()) {
     __HAL_RCC_GPIOI_CLK_ENABLE(); // RST PIN control
-  } else if (PCB_IS_V1_1()) {
+  } else {
     __HAL_RCC_GPIOK_CLK_ENABLE(); // RST PIN control
   }
 
@@ -117,7 +117,7 @@ void emmc_reset(void) {
   if (PCB_IS_V1_0()) {
     port = GPIOI;
     pin = GPIO_PIN_15;
-  } else if (PCB_IS_V1_1()) {
+  } else {
     port = GPIOK;
     pin = GPIO_PIN_4;
   }

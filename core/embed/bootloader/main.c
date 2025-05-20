@@ -503,7 +503,7 @@ static secbool need_stay_in_bootloader(void) {
 static inline bool is_usb_connect(void){
     if(PCB_IS_V1_0()) {
         return battery_read_current() >= 0;
-    } else if (PCB_IS_V1_1()) {
+    } else {
         return pm_get_power_source() == POWER_SOURCE_USB;
     }
     return true;

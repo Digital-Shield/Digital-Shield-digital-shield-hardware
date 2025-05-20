@@ -42,11 +42,9 @@ static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_exist_obj, mod_trezorio
 static mp_obj_t mod_trezorio_battery_is_charging(mp_obj_t self) {
     if (PCB_IS_V1_0()) {
         return battery_read_current() >= 0 ? mp_const_true : mp_const_false;
-    } else if (PCB_IS_V1_1()) {
-        return pm_get_power_source() == POWER_SOURCE_USB ? mp_const_true : mp_const_false;
     }
 
-    return false;
+    return pm_get_power_source() == POWER_SOURCE_USB ? mp_const_true : mp_const_false;
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_charging_obj, mod_trezorio_battery_is_charging);
 

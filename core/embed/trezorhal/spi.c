@@ -104,13 +104,13 @@ void control_pin_init(void) {
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
   if (PCB_IS_V1_0()) {
+    V10_BLE_CTRL_PIN_CLK_ENABLE();
+    port = V10_BLE_CTRL_PIN_GPIO_PORT;
+    pin = V10_BLE_CTRL_PIN_GPIO_PIN;
+  } else {
     BLE_CTRL_PIN_CLK_ENABLE();
     port = BLE_CTRL_PIN_GPIO_PORT;
     pin = BLE_CTRL_PIN_GPIO_PIN;
-  } else if (PCB_IS_V1_1()) {
-    V11_BLE_CTRL_PIN_CLK_ENABLE();
-    port = V11_BLE_CTRL_PIN_GPIO_PORT;
-    pin = V11_BLE_CTRL_PIN_GPIO_PIN;
   }
 
   // BLE SHAKE PIN
@@ -131,10 +131,10 @@ void control_pin_init(void) {
 
 void control_pin_write(GPIO_PinState state) {
   if (PCB_IS_V1_0()) {
-    HAL_GPIO_WritePin(BLE_CTRL_PIN_GPIO_PORT, BLE_CTRL_PIN_GPIO_PIN, state);
-  } else if (PCB_IS_V1_1()) {
-    HAL_GPIO_WritePin(V11_BLE_CTRL_PIN_GPIO_PORT, V11_BLE_CTRL_PIN_GPIO_PIN, state);
+    HAL_GPIO_WritePin(V10_BLE_CTRL_PIN_GPIO_PORT, V10_BLE_CTRL_PIN_GPIO_PIN, state);
+    return;
   }
+  HAL_GPIO_WritePin(BLE_CTRL_PIN_GPIO_PORT, BLE_CTRL_PIN_GPIO_PIN, state);
 }
 
 int32_t spi_slave_init() {

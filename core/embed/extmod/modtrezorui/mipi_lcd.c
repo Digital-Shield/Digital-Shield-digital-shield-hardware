@@ -516,13 +516,13 @@ void lcd_reset(void) {
   uint32_t pin = 0;
 
   if (PCB_IS_V1_0()) {
+    V10_LCD_RESET_CLK_ENABLE();
+    port = V10_LCD_RESET_GPIO_PORT;
+    pin = V10_LCD_RESET_PIN;
+  } else {
     LCD_RESET_CLK_ENABLE();
     port = LCD_RESET_GPIO_PORT;
     pin = LCD_RESET_PIN;
-  } else if (PCB_IS_V1_1()) {
-    V11_LCD_RESET_CLK_ENABLE();
-    port = V11_LCD_RESET_GPIO_PORT;
-    pin = V11_LCD_RESET_PIN;
   }
 
   /* Configure the GPIO Reset pin */

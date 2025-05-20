@@ -28,11 +28,11 @@ void motor_ctrl(bool on) {
     } else {
       HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_8, GPIO_PIN_RESET);
     }
-  } else if (PCB_IS_V1_1()){
-    if (on) {
-      pm_power_up(POWER_MODULE_MOTOR);
-    } else {
-      pm_power_down(POWER_MODULE_MOTOR);
-    }
+    return;
+  }
+  if (on) {
+    pm_power_up(POWER_MODULE_MOTOR);
+  } else {
+    pm_power_down(POWER_MODULE_MOTOR);
   }
 }
