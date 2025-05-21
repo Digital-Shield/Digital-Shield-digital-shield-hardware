@@ -297,6 +297,9 @@ void se_init(void) {
 void se_test(void) {
     se_init();
 
+    int ret = se_verify_app();
+    printf("verify app: 0x%02x \n", ret);
+
     // 0. 获取设备状态
     se_state_t state;
     if (!se_get_running_state(&state)) {

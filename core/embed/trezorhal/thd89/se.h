@@ -38,6 +38,8 @@ int se_set_sheared_key(const uint8_t *key, size_t key_len);
 int se_gen_dev_keypair(void);
 int se_write_certificate(const uint8_t *cert, size_t cert_len);
 
+int se_verify_app(void);
+
 
 // helper function
 static inline bool se_is_running_bootloader(void) {
