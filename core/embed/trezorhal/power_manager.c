@@ -129,9 +129,11 @@ int pm_init(void) {
      * bluetooth: LDO3
      * motor: LDO5
      */
-    // 3.1 V
-    uint8_t flag = 0x60;
+    // 2.8 V
+    uint8_t flag = 0x54;
     i2c1_write_reg(IP6303_ADDR, LDO2_VSEL, &flag, 1);
+    // 3.1 V
+    flag = 0x60;
     i2c1_write_reg(IP6303_ADDR, LDO3_VSEL, &flag, 1);
     i2c1_write_reg(IP6303_ADDR, LDO5_VSEL, &flag, 1);
     return 0;
