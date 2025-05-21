@@ -5,7 +5,7 @@
 #include "i2c.h"
 #include "power_manager.h"
 
-#define IP6303_ADDR 0x30
+#define IP6303_ADDR 0x60
 
 // registers
 #define PSTATE_CTL0 0x00
@@ -95,6 +95,7 @@ static inline int pm_enable_flag_bits(uint8_t reg, uint8_t mask) {
     if ((flag & mask) == mask) {
         return 0;
     }
+    flag |= mask;
     if (i2c1_write_reg(IP6303_ADDR, reg, &flag, 1)) {
         return 1;
     }
@@ -123,6 +124,16 @@ int pm_init(void) {
     // enable battery exist check
     pm_enable_flag_bits(0x4C, (1<<7));
 
+    /**
+     * camera: LDO2
+     * bluetooth: LDO3
+     * motor: LDO5
+     */
+    // 3.1 V
+    uint8_t flag = 0x60;
+    i2c1_write_reg(IP6303_ADDR, LDO2_VSEL, &flag, 1);
+    i2c1_write_reg(IP6303_ADDR, LDO3_VSEL, &flag, 1);
+    i2c1_write_reg(IP6303_ADDR, LDO5_VSEL, &flag, 1);
     return 0;
 }
 
