@@ -86,6 +86,23 @@
 #define PAD_DRV2     0x86
 #define ADDR_CTL     0x99
 
+static inline int pm_set_flag_bits(uint8_t reg, uint8_t value, uint8_t mask) {
+    uint8_t flag = 0;
+    if (i2c1_read_reg(IP6303_ADDR, reg, &flag, 1)) {
+        return 1;
+    }
+    // already enabled
+    if ((flag & mask) == value) {
+        return 0;
+    }
+    flag = (flag & ~mask) | value;
+    if (i2c1_write_reg(IP6303_ADDR, reg, &flag, 1)) {
+        return 1;
+    }
+    return 0;
+
+}
+
 static inline int pm_enable_flag_bits(uint8_t reg, uint8_t mask) {
     uint8_t flag = 0;
     if (i2c1_read_reg(IP6303_ADDR, reg, &flag, 1)) {
@@ -124,6 +141,9 @@ int pm_init(void) {
     // enable battery exist check
     pm_enable_flag_bits(0x4C, (1<<7));
     pm_enable_flag_bits(PSTATE_CTL3, (1<<0));
+
+    // set ONOFF time, 2 second
+    pm_set_flag_bits(PSTATE_SET, (0x01<<1), 0x06);
 
     /**
      * camera: LDO2
@@ -204,4 +224,22 @@ int pm_power_down(power_module_t source) {
             return 1;
     }
     return pm_disable_flag_bits(LDO_EN, 1 << bit);
+}
+
+#include "button.h"
+uint32_t pm_button_read(void) {
+    static uint8_t last_state = 0xFF;
+    uint8_t flag;
+    if (i2c1_read_reg(IP6303_ADDR, INT_FLAG1, &flag, 1)){
+        return 0;
+    }
+    uint8_t state;
+    // 1: down 0: up
+    state = (flag & (1<<5));
+    if (state == last_state){
+        return 0;
+    }
+    last_state = state;
+    uint32_t evt = (state ? BTN_EVT_UP : BTN_EVT_DOWN) | BTN_POWER;
+    return evt;
 }

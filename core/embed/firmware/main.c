@@ -112,7 +112,9 @@ int main(void) {
   qspi_flash_memory_mapped();
 
   // power control buttons
-  button_init();
+  if (PCB_IS_V1_0()){
+    button_init();
+  }
   device_para_init();
 
   bus_fault_disable();

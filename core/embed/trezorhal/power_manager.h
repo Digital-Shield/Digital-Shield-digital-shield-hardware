@@ -1,5 +1,6 @@
 #ifndef __POWER_MANAGER_H__
 #define __POWER_MANAGER_H__
+#include <stdint.h>
 #include <stdbool.h>
 
 typedef enum {
@@ -20,5 +21,6 @@ bool pm_battery_exist(void);
 power_source_t pm_get_power_source(void);
 int pm_power_up(power_module_t source);
 int pm_power_down(power_module_t source);
+uint32_t pm_button_read(void);
 
 #endif
