@@ -157,6 +157,10 @@ int pm_init(void) {
     flag = 0x60;
     i2c1_write_reg(IP6303_ADDR, LDO3_VSEL, &flag, 1);
     i2c1_write_reg(IP6303_ADDR, LDO5_VSEL, &flag, 1);
+
+    flag = 0xD7; //110 10111  600mAh
+    i2c1_write_reg(IP6303_ADDR, CHG_DIG_CTL0, &flag, 1);
+    
     return 0;
 }
 

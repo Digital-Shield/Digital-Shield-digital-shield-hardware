@@ -133,12 +133,21 @@ static void usb_init_all(secbool usb21_landing)
     usb_start();
 }
 
+static inline bool is_usb_connect(void){
+    if(PCB_IS_V1_0()) {
+        return battery_read_current() >= 0;
+    } else {
+        return pm_get_power_source() == POWER_SOURCE_USB;
+    }
+    return true;
+}
+
 // 0: by battery, 1: by usb
 int dev_pwr_source = 0;
 int battery_soc = 0;
 static void upate_battery_info(void) {
     battery_soc = battery_read_SOC();
-    dev_pwr_source = battery_read_current() >= 0 ? 1 : 0;
+    dev_pwr_source = is_usb_connect()? 1 : 0;
 }
 
 static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
@@ -500,14 +509,7 @@ static secbool need_stay_in_bootloader(void) {
     return boot;
 }
 
-static inline bool is_usb_connect(void){
-    if(PCB_IS_V1_0()) {
-        return battery_read_current() >= 0;
-    } else {
-        return pm_get_power_source() == POWER_SOURCE_USB;
-    }
-    return true;
-}
+
 
 static void low_power_detect(void) {
     hal_delay(10);
