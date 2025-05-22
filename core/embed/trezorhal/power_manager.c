@@ -240,6 +240,6 @@ uint32_t pm_button_read(void) {
         return 0;
     }
     last_state = state;
-    uint32_t evt = (state ? BTN_EVT_UP : BTN_EVT_DOWN) | BTN_POWER;
+    uint32_t evt = (state ? BTN_EVT_DOWN : BTN_EVT_UP) | BTN_POWER;
     return evt;
 }
