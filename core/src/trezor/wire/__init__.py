@@ -47,7 +47,7 @@ from trezor.wire.errors import ActionCancelled, DataError, Error
 # Import all errors into namespace, so that `wire.Error` is available from
 # other packages.
 from trezor.wire.errors import *  # isort:skip # noqa: F401,F403
-
+from trezor.utils import dump_protobuf_lines
 
 if TYPE_CHECKING:
     from typing import (
@@ -317,6 +317,9 @@ class Context:
         return _wrap_protobuf_load(msg.data, exptype)
 
     async def write(self, msg: protobuf.MessageType) -> None:
+        #格式化打印下res_msg
+        print("\n".join(dump_protobuf_lines(msg)))
+        print("res_msg--"+str(msg))
         if __debug__:
             log.debug(
                 __name__,
@@ -339,7 +342,10 @@ class Context:
             buffer = bytearray(msg_size)
 
         msg_size = protobuf.encode(buffer, msg)
-
+        #打印下memoryview(buffer)[:msg_size]
+        # print("memoryview(buffer)[:msg_size]--"+str(memoryview(buffer)[:msg_size]))
+        # print("memoryview(buffer)[:msg_size1]--" + str(bytes(memoryview(buffer)[:msg_size])))
+        # print("memoryview(buffer)[:msg_size2]--" + memoryview(buffer)[:msg_size].tobytes().decode('utf-8'))
         await codec_v1.write_message(
             self.wire,
             msg.MESSAGE_WIRE_TYPE,
@@ -386,6 +392,7 @@ async def _handle_single_message(
     if __debug__:
         try:
             msg_type = protobuf.type_for_wire(msg.type).MESSAGE_NAME
+            print("msg_type----" + msg_type)
         except Exception:
             msg_type = f"{msg.type} - unknown message type"
         log.debug(
@@ -415,6 +422,9 @@ async def _handle_single_message(
 
         # Try to decode the message according to schema from
         # `req_type`. Raises if the message is malformed.
+        # from trezor.utils import dump_protobuf_lines
+        # print("接收到的原始数据--------------------")
+        # print("\n".join(dump_protobuf_lines(protobuf.decode(msg.data, protobuf.type_for_wire(msg.type)))))
         req_msg = _wrap_protobuf_load(msg.data, req_type)
 
         # Create the handler task.

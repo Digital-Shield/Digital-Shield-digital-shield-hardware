@@ -86,6 +86,12 @@ BACKLIGHT_LOW = const(30)
 BACKLIGHT_NONE = const(0)
 BACKLIGHT_MAX = const(100)
 
+NORMAL = Display.FONT_NORMAL
+BOLD = Display.FONT_BOLD
+MONO = Display.FONT_MONO
+WIDTH = Display.WIDTH
+HEIGHT = Display.HEIGHT
+
 async def lvgl_tick():
     from trezor import workflow, utils, loop
 

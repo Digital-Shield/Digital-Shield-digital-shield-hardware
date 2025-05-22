@@ -1,12 +1,14 @@
 # from trezor import utils
 
 from typing import TYPE_CHECKING
-
+import lvgl as lv
 from trezor import log, wire, workflow, loop
+from trezor import ui, wire
 from trezor.enums import ButtonRequestType
 from trezor.messages import ButtonAck, ButtonRequest
 from trezor.ui import i18n, colors
 from trezor.ui import NavigationBack
+from .common import button_request, interact2, raise_if_cancelled
 
 if TYPE_CHECKING:
     from typing import Any, Awaitable, TypeVar, Sequence
@@ -505,7 +507,62 @@ async def confirm_data(
         ctx, title, "", blob=data, description=description, br_code=br_code
     )
 
+def confirm_address(
+    ctx: wire.GenericContext,
+    title: str,
+    address: str,
+    description: str | None = "Address:",
+    br_type: str = "confirm_address",
+    br_code: ButtonRequestType = ButtonRequestType.Other,
+    # icon: str = ui.ICON_SEND,  # TODO cleanup @ redesign
+    # icon_color: int = ui.GREEN,  # TODO cleanup @ redesign
+) -> Awaitable[None]:
+    # TODO clarify API - this should be pretty limited to support mainly confirming
+    # destinations and similar
+    # return confirm_blob(
+    #     ctx,
+    #     br_type=br_type,
+    #     title=title,
+    #     data=address,
+    #     description=description,
+    #     br_code=br_code,
+    #     icon=icon,
+    #     icon_color=icon_color,
+    # )
+    return confirm_blob(
+        ctx, title, "", blob=address.encode(), description=description or "", br_code=br_code
+    )
 
+async def should_show_details(
+    ctx: wire.GenericContext,
+    address: str,
+    title: str,
+    br_code: ButtonRequestType = ButtonRequestType.ConfirmOutput,
+) -> bool:
+    from trezor.lvglui.scrs.template import TransactionOverview
+
+    res = await interact2(
+        ctx,
+        TransactionOverview(
+            title,
+            address,
+            primary_color=lv.color_hex(0x0098EA),
+            icon_path="A:/res/chain-ton.png",
+            has_details=True,
+        ),
+        "confirm_output",
+        br_code,
+    )
+    if not res:
+        from trezor import loop
+
+        await loop.sleep(300)
+        raise wire.ActionCancelled()
+    elif res == 2:  # show more
+        return True
+    else:  # confirm
+        return False
+    
 async def confirm_text(
     ctx: wire.GenericContext, title: str, text: str, *, description: str
 ):

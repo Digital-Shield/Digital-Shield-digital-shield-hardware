@@ -39,7 +39,7 @@ class BootScreen(Screen):
         anim.init() 
         # anim.set_var(bar) 
         # anim.set_values(0, 100)  # 进度从 0 到 100
-        anim.set_time(12000)  # 11秒完成
+        anim.set_time(11000)  # 11秒完成
         # anim.set_custom_exec_cb(lambda _, v: self.update_animation(bar, v))  # 动态更新
         anim.set_ready_cb(lambda _: self.channel.publish(lv.EVENT.READY))
         anim.start()

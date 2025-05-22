@@ -901,18 +901,18 @@ extern const pb_msgdesc_t SEMessageSignature_msg;
 #define GetDeviceInfo_size                       0
 #define GetFeatures_size                         0
 #define Initialize_size                          0
-#define MESSAGES_PB_H_MAX_SIZE                   SESignMessage_size
+#define MESSAGES_PB_H_MAX_SIZE                   WriteSEPublicCert_size
 #define Ping_size                                258
 #define ReadSEPublicCert_size                    0
 #define ReadSEPublicKey_size                     0
 #define Reboot_size                              2
 #define SEMessageSignature_size                  66
-#define SEPublicCert_size                        419
-#define SEPublicKey_size                         66
+#define SEPublicCert_size                        2051
+#define SEPublicKey_size                         67
 #define SESignMessage_size                       1027
 #define Success_size                             258
 #define WipeDevice_size                          0
-#define WriteSEPublicCert_size                   419
+#define WriteSEPublicCert_size                   2051
 
 /* Mapping from canonical names (mangle_names or overridden package name) */
 #define Failure_FailureType FailureType

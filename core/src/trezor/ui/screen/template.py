@@ -123,9 +123,10 @@ class Blob(Modal):
         super().__init__()
 
         self.set_title(title)
-        self.btn_right.set_text(i18n.Button.continue_)
-        self.btn_right.set_text(i18n.Button.cancel)
-
+        # self.btn_right.set_text(i18n.Button.continue_)
+        # self.btn_right.set_text(i18n.Button.cancel)
+        self.btn_right.set_text(i18n.Button.continue_)  # 设置“继续”按钮
+        self.btn_left.set_text(i18n.Button.cancel)      # 设置“取消”按钮
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
         self.content: HStack
@@ -275,6 +276,63 @@ class TransactionOverview(Modal):
         label.set_style_text_color(colors.DS.PRIMARY, lv.PART.MAIN)
         label.center()
         self.btn_detail.add_event_cb(self.on_click_detail, lv.EVENT.CLICKED, None)
+
+        # reject button
+        self.btn_reject = self.btn_left
+        self.btn_reject.mode('reject')
+        self.btn_reject.add_event_cb(self.on_click_reject, lv.EVENT.CLICKED, None)
+
+        # confirm button
+        self.btn_confirm = self.btn_right
+        self.btn_confirm.add_event_cb(self.on_click_confirm, lv.EVENT.CLICKED, None)
+
+    def on_click_detail(self, e):
+        self.close(Detail())
+
+    def on_click_reject(self, e):
+        self.close(Reject())
+
+    def on_click_confirm(self, e):
+        self.close(Confirm())
+
+class TransactionOverviewTon(Modal):
+    def __init__(self, network: str, amount: str, to: str, icon: str):
+        super().__init__()
+        self.set_title(i18n.Title.transaction.format(network), icon)
+        self.btn_right.set_text(i18n.Button.confirm)
+        self.btn_left.set_text(i18n.Button.reject)
+
+        self.content.set_style_pad_all(16, lv.PART.MAIN)
+
+        self.create_content(HStack)
+        self.content: HStack
+        self.content.add_style(theme.Styles.board, lv.PART.MAIN)
+
+
+        # send `amount`
+        spans = self.add(lv.spangroup)
+        spans.set_width(lv.pct(100))
+        spans.set_height(lv.SIZE.CONTENT)
+        spans.set_mode(lv.SPAN_MODE.BREAK)
+        spans.add_style(LabeledText.style, lv.PART.MAIN)
+        spans.set_style_border_side(lv.BORDER_SIDE.BOTTOM, lv.PART.MAIN)
+        spans.set_style_border_width(1, lv.PART.MAIN)
+
+        span = spans.new_span()
+        span.set_text(i18n.Text.send)
+        span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.STD.WHITE)
+
+        span = spans.new_span()
+        span.set_text(amount)
+        span.style.set_text_font(font.bold)
+        span.style.set_text_color(colors.DS.DANGER)
+
+        # to
+        item = self.add(LabeledText)
+        item.set_label(i18n.Text.to)
+        item.set_text(to)
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
         # reject button
         self.btn_reject = self.btn_left
