@@ -8,7 +8,7 @@
 
 #define RT9426_ADDR            0x55 << 1
 #define MASK_REG_FLAG3_BSC_ACS 0x01
-#define SWVER                  0x04// update this ver when change rt9426 initialize code
+#define SWVER                  0x05// update this ver when change rt9426 initialize code
 
 #define REG_CNTL               (0x00)
 #define REG_RSVD               (0x02)
@@ -226,7 +226,7 @@ int RT9426_Initial(void)
 #define RT9426_CFG_VERSION         (0x01)
 #define RT9426_BATTERY_TYPE        (4200)
 #define RT9426_DC                  (650)
-#define RT9426_FCC                 (650)
+#define RT9426_FCC                 (640)
 #define RT9426_FC_VTH              (0x6C)
 #define RT9426_FC_ITH              (0x06)
 #define RT9426_FC_STH              (0x05)
