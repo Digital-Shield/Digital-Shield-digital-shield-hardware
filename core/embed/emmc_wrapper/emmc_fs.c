@@ -199,20 +199,29 @@ FRESULT emmc_fs_f_stat(const TCHAR* path_buff, FILINFO* fno)
     // f_stat will give error if you pass "0:" to it
 
     FRESULT fresult;
-
-    // check if it's volume root
-    if ( ':' == path_buff[strlen(path_buff) - 1] )
-    {
-        // wipe FILINFO to zero as f_stat won't work on root folder
-        if ( fno != NULL )
-            memset(fno, 0x00, sizeof(FILINFO));
-        // root must exist, return true
-        fresult = FR_OK;
+    size_t len = strlen(path_buff);
+    if (fno){
+        memset(fno, 0x00, sizeof(FILINFO));
     }
-    else
-    {
-        // non root case, do the actual check
-        fresult = f_stat(path_buff, fno);
+
+    // check root
+    if (len == 0) {
+        fresult = FR_INVALID_NAME;
+    }
+    else if (len == 1 && path_buff[0] == '/') {
+        fresult = FR_OK;
+    } else {
+        char vol = path_buff[0];
+        // we only support 2 volume
+        // 0: or 1:
+        if (len == 2 && path_buff[1] == ':' && (vol == '0' || vol == '1')) {
+            fresult = FR_OK;
+        } else if (len == 3 && path_buff[2] == '/' && path_buff[1] == ':' && (vol == '0' || vol == '1')) {
+            fresult = FR_OK;
+        } else {
+            // non root case, do the actual check
+            fresult = f_stat(path_buff, fno);
+        }
     }
 
     strncpy(emmc_wrapper_status.ff_call, "emmc_fs_f_stat(const TCHAR* path_buff, FILINFO* fno)", 128);
@@ -521,17 +530,17 @@ bool emmc_fs_dir_list_internal(
             continue;
 
         // get full path
-        if ( i == 2 )
+        if (path_buff[i-1] == '/')
             sprintf(&path_buff[i], "%s", finfo.fname);
         else
             sprintf(&path_buff[i], "/%s", finfo.fname);
-
         // if is dir
         if ( finfo.fattrib & AM_DIR )
         {
             // check length
-            if ( (strlen(list_subdirs_buff) + strlen(path_buff) + 1) >= list_subdirs_len )
+            if ( (strlen(list_subdirs_buff) + strlen(path_buff) + 1) >= list_subdirs_len ) {
                 return false;
+            }
 
             // append to the list
             strcat(list_subdirs_buff, path_buff);
@@ -546,8 +555,9 @@ bool emmc_fs_dir_list_internal(
         else
         {
             // check length
-            if ( (strlen(list_files_buff) + strlen(path_buff) + 1) >= list_files_len )
+            if ( (strlen(list_files_buff) + strlen(path_buff) + 1) >= list_files_len ) {
                 return false;
+            }
 
             // append to the list
             strcat(list_files_buff, path_buff);
