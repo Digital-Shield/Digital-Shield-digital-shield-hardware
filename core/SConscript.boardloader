@@ -5,7 +5,7 @@ import os
 TREZOR_MODEL = ARGUMENTS.get('TREZOR_MODEL', 'T')
 PRODUCTION_MODEL = ARGUMENTS.get('PRODUCTION_MODEL', 'H')
 
-PCB_VERSION = ARGUMENTS.get('PCB_VERSION', 'PCB_VERSION_1_0')
+PCB_VERSION = ARGUMENTS.get('PCB_VERSION', 'PCB_VERSION_1_1')
 
 CCFLAGS_MOD = ''
 CPPPATH_MOD = []
@@ -130,6 +130,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/i2c.c',
     'embed/trezorhal/uart_log.c',
     'embed/trezorhal/device.c',
+    'embed/trezorhal/power_manager.c',
 ]
 env = Environment(ENV=os.environ, CFLAGS='%s -DPRODUCTION=%s' % (ARGUMENTS.get('CFLAGS', ''), ARGUMENTS.get('PRODUCTION', '0')))
 
