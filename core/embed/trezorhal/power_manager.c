@@ -123,6 +123,7 @@ int pm_init(void) {
 
     // enable battery exist check
     pm_enable_flag_bits(0x4C, (1<<7));
+    pm_enable_flag_bits(PSTATE_CTL3, (1<<0));
 
     /**
      * camera: LDO2
