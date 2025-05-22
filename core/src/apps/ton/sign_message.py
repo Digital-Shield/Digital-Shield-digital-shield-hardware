@@ -34,7 +34,7 @@ async def sign_message(
     from trezor.utils import dump_protobuf_lines
     print("\n".join(dump_protobuf_lines(msg)))
     print("这是接收的参数: ", msg)
-    # return TonSignedTx(signature=b'\xf8yf\xbc6\xe7\xb5\x86\xd6\x96\xf0EV\xf2\\\x85a\xcb\xc3\x14\xe6$*\xa2\xeby\x98\xf7\x18\xfc\xae\r9N\x03\xbf\xef4\xb2+\xae\x9fk\xaf\x159_3\x8a\xacZg\xb3&\x8a&SV6\xa5\xccR3\x02', serialized_tx=b'2\xce\x8d\xd8v\xa1\x82\x9f\x05P"y\x0c\x83!\xaaC\xa5\r\x8aQ\xa2 \xa4;0\x04\xe6Mi\x8d\x97')
+    
     # await paths.validate_path(ctx, keychain, msg.address_n)
    
     node = keychain.derive(msg.address_n)
@@ -66,7 +66,7 @@ async def sign_message(
     print("public_key: ", public_key)
     print("private_key: ", node.private_key())
     wallet = Wallets.ALL[wallet_version](
-        public_key=public_key, wallet_id=698983191, wc=workchain
+        public_key=public_key, private_key = node.private_key() + public_key, wallet_id=698983191, wc=workchain
     )
     address = wallet.address.to_string(
         is_user_friendly=True,
@@ -82,14 +82,6 @@ async def sign_message(
     token = None
     recipient = Address(msg.address).to_string(True, True)
 
-    # if jetton_amount:
-    #     token = tokens.token_by_address("TON_TOKEN", msg.jetton_master_address)
-
-    #     if token is tokens.UNKNOWN_TOKEN:
-    #         # unknown token, confirm contract address
-    #         if msg.jetton_master_address is None:
-    #             raise ValueError("Address cannot be None")
-    #         # await confirm_unknown_token_transfer(ctx, msg.jetton_master_address)
 
     amount = msg.amount #jetton_amount if jetton_amount else 
     if amount is None:
@@ -129,7 +121,8 @@ async def sign_message(
             payload=payload,
             is_raw_data=False,
             send_mode=msg.mode,
-            state_init=state_init
+            state_init=state_init,
+            private_key=node.private_key(),
         )
     except Exception as e:
         print(e)
@@ -146,29 +139,12 @@ async def sign_message(
         else:
             raise wire.DataError("Parse boc failed.")
     # print(f"Recipient: {recipient}, Amount: {amount}, Token: {token}")
-    # show_details = await require_show_overview(
-    #     ctx,
-    #     recipient,
-    #     amount,
-    #     token,
-    # )
-
-    # if show_details:
-    # comment = msg.comment.encode("utf-8") if msg.comment else None
-    # await require_confirm_fee(
-    #     ctx,
-    #     from_address=address,
-    #     to_address=recipient,
-    #     value=amount,
-    #     token=token,
-    #     raw_data=comment if comment else None,
-    #     is_raw_data=False,
-    #)
+    
     print("msg.amount--",msg.amount)
     show_details = await require_show_overview_ton(
         ctx,
         "TON",
-        address,
+        msg.address,
         msg.amount,
         0,
         token,
@@ -201,8 +177,9 @@ async def sign_message(
     # print("boc------: ", boc)
     from binascii import a2b_base64, b2a_base64, unhexlify
     boc_b64 = b2a_base64(boc).decode("utf-8")
-    # boc_b64 = base64.b64encode(boc).decode('utf-8')
+    # print("signature------: ", b2a_base64(signature).decode("utf-8"))
     print("boc_b64------: ", boc_b64)
+    #广播
     # res = requests.post(
     #     "https://toncenter.com/api/v2/sendBoc",
     #     headers={"X-API-Key": "319e1b21f3d6367aef8194daa7883bc002500799d705703be609488b6fb27a49"},
@@ -210,7 +187,7 @@ async def sign_message(
     # )
 
     # print(res.json())
-    return TonSignedTx(signature=signature, serialized_tx=boc)
+    return TonSignedTx(signature=bytes(boc), serialized_tx=signature)
 
 def string_to_bytes(string, size=1):  # ?
     if size == 1:
