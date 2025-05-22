@@ -47,6 +47,7 @@ void device_get_enc_key(uint8_t key[32]);
 void device_test(bool force);
 void device_burnin_test(bool force);
 
+void device_power_on(void);
 void device_power_off(void);
 
 void device_set_pcb_version(pcb_version_t version);

@@ -565,20 +565,7 @@ int main(void)
     random_delays_init();
     motor_init();
 
-    // #0 hold system power pin
-    // 1. the device is powered, if user push `power button` then release
-    // 2. the device is not shutdown, if user connect USB then disconnect USB
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    GPIO_InitTypeDef sys_power_on;
-    sys_power_on.Pin = GPIO_PIN_1;
-    sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
-    sys_power_on.Pull = GPIO_PULLDOWN;
-    sys_power_on.Speed = GPIO_SPEED_MEDIUM;
-
-    // pull up power pin
-    HAL_GPIO_Init(GPIOC, &sys_power_on);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
-
+    device_power_on();
 
     bus_fault_enable();
     /* Initialize the QSPI */

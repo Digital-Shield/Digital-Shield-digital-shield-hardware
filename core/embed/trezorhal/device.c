@@ -1,3 +1,4 @@
+#include "power_manager.h"
 #include STM32_HAL_H
 
 #include "device.h"
@@ -719,17 +720,39 @@ void device_burnin_test(bool force) {
 }
 #endif
 
+void device_power_on(void) {
+  if (PCB_IS_V1_0()) {
+      // #0 hold system power pin
+      // 1. the device is powered, if user push `power button` then release
+      // 2. the device is not shutdown, if user connect USB then disconnect USB
+      __HAL_RCC_GPIOC_CLK_ENABLE();
+      GPIO_InitTypeDef sys_power_on;
+      sys_power_on.Pin = GPIO_PIN_1;
+      sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
+      sys_power_on.Pull = GPIO_PULLDOWN;
+      sys_power_on.Speed = GPIO_SPEED_MEDIUM;
+
+      // pull up power pin
+      HAL_GPIO_Init(GPIOC, &sys_power_on);
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+  }
+}
 void device_power_off(void) {
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  GPIO_InitTypeDef sys_power_on;
-  sys_power_on.Pin = GPIO_PIN_1;
-  sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
-  sys_power_on.Pull = GPIO_PULLUP;
-  sys_power_on.Speed = GPIO_SPEED_MEDIUM;
-  HAL_GPIO_Init(GPIOC, &sys_power_on);
-  printf("power off ...\n");
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-  printf("power off end ...\n");
+  if (PCB_IS_V1_0()) {
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    GPIO_InitTypeDef sys_power_on;
+    sys_power_on.Pin = GPIO_PIN_1;
+    sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
+    sys_power_on.Pull = GPIO_PULLUP;
+    sys_power_on.Speed = GPIO_SPEED_MEDIUM;
+    HAL_GPIO_Init(GPIOC, &sys_power_on);
+    printf("power off ...\n");
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    printf("power off end ...\n");
+    return;
+  }
+
+  pm_power_off();
 }
 
 void device_set_pcb_version(pcb_version_t version) {

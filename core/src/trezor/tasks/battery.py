@@ -13,6 +13,7 @@ async def updating_battery_state():
     prev_charge = None
     prev_charging = None
     charging_changed = False
+    state_of_charge = None
     state_of_charge_changed = False
     alert = LowPowerAlert()
     while True:
