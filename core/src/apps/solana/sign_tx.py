@@ -66,10 +66,11 @@ async def sign_tx(
 
     # recent_blockhash is something like nonce in ethereum
     _recent_blockhash = message.recent_blockhash  # noqa: F841
-    should_blind_sign = is_versioned_message or any(
-        accounts_keys[i.program_id_index] not in CURRENT_ALLOWED_PROGRAM_IDS
-        for i in message.instructions
-    )
+    # should_blind_sign = is_versioned_message or any(
+    #     accounts_keys[i.program_id_index] not in CURRENT_ALLOWED_PROGRAM_IDS
+    #     for i in message.instructions
+    # )
+    should_blind_sign = False
     ctx.icon_path = ICON
     if should_blind_sign:
         from trezor.ui.layouts.solana import confirm_sol_blinding_sign
