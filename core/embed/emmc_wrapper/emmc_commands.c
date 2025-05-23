@@ -740,7 +740,8 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
                 return -5;
             }
         );
-        se_launch(STATE_APP);
+        se_reboot();
+        se_conn_reset();
         ui_screen_progress_bar_update(NULL, NULL, 100);
 
         if ( msg_recv.has_reboot_on_success && msg_recv.reboot_on_success )
