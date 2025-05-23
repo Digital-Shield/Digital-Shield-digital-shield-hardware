@@ -679,10 +679,17 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
                 return -3;
             }
         );
-
+        char cur_ver[17] = {0};
+        char new_ver[17] = {0};
+        se_binary_version(bl_update_buffer, new_ver);
+        if (se_is_running_app()) {
+            if (se_get_version(cur_ver)) {
+                memcpy(cur_ver, "NULL", 4);
+            }
+        }
         // ui confirm
         ui_fadeout();
-        ui_install_ble_confirm();
+        ui_install_se_confirm(cur_ver, new_ver);
         ui_fadein();
 
         int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);

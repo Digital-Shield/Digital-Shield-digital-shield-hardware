@@ -64,5 +64,6 @@ static inline bool se_is_running_app(void) {
 
 int se_ping(void);
 bool se_check_app_binary(const uint8_t *binary, size_t binary_len);
+void se_binary_version(const uint8_t *binary, char version[17]);
 
 #endif

@@ -382,6 +382,16 @@ bool se_check_app_binary(const uint8_t *binary, size_t binary_len) {
     sha256_Raw(binary + header->header_size, header->code_size, digest);
     return memcmp(header->digest, digest, 32) == 0;
 }
+void se_binary_version(const uint8_t *binary, char *version) {
+    struct {
+        uint8_t build;
+        uint8_t patch;
+        uint8_t minor;
+        uint8_t major;
+    } *v = (void*)(binary+4);
+    sprintf(version, "%d.%d.%d.%d", v->major, v->minor, v->patch, v->build);
+    return ;
+}
 
 void se_init(void) {
     se_spi_init();

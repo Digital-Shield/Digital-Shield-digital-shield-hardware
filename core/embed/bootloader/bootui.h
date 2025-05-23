@@ -96,6 +96,7 @@ void ui_wipe_confirm(const image_header* const hdr);
 void ui_install_confirm(image_header* current_hdr,
                         const image_header* const new_hdr);
 void ui_install_ble_confirm(void);
+void ui_install_se_confirm(const char* cur_version, const char* new_version);
 void ui_bootloader_ble_name_reset(void);
 void ui_install_progress(image_header* current_hdr,
                          const image_header* const new_hdr);
