@@ -3,6 +3,8 @@
 #include "emmc_commands_macros.h"
 
 #include "supervise.h"
+#include "thd89.h"
+#include "thd89/se.h"
 
 // ######## global vars ########
 
@@ -657,7 +659,104 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
     image_header file_hdr;
 
     // detect firmware type
-    if ( memcmp(bl_update_buffer, "5283", 4) == 0 )
+    if (memcmp(bl_update_buffer, "TH89", 4) == 0) {
+        // se update
+        ExecuteCheck_MSGS_ADV(
+            se_check_app_binary(bl_update_buffer, emmc_file_size),
+            true,
+            {
+                emmc_fs_file_delete(msg_recv.path);
+                send_failure(iface_num, FailureType_Failure_ProcessError, "Update file header invalid!");
+                return -3;
+            }
+        );
+        // make sure se alive
+        ExecuteCheck_MSGS_ADV(
+            se_ping(),
+            0,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "device not alive!");
+                return -3;
+            }
+        );
+
+        // ui confirm
+        ui_fadeout();
+        ui_install_ble_confirm();
+        ui_fadein();
+
+        int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
+        if ( INPUT_CONFIRM != response )
+        {
+            ui_fadeout();
+            ui_bootloader_first(NULL);
+            ui_fadein();
+            send_user_abort_nocheck(iface_num, "Firmware install cancelled");
+            return -4;
+        }
+        int retry = 5;
+        while (se_is_running_app() && retry--) {
+            se_launch(STATE_BOOTLOADER);
+            hal_delay(50);
+            se_conn_reset();
+        }
+        se_conn_reset();
+        if ( !se_is_running_bootloader() ) {
+            send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+            return -5;
+        }
+
+        ui_fadeout();
+        ui_screen_progress_bar_prepare("Installing", NULL);
+        ui_fadein();
+
+
+        #define SE_DATA_BLOCK 512
+        size_t index = 0;
+        size_t size = 0;
+        size_t total = emmc_file_size;
+        uint8_t *p = bl_update_buffer;
+        while (total) {
+            size = MIN(SE_DATA_BLOCK, total);
+            ExecuteCheck_MSGS_ADV(
+                se_install_app(index, p, size),
+                0,
+                {
+                    send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+                    return -5;
+                }
+            );
+            int precent = (emmc_file_size - total) * 100 / emmc_file_size;
+            ui_screen_progress_bar_update(NULL, NULL, precent);
+            p += size;
+            total -= size;
+            index++;
+        }
+        ExecuteCheck_MSGS_ADV(
+            se_verify_app(),
+            0,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+                return -5;
+            }
+        );
+        se_launch(STATE_APP);
+        ui_screen_progress_bar_update(NULL, NULL, 100);
+
+        if ( msg_recv.has_reboot_on_success && msg_recv.reboot_on_success )
+        {
+            *STAY_IN_FLAG_ADDR = 0;
+            restart();
+        }
+        else
+        {
+            ui_fadeout();
+            ui_bootloader_first(NULL);
+            ui_fadein();
+        }
+        return 0;
+    }
+    else if ( memcmp(bl_update_buffer, "5283", 4) == 0 )
     {
         // bluetooth update
 

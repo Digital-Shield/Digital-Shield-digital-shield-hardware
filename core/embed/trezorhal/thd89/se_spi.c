@@ -70,7 +70,7 @@ int se_spi_init(void) {
   // SE_POWER_OFF();
   // se power on
   SE_POWER_ON();
-  HAL_Delay(5);
+  HAL_Delay(50);
 
   /* SPI5 parameter configuration*/
   hspi5.Instance = SPI5;
@@ -126,7 +126,12 @@ void log_data(uint8_t* data, size_t data_size) {
 
 int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
   // wait combus pull up, SE is IDLE
-  while(SE_COMBUS_IS_LOW());
+  uint32_t until = HAL_GetTick() + timeout;
+  while(SE_COMBUS_IS_LOW()) {
+    if (HAL_GetTick() > until) {
+      return SEC_TRANS_ERR_TIMEOUT;
+    }
+  }
   HAL_Delay(1);
   uint8_t se_cache_buf[SEC_MAX_FRAME_SIZE] = {0};
   memcpy(se_cache_buf, frame, frame_size);
@@ -145,7 +150,12 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
 
 int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   // wait combus pull down, SE have processed data
-  while(SE_COMBUS_IS_HIGH());
+  uint32_t until = HAL_GetTick() + timeout;
+  while(SE_COMBUS_IS_HIGH()) {
+    if (HAL_GetTick() > until) {
+      return SEC_TRANS_ERR_TIMEOUT;
+    }
+  };
   HAL_Delay(1);
   // delay a short time
   uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
@@ -157,14 +167,14 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
-  size_t len = buf[1];
-  len <<= 8;
-  len += buf[2];
-  if (len + 5> frame_buf_size) {
-    return SEC_TRANS_ERR_FAILED;
-  }
-  // add overhead
-  memcpy(frame, buf, len+5);
+  // size_t len = buf[1];
+  // len <<= 8;
+  // len += buf[2];
+  // if (len + 5> frame_buf_size) {
+  //   return SEC_TRANS_ERR_FAILED;
+  // }
+  // // add overhead
+  memcpy(frame, buf, SEC_MAX_FRAME_SIZE);
   printf("SE ==> APP\n");
   log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;

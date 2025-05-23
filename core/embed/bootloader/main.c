@@ -593,7 +593,7 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     sdram_init();
-
+    se_init();
     battery_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
@@ -608,7 +608,6 @@ int main(void)
 #endif
     }
 
-    se_init();
 
     if ( !cert_set )
     {

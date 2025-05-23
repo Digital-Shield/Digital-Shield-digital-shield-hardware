@@ -11,6 +11,7 @@
 #include "thd89.h"
 #include "se_spi.h"
 #include "alignment.h"
+#include "sha2.h"
 
 enum {
   // 设备相关指令
@@ -25,6 +26,11 @@ enum {
 
   // 管理指令
   CMD_ID_REBOOT = 0x10,
+  CMD_ID_LAUNCH = 0x11,
+
+  // boot 下指令
+  CMD_ID_VERIFY_APP = 0x90,
+  CMD_ID_INSTALL_APP = 0x91,
 };
 
 // struct for command and response
@@ -169,12 +175,33 @@ int se_get_life_cycle(life_cycle_t *life_cycle) {
     return 0;
 }
 
-int se_reboot_to(se_state_t state) {
-    uint8_t command[4] = {0};
+int se_reboot(void) {
+    uint8_t command[3] = {0};
     uint8_t response[16] = {0};
     size_t response_size = 0;
 
     REQ_INIT_CMD(command, CMD_ID_REBOOT);
+    REQ_EMPTY_PAYLOAD(req);
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+
+int se_launch(se_state_t state) {
+    uint8_t command[4] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    // 注意 boot状态下只能启动 app, app状态下只能启动到boot
+    // boot -> app, app -> boot
+    // 其他状态下会失败
+    REQ_INIT_CMD(command, CMD_ID_LAUNCH);
     REQ_PAYLOAD(req, &state, 1);
 
     thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
@@ -285,8 +312,85 @@ int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature) {
     return 0;
 }
 
+int se_verify_app(void) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_VERIFY_APP);
+    REQ_EMPTY_PAYLOAD(req);
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return *resp->payload;
+}
+
+int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
+    uint8_t command[1024] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_INSTALL_APP);
+    struct {
+        uint32_t block_index;
+        // 512 or <512 when is last block
+        uint32_t block_size;
+        uint8_t data[0];
+    } *app_block = (void*)req->payload;
+    app_block->block_index = index;
+    app_block->block_size = block_size;
+    memcpy(app_block->data, block, block_size);
+    request_set_length(req, block_size + 8);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+
+int se_ping(void) {
+    return thd89_ping();
+}
+
+bool se_check_app_binary(const uint8_t *binary, size_t binary_len) {
+    if (binary_len < 512) return false;
+    typedef struct {
+        uint8_t magic[4];
+        uint32_t version;
+        // the `header_t`
+        uint32_t header_size;
+        // code size
+        uint32_t code_size;
+        uint8_t digest[32];
+        uint8_t signature[64];
+    }__attribute__((packed, aligned(512))) header_t ;
+    header_t *header = (header_t*)binary;
+    if (binary_len != header->header_size + header->code_size) {
+        return false;
+    }
+    uint8_t digest[32] = {0};
+    sha256_Raw(binary + header->header_size, header->code_size, digest);
+    return memcmp(header->digest, digest, 32) == 0;
+}
+
 void se_init(void) {
     se_spi_init();
+    thd89_init();
+    // reset thd89 connection
+    thd89_reset();
+}
+
+void se_conn_reset(void) {
     thd89_init();
     // reset thd89 connection
     thd89_reset();

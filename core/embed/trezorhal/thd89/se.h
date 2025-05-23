@@ -19,16 +19,24 @@ typedef enum {
 }se_state_t;
 
 void se_init(void);
+void se_conn_reset(void);
 int se_get_life_cycle(life_cycle_t *life_cycle);
 int se_get_version(char version[17]);
 int se_get_sn(char serial[33]);
 int se_get_running_state(se_state_t *state);
-int se_reboot_to(se_state_t state);
 
 int se_get_dev_pubkey(uint8_t pubkey[65]);
 int se_get_certificate_len(size_t *cert_len);
 int se_read_certificate(uint8_t *cert, size_t *cert_len);
 int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature);
+
+// 系统指令
+int se_reboot(void);
+int se_launch(se_state_t state);
+
+// boot 下的指令
+int se_verify_app(void);
+int se_install_app(size_t index, const uint8_t* block, size_t block_size);
 
 // se factory function
 int se_erase_storage(void);
@@ -37,9 +45,6 @@ int se_set_sn(const uint8_t *sn, size_t sn_len);
 int se_set_sheared_key(const uint8_t *key, size_t key_len);
 int se_gen_dev_keypair(void);
 int se_write_certificate(const uint8_t *cert, size_t cert_len);
-
-int se_verify_app(void);
-
 
 // helper function
 static inline bool se_is_running_bootloader(void) {
@@ -56,5 +61,8 @@ static inline bool se_is_running_app(void) {
   }
   return state == STATE_APP;
 }
+
+int se_ping(void);
+bool se_check_app_binary(const uint8_t *binary, size_t binary_len);
 
 #endif
