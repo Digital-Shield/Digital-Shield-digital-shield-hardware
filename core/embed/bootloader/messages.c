@@ -375,7 +375,7 @@ static void send_msg_features(uint8_t iface_num,
       MSG_SEND_ASSIGN_VALUE(ble_enable, ble_get_switch());
     }
     char se_version[17] = {0};
-    if (se_get_version(se_version) == 0) {
+    if (se_is_running_app()  && se_get_version(se_version) == 0) {
       MSG_SEND_ASSIGN_STRING_LEN(se_ver, se_version, strlen(se_version));
     }
 

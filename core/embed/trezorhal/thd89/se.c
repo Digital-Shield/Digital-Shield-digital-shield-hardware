@@ -111,7 +111,7 @@ int se_get_version(char version[17]) {
         uint8_t patch;
         uint8_t build;
     } *v = (void*)resp->payload;
-    sprintf(version, "%d.%d.%d.%d", v->major, v->minor, v->patch, v->build);
+    sprintf(version, "%d.%d.%d", v->major, v->minor, v->patch);
     return 0;
 }
 
@@ -390,7 +390,7 @@ void se_binary_version(const uint8_t *binary, char version[17]) {
         uint8_t minor;
         uint8_t major;
     } *v = (void*)(binary+4);
-    sprintf(version, "%d.%d.%d.%d", v->major, v->minor, v->patch, v->build);
+    sprintf(version, "%d.%d.%d", v->major, v->minor, v->patch);
     return ;
 }
 
