@@ -2,6 +2,7 @@
 #include "bootui.h"
 #include "emmc_commands_macros.h"
 
+#include "stm32h7xx_hal.h"
 #include "supervise.h"
 #include "thd89.h"
 #include "thd89/se.h"
@@ -748,9 +749,14 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
             }
         );
         se_reboot();
+        // delay and wait SE startup
+        HAL_Delay(50);
         se_conn_reset();
+        se_is_running_app();
         ui_screen_progress_bar_update(NULL, NULL, 100);
 
+        send_success_nocheck(iface_num, "Succeed");
+        HAL_Delay(100);
         if ( msg_recv.has_reboot_on_success && msg_recv.reboot_on_success )
         {
             *STAY_IN_FLAG_ADDR = 0;

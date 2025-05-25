@@ -558,10 +558,6 @@ int main(void)
 
     mpu_config_bootloader();
 
-    extern void se_test(void);
-    se_test();
-    while (1);
-
     random_delays_init();
     motor_init();
 

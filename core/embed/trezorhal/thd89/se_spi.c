@@ -6,6 +6,43 @@
 #include "se_spi.h"
 #include "sec_trans.h"
 
+#if 1
+#define SE_LOG(...)
+#define log_data(...)
+#define log_frame(...)
+#else
+#define SE_LOG printf
+void log_data(uint8_t* data, size_t data_size) {
+  #define __FRAME_LINE__ 16
+  uint8_t count = 0;
+  while (data_size--) {
+    count++;
+    SE_LOG("%02x ", *data++);
+    if (count == __FRAME_LINE__) {
+      SE_LOG("\n");
+      count = 0;
+    }
+  }
+  SE_LOG("\n");
+}
+static void log_frame(uint8_t frame[SEC_MAX_FRAME_SIZE]) {
+  uint8_t fctr = frame[0];
+  (void)fctr;
+  size_t len = frame[1];
+  len <<= 8;
+  len |= frame[2];
+
+  size_t frame_size = len + 5;
+  (void)frame_size;
+  uint8_t* p = frame + 3;
+
+  SE_LOG("frame: %02x,  len: %d(%02x%02x), crc: %02x%02x\n", fctr, len,
+          frame[1], frame[2], frame[frame_size - 2], frame[frame_size - 1]);
+
+  log_data(p, len);
+}
+#endif
+
 static SPI_HandleTypeDef hspi5 = {0};
 #define SE_TRANS_TIMEOUT 10000
 int se_spi_init(void) {
@@ -18,6 +55,21 @@ int se_spi_init(void) {
 
   // enable gpio clock
   SPI_GPIO_CLK_ENABLE();
+
+  // power on
+  gpio.Pin = SE_POWER_GPIO_PIN;
+  gpio.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio.Pull = GPIO_PULLUP;
+  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+  gpio.Alternate = 0;
+  HAL_GPIO_Init(SE_POWER_GPIO_PORT, &gpio);
+
+  // se power off
+  SE_POWER_OFF();
+  HAL_Delay(50);
+  // se power on
+  SE_POWER_ON();
+  HAL_Delay(50);
 
   // CLK
   gpio.Pin = SPI_CLK_GPIO_PIN;
@@ -58,19 +110,6 @@ int se_spi_init(void) {
   gpio.Alternate = 0;
   HAL_GPIO_Init(SE_COMBUS_GPIO_PORT, &gpio);
 
-  // power on
-  gpio.Pin = SE_POWER_GPIO_PIN;
-  gpio.Mode = GPIO_MODE_OUTPUT_PP;
-  gpio.Pull = GPIO_PULLUP;
-  gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-  gpio.Alternate = 0;
-  HAL_GPIO_Init(SE_POWER_GPIO_PORT, &gpio);
-
-  // se power off
-  // SE_POWER_OFF();
-  // se power on
-  SE_POWER_ON();
-  HAL_Delay(50);
 
   /* SPI5 parameter configuration*/
   hspi5.Instance = SPI5;
@@ -96,33 +135,6 @@ int se_spi_init(void) {
   return 0;
 }
 
-void log_data(uint8_t* data, size_t data_size) {
-  #define __FRAME_LINE__ 16
-    uint8_t count = 0;
-    while (data_size--) {
-      count++;
-      printf("%02x ", *data++);
-      if (count == __FRAME_LINE__) {
-        printf("\n");
-        count = 0;
-      }
-    }
-    printf("\n");
-  }
-  static void log_frame(uint8_t frame[SEC_MAX_FRAME_SIZE]) {
-    uint8_t fctr = frame[0];
-    size_t len = frame[1];
-    len <<= 8;
-    len |= frame[2];
-
-    size_t frame_size = len + 5;
-    uint8_t* p = frame + 3;
-
-    printf("frame: %02x,  len: %d(%02x%02x), crc: %02x%02x\n", fctr, len,
-           frame[1], frame[2], frame[frame_size - 2], frame[frame_size - 1]);
-
-    log_data(p, len);
-  }
 
 int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
   // wait combus pull up, SE is IDLE
@@ -143,7 +155,7 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
   } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
-  printf("APP ==> SE\n");
+  SE_LOG("APP ==> SE\n");
   log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;
 }
@@ -167,24 +179,16 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
   } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
-  // size_t len = buf[1];
-  // len <<= 8;
-  // len += buf[2];
-  // if (len + 5> frame_buf_size) {
-  //   return SEC_TRANS_ERR_FAILED;
-  // }
-  // // add overhead
   memcpy(frame, buf, SEC_MAX_FRAME_SIZE);
-  printf("SE ==> APP\n");
+  SE_LOG("SE ==> APP\n");
   log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;
 }
-
 int se_send(uint8_t *buf, size_t size, uint32_t timeout) {
   // wait combus pull up, SE is IDLE
   while (SE_COMBUS_IS_LOW());
   HAL_Delay(1);
-  printf("SE sending: \n");
+  SE_LOG("SE sending: \n");
   log_data(buf, size);
   if (HAL_SPI_Transmit(&hspi5, buf, size, timeout) != HAL_OK) {
     return -1;
@@ -199,7 +203,7 @@ int se_recv(uint8_t *buf, size_t size, uint32_t timeout) {
   if (HAL_SPI_Receive(&hspi5, buf, size, timeout) != HAL_OK) {
     return -1;
   }
-  printf("SE received: \n");
+  SE_LOG("SE received: \n");
   log_data(buf, size);
   return 0;
 }

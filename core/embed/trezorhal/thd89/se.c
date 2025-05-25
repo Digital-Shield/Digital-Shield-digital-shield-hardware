@@ -328,7 +328,8 @@ int se_verify_app(void) {
     if (resp->code != RESP_CODE_SUCCESS) {
         return 1;
     }
-    return *resp->payload;
+    // we use 0 as success
+    return *resp->payload == 1? 0: 1;
 }
 
 int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
@@ -337,15 +338,15 @@ int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
     size_t response_size = 0;
     REQ_INIT_CMD(command, CMD_ID_INSTALL_APP);
     struct {
-        uint32_t block_index;
+        uint8_t block_index_bytes[2];
         // 512 or <512 when is last block
-        uint32_t block_size;
+        uint8_t block_size_bytes[2];
         uint8_t data[0];
     } *app_block = (void*)req->payload;
-    app_block->block_index = index;
-    app_block->block_size = block_size;
+    PUT_UINT16_BE(index, app_block->block_index_bytes, 0);
+    PUT_UINT16_BE(block_size, app_block->block_size_bytes, 0);
     memcpy(app_block->data, block, block_size);
-    request_set_length(req, block_size + 8);
+    request_set_length(req, block_size + 4);
     thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
     // transmit result
     if (ret != THD89_SUCCESS) {
@@ -382,7 +383,7 @@ bool se_check_app_binary(const uint8_t *binary, size_t binary_len) {
     sha256_Raw(binary + header->header_size, header->code_size, digest);
     return memcmp(header->digest, digest, 32) == 0;
 }
-void se_binary_version(const uint8_t *binary, char *version) {
+void se_binary_version(const uint8_t *binary, char version[17]) {
     struct {
         uint8_t build;
         uint8_t patch;
