@@ -32,6 +32,7 @@
 #include "sdram.h"
 #include "se_thd89.h"
 #include "spi.h"
+#include "stm32h7xx_hal.h"
 #include "sys.h"
 #include "usart.h"
 #include "usb.h"
@@ -543,8 +544,18 @@ static void low_power_detect(void) {
     hal_delay(500);
     // pull down system power pin
     // when user release power button, the device will shut down
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-    while (1);
+    if (PCB_IS_V1_0()) {
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    }
+    while (1) {
+        int soc = battery_read_SOC();
+        int C = battery_read_current();
+        if (soc > 1 && C > 0) {
+            break;
+        }
+        HAL_Delay(1000);
+    }
+
 }
 
 int main(void)

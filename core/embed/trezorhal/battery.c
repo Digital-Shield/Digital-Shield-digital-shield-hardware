@@ -1,3 +1,4 @@
+#include "stm32h7xx_hal.h"
 #include STM32_HAL_H
 #include "battery.h"
 #include <stdint.h>
@@ -85,6 +86,9 @@ static inline int battery_read_register(uint8_t Reg_Addr, int16_t* data)
   return 0;
 }
 
+volatile uint32_t charge_full_count = 0;
+
+
 int battery_read_current(void)
 {
   int result = 0;
@@ -156,6 +160,17 @@ int battery_read_SOC(void)
 
   result = battery_read_register(REG_SOC, &ret);
   OP_CHECK(result);
+  if (ret == 99) {
+    int C = battery_read_current();
+    if (C >= 0 && charge_full_count < 120) {
+      charge_full_count += 2;
+    } else if (C < 0 && charge_full_count > 0) {
+      charge_full_count--;
+    }
+    if (charge_full_count > 30) {
+      return 100;
+    }
+  }
   return ret;
 
   // printf("SOC before: %d\n", ret);
