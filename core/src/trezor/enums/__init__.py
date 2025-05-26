@@ -543,6 +543,9 @@ if TYPE_CHECKING:
         PromptAlways = 1
         PromptTemporarily = 2
 
+    class DigitalDeviceType(IntEnum):
+        PRO = 0
+
     class Capability(IntEnum):
         Bitcoin = 1
         Bitcoin_like = 2

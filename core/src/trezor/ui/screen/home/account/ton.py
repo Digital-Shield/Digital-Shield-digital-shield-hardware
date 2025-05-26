@@ -29,7 +29,7 @@ class Ton(DetailBase):
             init = Initialize(session_id=b"\x00")
             await handle_Initialize(ctx, init)
             
-            # print("address_n--"+str(parser_path(cls.get_path())))
+            print("address_n--"+str(parser_path(cls.get_path())))
             # step 2: get address
             req = TonGetAddress(address_n=parser_path(cls.get_path()),wallet_version=3, workchain=0, is_bounceable=False, 
                                 is_testnet_only=False, wallet_id=698983191, show_display=False)

@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from trezor.enums import DebugButton  # noqa: F401
     from trezor.enums import DebugSwipeDirection  # noqa: F401
     from trezor.enums import DecredStakingSpendType  # noqa: F401
+    from trezor.enums import DigitalDeviceType  # noqa: F401
     from trezor.enums import EthereumDataType  # noqa: F401
     from trezor.enums import EthereumDataTypeDigitalshield  # noqa: F401
     from trezor.enums import EthereumDefinitionType  # noqa: F401
@@ -2595,6 +2596,7 @@ if TYPE_CHECKING:
         build_id: "bytes | None"
         boardloader_version: "str | None"
         busy: "bool | None"
+        digital_device_type: "DigitalDeviceType | None"
 
         def __init__(
             self,
@@ -2656,6 +2658,7 @@ if TYPE_CHECKING:
             build_id: "bytes | None" = None,
             boardloader_version: "str | None" = None,
             busy: "bool | None" = None,
+            digital_device_type: "DigitalDeviceType | None" = None,
         ) -> None:
             pass
 
@@ -7996,7 +7999,6 @@ if TYPE_CHECKING:
             *,
             address: "str",
             amount: "int",
-            seqno: "int | None" = 0,
             valid_until: "int",
             address_n: "list[int] | None" = None,
             ext_destination: "list[str] | None" = None,
@@ -8009,6 +8011,7 @@ if TYPE_CHECKING:
             comment: "str | None" = None,
             is_raw_data: "bool | None" = None,
             mode: "int | None" = None,
+            seqno: "int | None" = None,
             wallet_version: "TonWalletVersion | None" = None,
             wallet_id: "int | None" = None,
             workchain: "TonWorkChain | None" = None,

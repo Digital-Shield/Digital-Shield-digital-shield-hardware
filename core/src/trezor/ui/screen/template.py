@@ -176,8 +176,8 @@ class SignMessage(Modal):
         super().__init__()
 
         self.set_title(title, icon)
-        self.btn_right(i18n.Button.sign)
-        self.btn_left(i18n.Button.reject)
+        self.btn_right.set_text(i18n.Button.sign)
+        self.btn_left.set_text(i18n.Button.reject)
 
         self.content.set_style_pad_all(16, lv.PART.MAIN)
         self.create_content(HStack)
@@ -188,6 +188,7 @@ class SignMessage(Modal):
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
+            item.set_style_text_color(colors.STD.RED, lv.PART.MAIN) 
             return item
 
         # chin_id

@@ -579,6 +579,10 @@ class SafetyCheckLevel(IntEnum):
     PromptTemporarily = 2
 
 
+class DigitalDeviceType(IntEnum):
+    PRO = 0
+
+
 class Capability(IntEnum):
     Bitcoin = 1
     Bitcoin_like = 2
@@ -3884,6 +3888,7 @@ class Features(protobuf.MessageType):
         518: protobuf.Field("build_id", "bytes", repeated=False, required=False),
         519: protobuf.Field("boardloader_version", "string", repeated=False, required=False),
         41: protobuf.Field("busy", "bool", repeated=False, required=False),
+        600: protobuf.Field("digital_device_type", "DigitalDeviceType", repeated=False, required=False),
     }
 
     def __init__(
@@ -3947,6 +3952,7 @@ class Features(protobuf.MessageType):
         build_id: Optional["bytes"] = None,
         boardloader_version: Optional["str"] = None,
         busy: Optional["bool"] = None,
+        digital_device_type: Optional["DigitalDeviceType"] = None,
     ) -> None:
         self.capabilities: Sequence["Capability"] = capabilities if capabilities is not None else []
         self.major_version = major_version
@@ -4006,6 +4012,7 @@ class Features(protobuf.MessageType):
         self.build_id = build_id
         self.boardloader_version = boardloader_version
         self.busy = busy
+        self.digital_device_type = digital_device_type
 
 
 class LockDevice(protobuf.MessageType):
@@ -9909,16 +9916,16 @@ class TonSignTx(protobuf.MessageType):
     MESSAGE_WIRE_TYPE = 11908
     FIELDS = {
         1: protobuf.Field("address_n", "uint32", repeated=True, required=False),
-        2: protobuf.Field("destination", "string", repeated=False, required=True),
+        2: protobuf.Field("address", "string", repeated=False, required=True),
         3: protobuf.Field("jetton_master_address", "string", repeated=False, required=False),
         4: protobuf.Field("jetton_wallet_address", "string", repeated=False, required=False),
-        5: protobuf.Field("ton_amount", "uint64", repeated=False, required=True),
+        5: protobuf.Field("amount", "uint64", repeated=False, required=True),
         6: protobuf.Field("jetton_amount", "uint64", repeated=False, required=False),
         7: protobuf.Field("fwd_fee", "uint64", repeated=False, required=False),
         8: protobuf.Field("comment", "string", repeated=False, required=False),
         9: protobuf.Field("is_raw_data", "bool", repeated=False, required=False),
         10: protobuf.Field("mode", "uint32", repeated=False, required=False),
-        11: protobuf.Field("seqno", "uint32", repeated=False, required=True),
+        11: protobuf.Field("seqno", "uint32", repeated=False, required=False),
         12: protobuf.Field("valid_until", "uint64", repeated=False, required=True),
         13: protobuf.Field("wallet_version", "TonWalletVersion", repeated=False, required=False),
         14: protobuf.Field("wallet_id", "uint32", repeated=False, required=False),
@@ -9932,21 +9939,18 @@ class TonSignTx(protobuf.MessageType):
         22: protobuf.Field("init_data_initial_chunk", "bytes", repeated=False, required=False),
         23: protobuf.Field("init_data_length", "uint32", repeated=False, required=False),
         24: protobuf.Field("signing_message_repr", "bytes", repeated=False, required=False),
-        25: protobuf.Field("messages", "TonMessages", repeated=True, required=False),
     }
 
     def __init__(
         self,
         *,
-        destination: "str",
-        ton_amount: "int",
-        seqno: "int",
+        address: "str",
+        amount: "int",
         valid_until: "int",
         address_n: Optional[Sequence["int"]] = None,
         ext_destination: Optional[Sequence["str"]] = None,
         ext_ton_amount: Optional[Sequence["int"]] = None,
         ext_payload: Optional[Sequence["str"]] = None,
-        messages: Optional[Sequence["TonMessages"]] = None,
         jetton_master_address: Optional["str"] = None,
         jetton_wallet_address: Optional["str"] = None,
         jetton_amount: Optional["int"] = None,
@@ -9954,6 +9958,7 @@ class TonSignTx(protobuf.MessageType):
         comment: Optional["str"] = None,
         is_raw_data: Optional["bool"] = False,
         mode: Optional["int"] = 3,
+        seqno: Optional["int"] = None,
         wallet_version: Optional["TonWalletVersion"] = TonWalletVersion.V4R2,
         wallet_id: Optional["int"] = 698983191,
         workchain: Optional["TonWorkChain"] = TonWorkChain.BASECHAIN,
@@ -9968,10 +9973,8 @@ class TonSignTx(protobuf.MessageType):
         self.ext_destination: Sequence["str"] = ext_destination if ext_destination is not None else []
         self.ext_ton_amount: Sequence["int"] = ext_ton_amount if ext_ton_amount is not None else []
         self.ext_payload: Sequence["str"] = ext_payload if ext_payload is not None else []
-        self.messages: Sequence["TonMessages"] = messages if messages is not None else []
-        self.destination = destination
-        self.ton_amount = ton_amount
-        self.seqno = seqno
+        self.address = address
+        self.amount = amount
         self.valid_until = valid_until
         self.jetton_master_address = jetton_master_address
         self.jetton_wallet_address = jetton_wallet_address
@@ -9980,6 +9983,7 @@ class TonSignTx(protobuf.MessageType):
         self.comment = comment
         self.is_raw_data = is_raw_data
         self.mode = mode
+        self.seqno = seqno
         self.wallet_version = wallet_version
         self.wallet_id = wallet_id
         self.workchain = workchain
@@ -9995,7 +9999,7 @@ class TonSignedTx(protobuf.MessageType):
     MESSAGE_WIRE_TYPE = 11909
     FIELDS = {
         1: protobuf.Field("signature", "bytes", repeated=False, required=False),
-        2: protobuf.Field("signning_message", "bytes", repeated=False, required=False),
+        2: protobuf.Field("serialized_tx", "bytes", repeated=False, required=False),
         3: protobuf.Field("init_data_length", "uint32", repeated=False, required=False),
     }
 
@@ -10003,11 +10007,11 @@ class TonSignedTx(protobuf.MessageType):
         self,
         *,
         signature: Optional["bytes"] = None,
-        signning_message: Optional["bytes"] = None,
+        serialized_tx: Optional["bytes"] = None,
         init_data_length: Optional["int"] = None,
     ) -> None:
         self.signature = signature
-        self.signning_message = signning_message
+        self.serialized_tx = serialized_tx
         self.init_data_length = init_data_length
 
 
@@ -10075,26 +10079,6 @@ class TonSignedProof(protobuf.MessageType):
         signature: Optional["bytes"] = None,
     ) -> None:
         self.signature = signature
-
-
-class TonMessages(protobuf.MessageType):
-    MESSAGE_WIRE_TYPE = None
-    FIELDS = {
-        1: protobuf.Field("address", "string", repeated=False, required=False),
-        2: protobuf.Field("amount", "string", repeated=False, required=False),
-        3: protobuf.Field("payload", "string", repeated=False, required=False),
-    }
-
-    def __init__(
-        self,
-        *,
-        address: Optional["str"] = None,
-        amount: Optional["str"] = None,
-        payload: Optional["str"] = None,
-    ) -> None:
-        self.address = address
-        self.amount = amount
-        self.payload = payload
 
 
 class TronGetAddress(protobuf.MessageType):

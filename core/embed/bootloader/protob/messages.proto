@@ -61,6 +61,11 @@ message Initialize {
 message GetFeatures {
 }
 
+enum DigitalDeviceType {
+    PRO = 0x00;
+}
+
+
 /**
  * Response: Reports various information about the device
  * @end
@@ -96,6 +101,8 @@ message Features {
 
     optional uint32 initstates = 513;      // list of facotry state
     optional string boardloader_version = 519;
+
+    optional DigitalDeviceType digital_device_type = 600;
 }
 
 /**

@@ -49,6 +49,10 @@ typedef enum _MessageType {
     MessageType_MessageType_EmmcDirRemove = 30110
 } MessageType;
 
+typedef enum _DigitalDeviceType {
+    DigitalDeviceType_PRO = 0
+} DigitalDeviceType;
+
 typedef enum _RebootType {
     RebootType_Normal = 0,
     RebootType_Boardloader = 1,
@@ -130,6 +134,8 @@ typedef struct _Features {
     uint32_t initstates;
     bool has_boardloader_version;
     char boardloader_version[32];
+    bool has_digital_device_type;
+    DigitalDeviceType digital_device_type;
 } Features;
 
 typedef struct _Ping {
@@ -339,6 +345,10 @@ extern "C" {
 #define _MessageType_MAX MessageType_MessageType_EmmcDirRemove
 #define _MessageType_ARRAYSIZE ((MessageType)(MessageType_MessageType_EmmcDirRemove+1))
 
+#define _DigitalDeviceType_MIN DigitalDeviceType_PRO
+#define _DigitalDeviceType_MAX DigitalDeviceType_PRO
+#define _DigitalDeviceType_ARRAYSIZE ((DigitalDeviceType)(DigitalDeviceType_PRO+1))
+
 #define _RebootType_MIN RebootType_Normal
 #define _RebootType_MAX RebootType_BootLoader
 #define _RebootType_ARRAYSIZE ((RebootType)(RebootType_BootLoader+1))
@@ -353,6 +363,7 @@ extern "C" {
 
 
 
+#define Features_digital_device_type_ENUMTYPE DigitalDeviceType
 
 
 
@@ -394,7 +405,7 @@ extern "C" {
 /* Initializer values for message structs */
 #define Initialize_init_default                  {0}
 #define GetFeatures_init_default                 {0}
-#define Features_init_default                    {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, ""}
+#define Features_init_default                    {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _DigitalDeviceType_MIN}
 #define Ping_init_default                        {false, ""}
 #define Success_init_default                     {false, ""}
 #define Failure_init_default                     {false, _FailureType_MIN, false, ""}
@@ -430,7 +441,7 @@ extern "C" {
 #define SEMessageSignature_init_default          {{0, {0}}}
 #define Initialize_init_zero                     {0}
 #define GetFeatures_init_zero                    {0}
-#define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, ""}
+#define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _DigitalDeviceType_MIN}
 #define Ping_init_zero                           {false, ""}
 #define Success_init_zero                        {false, ""}
 #define Failure_init_zero                        {false, _FailureType_MIN, false, ""}
@@ -494,6 +505,7 @@ extern "C" {
 #define Features_serial_no_tag                   511
 #define Features_initstates_tag                  513
 #define Features_boardloader_version_tag         519
+#define Features_digital_device_type_tag         600
 #define Ping_message_tag                         1
 #define Success_message_tag                      1
 #define Failure_code_tag                         1
@@ -595,7 +607,8 @@ X(a, STATIC,   OPTIONAL, STRING,   digitalshield_version, 508) \
 X(a, STATIC,   OPTIONAL, STRING,   bootloader_version, 510) \
 X(a, STATIC,   OPTIONAL, STRING,   serial_no,       511) \
 X(a, STATIC,   OPTIONAL, UINT32,   initstates,      513) \
-X(a, STATIC,   OPTIONAL, STRING,   boardloader_version, 519)
+X(a, STATIC,   OPTIONAL, STRING,   boardloader_version, 519) \
+X(a, STATIC,   OPTIONAL, UENUM,    digital_device_type, 600)
 #define Features_CALLBACK NULL
 #define Features_DEFAULT NULL
 
@@ -893,7 +906,7 @@ extern const pb_msgdesc_t SEMessageSignature_msg;
 #define EmmcPathInfo_size                        258
 #define EmmcPath_size                            59
 #define Failure_size                             260
-#define Features_size                            663
+#define Features_size                            666
 #define FirmwareErase_ex_size                    6
 #define FirmwareErase_size                       6
 #define FirmwareRequest_size                     12

@@ -134,6 +134,12 @@ message Features {
     optional bytes build_id = 518;
     optional string boardloader_version = 519;
     optional bool busy = 41;                    // is the device busy, showing "Do not disconnect"?
+
+    optional DigitalDeviceType digital_device_type = 600;
+}
+
+enum DigitalDeviceType {
+    PRO = 0x00;
 }
 
 /**
