@@ -392,6 +392,12 @@ secbool bootloader_usb_loop_factory(const vendor_header* const vhdr, const image
         case MSG_NAME_TO_ID(SESignMessage): // SESignMessage
             process_msg_SESignMessage(USB_IFACE_NUM, msg_size, buf);
             break;
+        case MSG_NAME_TO_ID(SEInitialize): // SEInitialize
+            process_msg_SEInitializePrepare(USB_IFACE_NUM, msg_size, buf);
+            break;
+        case MSG_NAME_TO_ID(SEInitializeDone): // SEInitializeDone
+            process_msg_SEInitializeDone(USB_IFACE_NUM, msg_size, buf);
+            break;
         case MSG_NAME_TO_ID(Reboot): // Reboot
             process_msg_Reboot(USB_IFACE_NUM, msg_size, buf);
             break;
@@ -570,9 +576,6 @@ int main(void)
 
     SystemCoreClockUpdate();
 
-    // extern void thd89_test(void);
-    // thd89_test();
-
     /* Enable the CPU Cache */
     cpu_cache_enable();
 
@@ -596,14 +599,17 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     sdram_init();
-    se_init();
     battery_init();
     pm_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
     low_power_detect();
-
     device_para_init();
+    se_init();
+
+    BLE_CTL_PIN_INIT();
+    ble_function_on();
+
     if ( !serial_set )
     {
         serial_set = device_serial_set();
@@ -611,7 +617,6 @@ int main(void)
         serial_set = true; // TODO: need debug.
 #endif
     }
-
 
     if ( !cert_set )
     {
@@ -623,13 +628,24 @@ int main(void)
 #endif
     }
 
+#if 0
+    // 进行生产
+    if (!serial_set || !cert_set)
+    {
+        display_clear();
+        ui_fadein();
+        ui_bootloader_first(NULL);
+        if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
+        {
+            return 1;
+        }
+    }
+#endif
+
     if ( emmc_fs_path_exist("0:/res/.DIGITSHIELD_RESOURCE") == true )
     {
         res_set = true;
     }
-
-    BLE_CTL_PIN_INIT();
-    ble_function_on();
 
     vendor_header vhdr;
     image_header hdr;
@@ -654,7 +670,7 @@ int main(void)
         display_clear();
         ui_fadein();
         ui_bootloader_first(NULL);
-        if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
+        if ( bootloader_usb_loop(NULL, NULL) != sectrue )
         {
             return 1;
         }

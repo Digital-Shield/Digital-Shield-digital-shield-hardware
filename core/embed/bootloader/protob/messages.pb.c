@@ -114,6 +114,12 @@ PB_BIND(SESignMessage, SESignMessage, 2)
 PB_BIND(SEMessageSignature, SEMessageSignature, AUTO)
 
 
+PB_BIND(SEInitialize, SEInitialize, AUTO)
+
+
+PB_BIND(SEInitializeDone, SEInitializeDone, AUTO)
+
+
 
 
 

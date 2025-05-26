@@ -34,6 +34,8 @@ typedef enum _MessageType {
     MessageType_MessageType_SEPublicCert = 10008,
     MessageType_MessageType_SESignMessage = 10012,
     MessageType_MessageType_SEMessageSignature = 10013,
+    MessageType_MessageType_SEInitialize = 10025,
+    MessageType_MessageType_SEInitializeDone = 10026,
     MessageType_MessageType_Reboot = 30000,
     MessageType_MessageType_FirmwareUpdateEmmc = 30001,
     MessageType_MessageType_EmmcFixPermission = 30100,
@@ -329,6 +331,14 @@ typedef struct _SEMessageSignature {
     SEMessageSignature_signature_t signature;
 } SEMessageSignature;
 
+typedef struct _SEInitialize {
+    char dummy_field;
+} SEInitialize;
+
+typedef struct _SEInitializeDone {
+    char dummy_field;
+} SEInitializeDone;
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -391,6 +401,8 @@ extern "C" {
 
 
 
+
+
 /* Initializer values for message structs */
 #define Initialize_init_default                  {0}
 #define GetFeatures_init_default                 {0}
@@ -428,6 +440,8 @@ extern "C" {
 #define SEPublicCert_init_default                {{0, {0}}}
 #define SESignMessage_init_default               {{0, {0}}}
 #define SEMessageSignature_init_default          {{0, {0}}}
+#define SEInitialize_init_default                {0}
+#define SEInitializeDone_init_default            {0}
 #define Initialize_init_zero                     {0}
 #define GetFeatures_init_zero                    {0}
 #define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, ""}
@@ -464,6 +478,8 @@ extern "C" {
 #define SEPublicCert_init_zero                   {{0, {0}}}
 #define SESignMessage_init_zero                  {{0, {0}}}
 #define SEMessageSignature_init_zero             {{0, {0}}}
+#define SEInitialize_init_zero                   {0}
+#define SEInitializeDone_init_zero               {0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Features_vendor_tag                      1
@@ -800,6 +816,16 @@ X(a, STATIC,   REQUIRED, BYTES,    signature,         1)
 #define SEMessageSignature_CALLBACK NULL
 #define SEMessageSignature_DEFAULT NULL
 
+#define SEInitialize_FIELDLIST(X, a) \
+
+#define SEInitialize_CALLBACK NULL
+#define SEInitialize_DEFAULT NULL
+
+#define SEInitializeDone_FIELDLIST(X, a) \
+
+#define SEInitializeDone_CALLBACK NULL
+#define SEInitializeDone_DEFAULT NULL
+
 extern const pb_msgdesc_t Initialize_msg;
 extern const pb_msgdesc_t GetFeatures_msg;
 extern const pb_msgdesc_t Features_msg;
@@ -836,6 +862,8 @@ extern const pb_msgdesc_t ReadSEPublicCert_msg;
 extern const pb_msgdesc_t SEPublicCert_msg;
 extern const pb_msgdesc_t SESignMessage_msg;
 extern const pb_msgdesc_t SEMessageSignature_msg;
+extern const pb_msgdesc_t SEInitialize_msg;
+extern const pb_msgdesc_t SEInitializeDone_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define Initialize_fields &Initialize_msg
@@ -874,6 +902,8 @@ extern const pb_msgdesc_t SEMessageSignature_msg;
 #define SEPublicCert_fields &SEPublicCert_msg
 #define SESignMessage_fields &SESignMessage_msg
 #define SEMessageSignature_fields &SEMessageSignature_msg
+#define SEInitialize_fields &SEInitialize_msg
+#define SEInitializeDone_fields &SEInitializeDone_msg
 
 /* Maximum encoded size of messages (where known) */
 /* FirmwareUpload_size depends on runtime parameters */
@@ -906,6 +936,8 @@ extern const pb_msgdesc_t SEMessageSignature_msg;
 #define ReadSEPublicCert_size                    0
 #define ReadSEPublicKey_size                     0
 #define Reboot_size                              2
+#define SEInitializeDone_size                    0
+#define SEInitialize_size                        0
 #define SEMessageSignature_size                  66
 #define SEPublicCert_size                        2051
 #define SEPublicKey_size                         67

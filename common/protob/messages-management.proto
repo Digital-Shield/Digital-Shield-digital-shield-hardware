@@ -595,6 +595,20 @@ message SEMessageSignature {
 }
 
 /**
+ * Request: SE erase storage
+ * @end
+ */
+message SEInitialize {
+}
+
+ /**
+  * Request: SE Initialize done
+  * @end
+  */
+ message SEInitializeDone {
+ }
+
+/**
  * Request: Ask for uoload resource to device (wallpaper/nft pics, mp4)
  * @next ResourceRequest
  * @next ZoomRequest
