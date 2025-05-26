@@ -8,6 +8,11 @@
 #define PRODUCT_STRING "Digitshield Touch"
 #define SE_NAME "ATECC608"
 
+typedef enum {
+  PCB_V1_0,
+  PCB_V1_1,
+}pcb_version_t;
+
 typedef struct __attribute__((packed)) {
   char product[2];
   char hardware[2];
@@ -42,5 +47,11 @@ void device_get_enc_key(uint8_t key[32]);
 void device_test(bool force);
 void device_burnin_test(bool force);
 
+void device_power_on(void);
 void device_power_off(void);
+
+void device_set_pcb_version(pcb_version_t version);
+pcb_version_t device_get_pcb_version(void);
+#define PCB_IS_V1_0() (device_get_pcb_version() == PCB_V1_0)
+#define PCB_IS_V1_1() (device_get_pcb_version() == PCB_V1_1)
 #endif

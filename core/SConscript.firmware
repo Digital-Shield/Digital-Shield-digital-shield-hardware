@@ -59,6 +59,7 @@ SOURCE_MOD += [
     'embed/extmod/modtrezorcrypto/rand.c',
     'vendor/trezor-crypto/address.c',
     'vendor/trezor-crypto/aes/aes_modes.c',
+    'vendor/trezor-crypto/aes/aesccm.c',
     'vendor/trezor-crypto/aes/aescrypt.c',
     'vendor/trezor-crypto/aes/aeskey.c',
     'vendor/trezor-crypto/aes/aestab.c',
@@ -451,7 +452,11 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/usbd_ctlreq.c',
     'embed/trezorhal/usbd_ioreq.c',
     'embed/trezorhal/usbd_desc.c',
-    'embed/trezorhal/thd89/se_thd89.c',
+    'embed/trezorhal/thd89/se_spi.c',
+    'embed/trezorhal/thd89/se.c',
+    'embed/trezorhal/thd89/thd89.c',
+    'embed/trezorhal/thd89/se_factory.c',
+    'embed/trezorhal/thd89/thd89_test.c',
 	'embed/trezorhal/trans_fifo.c',
     'embed/trezorhal/spi.c',
     'embed/trezorhal/usart.c',
@@ -467,6 +472,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/sbu.c',
     'embed/trezorhal/touch.c',
     'embed/trezorhal/button.c',
+    'embed/trezorhal/power_manager.c',
 ]
 
 SOURCE_NANOPB = [

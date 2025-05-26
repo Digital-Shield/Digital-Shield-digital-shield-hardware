@@ -11,7 +11,8 @@ int uart_log_init(void) {
   __HAL_RCC_USART1_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  GPIO_InitStruct.Pin = GPIO_PIN_14 | GPIO_PIN_15;
+  // log only use tx
+  GPIO_InitStruct.Pin = GPIO_PIN_14; // | GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -24,7 +25,8 @@ int uart_log_init(void) {
   uart.Init.StopBits = UART_STOPBITS_1;
   uart.Init.Parity = UART_PARITY_NONE;
   uart.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  uart.Init.Mode = UART_MODE_TX_RX;
+  // log only use tx
+  uart.Init.Mode = UART_MODE_TX; // UART_MODE_TX_RX;
   uart.Init.OverSampling = UART_OVERSAMPLING_16;
   uart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   uart.Init.ClockPrescaler = UART_PRESCALER_DIV1;

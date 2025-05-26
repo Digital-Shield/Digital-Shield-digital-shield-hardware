@@ -27,6 +27,8 @@
 #include "rand.h"
 #include "supervise.h"
 #include "touch.h"
+#include "device.h"
+#include "power_manager.h"
 
 #if defined(STM32F427xx) || defined(STM32F405xx)
 #include "stm32f4xx_ll_utils.h"
@@ -67,7 +69,18 @@ void shutdown(void) {
 #endif
 }
 
-void restart(void) { svc_reset_system(); }
+void restart(void) {
+  if (PCB_IS_V1_0()) {
+    svc_reset_system();
+    return;
+  }
+
+  // power down modules
+  pm_power_down(POWER_MODULE_BLUETOOTH);
+  pm_power_down(POWER_MODULE_CAMERA);
+  pm_power_down(POWER_MODULE_MOTOR);
+  svc_reset_system();
+}
 
 void reboot_to_board(void) {
   *STAY_IN_FLAG_ADDR = STAY_IN_BOARDLOADER_FLAG;

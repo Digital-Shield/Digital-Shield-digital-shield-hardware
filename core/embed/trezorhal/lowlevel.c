@@ -479,23 +479,6 @@ void flash_option_bytes_init(void) {
   }
 }
 
-void gpio_init(void) {
-  GPIO_InitTypeDef GPIO_InitStruct;
-
-  __HAL_RCC_GPIOJ_CLK_ENABLE();
-  __HAL_RCC_GPIOK_CLK_ENABLE();
-
-  GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-
-  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
-}
-
 void led_on(void) { HAL_GPIO_WritePin(GPIOI, GPIO_PIN_14, GPIO_PIN_RESET); }
 
 void led_off(void) { HAL_GPIO_WritePin(GPIOI, GPIO_PIN_14, GPIO_PIN_SET); }
