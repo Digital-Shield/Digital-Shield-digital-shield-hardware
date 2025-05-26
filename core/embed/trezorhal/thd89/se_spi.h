@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define SE_POWER_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
 #define SE_POWER_GPIO_PORT GPIOD
 #define SE_POWER_GPIO_PIN GPIO_PIN_4
 
