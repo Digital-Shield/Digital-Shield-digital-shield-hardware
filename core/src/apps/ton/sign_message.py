@@ -141,6 +141,7 @@ async def sign_message(
     # print(f"Recipient: {recipient}, Amount: {amount}, Token: {token}")
     
     print("msg.amount--",msg.amount)
+    
     show_details = await require_show_overview_ton(
         ctx,
         "TON",
@@ -150,25 +151,26 @@ async def sign_message(
         token,
         False,
     )
-
-    if show_details:
-        has_raw_data = False
-        # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
-        node = keychain.derive(msg.address_n)
-        await require_confirm_fee_ton(
-            ctx,
-            msg.amount,
-            0,
-            1,
-            0,
-            token,
-            from_address=address,
-            to_address=msg.address,
-            contract_addr="0x",
-            token_id=1,
-            evm_chain_id=None,
-            raw_data=None,
-        )
+    from trezor.ui.layouts import confirm_final
+    await confirm_final(ctx, "TON")
+    # if show_details:
+    #     has_raw_data = False
+    #     # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
+    #     node = keychain.derive(msg.address_n)
+    #     await require_confirm_fee_ton(
+    #         ctx,
+    #         msg.amount,
+    #         0,
+    #         1,
+    #         0,
+    #         token,
+    #         from_address=address,
+    #         to_address=msg.address,
+    #         contract_addr="0x",
+    #         token_id=1,
+    #         evm_chain_id=None,
+    #         raw_data=None,
+    #     )
 
     
     # await confirm_final(ctx, "TON")
