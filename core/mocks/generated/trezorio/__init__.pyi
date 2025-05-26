@@ -10,6 +10,16 @@ class Battery:
         """
         """
 
+    def exist(self) -> bool:
+        """
+        check battery is present
+        """
+
+    def charging(self) -> bool:
+        """
+        check weather battery is charging
+        """
+
     def state_of_charge(self) -> int|None:
         """
         read SOC (state of charge), in percent

@@ -13,9 +13,15 @@ extern "C" {
 
 #define DISPLAY_MEMORY_BASE FMC_SDRAM_LTDC_BUFFER_ADDRESS
 
-/* LCD reset pin */
-#define LCD_RESET_PIN GPIO_PIN_3
-#define LCD_RESET_GPIO_PORT GPIOG
+/* pcb v1.0 LCD reset pin */
+#define V10_LCD_RESET_CLK_ENABLE() __HAL_RCC_GPIOG_CLK_ENABLE()
+#define V10_LCD_RESET_PIN GPIO_PIN_3
+#define V10_LCD_RESET_GPIO_PORT GPIOG
+
+/* pcb v1.1 LCD reset pin */
+#define LCD_RESET_CLK_ENABLE() __HAL_RCC_GPIOJ_CLK_ENABLE()
+#define LCD_RESET_PIN GPIO_PIN_6
+#define LCD_RESET_GPIO_PORT GPIOJ
 
 /* Back-light control pin */
 #define LCD_BL_CTRL_PIN GPIO_PIN_11

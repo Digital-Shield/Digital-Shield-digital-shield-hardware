@@ -5,6 +5,8 @@ import os
 TREZOR_MODEL = ARGUMENTS.get('TREZOR_MODEL', 'T')
 PRODUCTION_MODEL = ARGUMENTS.get('PRODUCTION_MODEL', 'H')
 
+PCB_VERSION = ARGUMENTS.get('PCB_VERSION', 'PCB_VERSION_1_1')
+
 CCFLAGS_MOD = ''
 CPPPATH_MOD = []
 CPPDEFINES_MOD = []
@@ -127,6 +129,8 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/fatfs/diskio_emmc.c',
     'embed/trezorhal/i2c.c',
     'embed/trezorhal/uart_log.c',
+    'embed/trezorhal/device.c',
+    'embed/trezorhal/power_manager.c',
 ]
 env = Environment(ENV=os.environ, CFLAGS='%s -DPRODUCTION=%s' % (ARGUMENTS.get('CFLAGS', ''), ARGUMENTS.get('PRODUCTION', '0')))
 
@@ -178,7 +182,8 @@ env.Replace(
         CORE_MODEL,
         'USE_HAL_DRIVER',
         ('STM32_HAL_H', '"<stm32h7xx.h>"'),
-        'DATA_IN_ExtSDRAM'
+        'DATA_IN_ExtSDRAM',
+        PCB_VERSION,
     ] + CPPDEFINES_MOD,
     ASFLAGS=CPU_ASFLAGS,
     ASPPFLAGS='$CFLAGS $CCFLAGS', )
