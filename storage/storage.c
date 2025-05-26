@@ -33,7 +33,7 @@
 #include "sha2.h"
 #include "storage.h"
 #ifndef TREZOR_EMULATOR
-#include "se_thd89.h"
+#include "thd89/se.h"
 #endif
 
 #define LOW_MASK 0x55555555
@@ -1528,10 +1528,6 @@ void storage_wipe(void) {
 #ifdef TREZOR_EMULATOR
   _storage_wipe();
 #else
-  se_set_wiping(true);
-  se_reset_storage();
-  _storage_wipe();
-  se_reset_state();
 #endif
 }
 

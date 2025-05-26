@@ -61,7 +61,7 @@
 #include "supervise.h"
 #include "timer.h"
 #include "touch.h"
-#include "se_thd89.h"
+#include "thd89/se.h"
 #include "uart_log.h"
 #include "power_manager.h"
 #ifdef USE_SECP256K1_ZKP

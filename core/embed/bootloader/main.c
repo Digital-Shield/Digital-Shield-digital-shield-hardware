@@ -30,7 +30,7 @@
 #include "mipi_lcd.h"
 #include "mpu.h"
 #include "sdram.h"
-#include "se_thd89.h"
+#include "thd89/se.h"
 #include "spi.h"
 #include "stm32h7xx_hal.h"
 #include "sys.h"
@@ -570,6 +570,9 @@ int main(void)
 
     SystemCoreClockUpdate();
 
+    // extern void thd89_test(void);
+    // thd89_test();
+
     /* Enable the CPU Cache */
     cpu_cache_enable();
 
@@ -593,7 +596,7 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     sdram_init();
-
+    se_init();
     battery_init();
     pm_init();
     touch_init();
@@ -609,13 +612,12 @@ int main(void)
 #endif
     }
 
-    se_init();
 
     if ( !cert_set )
     {
         // if se certificate is not set
-        uint32_t cert_len = 0;
-        cert_set = se_get_certificate_len(&cert_len);
+        size_t cert_len = 0;
+        cert_set = se_get_certificate_len(&cert_len) == 0;
 #if !PRODUCTION
         cert_set = true; // TODO: need debug.
 #endif
