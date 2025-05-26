@@ -316,6 +316,18 @@ def reboot_to_boardloader(obj: "TrezorConnection") -> str:
             click.echo(f"Reboot to boardloader is not support on Digitshield {client.features.model}")
         return device.reboot(client, False)
 
+@cli.command()
+@click.pass_obj
+@click.argument("cert")
+def se_write_cert(obj: "TrezorConnection", cert: str) -> None:
+    """Get device se cert.
+
+    Used in device verify.
+    """
+    with obj.client_context() as client:
+        cert_bytes = device.se_write_cert(client, cert.strip('"'))
+        return cert_bytes
+
 
 @cli.command()
 @click.pass_obj
@@ -758,3 +770,12 @@ def emmc_dir_make(client: "TrezorClient", path: str) -> None:
 @with_client
 def emmc_dir_remove(client: "TrezorClient", path: str) -> None:
     device.emmc_dir_remove(client, path)
+
+# write-sn
+@cli.command()
+# fmt: off
+@click.argument("sn")
+# fmt: on
+@with_client
+def write_sn(client: "TrezorClient", sn: str) -> None:
+    device.write_sn(client, sn)

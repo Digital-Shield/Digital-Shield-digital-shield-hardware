@@ -151,7 +151,7 @@ static void upate_battery_info(void) {
     dev_pwr_source = is_usb_connect()? 1 : 0;
 }
 
-static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
+secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
 { // touch click commented on development board
     // if both are NULL, we don't have a firmware installed
     // let's show a webusb landing page in this case
@@ -654,7 +654,7 @@ int main(void)
         display_clear();
         ui_fadein();
         ui_bootloader_first(NULL);
-        if ( bootloader_usb_loop(NULL, NULL) != sectrue )
+        if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
         {
             return 1;
         }

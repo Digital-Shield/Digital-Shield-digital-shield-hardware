@@ -7480,12 +7480,16 @@ if TYPE_CHECKING:
     class SuiSignTx(protobuf.MessageType):
         address_n: "list[int]"
         raw_tx: "bytes"
+        destination: "str"
+        sui_amount: "int"
 
         def __init__(
             self,
             *,
             raw_tx: "bytes",
             address_n: "list[int] | None" = None,
+            destination: "str | None" = None, 
+            sui_amount: "int | None" = None,  
         ) -> None:
             pass
 

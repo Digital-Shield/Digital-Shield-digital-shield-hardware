@@ -5,7 +5,7 @@ from trezor.crypto.curve import ed25519
 from trezor.crypto.hashlib import sha256
 from trezor.enums import TonWalletVersion, TonWorkChain
 import lvgl as lv
-from trezor.messages import TonSignedTx, TonSignTx, TonTxAck
+from trezor.messages import TonSignedMessage, TonSignMessage, TonTxAck
 
 from apps.common.ton import paths, seed
 from apps.common.ton.keychain import Keychain, auto_keychain
@@ -29,8 +29,8 @@ if TYPE_CHECKING:
 
 @auto_keychain(__name__)
 async def sign_message(
-    ctx: Context, msg: TonSignTx, keychain: Keychain
-) -> TonSignedTx:
+    ctx: Context, msg: TonSignMessage, keychain: Keychain
+) -> TonSignedMessage:
     from trezor.utils import dump_protobuf_lines
     print("\n".join(dump_protobuf_lines(msg)))
     print("这是接收的参数: ", msg)
@@ -80,10 +80,10 @@ async def sign_message(
     from trezor.ui.layouts import confirm_final #, confirm_unknown_token_transfer
 
     token = None
-    recipient = Address(msg.address).to_string(True, True)
+    recipient = Address(msg.destination).to_string(True, True)
 
 
-    amount = msg.amount #jetton_amount if jetton_amount else 
+    amount = msg.ton_amount #jetton_amount if jetton_amount else 
     if amount is None:
         raise ValueError("Amount cannot be None")
 
@@ -108,16 +108,16 @@ async def sign_message(
         # 已激活钱包则无需携带
         state_init = bytes()
     print("msg.address_n: ", msg.address_n)
-    print("msg.address: ", msg.address)
+    print("msg.address: ", msg.destination)
     print("msg.seqno: ", msg.seqno)
-    print("msg.valid_until: ", msg.valid_until)
-    print("msg.amount: ", msg.amount)
+    print("msg.valid_until: ", msg.expire_at)
+    print("msg.amount: ", msg.ton_amount)
     try:
         digest, boc = wallet.create_transaction_digest(
-            to_addr=msg.address,
-            amount=msg.amount,
+            to_addr=msg.destination,
+            amount=msg.ton_amount,
             seqno=msg.seqno,
-            expire_at=msg.valid_until,
+            expire_at=msg.expire_at,
             payload=payload,
             is_raw_data=False,
             send_mode=msg.mode,
@@ -135,40 +135,42 @@ async def sign_message(
             await confirm_final(ctx, "TON")
             digest = sha256(msg.signing_message_repr).digest()
             signature = ed25519.sign(node.private_key(), digest)
-            return TonSignedTx(signature=signature, serialized_tx=None)
+            return TonSignedMessage(signature=bytes(boc), signning_message=None)
         else:
             raise wire.DataError("Parse boc failed.")
     # print(f"Recipient: {recipient}, Amount: {amount}, Token: {token}")
     
-    print("msg.amount--",msg.amount)
+    print("msg.amount--",msg.ton_amount)
+    
     show_details = await require_show_overview_ton(
         ctx,
         "TON",
-        msg.address,
-        msg.amount,
+        msg.destination,
+        msg.ton_amount,
         0,
         token,
         False,
     )
-
-    if show_details:
-        has_raw_data = False
-        # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
-        node = keychain.derive(msg.address_n)
-        await require_confirm_fee_ton(
-            ctx,
-            msg.amount,
-            0,
-            1,
-            0,
-            token,
-            from_address=address,
-            to_address=msg.address,
-            contract_addr="0x",
-            token_id=1,
-            evm_chain_id=None,
-            raw_data=None,
-        )
+    from trezor.ui.layouts import confirm_final
+    await confirm_final(ctx, "TON")
+    # if show_details:
+    #     has_raw_data = False
+    #     # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
+    #     node = keychain.derive(msg.address_n)
+    #     await require_confirm_fee_ton(
+    #         ctx,
+    #         msg.amount,
+    #         0,
+    #         1,
+    #         0,
+    #         token,
+    #         from_address=address,
+    #         to_address=msg.address,
+    #         contract_addr="0x",
+    #         token_id=1,
+    #         evm_chain_id=None,
+    #         raw_data=None,
+    #     )
 
     
     # await confirm_final(ctx, "TON")
@@ -187,7 +189,7 @@ async def sign_message(
     # )
 
     # print(res.json())
-    return TonSignedTx(signature=bytes(boc), serialized_tx=signature)
+    return TonSignedMessage(signature=bytes(boc), signning_message=signature)
 
 def string_to_bytes(string, size=1):  # ?
     if size == 1:
@@ -205,7 +207,7 @@ def string_to_bytes(string, size=1):  # ?
 
     return bytes(buf)
 
-def check_jetton_transfer(msg: TonSignTx) -> int:
+def check_jetton_transfer(msg: TonSignMessage) -> int:
     if msg.jetton_amount is None and msg.jetton_amount_bytes is None:
         return 0
     # fmt: off
@@ -219,7 +221,7 @@ def check_jetton_transfer(msg: TonSignTx) -> int:
 
 
 async def send_request_chunk(ctx: wire.Context, data_left: int) -> TonTxAck:
-    req = TonSignedTx()
+    req = TonSignedMessage()
     if data_left <= 1024:
         req.init_data_length = data_left
     else:
