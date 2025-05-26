@@ -30,6 +30,8 @@ class Terms(Navigation):
         label.set_text(i18n.Guide.accept_tems)
         label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         label.set_style_text_font(font.Bold.SCS30, 0)
+        label.set_width(lv.pct(100))
+        label.set_long_mode(lv.label.LONG.WRAP)
 
         # label = self.add(lv.label)
         # label.set_text(i18n.Guide.use_range)
@@ -62,6 +64,8 @@ class Terms(Navigation):
         label.set_text(i18n.Guide.wallet_buy_iterms)
         label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         label.set_style_text_font(font.Bold.SCS30, 0)
+        label.set_width(lv.pct(100))
+        label.set_long_mode(lv.label.LONG.WRAP)
         #1. 訂單流程
         view = self.add(Text)
         view.set_label_2(i18n.Guide.order_process)
@@ -81,6 +85,8 @@ class Terms(Navigation):
         label.set_text(i18n.Guide.disclaimer)
         label.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
         label.set_style_text_font(font.Bold.SCS30, 0)
+        label.set_width(lv.pct(100))
+        label.set_long_mode(lv.label.LONG.WRAP)
         #1. 產品風險
         view = self.add(Text)
         view.set_label_2(i18n.Guide.product_risk)
