@@ -44,7 +44,7 @@ static void log_frame(uint8_t frame[SEC_MAX_FRAME_SIZE]) {
 #endif
 
 static SPI_HandleTypeDef hspi5 = {0};
-#define SE_TRANS_TIMEOUT 10000
+#define SE_TRANS_TIMEOUT 500
 int se_spi_init(void) {
   GPIO_InitTypeDef gpio = {0};
 
