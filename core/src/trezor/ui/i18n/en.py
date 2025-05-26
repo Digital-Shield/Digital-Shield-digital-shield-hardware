@@ -298,7 +298,7 @@ class Text:
     tap_switch_to_airgap = "Tap QR code to show Airgap address"
     tap_switch_to_receive = "Tap QR code to show Receiving address"
     incorrect_pin_times_left = "Incorrect PIN. {} attempts remaining"
-    incorrect_pin_last_time = "You have exceeded the maximum number of password recovery attempts."
+    incorrect_pin_last_time = "The PIN is incorrect, there is still one last chance"
     wrong_pin = "Incorrect PIN Entered"
     seedless = "No seed phrase detected"
     backup_failed = "Backup Failed!"
