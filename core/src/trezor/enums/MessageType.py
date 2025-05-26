@@ -288,6 +288,8 @@ if not utils.BITCOIN_ONLY:
     TonSignProof = 11905
     TonSignedProof = 11906
     TonTxAck = 11907
+    TonSignTx = 11908
+    TonSignedTx = 11909
     TronGetAddress = 10501
     TronAddress = 10502
     TronSignTx = 10503

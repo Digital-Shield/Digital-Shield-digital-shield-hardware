@@ -179,6 +179,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/thd89/thd89_test.c',
 
     'embed/trezorhal/sdram.c',
+    'embed/trezorhal/power_manager.c',
 ]
 
 # emmc wrapper

@@ -137,20 +137,18 @@ STATIC mp_obj_t mod_trezorio_poll(mp_obj_t ifaces, mp_obj_t list_ref,
       }
 #endif
       else if (iface == BUTTON_IFACE) {
-        const uint32_t evt = button_read();
+        uint32_t evt = 0;
+        if (PCB_IS_V1_0()) {
+          evt = button_read();
+        } else {
+          evt = pm_button_read();
+        }
         if (evt & (BTN_EVT_DOWN | BTN_EVT_UP)) {
           mp_obj_tuple_t *tuple = MP_OBJ_TO_PTR(mp_obj_new_tuple(2, NULL));
           uint32_t etype = (evt >> 24) & 0x3U;  // button down/up
           uint32_t en = evt & 0xFFFF;           // button number
-#if defined (TREZOR_MODEL_1) || defined (TREZOR_MODEL_R)
-          if (display_orientation(-1) == 180) {
-            en = (en == BTN_LEFT) ? BTN_RIGHT : BTN_LEFT;
-          }
-#endif
-#if defined (TREZOR_MODEL_T)
           //power key
           en = BTN_POWER;
-#endif
           tuple->items[0] = MP_OBJ_NEW_SMALL_INT(etype);
           tuple->items[1] = MP_OBJ_NEW_SMALL_INT(en);
           ret->items[0] = MP_OBJ_NEW_SMALL_INT(i);

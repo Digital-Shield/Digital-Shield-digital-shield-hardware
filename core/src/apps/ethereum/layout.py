@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from ubinascii import hexlify
 
 from trezor import ui
+from trezor import wire, log
 from trezor.ui import i18n
 from trezor.enums import (
     ButtonRequestType,
@@ -26,8 +27,12 @@ from trezor.ui.layouts.ethereum import (
     confirm_sign_typed_hash,
     should_show_more,
     show_transaction_overview,
+    show_transaction_overview_ton,
     confirm_transaction_detail,
     confirm_transaction_detail_eip1559,
+)
+from trezor.ui.screen.ethereum import (
+    TransactionOverview,
 )
 
 from . import networks, tokens
@@ -126,6 +131,76 @@ def require_confirm_fee(
         raw_data=raw_data,
     )
 
+def require_show_overview_ton(
+    ctx: Context,
+    network: str,
+    to_address: str,
+    value: int,
+    chain_id: int,
+    token: tokens.EthereumTokenInfo | None = None,
+    is_nft: bool = False,
+) -> Awaitable[bool]:
+    # to_str = "Ton"
+    return show_transaction_overview_ton(
+        ctx,
+        amount=format_ethereum_amount_ton(value, token, chain_id, is_nft),
+        to=to_address,
+        network=network,
+    )
+
+# async def show_transaction_overview_ton(
+#     ctx: wire.GenericContext,
+#     amount: str,
+#     to: str,
+#     network: str,
+# ):
+#     screen = TransactionOverview(network, amount, to, ctx.icon_path)
+#     await screen.show()
+#     r = await interact(ctx, screen, ButtonRequestType.SignTx)
+#     if isinstance(r, Reject):
+#         raise wire.ActionCancelled()
+#     elif isinstance(r, Detail):
+#         return True
+#     else:
+#         return False
+    
+def require_confirm_fee_ton(
+    ctx: Context,
+    spending: int,
+    gas_price: int,
+    gas_limit: int,
+    chain_id: int,
+    token: tokens.EthereumTokenInfo | None = None,
+    from_address: str | None = None,
+    to_address: str | None = None,
+    contract_addr: str | None = None,
+    token_id: int | None = None,
+    evm_chain_id: int | None = None,
+    raw_data: bytes | None = None,
+) -> Awaitable[None]:
+    fee_max = gas_price * gas_limit
+    from trezor import log
+
+    log.debug(__name__, "enter require_confirm_fee")
+    return confirm_transaction_detail(
+        ctx,
+        format_ethereum_amount(
+            spending, token, chain_id, is_nft=False if token_id else False
+        ),
+        format_ethereum_amount(gas_price, None, chain_id),
+        format_ethereum_amount(fee_max, None, chain_id),
+        from_address,
+        to_address,
+        (
+            format_ethereum_amount(spending + fee_max, None, chain_id)
+            if (token is None and contract_addr is None)
+            else None
+        ),
+        contract_addr,
+        token_id,
+        evm_chain_id=evm_chain_id,
+        raw_data=raw_data,
+    )
 
 async def require_confirm_eip1559_fee(
     ctx: Context,
@@ -406,6 +481,25 @@ def format_ethereum_amount(
 
     return f"{format_amount(value, decimals)} {suffix}"
 
+def format_ethereum_amount_ton(
+    value: int,
+    token: tokens.EthereumTokenInfo | None,
+    chain_id: int,
+    is_nft: bool = False,
+) -> str:
+    if token:
+        suffix = token.symbol
+        decimals = token.decimals
+    else:
+        suffix = "Ton"
+        decimals = 9
+
+    # Don't want to display wei values for tokens with small decimal numbers
+    # if decimals > 9 and value < 10 ** (decimals - 9):
+    #     suffix = "Wei " + suffix
+    #     decimals = 0
+
+    return f"{format_amount(value, decimals)} {suffix}"
 
 def limit_str(s: str, limit: int = 16) -> str:
     """Shortens string to show the last <limit> characters."""

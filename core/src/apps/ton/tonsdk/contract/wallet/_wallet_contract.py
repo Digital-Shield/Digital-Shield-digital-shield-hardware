@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING, List, Union
 
-from ...boc import Cell
-from ...utils import Address
-from .. import Contract
 
+from ...boc import Cell
+from ...utils import Address#,sign_message
+from .. import Contract
+from trezor.crypto.curve import ed25519
+# import base64
 if TYPE_CHECKING:
     from enum import IntEnum
 else:
@@ -52,6 +54,7 @@ class WalletContract(Contract):
         ext_to: List[str] = None,
         ext_amount: List[int] = None,
         ext_payload: List[Union[Cell, str, bytes, None]] = None,
+        private_key: bytes = None,
     ):
         payload_cell = Cell()
         if payload:
@@ -74,9 +77,11 @@ class WalletContract(Contract):
 
         state_init_cell = None
         if state_init:
+            print("state_start: ", Cell.REACH_BOC_MAGIC_PREFIX)
             if state_init.startswith(Cell.REACH_BOC_MAGIC_PREFIX):
                 state_init_cell = Cell.one_from_boc(state_init)
             else:
+                # state_init_cell = state_init
                 raise ValueError("Invalid state init")
         order = Contract.create_common_msg_info(
             order_header, state_init_cell, payload_cell
@@ -85,46 +90,42 @@ class WalletContract(Contract):
         signing_message.bits.write_uint8(send_mode)
         signing_message.refs.append(order)
 
-        if ext_to:
-            if len(ext_to) > 3:
-                raise ValueError(
-                    "Number of extra messages exceeds the maximum limit of 3"
-                )
-
-            ext_payload_list = (
-                ext_payload if ext_payload is not None else [None] * len(ext_to)
-            )
-            ext_amount_list = (
-                ext_amount if ext_amount is not None else [0] * len(ext_to)
-            )
-
-            zipped_ext_data = zip(ext_to, ext_payload_list, ext_amount_list)
-
-            for ext_addr, current_payload, ext_amt in zipped_ext_data:
-                ext_payload_cell = Cell()
-                if current_payload:
-                    if isinstance(current_payload, str):
-                        # check payload type
-                        if current_payload.startswith("b5ee9c72"):
-                            ext_payload_cell = Cell.one_from_boc(current_payload)
-                        else:
-                            ext_payload_cell.bits.write_uint(0, 32)
-                            ext_payload_cell.bits.write_string(current_payload)
-                    elif isinstance(current_payload, Cell):
-                        ext_payload_cell = current_payload
-                    else:
-                        ext_payload_cell.bits.write_bytes(current_payload)
-
-                ext_order_header = Contract.create_internal_message_header(
-                    dest=Address(ext_addr), grams=ext_amt
-                )
-                ext_order = Contract.create_common_msg_info(
-                    ext_order_header, state_init, ext_payload_cell
-                )
-
-                signing_message.bits.write_uint8(send_mode)
-                signing_message.refs.append(ext_order)
-
-        boc = bytes(signing_message.to_boc())
-
+        query = self.create_external_message(signing_message, seqno, private_key)
+        boc = query["message"].to_boc(False)
+        # boc = signing_message.to_boc(False)#bytes()#)base64.b64encode().decode('utf-8')
         return signing_message.bytes_hash(), boc
+    def create_external_message(self, signing_message, seqno, private_key, dummy_signature=False):
+        print("private_key: ", private_key)
+        sign_messages = ed25519.sign(private_key, signing_message.bytes_hash())
+        # sign_messages = sign_message(bytes(signing_message.bytes_hash()), self.options['private_key'])
+        signature = bytes(64) if dummy_signature else sign_messages #
+        # print("signing_message:", sign_messages)
+        print("sign_messages.signature:", sign_messages)
+        body = Cell()
+        body.bits.write_bytes(signature)
+        body.write_cell(signing_message)
+
+        state_init = code = data = None
+
+        if seqno == 0:
+            deploy = self.create_state_init()
+            state_init = deploy["state_init"]
+            code = deploy["code"]
+            data = deploy["data"]
+
+        self_address = self.address
+        header = Contract.create_external_message_header(self_address)
+        result_message = Contract.create_common_msg_info(
+            header, state_init, body)
+
+        return {
+            "address": self_address,
+            "message": result_message,
+            "body": body,
+            "signature": signature,
+            "signing_message": signing_message,
+            "state_init": state_init,
+            "code": code,
+            "data": data,
+        }
+

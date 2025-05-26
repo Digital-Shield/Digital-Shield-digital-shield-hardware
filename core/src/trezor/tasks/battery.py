@@ -9,23 +9,30 @@ LOW_STATE_OF_CHARGE = 5
 
 
 async def updating_battery_state():
+
     prev_charge = None
     prev_charging = None
     charging_changed = False
+    state_of_charge = None
     state_of_charge_changed = False
     alert = LowPowerAlert()
     while True:
         # update battery every second
         await loop.sleep(1000)
 
+        if not battery.exist():
+            prev_charge = state_of_charge
+            StatusBar.instance().show_battery_none()
+            continue
+
         state_of_charge = battery.state_of_charge()
         # log.debug(__name__, f"battery state of charge: {state_of_charge}%%")
-        current = battery.current()
+        # current = battery.current()
         # log.debug(__name__, f"battery current: {current}mA")
         voltage = battery.voltage()
         # log.debug(__name__, f"battery voltage: {voltage}mV")
 
-        charging = current >= 0
+        charging = battery.charging()
 
         charging_changed = prev_charging != charging
         prev_charging = charging
@@ -37,11 +44,6 @@ async def updating_battery_state():
         refresh = charging_changed or state_of_charge_changed
 
         if not refresh:
-            continue
-
-        if state_of_charge is None:
-            prev_charge = state_of_charge
-            StatusBar.instance().show_battery_none()
             continue
 
         # cache charge state

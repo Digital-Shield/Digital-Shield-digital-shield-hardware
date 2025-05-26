@@ -469,6 +469,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/sbu.c',
     'embed/trezorhal/touch.c',
     'embed/trezorhal/button.c',
+    'embed/trezorhal/power_manager.c',
 ]
 
 SOURCE_NANOPB = [
@@ -660,8 +661,9 @@ if FROZEN:
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/components/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/components/common/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/components/common/*/*.py'))
-    SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/constants/__init__.py'))
+    SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/constants/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/ui/layouts/*.py'))
+
 
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/wire/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/airgap/*.py'))

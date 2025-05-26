@@ -1,10 +1,12 @@
 #include STM32_HAL_H
+#include "stm32h7xx_hal_gpio.h"
 
 #include <stdio.h>
 
 #include <string.h>
 #include "common.h"
 #include "emmc.h"
+#include "device.h"
 
 static MMC_HandleTypeDef hmmc1;
 void emmc_reset(void);
@@ -17,7 +19,7 @@ void emmc_init(void) {
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOI_CLK_ENABLE(); // RST PIN control
+
   /**SDMMC1 GPIO Configuration
   PC10     ------> SDMMC1_D2
   PC11     ------> SDMMC1_D3
@@ -29,7 +31,9 @@ void emmc_init(void) {
   PC9     ------> SDMMC1_D1
   PC7     ------> SDMMC1_D7
   PC6     ------> SDMMC1_D6
-  PI15     ------> SDMMC1_RST */
+  PI15     ------> SDMMC1_RST // pcb v1.0
+  PK4     ------> SDMMC1_RST  // pcb v1.1
+  */
   GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_8 |
                         GPIO_PIN_9 | GPIO_PIN_7 | GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -51,7 +55,6 @@ void emmc_init(void) {
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF12_SDIO1;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
 
   emmc_reset();
   hmmc1.Instance = SDMMC1;
@@ -98,18 +101,36 @@ void emmc_init(void) {
 #endif
 }
 void emmc_reset(void) {
-  __HAL_RCC_GPIOI_CLK_ENABLE();
+  /*
+    PI15     ------> SDMMC1_RST // pcb v1.0
+    PK4     ------> SDMMC1_RST  // pcb v1.1
+  */
+  if (PCB_IS_V1_0()) {
+    __HAL_RCC_GPIOI_CLK_ENABLE(); // RST PIN control
+  } else {
+    __HAL_RCC_GPIOK_CLK_ENABLE(); // RST PIN control
+  }
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
+  GPIO_TypeDef* port = NULL;
+  uint32_t pin = 0;
+  if (PCB_IS_V1_0()) {
+    port = GPIOI;
+    pin = GPIO_PIN_15;
+  } else {
+    port = GPIOK;
+    pin = GPIO_PIN_4;
+  }
+
+  GPIO_InitStruct.Pin = pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+  HAL_GPIO_Init(port, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_15, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET);
   HAL_Delay(5);
-  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_15, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);
   HAL_Delay(5);
 }
 uint8_t emmc_get_card_state(void) {

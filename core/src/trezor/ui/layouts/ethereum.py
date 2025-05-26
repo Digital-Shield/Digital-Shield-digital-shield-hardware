@@ -10,6 +10,7 @@ from trezor.ui.screen.ethereum import (
     TransactionDetail,
     TransactionDetail1559,
     TransactionOverview,
+    TransactionOverviewTon,
 )
 
 if TYPE_CHECKING:
@@ -34,7 +35,22 @@ async def show_transaction_overview(
     else:
         return False
 
-
+async def show_transaction_overview_ton(
+    ctx: wire.GenericContext,
+    amount: str,
+    to: str,
+    network: str,
+):
+    screen = TransactionOverviewTon(network, amount, to, ctx.icon_path)
+    await screen.show()
+    r = await interact(ctx, screen, ButtonRequestType.SignTx)
+    if isinstance(r, Reject):
+        raise wire.ActionCancelled()
+    elif isinstance(r, Detail):
+        return True
+    else:
+        return False
+    
 async def confirm_transaction_detail(
     ctx: wire.GenericContext,
     amount: str,
