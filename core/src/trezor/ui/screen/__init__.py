@@ -144,7 +144,12 @@ class Screen(lv.obj):
             # Remove the white shadow by setting the shadow width to 0
             self._btn_left.set_style_shadow_width(0, lv.PART.MAIN)
             self._btn_left.set_style_shadow_opa(lv.OPA.TRANSP, lv.PART.MAIN)
-            
+            #判断是否德语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "de":
+                #增大self._btn_left的宽度
+                # print("德语,宽度是--"+str(self._btn_right.get_style_width(lv.PART.MAIN)))
+                self._btn_left.set_style_width(200, lv.PART.MAIN)
         return self._btn_left
 
     def _create_btn_container(self):
