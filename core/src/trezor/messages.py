@@ -3228,6 +3228,18 @@ if TYPE_CHECKING:
         def is_type_of(cls, msg: Any) -> TypeGuard["SEMessageSignature"]:
             return isinstance(msg, cls)
 
+    class SEInitialize(protobuf.MessageType):
+
+        @classmethod
+        def is_type_of(cls, msg: Any) -> TypeGuard["SEInitialize"]:
+            return isinstance(msg, cls)
+
+    class SEInitializeDone(protobuf.MessageType):
+
+        @classmethod
+        def is_type_of(cls, msg: Any) -> TypeGuard["SEInitializeDone"]:
+            return isinstance(msg, cls)
+
     class ResourceUpload(protobuf.MessageType):
         extension: "str"
         data_length: "int"
@@ -7490,9 +7502,9 @@ if TYPE_CHECKING:
             self,
             *,
             raw_tx: "bytes",
+            destination: "str",
+            sui_amount: "int",
             address_n: "list[int] | None" = None,
-            destination: "str | None" = None, 
-            sui_amount: "int | None" = None,  
         ) -> None:
             pass
 

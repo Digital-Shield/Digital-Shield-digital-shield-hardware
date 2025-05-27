@@ -779,3 +779,15 @@ def emmc_dir_remove(client: "TrezorClient", path: str) -> None:
 @with_client
 def write_sn(client: "TrezorClient", sn: str) -> None:
     device.write_sn(client, sn)
+
+# se-initialize
+@cli.command()
+@with_client
+def se_initialize(client: "TrezorClient") -> None:
+    device.se_initialize(client)
+
+# se-initialize-done
+@cli.command()
+@with_client
+def se_initialize_done(client: "TrezorClient") -> None:
+    device.se_initialize_done(client)

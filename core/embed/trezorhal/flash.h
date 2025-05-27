@@ -123,6 +123,7 @@ typedef struct __attribute__((packed)) {
 #define FLASH_OTP_BLOCK_BURNIN_TEST 7
 
 #define FLASH_OTP_PCB_VERSION 8
+#define FLASH_OTP_PRE_SHARED_KEY 9
 
 #define FLASH_OTP_DEVICE_SERIAL 12
 #define FLASH_OTP_FACTORY_TEST 13

@@ -1,3 +1,4 @@
+#include "device.h"
 #include "stm32h7xx_hal.h"
 #include "thd89.h"
 #include "se_spi.h"
@@ -16,7 +17,11 @@ void test_frame_ping(void) {
   }
 }
 void test_handshake(void) {
-  uint8_t SECRET[16] = {0};
+  uint8_t SECRET[32] = {0};
+  if (!device_get_pre_shared_key(SECRET)) {
+    printf("get pre-shared key failed\n");
+    return;
+  }
   thd89_result_t ret = thd89_handshake(SECRET, sizeof(SECRET));
   if (ret != THD89_SUCCESS) {
     printf("handshake failed: %d\n", ret);
@@ -75,9 +80,9 @@ void test_block(void) {
 void thd89_test(void) {
   se_spi_init();
   HAL_Delay(1000);
-  test_block();
-  // thd89_init();
+  // test_block();
+  thd89_init();
   // test_frame_ping();
-  // test_handshake();
+  test_handshake();
   // test_echo();
 }

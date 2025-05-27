@@ -33,6 +33,7 @@
 #include "messages.h"
 
 #include "memzero.h"
+#include "rand.h"
 
 #include "ble.h"
 #include "bootui.h"
@@ -1000,17 +1001,23 @@ void process_msg_DeviceInfoSettings(uint8_t iface_num, uint32_t msg_size,
                                     uint8_t *buf) {
   MSG_RECV_INIT(DeviceInfoSettings);
   MSG_RECV(DeviceInfoSettings);
-
-  if (msg_recv.has_serial_no) {
-    if (!device_set_serial((char *)msg_recv.serial_no)) {
-      send_failure(iface_num, FailureType_Failure_ProcessError,
-                   "Set serial failed");
-    } else {
-      send_success(iface_num, "Set applied");
-    }
-  } else {
+  if (!msg_recv.has_serial_no) {
     send_failure(iface_num, FailureType_Failure_ProcessError, "serial null");
+    return;
   }
+
+  if (!device_set_serial((char *)msg_recv.serial_no)) {
+    send_failure(iface_num, FailureType_Failure_ProcessError,
+                  "Set serial failed");
+    return;
+  }
+  if (0 != se_set_sn((uint8_t*)msg_recv.serial_no, strlen(msg_recv.serial_no))) {
+    send_failure(iface_num, FailureType_Failure_ProcessError,
+                  "Set serial failed");
+    return;
+  }
+
+  send_success(iface_num, "Set applied");
 }
 
 void process_msg_GetDeviceInfo(uint8_t iface_num, uint32_t msg_size,
@@ -1093,6 +1100,64 @@ void process_msg_SESignMessage(uint8_t iface_num, uint32_t msg_size,
   }
 }
 
+void process_msg_SEInitializePrepare(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf) {
+  MSG_RECV_INIT(SEInitialize);
+  MSG_RECV(SEInitialize);
+  if (!se_is_running_app()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
+    return;
+  }
+  // 清除 SE 存储
+  if (se_erase_storage() != 0) {
+    send_failure(iface_num, FailureType_Failure_ProcessError,
+                 "Erase storage failed");
+    return;
+  }
+  // 生成设备密钥
+  if (0 != se_gen_dev_keypair()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE gen keypair failed");
+    return;
+  }
+
+  // 绑定通讯密钥
+  uint8_t key[32] = {0};
+  random_buffer(key, sizeof(key));
+  if (se_set_sheared_key(key, sizeof(key)) != 0 ||
+      !device_set_pre_shared_key(key)) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE bind key failed");
+    return;
+  }
+
+  send_success(iface_num, "SE prepare success");
+}
+
+void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf) {
+  MSG_RECV_INIT(SEInitialize);
+  MSG_RECV(SEInitialize);
+  if (!se_is_running_app()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
+    return;
+  }
+  life_cycle_t lcs;
+  if (0 != se_get_life_cycle(&lcs) || lcs != LCS_FACTORY) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
+    return;
+  }
+  if (0 != se_switch_life_cycle()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE switch life cycle failed");
+    return;
+  }
+  if (0 != se_reboot()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE reboot failed");
+    return;
+  }
+  hal_delay(50);
+  se_conn_reset();
+
+  send_success(iface_num, "SE prepare success");
+}
 void process_msg_FirmwareEraseBLE(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf) {
   firmware_remaining = 0;

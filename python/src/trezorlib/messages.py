@@ -393,6 +393,8 @@ class MessageType(IntEnum):
     ResourceUpdate = 10022
     ListResDir = 10023
     FileInfoList = 10024
+    SEInitialize = 10025
+    SEInitializeDone = 10026
 
 
 class FailureType(IntEnum):
@@ -4589,6 +4591,14 @@ class SEMessageSignature(protobuf.MessageType):
         signature: "bytes",
     ) -> None:
         self.signature = signature
+
+
+class SEInitialize(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 10025
+
+
+class SEInitializeDone(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 10026
 
 
 class ResourceUpload(protobuf.MessageType):
@@ -9350,16 +9360,22 @@ class SuiSignTx(protobuf.MessageType):
     FIELDS = {
         1: protobuf.Field("address_n", "uint32", repeated=True, required=False),
         2: protobuf.Field("raw_tx", "bytes", repeated=False, required=True),
+        3: protobuf.Field("destination", "string", repeated=False, required=True),
+        4: protobuf.Field("sui_amount", "uint64", repeated=False, required=True),
     }
 
     def __init__(
         self,
         *,
         raw_tx: "bytes",
+        destination: "str",
+        sui_amount: "int",
         address_n: Optional[Sequence["int"]] = None,
     ) -> None:
         self.address_n: Sequence["int"] = address_n if address_n is not None else []
         self.raw_tx = raw_tx
+        self.destination = destination
+        self.sui_amount = sui_amount
 
 
 class SuiSignedTx(protobuf.MessageType):

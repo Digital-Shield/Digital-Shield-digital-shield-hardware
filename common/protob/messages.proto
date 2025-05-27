@@ -498,7 +498,7 @@ enum MessageType {
     MessageType_KaspaSignedTx = 11303 [(wire_out) = true];
     MessageType_KaspaTxInputRequest = 11304 [(wire_out) = true];
     MessageType_KaspaTxInputAck = 11305 [(wire_in) = true];
-    
+
     // Nexa
     MessageType_NexaGetAddress = 11400 [(wire_in) = true];
     MessageType_NexaAddress = 11401 [(wire_out) = true];
@@ -533,4 +533,6 @@ enum MessageType {
     MessageType_ResourceUpdate = 10022 [(wire_in) = true];
     MessageType_ListResDir = 10023 [(wire_in) = true];
     MessageType_FileInfoList = 10024 [(wire_out) = true];
+    MessageType_SEInitialize = 10025 [(wire_in) = true, (wire_bootloader) = true];
+    MessageType_SEInitializeDone = 10026 [(wire_in) = true, (wire_bootloader) = true];
 }

@@ -148,11 +148,12 @@ int sec_trans_write(const uint8_t *frame, size_t frame_size, uint32_t timeout) {
       return SEC_TRANS_ERR_TIMEOUT;
     }
   }
+  // delay a short time
   HAL_Delay(1);
-  uint8_t se_cache_buf[SEC_MAX_FRAME_SIZE] = {0};
-  memcpy(se_cache_buf, frame, frame_size);
   SCB_DisableICache();
-  int ret = HAL_SPI_Transmit(&hspi5, se_cache_buf, sizeof(se_cache_buf), timeout);
+  SCB_DisableDCache();
+  int ret = HAL_SPI_Transmit(&hspi5, frame, SEC_MAX_FRAME_SIZE, timeout);
+  SCB_EnableDCache();
   SCB_EnableICache();
   if (ret == HAL_TIMEOUT) {
     return SEC_TRANS_ERR_TIMEOUT;
@@ -172,18 +173,18 @@ int sec_trans_read(uint8_t *frame, size_t frame_buf_size, uint32_t timeout) {
       return SEC_TRANS_ERR_TIMEOUT;
     }
   };
-  HAL_Delay(1);
   // delay a short time
-  uint8_t buf[SEC_MAX_FRAME_SIZE] = {0};
+  HAL_Delay(1);
   SCB_DisableICache();
-  int ret = HAL_SPI_Receive(&hspi5, buf, sizeof(buf), timeout);
+  SCB_DisableDCache();
+  int ret = HAL_SPI_Receive(&hspi5, frame, SEC_MAX_FRAME_SIZE, timeout);
+  SCB_EnableDCache();
   SCB_EnableICache();
   if (ret == HAL_TIMEOUT) {
     return SEC_TRANS_ERR_TIMEOUT;
   } else if (ret != HAL_OK) {
     return SEC_TRANS_ERR_FAILED;
   }
-  memcpy(frame, buf, SEC_MAX_FRAME_SIZE);
   SE_LOG("SE ==> APP\n");
   log_frame((uint8_t*)frame);
   return SEC_TRANS_SUCCESS;

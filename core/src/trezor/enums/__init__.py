@@ -385,6 +385,8 @@ if TYPE_CHECKING:
         ResourceUpdate = 10022
         ListResDir = 10023
         FileInfoList = 10024
+        SEInitialize = 10025
+        SEInitializeDone = 10026
 
     class FailureType(IntEnum):
         UnexpectedMessage = 1

@@ -30,6 +30,8 @@ typedef struct __attribute__((packed)) {
   uint32_t st_id[3];
   bool random_key_init;
   uint8_t random_key[32];
+  bool pre_shared_key_init;
+  uint8_t pre_shared_key[32];
 } DeviceInfomation;
 
 void device_set_factory_mode(bool mode);
@@ -43,6 +45,8 @@ bool device_get_cpu_firmware(char **cpu_info, char **firmware_ver);
 bool device_get_serial(char **serial);
 char *device_get_se_config_version(void);
 void device_get_enc_key(uint8_t key[32]);
+bool device_set_pre_shared_key(uint8_t key[32]);
+bool device_get_pre_shared_key(uint8_t key[32]);
 
 void device_test(bool force);
 void device_burnin_test(bool force);

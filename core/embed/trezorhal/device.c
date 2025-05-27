@@ -89,6 +89,8 @@ void device_para_init(void) {
     serial_set = true;
   }
 
+  dev_info.pre_shared_key_init = device_get_pre_shared_key(dev_info.pre_shared_key);
+
   return;
 }
 
@@ -771,4 +773,28 @@ void device_set_pcb_version(pcb_version_t version) {
 pcb_version_t device_get_pcb_version(void) {
   uint8_t* addr = flash_otp_data->flash_otp[FLASH_OTP_PCB_VERSION];
   return (pcb_version_t)*addr;
+}
+
+bool device_set_pre_shared_key(uint8_t key[32]) {
+
+  if (flash_otp_is_locked(FLASH_OTP_PRE_SHARED_KEY)) {
+    return false;
+  }
+  if (sectrue != flash_otp_write(FLASH_OTP_PRE_SHARED_KEY, 0, key, FLASH_OTP_BLOCK_SIZE)) {
+    return false;
+  }
+  if (sectrue != flash_otp_lock(FLASH_OTP_PRE_SHARED_KEY)) {
+    return false;
+  }
+  return true;
+}
+
+bool device_get_pre_shared_key(uint8_t key[32]) {
+  if(!flash_otp_is_locked(FLASH_OTP_PRE_SHARED_KEY)) {
+    return false;
+  }
+  if (sectrue != flash_otp_read(FLASH_OTP_PRE_SHARED_KEY, 0, key, FLASH_OTP_BLOCK_SIZE)) {
+    return false;
+  }
+  return true;
 }
