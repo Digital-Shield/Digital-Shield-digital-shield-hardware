@@ -37,7 +37,6 @@ if TYPE_CHECKING:
     from trezor.enums import DebugButton  # noqa: F401
     from trezor.enums import DebugSwipeDirection  # noqa: F401
     from trezor.enums import DecredStakingSpendType  # noqa: F401
-    from trezor.enums import DigitalDeviceType  # noqa: F401
     from trezor.enums import EthereumDataType  # noqa: F401
     from trezor.enums import EthereumDataTypeDigitalshield  # noqa: F401
     from trezor.enums import EthereumDefinitionType  # noqa: F401
@@ -49,6 +48,7 @@ if TYPE_CHECKING:
     from trezor.enums import NEMModificationType  # noqa: F401
     from trezor.enums import NEMMosaicLevy  # noqa: F401
     from trezor.enums import NEMSupplyChangeType  # noqa: F401
+    from trezor.enums import OneKeyDeviceType  # noqa: F401
     from trezor.enums import OutputScriptType  # noqa: F401
     from trezor.enums import PinMatrixRequestType  # noqa: F401
     from trezor.enums import RecoveryDeviceType  # noqa: F401
@@ -2596,7 +2596,7 @@ if TYPE_CHECKING:
         build_id: "bytes | None"
         boardloader_version: "str | None"
         busy: "bool | None"
-        digital_device_type: "DigitalDeviceType | None"
+        onekey_device_type: "OneKeyDeviceType | None"
 
         def __init__(
             self,
@@ -2658,7 +2658,7 @@ if TYPE_CHECKING:
             build_id: "bytes | None" = None,
             boardloader_version: "str | None" = None,
             busy: "bool | None" = None,
-            digital_device_type: "DigitalDeviceType | None" = None,
+            onekey_device_type: "OneKeyDeviceType | None" = None,
         ) -> None:
             pass
 

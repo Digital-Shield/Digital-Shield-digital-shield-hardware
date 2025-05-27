@@ -49,9 +49,13 @@ typedef enum _MessageType {
     MessageType_MessageType_EmmcDirRemove = 30110
 } MessageType;
 
-typedef enum _DigitalDeviceType {
-    DigitalDeviceType_PRO = 0
-} DigitalDeviceType;
+typedef enum _OneKeyDeviceType {
+    OneKeyDeviceType_CLASSIC = 0,
+    OneKeyDeviceType_CLASSIC1S = 1,
+    OneKeyDeviceType_MINI = 2,
+    OneKeyDeviceType_TOUCH = 3,
+    OneKeyDeviceType_PRO = 5
+} OneKeyDeviceType;
 
 typedef enum _RebootType {
     RebootType_Normal = 0,
@@ -134,8 +138,8 @@ typedef struct _Features {
     uint32_t initstates;
     bool has_boardloader_version;
     char boardloader_version[32];
-    bool has_digital_device_type;
-    DigitalDeviceType digital_device_type;
+    bool has_onekey_device_type;
+    OneKeyDeviceType onekey_device_type;
 } Features;
 
 typedef struct _Ping {
@@ -345,9 +349,9 @@ extern "C" {
 #define _MessageType_MAX MessageType_MessageType_EmmcDirRemove
 #define _MessageType_ARRAYSIZE ((MessageType)(MessageType_MessageType_EmmcDirRemove+1))
 
-#define _DigitalDeviceType_MIN DigitalDeviceType_PRO
-#define _DigitalDeviceType_MAX DigitalDeviceType_PRO
-#define _DigitalDeviceType_ARRAYSIZE ((DigitalDeviceType)(DigitalDeviceType_PRO+1))
+#define _OneKeyDeviceType_MIN OneKeyDeviceType_CLASSIC
+#define _OneKeyDeviceType_MAX OneKeyDeviceType_PRO
+#define _OneKeyDeviceType_ARRAYSIZE ((OneKeyDeviceType)(OneKeyDeviceType_PRO+1))
 
 #define _RebootType_MIN RebootType_Normal
 #define _RebootType_MAX RebootType_BootLoader
@@ -363,7 +367,7 @@ extern "C" {
 
 
 
-#define Features_digital_device_type_ENUMTYPE DigitalDeviceType
+#define Features_onekey_device_type_ENUMTYPE OneKeyDeviceType
 
 
 
@@ -405,7 +409,7 @@ extern "C" {
 /* Initializer values for message structs */
 #define Initialize_init_default                  {0}
 #define GetFeatures_init_default                 {0}
-#define Features_init_default                    {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _DigitalDeviceType_MIN}
+#define Features_init_default                    {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _OneKeyDeviceType_MIN}
 #define Ping_init_default                        {false, ""}
 #define Success_init_default                     {false, ""}
 #define Failure_init_default                     {false, _FailureType_MIN, false, ""}
@@ -441,7 +445,7 @@ extern "C" {
 #define SEMessageSignature_init_default          {{0, {0}}}
 #define Initialize_init_zero                     {0}
 #define GetFeatures_init_zero                    {0}
-#define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _DigitalDeviceType_MIN}
+#define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _OneKeyDeviceType_MIN}
 #define Ping_init_zero                           {false, ""}
 #define Success_init_zero                        {false, ""}
 #define Failure_init_zero                        {false, _FailureType_MIN, false, ""}
@@ -505,7 +509,7 @@ extern "C" {
 #define Features_serial_no_tag                   511
 #define Features_initstates_tag                  513
 #define Features_boardloader_version_tag         519
-#define Features_digital_device_type_tag         600
+#define Features_onekey_device_type_tag          600
 #define Ping_message_tag                         1
 #define Success_message_tag                      1
 #define Failure_code_tag                         1
@@ -608,7 +612,7 @@ X(a, STATIC,   OPTIONAL, STRING,   bootloader_version, 510) \
 X(a, STATIC,   OPTIONAL, STRING,   serial_no,       511) \
 X(a, STATIC,   OPTIONAL, UINT32,   initstates,      513) \
 X(a, STATIC,   OPTIONAL, STRING,   boardloader_version, 519) \
-X(a, STATIC,   OPTIONAL, UENUM,    digital_device_type, 600)
+X(a, STATIC,   OPTIONAL, UENUM,    onekey_device_type, 600)
 #define Features_CALLBACK NULL
 #define Features_DEFAULT NULL
 

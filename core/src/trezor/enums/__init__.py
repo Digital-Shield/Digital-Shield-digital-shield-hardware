@@ -543,8 +543,12 @@ if TYPE_CHECKING:
         PromptAlways = 1
         PromptTemporarily = 2
 
-    class DigitalDeviceType(IntEnum):
-        PRO = 0
+    class OneKeyDeviceType(IntEnum):
+        CLASSIC = 0
+        CLASSIC1S = 1
+        MINI = 2
+        TOUCH = 3
+        PRO = 5
 
     class Capability(IntEnum):
         Bitcoin = 1

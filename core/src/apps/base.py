@@ -49,7 +49,7 @@ def get_features() -> Features:
     import storage  # workaround for https://github.com/microsoft/pyright/issues/2685
 
     from trezor import sdcard
-    from trezor.enums import Capability
+    from trezor.enums import Capability, OneKeyDeviceType
     from trezor.messages import Features
     from trezor import uart
     from apps.common import mnemonic, safety_checks
@@ -75,6 +75,7 @@ def get_features() -> Features:
         bootloader_version=utils.boot_version(),
         boardloader_version=utils.board_version(),
         busy=busy_expiry_ms() > 0,
+        onekey_device_type=OneKeyDeviceType.PRO,
     )
 
     if utils.BITCOIN_ONLY:

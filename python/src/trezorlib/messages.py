@@ -579,8 +579,12 @@ class SafetyCheckLevel(IntEnum):
     PromptTemporarily = 2
 
 
-class DigitalDeviceType(IntEnum):
-    PRO = 0
+class OneKeyDeviceType(IntEnum):
+    CLASSIC = 0
+    CLASSIC1S = 1
+    MINI = 2
+    TOUCH = 3
+    PRO = 5
 
 
 class Capability(IntEnum):
@@ -3888,7 +3892,7 @@ class Features(protobuf.MessageType):
         518: protobuf.Field("build_id", "bytes", repeated=False, required=False),
         519: protobuf.Field("boardloader_version", "string", repeated=False, required=False),
         41: protobuf.Field("busy", "bool", repeated=False, required=False),
-        600: protobuf.Field("digital_device_type", "DigitalDeviceType", repeated=False, required=False),
+        600: protobuf.Field("onekey_device_type", "OneKeyDeviceType", repeated=False, required=False),
     }
 
     def __init__(
@@ -3952,7 +3956,7 @@ class Features(protobuf.MessageType):
         build_id: Optional["bytes"] = None,
         boardloader_version: Optional["str"] = None,
         busy: Optional["bool"] = None,
-        digital_device_type: Optional["DigitalDeviceType"] = None,
+        onekey_device_type: Optional["OneKeyDeviceType"] = None,
     ) -> None:
         self.capabilities: Sequence["Capability"] = capabilities if capabilities is not None else []
         self.major_version = major_version
@@ -4012,7 +4016,7 @@ class Features(protobuf.MessageType):
         self.build_id = build_id
         self.boardloader_version = boardloader_version
         self.busy = busy
-        self.digital_device_type = digital_device_type
+        self.onekey_device_type = onekey_device_type
 
 
 class LockDevice(protobuf.MessageType):
