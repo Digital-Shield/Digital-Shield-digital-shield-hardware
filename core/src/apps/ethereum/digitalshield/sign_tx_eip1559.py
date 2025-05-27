@@ -8,7 +8,7 @@ from trezor.messages import (
     EthereumAccessListDigitalshield as EthereumAccessList,
     EthereumTxRequestDigitalshield as EthereumTxRequest,
 )
-from trezor.ui.layouts import confirm_final, confirm_final2
+from trezor.ui.layouts import confirm_final, confirm_final
 from trezor.utils import HashWriter
 
 from apps.common import paths
@@ -168,7 +168,7 @@ async def sign_tx_eip1559(
 
     digest = sha.get_digest()
     result = sign_digest(msg, keychain, digest)
-    await confirm_final2(ctx, get_display_network_name(network))
+    await confirm_final(ctx, get_display_network_name(network))
     return result
 
 
