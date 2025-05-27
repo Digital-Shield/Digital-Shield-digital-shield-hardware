@@ -13,7 +13,24 @@ class Message(Modal):
     def __init__(self, title, message, icon=None):
         super().__init__()
         if title:
-            self.set_title(title)
+            #判断是否德语
+            cur_language = i18n.using.code if i18n.using is not None else None
+            if cur_language == "de":
+                # 创建一个可滚动的标题容器
+                self.title_container = self.add(lv.obj)
+                self.title_container.set_width(lv.pct(100))
+                self.title_container.set_height(40)
+                self.title_container.set_style_bg_opa(lv.OPA.TRANSP, 0)
+                self.title_container.set_style_border_width(0, 0)
+                self.title_label = lv.label(self.title_container)
+                self.title_label.set_text(title)
+                self.title_label.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)
+                self.title_label.set_scrollbar_mode(lv.SCROLLBAR_MODE.AUTO)  # 滚动条自适应
+                self.title_label.set_width(lv.pct(100))
+                self.title_label.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
+                self.title_label.center()
+            else:
+                self.set_title(title)
         #获取i18n.Button.ok当前语言内容，重新赋值
         self.btn_right.set_text(i18n.Button.ok)
         self.content.set_style_pad_all(16, lv.PART.MAIN)

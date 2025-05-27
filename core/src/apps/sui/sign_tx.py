@@ -8,6 +8,9 @@ from apps.common.keychain import Keychain, auto_keychain
 
 from .helper import INTENT_BYTES, sui_address_from_pubkey
 from . import ICON
+from ..ethereum.layout import (
+    require_show_overview_ton,
+)
 
 @auto_keychain(__name__)
 async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiSignedTx:
@@ -25,7 +28,20 @@ async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiS
         raise wire.DataError("Invalid raw tx")
     ctx.name = 'SUI'
     ctx.icon_path = ICON
-    await confirm_blind_sign_common(ctx, address, msg.raw_tx)
+    from apps.common.signverify import decode_message
+    #格式化打印下message
+    # from trezor.utils import dump_protobuf_lines
+    # print("Sui_message","\n".join(dump_protobuf_lines(msg)))
+    # await confirm_blind_sign_common(ctx, address, msg.raw_tx)
+    await require_show_overview_ton(
+        ctx,
+        "SUI",
+        msg.destination,
+        msg.sui_amount,
+        0,
+        None,
+        False,
+    )
     await confirm_final(ctx, "SUI")
     signature = ed25519.sign(
         node.private_key(), blake2b(data=msg.raw_tx, outlen=32).digest()

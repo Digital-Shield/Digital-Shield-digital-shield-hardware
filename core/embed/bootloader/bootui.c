@@ -687,6 +687,29 @@ void ui_install_ble_confirm(void) {
   display_text_center(DISPLAY_RESX - DISPLAY_RESX / 4, 755, "Install", -1,
                       FONT_PJKS_BOLD_26, COLOR_BL_DONE, COLOR_BL_ICON);
 }
+void ui_install_se_confirm(const char* cur_version, const char* new_version) {
+  ui_title_update();
+  ui_logo_center();
+  display_text_center(DISPLAY_RESX / 2, 190, "SE Update", -1,
+                      FONT_PJKS_BOLD_38, COLOR_BL_FG, COLOR_BL_BG);
+  display_text_center(DISPLAY_RESX / 2, 240,
+                      "A new SE firmware is avaliable! The", -1,
+                      FONT_NORMAL, COLOR_BL_SUBTITLE, COLOR_BL_BG);
+  display_text_right(DISPLAY_RESX / 2 - 25, 320, cur_version, -1, FONT_NORMAL,
+                     COLOR_BL_SUBTITLE, COLOR_BL_BG);
+  display_text(DISPLAY_RESX / 2 + 25, 320, new_version, -1, FONT_NORMAL,
+               COLOR_BL_SUBTITLE, COLOR_BL_BG);
+
+  display_image(231, 303, 17, 14, toi_icon_arrow_right + 12,
+                sizeof(toi_icon_arrow_right) - 12);
+
+  display_bar(8, 694, 231, 98, COLOR_BL_ICON);
+  display_text_center(DISPLAY_RESX / 4, 755, "Cancel", -1, FONT_PJKS_BOLD_26,
+                      COLOR_BL_FG, COLOR_BL_ICON);
+  display_bar(241, 694, 231, 98, COLOR_BL_ICON);
+  display_text_center(DISPLAY_RESX - DISPLAY_RESX / 4, 755, "Install", -1,
+                      FONT_PJKS_BOLD_26, COLOR_BL_DONE, COLOR_BL_ICON);
+}
 
 void ui_bootloader_first(const image_header *const hdr) {
   ui_bootloader_page_current = 0;

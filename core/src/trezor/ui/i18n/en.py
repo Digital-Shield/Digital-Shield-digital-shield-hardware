@@ -13,7 +13,7 @@ class Setting:
     vibration = "Haptic Feedback"
     brightness = "Brightness"
     auto_lock = "Auto Lock"
-    auto_shutdown = "Auto Shutdown"
+    auto_shutdown = "Auto Power Off"
     animation = "Transition Animation"
     wallpaper = "Wallpaper"
     power_off = "Power Off"
@@ -23,7 +23,7 @@ class Setting:
 class Security:
     change_pin = "Change PIN"
     backup_mnemonic = "Backup Recovery Phrase"
-    check_mnemonic = "Verify Recovery Phrase"
+    check_mnemonic = "Check Recovery Phrase"
     wipe_device = "Factory Reset"
 
 #### guide App
@@ -90,11 +90,11 @@ class Guide:
     bluetooth_name = "Bluetooth Name"
     bluetooth_version = "Bluetooth Version"
 
-    firmware_title_1 = '1.Ensure device battery >20%'
-    firmware_title_2 = '2.Connect device to computer via USB-C'
+    firmware_title_1 = '1.Ensure the device has more than 20% battery.'
+    firmware_title_2 = '2.Connect the device to your computer using a USB-C cable.'
     firmware_title_3 = "3.Click 'Firmware Update'"
     firmware_title_caution = 'Warning'
-    firmware_describe_caution = 'Maintain USB connection during update'
+    firmware_describe_caution = 'During upgrade, please ensure the USB connection is stable.'
     equipment_info = 'Equipment information'
     equipment_name = 'Equipment name'
     equipment_version = 'Equipment version'
@@ -111,7 +111,7 @@ class Button:
     redo = "Regenerate"
     continue_ = "Continue"
     cancel = "Cancel"
-    try_again = "Try again"
+    try_again = "Retry"
     power_off = "Power Off"
     restart = "Restart"
     hold = "Keep\nhold"
@@ -132,7 +132,7 @@ class Button:
     update = "Update"
 
 class Title:
-    enter_old_pin = "Enter Current PIN"
+    enter_old_pin = "Enter Old PIN"
     enter_new_pin = "Enter New PIN"
     enter_pin = "Enter PIN"
     enter_pin_again = "Re-enter PIN"
@@ -142,7 +142,7 @@ class Title:
     import_wallet = "Import Wallet"
     restore_wallet = "Restore Wallet"
     wallet_is_ready = "Wallet Ready"
-    select_word_count = "Select Recovery Phrase Length"
+    select_word_count = "Choose Number of Words"
     wallet_security = "Wallet Security"
     pin_security = "PIN Security Hint"
     mnemonic_security = "Recovery Phrase Security Hint"
@@ -172,7 +172,7 @@ class Title:
     confirm_transaction = "Confirm Transaction"
     confirm_message = "Confirm Message"
     signature = "Signature Details"
-    wrong_pin = "Incorrect PIN"
+    wrong_pin = "PIN Error"
     pin_changed = "PIN Changed"
     pin_enabled = "PIN Enabled"
     pin_disabled = "PIN Disabled"
@@ -261,8 +261,8 @@ class Text:
     minute = "Minute"
     minutes = "Minutes"
     changing_language = "Changing language\nDevice will restart"
-    change_pin = "Set a 4-16 digit PIN to secure your device"
-    wipe_device = "Reset device to factory settings.\nWARNING: This erases ALL data."
+    change_pin = "Set a 4-16 digit PIN to protect your device"
+    wipe_device = "Restore the device to factory settings.\nWarning: This will erase all data from your device."
     wipe_device_check = [
         "Factory reset erases all data",
         "Data cannot be recovered",
@@ -296,10 +296,10 @@ class Text:
     use_app_scan_this_signature = "Scan signature with Digital Shield app"
     internal_error = "Internal Error"
     tap_switch_to_airgap = "Tap QR code to show Airgap address"
-    tap_switch_to_receive = "Tap QR code to show receive address"
+    tap_switch_to_receive = "Tap QR code to show Receiving address"
     incorrect_pin_times_left = "Incorrect PIN. {} attempts remaining"
-    incorrect_pin_last_time = "Incorrect PIN.Last attempt"
-    wrong_pin = "Incorrect PIN"
+    incorrect_pin_last_time = "The PIN is incorrect, there is still one last chance"
+    wrong_pin = "Incorrect PIN Entered"
     seedless = "No seed phrase detected"
     backup_failed = "Backup Failed!"
     need_backup = "Backup Required!"

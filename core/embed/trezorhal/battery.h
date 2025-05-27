@@ -1,5 +1,6 @@
 #ifndef TREZORHAL_BATTERY_H_
 #define TREZORHAL_BATTERY_H_
+#include "stdbool.h"
 
 #define BATTERY_I2C_PORT    GPIOB
 #define BATTERY_I2C_SCL_PIN GPIO_PIN_6
@@ -28,4 +29,5 @@ int battery_read_time_to_empty(void); // 读剩余时间
 int battery_read_state_of_health(void); // 读取电池的健康状况
 
 int battery_init(void);
+bool battery_is_exist(void);
 #endif

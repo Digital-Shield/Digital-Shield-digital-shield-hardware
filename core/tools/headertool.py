@@ -128,6 +128,7 @@ def do_replace_vendorheader(fw, vh_file) -> None:
 @click.option("-n", "--dry-run", is_flag=True, help="Do not save changes.")
 @click.option("-h", "--rehash", is_flag=True, help="Force recalculate hashes.")
 @click.option("-v", "--verbose", is_flag=True, help="Show verbose info about headers.")
+@click.option("--verify", "verify", is_flag=True, help="Verify signed bin")
 @click.option(
     "-S",
     "--sign-private",
@@ -166,6 +167,7 @@ def do_replace_vendorheader(fw, vh_file) -> None:
 def cli(
     firmware_file,
     verbose,
+    verify,
     rehash,
     dry_run,
     privkey_data,
@@ -225,6 +227,10 @@ def cli(
         raise click.ClickException(
             "Could not parse file (magic bytes: {!r})".format(magic)
         ) from e
+
+    if verify:
+        click.echo(fw.format(True))
+        return
 
     digest = fw.digest()
     if print_digest:

@@ -30,8 +30,9 @@
 #include "mipi_lcd.h"
 #include "mpu.h"
 #include "sdram.h"
-#include "se_thd89.h"
+#include "thd89/se.h"
 #include "spi.h"
+#include "stm32h7xx_hal.h"
 #include "sys.h"
 #include "usart.h"
 #include "usb.h"
@@ -47,6 +48,8 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_rcc.h"
 #include "uart_log.h"
+#include "device.h"
+#include "power_manager.h"
 
 #define MSG_NAME_TO_ID(x)         MessageType_MessageType_##x
 
@@ -62,9 +65,9 @@ const uint8_t BOOTLOADER_KEY_N = 3;
 #endif
 const uint8_t* const BOOTLOADER_KEYS[] = {
 #if PRODUCTION
-    (const uint8_t *)"\xEE\xD4\xE5\x12\x3D\x60\x81\x4F\x2D\xD6\x86\x6A\x68\x86\x2F\x24\xE9\x38\x78\x34\x3E\x69\x60\xD2\x52\x25\x69\x51\x12\xCA\xA3\x77",
-    (const uint8_t *)"\x30\x37\x00\xC4\x5C\xAD\x09\xD3\xDA\xBE\x17\x6E\x16\xEC\x24\xF0\xA6\xA8\x56\x80\x9F\x5E\x8E\x09\x57\x92\x57\x09\x10\x16\xF8\xCF",
-    (const uint8_t *)"\x24\xED\x84\xE2\x66\x73\x5D\x7C\x7A\x44\xE4\x66\xE6\xAA\xD4\x43\xA5\x5E\x6A\xD7\x50\x41\x46\x71\x00\x6A\xF0\xD0\x16\xC7\x63\x42",
+    (const uint8_t *)"\xEE\xD4\xE5\x12\x3D\xB0\x81\x4F\x2D\xDB\x86\x6A\x68\x86\x2F\x24\xE9\xA8\x78\x34\x3E\x69\xB0\xD2\x52\x25\xB9\x51\x12\xCA\xA3\x77",
+    (const uint8_t *)"\x30\x37\x00\xC4\x5C\xAD\x09\xD3\xDA\xBE\x17\x6E\x1B\xEC\x24\xF0\xA6\xA8\x5B\x80\x9F\x5E\x8E\x09\x57\x92\x57\x09\x10\x1B\xF8\xCF",
+    (const uint8_t *)"\x24\xED\x84\xE2\x6B\x73\x5D\x7C\x7A\x44\xE4\xB6\xE6\xAA\xD4\x43\xA5\x5E\x6A\xD7\x50\x41\x4B\x71\x00\x6A\xF0\xD0\x16\xC7\x63\x42",
 #else
     (const uint8_t *)"\xd7\x59\x79\x3b\xbc\x13\xa2\x81\x9a\x82\x7c\x76\xad\xb6\xfb\xa8\xa4\x9a\xee\x00\x7f\x49\xf2\xd0\x99\x2d\x99\xb8\x25\xad\x2c\x48",
     (const uint8_t *)"\x63\x55\x69\x1c\x17\x8a\x8f\xf9\x10\x07\xa7\x47\x8a\xfb\x95\x5e\xf7\x35\x2c\x63\xe7\xb2\x57\x03\x98\x4c\xf7\x8b\x26\xe2\x1a\x56",
@@ -131,15 +134,24 @@ static void usb_init_all(secbool usb21_landing)
     usb_start();
 }
 
+static inline bool is_usb_connect(void){
+    if(PCB_IS_V1_0()) {
+        return battery_read_current() >= 0;
+    } else {
+        return pm_get_power_source() == POWER_SOURCE_USB;
+    }
+    return true;
+}
+
 // 0: by battery, 1: by usb
 int dev_pwr_source = 0;
 int battery_soc = 0;
 static void upate_battery_info(void) {
     battery_soc = battery_read_SOC();
-    dev_pwr_source = battery_read_current() >= 0 ? 1 : 0;
+    dev_pwr_source = is_usb_connect()? 1 : 0;
 }
 
-static secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
+secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header* const hdr)
 { // touch click commented on development board
     // if both are NULL, we don't have a firmware installed
     // let's show a webusb landing page in this case
@@ -498,18 +510,16 @@ static secbool need_stay_in_bootloader(void) {
     return boot;
 }
 
+
+
 static void low_power_detect(void) {
     hal_delay(10);
-    int current = battery_read_current();
-    // usb connect, no need check
-    if (current >= 0) {
+    if (is_usb_connect()) {
         return;
     }
-
     int soc = battery_read_SOC();
-
-    // almost empty
-    if (soc <= 1) {
+    // have power
+    if (soc > 1) {
         return;
     }
 
@@ -534,8 +544,18 @@ static void low_power_detect(void) {
     hal_delay(500);
     // pull down system power pin
     // when user release power button, the device will shut down
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-    while (1);
+    if (PCB_IS_V1_0()) {
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+    }
+    while (1) {
+        int soc = battery_read_SOC();
+        int C = battery_read_current();
+        if (soc > 1 && C > 0) {
+            break;
+        }
+        HAL_Delay(1000);
+    }
+
 }
 
 int main(void)
@@ -550,6 +570,9 @@ int main(void)
 
     SystemCoreClockUpdate();
 
+    // extern void thd89_test(void);
+    // thd89_test();
+
     /* Enable the CPU Cache */
     cpu_cache_enable();
 
@@ -558,20 +581,7 @@ int main(void)
     random_delays_init();
     motor_init();
 
-    // #0 hold system power pin
-    // 1. the device is powered, if user push `power button` then release
-    // 2. the device is not shutdown, if user connect USB then disconnect USB
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    GPIO_InitTypeDef sys_power_on;
-    sys_power_on.Pin = GPIO_PIN_1;
-    sys_power_on.Mode = GPIO_MODE_OUTPUT_PP;
-    sys_power_on.Pull = GPIO_PULLDOWN;
-    sys_power_on.Speed = GPIO_SPEED_MEDIUM;
-
-    // pull up power pin
-    HAL_GPIO_Init(GPIOC, &sys_power_on);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
-
+    device_power_on();
 
     bus_fault_enable();
     /* Initialize the QSPI */
@@ -586,8 +596,9 @@ int main(void)
     // bus_fault_disable();
     // /* Initialize the LCD */
     sdram_init();
-
+    se_init();
     battery_init();
+    pm_init();
     touch_init();
     lcd_para_init(480, 800, LCD_PIXEL_FORMAT_RGB565);
     low_power_detect();
@@ -601,13 +612,12 @@ int main(void)
 #endif
     }
 
-    se_init();
 
     if ( !cert_set )
     {
         // if se certificate is not set
-        uint32_t cert_len = 0;
-        cert_set = se_get_certificate_len(&cert_len);
+        size_t cert_len = 0;
+        cert_set = se_get_certificate_len(&cert_len) == 0;
 #if !PRODUCTION
         cert_set = true; // TODO: need debug.
 #endif
@@ -644,7 +654,7 @@ int main(void)
         display_clear();
         ui_fadein();
         ui_bootloader_first(NULL);
-        if ( bootloader_usb_loop(NULL, NULL) != sectrue )
+        if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
         {
             return 1;
         }

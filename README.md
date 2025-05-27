@@ -17,8 +17,7 @@ ubuntu系统
 ``` sh
 sudo apt install git-lfs
 ```
-
-# 代码编译
+# ⚠️ 代码编译 注意设置pcb版本
 
 ``` sh
 git submodule update --init --recursivecd
@@ -27,6 +26,8 @@ git lfs pull
 nix-shell
 poetry install
 poetry shell
+# 如果调试用的是老版本的PCB，需要打开下面一行
+# export PCB_VERSION=PCB_VERSION_1_0
 sh ./build-local.sh
 ```
 

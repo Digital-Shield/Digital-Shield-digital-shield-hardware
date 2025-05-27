@@ -99,9 +99,6 @@ async def write_message(iface: Interface, mtype: int, mdata: bytes) -> None:
     ustruct.pack_into(
         _REP_INIT, report, 0, _REP_MARKER, _REP_MAGIC, _REP_MAGIC, mtype, msize
     )
-    # if __debug__:
-    #     log.debug(__name__, "writing message")
-    #     log.debug(__name__, f"message: {binascii.hexlify(report)}")
     nwritten = 0
     while True:
         # copy as much as possible to the report buffer
@@ -109,6 +106,9 @@ async def write_message(iface: Interface, mtype: int, mdata: bytes) -> None:
 
         # write the report
         while True:
+            # if __debug__:
+            #     log.debug(__name__, "writing message")
+            #     log.debug(__name__, f"message: {binascii.hexlify(report)}")
             n = await iface. write(report)
             if n == 0:
                 raise WriteError("Write error")

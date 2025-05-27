@@ -20,8 +20,7 @@
 #include "py/objstr.h"
 #include "py/runtime.h"
 
-#include "se_thd89.h"
-#include "thd89/se_thd89.h"
+#include "thd89/se.h"
 
 /// package: thd89
 
@@ -32,7 +31,7 @@
 ///     """
 STATIC mp_obj_t mod_thd89_get_public_key(void) {
   uint8_t pk[65];
-  if (!se_get_pubkey(pk)) {
+  if (se_get_dev_pubkey(pk)) {
     mp_raise_ValueError("read public key failed");
   }
   return mp_obj_new_str_copy(&mp_type_bytes, pk, 65);
@@ -47,8 +46,8 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_thd89_get_public_key_obj,
 ///     """
 STATIC mp_obj_t mod_thd89_read_certificate(void) {
   uint8_t cert[2048];
-  uint32_t cert_len = sizeof(cert);
-  if (!se_read_certificate(cert, &cert_len)) {
+  size_t cert_len = sizeof(cert);
+  if (se_read_certificate(cert, &cert_len)) {
     mp_raise_ValueError("read certificate failed");
   }
   return mp_obj_new_str_copy(&mp_type_bytes, cert, cert_len);
@@ -66,7 +65,7 @@ STATIC mp_obj_t mod_thd89_sign_message(mp_obj_t msg) {
   mp_buffer_info_t msg_info = {0};
   mp_get_buffer_raise(msg, &msg_info, MP_BUFFER_READ);
 
-  if (!se_sign_message(msg_info.buf, msg_info.len, signature)) {
+  if (se_sign_message(msg_info.buf, msg_info.len, signature)) {
     mp_raise_ValueError("sign message failed");
   }
   return mp_obj_new_str_copy(&mp_type_bytes, signature, 64);

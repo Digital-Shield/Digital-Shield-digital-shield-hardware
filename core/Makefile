@@ -27,6 +27,7 @@ TREZOR_MEMPERF ?= 0
 ADDRESS_SANITIZER ?= 0
 UI2 ?= 0
 PRODUCTION_MODEL = H
+PCB_VERSION ?= PCB_VERSION_V_1_1
 
 # OpenOCD interface default. Alternative: ftdi/olimex-arm-usb-tiny-h
 OPENOCD_INTERFACE ?= stlink
@@ -165,7 +166,7 @@ build: build_boardloader build_bootloader build_firmware build_prodtest build_un
 build_embed: build_boardloader build_bootloader build_firmware # build boardloader, bootloader, firmware
 
 build_boardloader: ## build boardloader
-	$(SCONS) CFLAGS="$(CFLAGS)" PRODUCTION="$(PRODUCTION)" TREZOR_MODEL="$(TREZOR_MODEL)" PRODUCTION_MODEL="$(PRODUCTION_MODEL)" $(BOARDLOADER_BUILD_DIR)/boardloader.bin
+	$(SCONS) CFLAGS="$(CFLAGS)" PRODUCTION="$(PRODUCTION)" TREZOR_MODEL="$(TREZOR_MODEL)" PRODUCTION_MODEL="$(PRODUCTION_MODEL)" PCB_VERSION="$(PCB_VERSION)" $(BOARDLOADER_BUILD_DIR)/boardloader.bin
 
 build_bootloader: ## build bootloader
 	$(SCONS) CFLAGS="$(CFLAGS)" PRODUCTION="$(PRODUCTION)" TREZOR_MODEL="$(TREZOR_MODEL)" PRODUCTION_MODEL="$(PRODUCTION_MODEL)" $(BOOTLOADER_BUILD_DIR)/bootloader.bin

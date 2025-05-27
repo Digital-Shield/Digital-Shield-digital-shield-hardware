@@ -2,7 +2,10 @@
 #include "bootui.h"
 #include "emmc_commands_macros.h"
 
+#include "stm32h7xx_hal.h"
 #include "supervise.h"
+#include "thd89.h"
+#include "thd89/se.h"
 
 // ######## global vars ########
 
@@ -657,7 +660,117 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
     image_header file_hdr;
 
     // detect firmware type
-    if ( memcmp(bl_update_buffer, "5283", 4) == 0 )
+    if (memcmp(bl_update_buffer, "TH89", 4) == 0) {
+        // se update
+        ExecuteCheck_MSGS_ADV(
+            se_check_app_binary(bl_update_buffer, emmc_file_size),
+            true,
+            {
+                emmc_fs_file_delete(msg_recv.path);
+                send_failure(iface_num, FailureType_Failure_ProcessError, "Update file header invalid!");
+                return -3;
+            }
+        );
+        // make sure se alive
+        ExecuteCheck_MSGS_ADV(
+            se_ping(),
+            0,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "device not alive!");
+                return -3;
+            }
+        );
+        char cur_ver[17] = {0};
+        char new_ver[17] = {0};
+        se_binary_version(bl_update_buffer, new_ver);
+        if (se_is_running_app()) {
+            if (se_get_version(cur_ver)) {
+                memcpy(cur_ver, "NULL", 4);
+            }
+        }
+        // ui confirm
+        ui_fadeout();
+        ui_install_se_confirm(cur_ver, new_ver);
+        ui_fadein();
+
+        int response = ui_input_poll(INPUT_CONFIRM | INPUT_CANCEL, true);
+        if ( INPUT_CONFIRM != response )
+        {
+            ui_fadeout();
+            ui_bootloader_first(NULL);
+            ui_fadein();
+            send_user_abort_nocheck(iface_num, "Firmware install cancelled");
+            return -4;
+        }
+        int retry = 5;
+        while (se_is_running_app() && retry--) {
+            se_launch(STATE_BOOTLOADER);
+            hal_delay(50);
+            se_conn_reset();
+        }
+        se_conn_reset();
+        if ( !se_is_running_bootloader() ) {
+            send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+            return -5;
+        }
+
+        ui_fadeout();
+        ui_screen_progress_bar_prepare("Installing", NULL);
+        ui_fadein();
+
+
+        #define SE_DATA_BLOCK 512
+        size_t index = 0;
+        size_t size = 0;
+        size_t total = emmc_file_size;
+        uint8_t *p = bl_update_buffer;
+        while (total) {
+            size = MIN(SE_DATA_BLOCK, total);
+            ExecuteCheck_MSGS_ADV(
+                se_install_app(index, p, size),
+                0,
+                {
+                    send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+                    return -5;
+                }
+            );
+            int precent = (emmc_file_size - total) * 100 / emmc_file_size;
+            ui_screen_progress_bar_update(NULL, NULL, precent);
+            p += size;
+            total -= size;
+            index++;
+        }
+        ExecuteCheck_MSGS_ADV(
+            se_verify_app(),
+            0,
+            {
+                send_failure(iface_num, FailureType_Failure_ProcessError, "update SE firmware filed!");
+                return -5;
+            }
+        );
+        se_reboot();
+        // delay and wait SE startup
+        HAL_Delay(50);
+        se_conn_reset();
+        se_is_running_app();
+        ui_screen_progress_bar_update(NULL, NULL, 100);
+
+        send_success_nocheck(iface_num, "Succeed");
+        HAL_Delay(100);
+        if ( msg_recv.has_reboot_on_success && msg_recv.reboot_on_success )
+        {
+            *STAY_IN_FLAG_ADDR = 0;
+            restart();
+        }
+        else
+        {
+            ui_fadeout();
+            ui_bootloader_first(NULL);
+            ui_fadein();
+        }
+        return 0;
+    }
+    else if ( memcmp(bl_update_buffer, "5283", 4) == 0 )
     {
         // bluetooth update
 
@@ -939,9 +1052,6 @@ int process_msg_FirmwareUpdateEmmc(uint8_t iface_num, uint32_t msg_size, uint8_t
         // selectively wipe user data and reset se
         if ( sectrue == wipe_required )
         {
-            // not supported
-            // se_set_wiping(true);
-            // se_reset_storage();
 
             // erease with retry, max 10 retry allowed, 10ms delay in between
             ExecuteCheck_MSGS_ADV_RETRY_DELAY(
@@ -1516,12 +1626,13 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
     MSG_INIT(msg_recv, EmmcDirList);
     MSG_RECV_RET_ON_ERR(msg_recv, EmmcDirList);
 
-    const size_t max_list_len = 8192;
+    const size_t max_list_len = 16 * 1024;
+    const size_t max_subdir_len = 1024;
 
     typedef struct
     {
         // both are '\n' seprated multiline strings
-        char list_subdirs[max_list_len];
+        char list_subdirs[max_subdir_len];
         char list_files[max_list_len];
     } lists_struct;
 
@@ -1530,7 +1641,7 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
 
     ExecuteCheck_MSGS_ADV(
         emmc_fs_dir_list(
-            msg_recv.path, temp_buf->list_subdirs, max_list_len, temp_buf->list_files, max_list_len
+            msg_recv.path, temp_buf->list_subdirs, max_subdir_len, temp_buf->list_files, max_list_len
         ),
         true,
         {
@@ -1552,7 +1663,7 @@ int process_msg_EmmcDirList(uint8_t iface_num, uint32_t msg_size, uint8_t* buf)
 
     nanopb_callback_args cb_args_send_subdirs = {
         .buffer = (uint8_t*)temp_buf->list_subdirs,
-        .buffer_size = max_list_len,
+        .buffer_size = max_subdir_len,
         .payload_size = strlen(temp_buf->list_subdirs),
     };
     nanopb_callback_args cb_args_send_files = {

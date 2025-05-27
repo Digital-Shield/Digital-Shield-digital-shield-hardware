@@ -24,7 +24,7 @@
 #include "flash.h"
 #include "image.h"
 #include "sdram.h"
-#include "se_thd89.h"
+#include "thd89/se.h"
 #include "secbool.h"
 #include "usb.h"
 #include "version.h"
@@ -335,7 +335,7 @@ static void send_msg_features(uint8_t iface_num,
                               const image_header *const hdr) {
   MSG_SEND_INIT(Features);
   if (device_is_factory_mode()) {
-    uint32_t cert_len = 0;
+    size_t cert_len = 0;
     uint32_t init_state = 0;
     MSG_SEND_ASSIGN_STRING(vendor, "Digitshield.so");
     MSG_SEND_ASSIGN_REQUIRED_VALUE(major_version, VERSION_MAJOR);
@@ -344,7 +344,7 @@ static void send_msg_features(uint8_t iface_num,
     MSG_SEND_ASSIGN_VALUE(bootloader_mode, true);
     MSG_SEND_ASSIGN_STRING(model, "factory");
     init_state |= device_serial_set() ? 1 : 0;
-    init_state |= se_get_certificate_len(&cert_len) ? (1 << 2) : 0;
+    init_state |= se_get_certificate_len(&cert_len) == 0 ? (1 << 2) : 0;
     MSG_SEND_ASSIGN_VALUE(initstates, init_state);
     MSG_SEND_ASSIGN_VALUE(onekey_device_type, OneKeyDeviceType_PRO);
 
@@ -375,8 +375,8 @@ static void send_msg_features(uint8_t iface_num,
     if (ble_switch_state()) {
       MSG_SEND_ASSIGN_VALUE(ble_enable, ble_get_switch());
     }
-    char *se_version = se_get_version();
-    if (se_version) {
+    char se_version[17] = {0};
+    if (se_is_running_app()  && se_get_version(se_version) == 0) {
       MSG_SEND_ASSIGN_STRING_LEN(se_ver, se_version, strlen(se_version));
     }
 
@@ -763,12 +763,9 @@ int process_msg_FirmwareUpload(uint8_t iface_num, uint32_t msg_size,
       } else {
         // if firmware is not upgrade, erase storage
         if (sectrue != is_upgrade) {
-          se_set_wiping(true);
-          se_reset_storage();
           ensure(
               flash_erase_sectors(STORAGE_SECTORS, STORAGE_SECTORS_COUNT, NULL),
               NULL);
-          se_reset_state();
         }
         ensure(flash_erase_sectors(FIRMWARE_SECTORS, FIRMWARE_SECTORS_COUNT,
                                    ui_screen_install_progress_erase),
@@ -962,9 +959,6 @@ int process_msg_WipeDevice(uint8_t iface_num, uint32_t msg_size, uint8_t *buf) {
       30,
       FLASH_SECTOR_FIRMWARE_EXTRA_END,
   };
-  se_set_wiping(true);
-  se_reset_storage();
-  se_reset_state();
   if (sectrue !=
       flash_erase_sectors(sectors, sizeof(sectors), ui_screen_wipe_progress)) {
     MSG_SEND_INIT(Failure);
@@ -1040,7 +1034,7 @@ void process_msg_ReadSEPublicKey(uint8_t iface_num, uint32_t msg_size,
   MSG_RECV(ReadSEPublicKey);
 
   MSG_SEND_INIT(SEPublicKey);
-  if (se_get_pubkey(pubkey)) {
+  if (se_get_dev_pubkey(pubkey) == 0) {
     MSG_SEND_ASSIGN_REQUIRED_BYTES(public_key, pubkey, 65);
     MSG_SEND(SEPublicKey);
   } else {
@@ -1056,10 +1050,10 @@ void process_msg_WriteSEPublicCert(uint8_t iface_num, uint32_t msg_size,
 
   if (se_write_certificate(msg_recv.public_cert.bytes,
                            msg_recv.public_cert.size)) {
-    send_success(iface_num, "Write certificate success");
-  } else {
     send_failure(iface_num, FailureType_Failure_ProcessError,
                  "Write certificate Failed");
+  } else {
+    send_success(iface_num, "Write certificate success");
   }
 }
 
@@ -1072,7 +1066,7 @@ void process_msg_ReadSEPublicCert(uint8_t iface_num, uint32_t msg_size,
   uint32_t cert_len = sizeof(cert);
 
   MSG_SEND_INIT(SEPublicCert);
-  if (se_read_certificate(cert, &cert_len)) {
+  if (se_read_certificate(cert, &cert_len) == 0) {
     MSG_SEND_ASSIGN_REQUIRED_BYTES(public_cert, cert, cert_len);
     MSG_SEND(SEPublicCert);
   } else {
@@ -1091,7 +1085,7 @@ void process_msg_SESignMessage(uint8_t iface_num, uint32_t msg_size,
   MSG_SEND_INIT(SEMessageSignature);
 
   if (se_sign_message((uint8_t *)msg_recv.message.bytes, msg_recv.message.size,
-                      sign)) {
+                      sign) == 0) {
     MSG_SEND_ASSIGN_REQUIRED_BYTES(signature, sign, 64);
     MSG_SEND(SEMessageSignature);
   } else {
