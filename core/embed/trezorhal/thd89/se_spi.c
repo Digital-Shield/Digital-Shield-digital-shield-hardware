@@ -36,7 +36,10 @@ static void log_frame(uint8_t frame[SEC_MAX_FRAME_SIZE]) {
   size_t frame_size = len + 5;
   (void)frame_size;
   uint8_t* p = frame + 3;
-
+  if (frame_size > SEC_MAX_FRAME_SIZE) {
+    printf("SE spi maybe read failed\n");
+    return;
+  }
   SE_LOG("frame: %02x,  len: %d(%02x%02x), crc: %02x%02x\n", fctr, len,
           frame[1], frame[2], frame[frame_size - 2], frame[frame_size - 1]);
 
