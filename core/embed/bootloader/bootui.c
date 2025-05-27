@@ -35,7 +35,6 @@
 #include "icon_safeplace.h"
 #include "icon_welcome.h"
 #include "icon_wipe.h"
-#include "mini_printf.h"
 #include "version.h"
 #include "touch.h"
 #include "ble.h"
@@ -84,7 +83,7 @@ static void ui_confirm_cancel_buttons(void) {
 
 const char *format_ver(const char *format, uint32_t version) {
   static char ver_str[64];
-  mini_snprintf(ver_str, sizeof(ver_str), format, (int)(version & 0xFF),
+  snprintf(ver_str, sizeof(ver_str), format, (int)(version & 0xFF),
                 (int)((version >> 8) & 0xFF), (int)((version >> 16) & 0xFF)
                 // ignore build field (int)((version >> 24) & 0xFF)
   );
@@ -147,7 +146,7 @@ void ui_screen_boot(const vendor_header *const vhdr,
 
 void ui_screen_boot_wait(int wait_seconds) {
   char wait_str[32];
-  mini_snprintf(wait_str, sizeof(wait_str), "Starting in %d s", wait_seconds);
+  snprintf(wait_str, sizeof(wait_str), "Starting in %d s", wait_seconds);
   display_bar(0, DISPLAY_RESY - 5 - 20, DISPLAY_RESX, 5 + 20, boot_background);
   ui_title_update();
   display_bar(0, 600, DISPLAY_RESX, 100, boot_background);
@@ -435,7 +434,7 @@ void ui_screen_done(int restart_seconds, secbool full_redraw) {
   const char *str;
   char count_str[24];
   if (restart_seconds >= 1) {
-    mini_snprintf(count_str, sizeof(count_str), "Done! Restarting in %d s",
+    snprintf(count_str, sizeof(count_str), "Done! Restarting in %d s",
                   restart_seconds);
     str = count_str;
   } else {
@@ -588,8 +587,8 @@ void ui_title_update(void) {
   }
   if (dev_pwr_source == 1) {
     offset_x += 4;
-    mini_snprintf(battery_str, sizeof(battery_str), "%d%%", battery_soc);
-    len = display_text_width(battery_str, -1, FONT_ROBOT_REGULAR_24);
+    snprintf(battery_str, sizeof(battery_str), "%d%%", battery_soc);
+    len = display_text_width(battery_str, -1, FONT_PJKS_REGULAR_20);
     offset_x += len;
     display_text(DISPLAY_RESX - offset_x, 24 + offset_y, battery_str, -1,
                  FONT_PJKS_REGULAR_20, COLOR_BL_SUBTITLE, boot_background);
