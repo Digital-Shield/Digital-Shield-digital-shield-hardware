@@ -1097,7 +1097,7 @@ void process_msg_SESignMessage(uint8_t iface_num, uint32_t msg_size,
   }
 }
 
-void process_msg_SEInitializePrepare(uint8_t iface_num, uint32_t msg_size,
+void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
                                 uint8_t *buf) {
   MSG_RECV_INIT(SEInitialize);
   MSG_RECV(SEInitialize);

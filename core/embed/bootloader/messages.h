@@ -72,9 +72,7 @@ void process_msg_ReadSEPublicCert(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf);
 void process_msg_SESignMessage(uint8_t iface_num, uint32_t msg_size,
                                uint8_t *buf);
-void process_msg_SEInitializePrepare(uint8_t iface_num, uint32_t msg_size,
-                               uint8_t *buf);
-void process_msg_SEBindPreSharedKey(uint8_t iface_num, uint32_t msg_size,
+void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
                                uint8_t *buf);
 void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
                                uint8_t *buf);

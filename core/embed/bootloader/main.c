@@ -395,7 +395,7 @@ secbool bootloader_usb_loop_factory(const vendor_header* const vhdr, const image
             process_msg_SESignMessage(USB_IFACE_NUM, msg_size, buf);
             break;
         case MSG_NAME_TO_ID(SEInitialize): // SEInitialize
-            process_msg_SEInitializePrepare(USB_IFACE_NUM, msg_size, buf);
+            process_msg_SEInitialize(USB_IFACE_NUM, msg_size, buf);
             break;
         case MSG_NAME_TO_ID(SEInitializeDone): // SEInitializeDone
             process_msg_SEInitializeDone(USB_IFACE_NUM, msg_size, buf);
