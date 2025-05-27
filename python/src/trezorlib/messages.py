@@ -395,6 +395,7 @@ class MessageType(IntEnum):
     FileInfoList = 10024
     SEInitialize = 10025
     SEInitializeDone = 10026
+    SEBackToRomBoot = 10027
 
 
 class FailureType(IntEnum):
@@ -4588,6 +4589,10 @@ class SEInitialize(protobuf.MessageType):
 
 class SEInitializeDone(protobuf.MessageType):
     MESSAGE_WIRE_TYPE = 10026
+
+
+class SEBackToRomBoot(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 10027
 
 
 class ResourceUpload(protobuf.MessageType):

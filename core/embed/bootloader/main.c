@@ -400,6 +400,9 @@ secbool bootloader_usb_loop_factory(const vendor_header* const vhdr, const image
         case MSG_NAME_TO_ID(SEInitializeDone): // SEInitializeDone
             process_msg_SEInitializeDone(USB_IFACE_NUM, msg_size, buf);
             break;
+        case MSG_NAME_TO_ID(SEBackToRomBoot): // SEInitializeDone
+            process_msg_SEBackToRomBoot(USB_IFACE_NUM, msg_size, buf);
+            break;
         case MSG_NAME_TO_ID(Reboot): // Reboot
             process_msg_Reboot(USB_IFACE_NUM, msg_size, buf);
             break;

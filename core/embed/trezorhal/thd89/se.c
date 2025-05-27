@@ -37,6 +37,8 @@ enum {
   // boot 下指令
   CMD_ID_VERIFY_APP = 0x90,
   CMD_ID_INSTALL_APP = 0x91,
+
+  CMD_ID_ROM_BL = 0xEF,
 };
 
 // struct for command and response
@@ -209,6 +211,24 @@ int se_launch(se_state_t state) {
     // 其他状态下会失败
     REQ_INIT_CMD(command, CMD_ID_LAUNCH);
     REQ_PAYLOAD(req, &state, 1);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+int se_back_to_rom_bl(void) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_ROM_BL);
+    REQ_EMPTY_PAYLOAD(req);
 
     thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
     // transmit result

@@ -608,6 +608,14 @@ message SEInitialize {
  message SEInitializeDone {
  }
 
+ /**
+  * Request: SE back to rom boot
+  * @end
+  */
+ message SEBackToRomBoot {
+ }
+
+
 /**
  * Request: Ask for uoload resource to device (wallpaper/nft pics, mp4)
  * @next ResourceRequest

@@ -535,4 +535,5 @@ enum MessageType {
     MessageType_FileInfoList = 10024 [(wire_out) = true];
     MessageType_SEInitialize = 10025 [(wire_in) = true, (wire_bootloader) = true];
     MessageType_SEInitializeDone = 10026 [(wire_in) = true, (wire_bootloader) = true];
+    MessageType_SEBackToRomBoot = 10027 [(wire_in) = true, (wire_bootloader) = true];
 }

@@ -36,6 +36,7 @@ typedef enum _MessageType {
     MessageType_MessageType_SEMessageSignature = 10013,
     MessageType_MessageType_SEInitialize = 10025,
     MessageType_MessageType_SEInitializeDone = 10026,
+    MessageType_MessageType_SEBackToRomBoot = 10027,
     MessageType_MessageType_Reboot = 30000,
     MessageType_MessageType_FirmwareUpdateEmmc = 30001,
     MessageType_MessageType_EmmcFixPermission = 30100,
@@ -339,6 +340,10 @@ typedef struct _SEInitializeDone {
     char dummy_field;
 } SEInitializeDone;
 
+typedef struct _SEBackToRomBoot {
+    char dummy_field;
+} SEBackToRomBoot;
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -377,6 +382,7 @@ extern "C" {
 
 
 #define Reboot_reboot_type_ENUMTYPE RebootType
+
 
 
 
@@ -442,6 +448,7 @@ extern "C" {
 #define SEMessageSignature_init_default          {{0, {0}}}
 #define SEInitialize_init_default                {0}
 #define SEInitializeDone_init_default            {0}
+#define SEBackToRomBoot_init_default             {0}
 #define Initialize_init_zero                     {0}
 #define GetFeatures_init_zero                    {0}
 #define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, ""}
@@ -480,6 +487,7 @@ extern "C" {
 #define SEMessageSignature_init_zero             {{0, {0}}}
 #define SEInitialize_init_zero                   {0}
 #define SEInitializeDone_init_zero               {0}
+#define SEBackToRomBoot_init_zero                {0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Features_vendor_tag                      1
@@ -826,6 +834,11 @@ X(a, STATIC,   REQUIRED, BYTES,    signature,         1)
 #define SEInitializeDone_CALLBACK NULL
 #define SEInitializeDone_DEFAULT NULL
 
+#define SEBackToRomBoot_FIELDLIST(X, a) \
+
+#define SEBackToRomBoot_CALLBACK NULL
+#define SEBackToRomBoot_DEFAULT NULL
+
 extern const pb_msgdesc_t Initialize_msg;
 extern const pb_msgdesc_t GetFeatures_msg;
 extern const pb_msgdesc_t Features_msg;
@@ -864,6 +877,7 @@ extern const pb_msgdesc_t SESignMessage_msg;
 extern const pb_msgdesc_t SEMessageSignature_msg;
 extern const pb_msgdesc_t SEInitialize_msg;
 extern const pb_msgdesc_t SEInitializeDone_msg;
+extern const pb_msgdesc_t SEBackToRomBoot_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define Initialize_fields &Initialize_msg
@@ -904,6 +918,7 @@ extern const pb_msgdesc_t SEInitializeDone_msg;
 #define SEMessageSignature_fields &SEMessageSignature_msg
 #define SEInitialize_fields &SEInitialize_msg
 #define SEInitializeDone_fields &SEInitializeDone_msg
+#define SEBackToRomBoot_fields &SEBackToRomBoot_msg
 
 /* Maximum encoded size of messages (where known) */
 /* FirmwareUpload_size depends on runtime parameters */
@@ -936,6 +951,7 @@ extern const pb_msgdesc_t SEInitializeDone_msg;
 #define ReadSEPublicCert_size                    0
 #define ReadSEPublicKey_size                     0
 #define Reboot_size                              2
+#define SEBackToRomBoot_size                     0
 #define SEInitializeDone_size                    0
 #define SEInitialize_size                        0
 #define SEMessageSignature_size                  66

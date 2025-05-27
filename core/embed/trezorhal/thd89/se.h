@@ -33,6 +33,7 @@ int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature);
 // 系统指令
 int se_reboot(void);
 int se_launch(se_state_t state);
+int se_back_to_rom_bl(void);
 
 // boot 下的指令
 int se_verify_app(void);

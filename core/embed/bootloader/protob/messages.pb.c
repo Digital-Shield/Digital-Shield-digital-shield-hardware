@@ -120,6 +120,9 @@ PB_BIND(SEInitialize, SEInitialize, AUTO)
 PB_BIND(SEInitializeDone, SEInitializeDone, AUTO)
 
 
+PB_BIND(SEBackToRomBoot, SEBackToRomBoot, AUTO)
+
+
 
 
 

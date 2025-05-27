@@ -1155,6 +1155,23 @@ void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
 
   send_success(iface_num, "SE prepare success");
 }
+void process_msg_SEBackToRomBoot(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf) {
+  MSG_RECV_INIT(SEBackToRomBoot);
+  MSG_RECV(SEBackToRomBoot);
+  if (0 != se_back_to_rom_bl()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE back to rom boot failed");
+    return;
+  }
+  if (0 != se_reboot()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE reboot failed");
+    return;
+  }
+  hal_delay(50);
+  se_conn_reset();
+
+  send_success(iface_num, "SE back to ROM boot success");
+}
 void process_msg_FirmwareEraseBLE(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf) {
   firmware_remaining = 0;

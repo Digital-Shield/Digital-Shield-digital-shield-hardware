@@ -369,3 +369,4 @@ if not utils.BITCOIN_ONLY:
     FileInfoList = 10024
     SEInitialize = 10025
     SEInitializeDone = 10026
+    SEBackToRomBoot = 10027

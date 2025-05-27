@@ -448,3 +448,8 @@ def se_initialize(client: "TrezorClient") -> "MessageType":
 def se_initialize_done(client: "TrezorClient") -> "MessageType":
     resp = client.call(messages.SEInitializeDone())
     return resp
+
+@session
+def se_back_to_rom_boot(client: "TrezorClient") -> "MessageType":
+    resp = client.call(messages.SEBackToRomBoot())
+    return resp

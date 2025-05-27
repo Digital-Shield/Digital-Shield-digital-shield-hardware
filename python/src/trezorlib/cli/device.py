@@ -806,3 +806,9 @@ def se_sign_cert_request(obj: "TrezorConnection", csr: str) -> dict:
         return {
             "signature": sig.hex()
         }
+
+# se-initialize
+@cli.command()
+@with_client
+def se_back_to_rom_boot(client: "TrezorClient") -> None:
+    device.se_back_to_rom_boot(client)
