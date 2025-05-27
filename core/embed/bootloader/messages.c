@@ -1105,11 +1105,6 @@ void process_msg_SEInitializePrepare(uint8_t iface_num, uint32_t msg_size,
     send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
     return;
   }
-  life_cycle_t lcs;
-  if (0 != se_get_life_cycle(&lcs) || lcs != LCS_FACTORY) {
-    send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
-    return;
-  }
   // 清除 SE 存储
   if (se_erase_storage() != 0) {
     send_failure(iface_num, FailureType_Failure_ProcessError,
