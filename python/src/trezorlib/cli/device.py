@@ -791,3 +791,18 @@ def se_initialize(client: "TrezorClient") -> None:
 @with_client
 def se_initialize_done(client: "TrezorClient") -> None:
     device.se_initialize_done(client)
+
+@cli.command()
+@click.pass_obj
+@click.argument("csr")
+def se_sign_cert_request(obj: "TrezorConnection", csr: str) -> dict:
+    """Get device se public key.
+
+    Used in device verify.
+    """
+    csr = bytes.fromhex(csr)
+    with obj.client_context() as client:
+        sig = device.se_sign_message(client, csr).signature
+        return {
+            "signature": sig.hex()
+        }
