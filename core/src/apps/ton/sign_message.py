@@ -31,12 +31,13 @@ if TYPE_CHECKING:
 async def sign_message(
     ctx: Context, msg: TonSignMessage, keychain: Keychain
 ) -> TonSignedMessage:
-    from trezor.utils import dump_protobuf_lines
-    print("\n".join(dump_protobuf_lines(msg)))
-    print("这是接收的参数: ", msg)
-    
+    if __debug__:
+        from trezor.utils import dump_protobuf_lines
+        print("\n".join(dump_protobuf_lines(msg)))
+        print("这是接收的参数: ", msg)
+
     # await paths.validate_path(ctx, keychain, msg.address_n)
-   
+
     node = keychain.derive(msg.address_n)
     public_key = seed.remove_ed25519_prefix(node.public_key())
     workchain = (
@@ -83,7 +84,7 @@ async def sign_message(
     recipient = Address(msg.destination).to_string(True, True)
 
 
-    amount = msg.ton_amount #jetton_amount if jetton_amount else 
+    amount = msg.ton_amount #jetton_amount if jetton_amount else
     if amount is None:
         raise ValueError("Amount cannot be None")
 
@@ -98,7 +99,7 @@ async def sign_message(
     #     payload = body
     # else:
     payload = ""
-    
+
      # 如果 seqno = 0，说明钱包还未激活，需要带上 state_init 激活信息
     if msg.seqno == 0:
         # 构建初始化状态数据（激活用）
@@ -139,9 +140,9 @@ async def sign_message(
         else:
             raise wire.DataError("Parse boc failed.")
     # print(f"Recipient: {recipient}, Amount: {amount}, Token: {token}")
-    
+
     print("msg.amount--",msg.ton_amount)
-    
+
     show_details = await require_show_overview_ton(
         ctx,
         "TON",
@@ -166,7 +167,26 @@ async def sign_message(
         raw_data=None,
     )
     await confirm_final(ctx, "TON")
-    
+    # if show_details:
+    #     has_raw_data = False
+    #     # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
+    #     node = keychain.derive(msg.address_n)
+    #     await require_confirm_fee_ton(
+    #         ctx,
+    #         msg.amount,
+    #         0,
+    #         1,
+    #         0,
+    #         token,
+    #         from_address=address,
+    #         to_address=msg.address,
+    #         contract_addr="0x",
+    #         token_id=1,
+    #         evm_chain_id=None,
+    #         raw_data=None,
+    #     )
+
+
     # await confirm_final(ctx, "TON")
     signature = ed25519.sign(node.private_key(), digest)
     print("signature------: ", signature)
