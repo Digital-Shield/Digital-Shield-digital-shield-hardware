@@ -142,6 +142,9 @@ int pm_init(void) {
     pm_enable_flag_bits(0x4C, (1<<7));
     pm_enable_flag_bits(PSTATE_CTL3, (1<<0));
 
+    // enable long press wakeup
+    pm_enable_flag_bits(PSTATE_CTL0, (1<<5));
+
     // set ONOFF time, 2 second
     pm_set_flag_bits(PSTATE_SET, (0x01<<1), 0x06);
 
@@ -160,7 +163,7 @@ int pm_init(void) {
 
     flag = 0xD7; //110 10111  600mAh
     i2c1_write_reg(IP6303_ADDR, CHG_DIG_CTL0, &flag, 1);
-    
+
     return 0;
 }
 
