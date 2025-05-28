@@ -359,7 +359,7 @@ class HoldConfirmAction(HolderConfirm):
         label.set_width(lv.pct(100))
         label.set_long_mode(lv.label.LONG.WRAP)
         label.set_style_text_align(lv.TEXT_ALIGN.CENTER, 0)
-        label.set_text(msg)
+        label.set_text("")
         label.align(lv.ALIGN.TOP_MID, 0, 16)
 
         self.holder.set_text(i18n.Button.hold_to_sign)

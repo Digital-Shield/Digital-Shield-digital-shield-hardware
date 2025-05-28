@@ -198,6 +198,8 @@ class Total(Modal):
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
+            #设置颜色为白色
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
             return item
 

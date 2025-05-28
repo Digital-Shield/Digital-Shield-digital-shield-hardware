@@ -151,27 +151,21 @@ async def sign_message(
         token,
         False,
     )
-    from trezor.ui.layouts import confirm_final
+    await require_confirm_fee_ton(
+        ctx,
+        msg.ton_amount,
+        0,
+        1,
+        -11,
+        token,
+        from_address=address,
+        to_address=msg.destination,
+        contract_addr=None,
+        token_id=None,
+        evm_chain_id=None,
+        raw_data=None,
+    )
     await confirm_final(ctx, "TON")
-    # if show_details:
-    #     has_raw_data = False
-    #     # await require_confirm_data(ctx, msg.data_initial_chunk, data_total)
-    #     node = keychain.derive(msg.address_n)
-    #     await require_confirm_fee_ton(
-    #         ctx,
-    #         msg.amount,
-    #         0,
-    #         1,
-    #         0,
-    #         token,
-    #         from_address=address,
-    #         to_address=msg.address,
-    #         contract_addr="0x",
-    #         token_id=1,
-    #         evm_chain_id=None,
-    #         raw_data=None,
-    #     )
-
     
     # await confirm_final(ctx, "TON")
     signature = ed25519.sign(node.private_key(), digest)
