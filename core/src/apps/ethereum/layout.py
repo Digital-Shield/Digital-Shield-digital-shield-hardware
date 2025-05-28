@@ -467,9 +467,18 @@ def format_ethereum_amount(
 ) -> str:
     if is_nft:
         return f"{value} NFT"
-    if token:
+    elif token:
         suffix = token.symbol
         decimals = token.decimals
+    elif chain_id == -10:
+        suffix = "SUI"
+        decimals = 9    
+    elif chain_id == -11:
+        suffix = "TON"
+        decimals = 9
+    elif chain_id == -12: 
+        suffix = "TRON"
+        decimals = 6    
     else:
         suffix = networks.shortcut_by_chain_id(chain_id)
         decimals = 18
@@ -490,6 +499,15 @@ def format_ethereum_amount_ton(
     if token:
         suffix = token.symbol
         decimals = token.decimals
+    elif chain_id == -10:
+        suffix = "SUI"
+        decimals = 9
+    elif chain_id == -11:
+        suffix = "TON"
+        decimals = 9
+    elif chain_id == -12:
+        suffix = "TRON"
+        decimals = 6    
     else:
         suffix = "Ton"
         decimals = 9
