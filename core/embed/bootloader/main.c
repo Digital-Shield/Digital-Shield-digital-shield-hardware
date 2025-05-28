@@ -615,6 +615,18 @@ int main(void)
     BLE_CTL_PIN_INIT();
     ble_function_on();
 
+#if FACTORY_MODE
+#warning "You are buid factory mode bootloader, this binary can't use in production"
+    // 进行生产
+    display_clear();
+    ui_fadein();
+    ui_bootloader_first(NULL);
+    if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
+    {
+        return 1;
+    }
+#endif
+
     if ( !serial_set )
     {
         serial_set = device_serial_set();
@@ -633,20 +645,6 @@ int main(void)
 #endif
     }
 
-#if FACTORY_MODE
-#warning "You are buid factory mode bootloader, this binary can't use in production"
-    // 进行生产
-    if (!serial_set || !cert_set)
-    {
-        display_clear();
-        ui_fadein();
-        ui_bootloader_first(NULL);
-        if ( bootloader_usb_loop_factory(NULL, NULL) != sectrue )
-        {
-            return 1;
-        }
-    }
-#endif
 
     if ( emmc_fs_path_exist("0:/res/.DIGITSHIELD_RESOURCE") == true )
     {
