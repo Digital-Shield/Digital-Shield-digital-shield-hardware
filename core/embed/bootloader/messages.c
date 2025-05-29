@@ -1101,20 +1101,31 @@ void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
                                 uint8_t *buf) {
   MSG_RECV_INIT(SEInitialize);
   MSG_RECV(SEInitialize);
+  int retry = 5;
   if (!se_is_running_app()) {
     send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
     return;
   }
-  // 清除 SE 存储
-  if (se_erase_storage() != 0) {
-    send_failure(iface_num, FailureType_Failure_ProcessError,
-                 "Erase storage failed");
-    return;
-  }
-  // 生成设备密钥
-  if (0 != se_gen_dev_keypair()) {
-    send_failure(iface_num, FailureType_Failure_ProcessError, "SE gen keypair failed");
-    return;
+  while (retry--) {
+    hal_delay(50);
+    // 清除 SE 存储
+    if (0 != se_erase_storage()) {
+      if (retry) {
+        continue;
+      }
+      send_failure(iface_num, FailureType_Failure_ProcessError, "Erase storage failed");
+      return;
+    }
+    hal_delay(50);
+    // 生成设备密钥
+    if (0 != se_gen_dev_keypair()) {
+      if (retry) {
+        continue;
+      }
+      send_failure(iface_num, FailureType_Failure_ProcessError, "SE gen keypair failed");
+      return;
+    }
+    break;
   }
 
   // 绑定通讯密钥
@@ -1126,7 +1137,7 @@ void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
     return;
   }
 
-  send_success(iface_num, "SE prepare success");
+  send_success(iface_num, "SE initialize success");
 }
 
 void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
@@ -1153,7 +1164,7 @@ void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
   hal_delay(50);
   se_conn_reset();
 
-  send_success(iface_num, "SE prepare success");
+  send_success(iface_num, "SE initialize done success");
 }
 void process_msg_SEBackToRomBoot(uint8_t iface_num, uint32_t msg_size,
                                 uint8_t *buf) {
