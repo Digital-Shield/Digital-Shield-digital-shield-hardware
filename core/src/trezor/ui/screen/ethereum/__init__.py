@@ -317,6 +317,8 @@ class TransactionDetail1559(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.contract)
         item.set_text(address)
+        #设置颜色为白色
+        item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
 
     def show_token_id(self, id: int):
         item = self.add(LabeledText)
