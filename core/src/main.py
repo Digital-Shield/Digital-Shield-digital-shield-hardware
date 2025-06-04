@@ -10,7 +10,7 @@
 # trezor imports only C modules
 import trezor
 # trezor.utils import only C modules
-from trezor import utils,log
+from trezor import config, utils,log, ui
 # we need space for 30 items in the trezor module
 utils.presize_module("trezor", 30)
 # storage imports storage.common, storage.cache and storage.device.
@@ -18,10 +18,24 @@ utils.presize_module("trezor", 30)
 import storage
 # we will need space for 12 items in the storage module
 utils.presize_module("storage", 12)
+
+def clear() -> None:
+    """if device is not initialized, pin is needless, so clear it"""
+    if not storage.device.is_initialized() and config.has_pin():
+        storage.wipe()
+    if config.has_pin() and config.get_pin_rem() == 0:
+        storage.wipe()
+
+config.init(None)
+ui.display.backlight(storage.device.get_brightness())
+clear()
+
 # initialize lvgl drivers
 import trezor.ui
 
 log.info("init", "trezor.ui successfully")
+
+utils.avi_play("0:/res/booting.avi")
 
 if not utils.BITCOIN_ONLY:
     # storage.fido2 only imports C modules
@@ -45,9 +59,10 @@ log.info("init", "trezor.pin successfully")
 unimport_manager = utils.unimport()
 
 # unlock the device, unload the boot module afterwards
-with unimport_manager:
-    import boot
-    del boot
+# with unimport_manager:
+#     import boot
+#     del boot
+
 
 # === Prepare the USB interfaces first. Do not connect to the host yet.
 # usb imports trezor.utils and trezor.io which is a C module

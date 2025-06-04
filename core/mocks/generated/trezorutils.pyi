@@ -101,6 +101,13 @@ def usb_data_connected() -> bool:
     Returns whether USB has been enumerated/configured
     (and is not just connected by cable without data pins)
     """
+
+
+# extmod/modtrezorutils/modtrezorutils.c
+def avi_play(path) -> None:
+    """
+    Play a video on screen
+    """
 SCM_REVISION: bytes
 BUILD_ID: bytes
 VERSION_MAJOR: int

@@ -9,70 +9,42 @@
 #include "lvgl.h"
 #if 1
 #include STM32_HAL_H
+#include "stm32h7xx_hal_jpeg.h"
+#include "stm32h7xx_hal_mdma.h"
 
 #include "ff.h"
 #include "irq.h"
 #include "mipi_lcd.h"
 #include "sdram.h"
 
-/*********************
- *      DEFINES
- *********************/
 #define CHUNK_SIZE_IN ((uint32_t)(4 * 1024))
 #define CHUNK_SIZE_OUT ((uint32_t)(64 * 1024))
-#define JPEG_BUFFER_EMPTY 0
-#define JPEG_BUFFER_FULL 1
-
-#define NB_INPUT_DATA_BUFFERS 2
 
 typedef struct {
-  volatile uint8_t State;
-  uint8_t *DataBuffer;
-  volatile uint32_t DataBufferSize;
+  uint8_t *p;
+  volatile uint32_t size;
+} jpeg_data_t;
 
-} JPEG_Data_BufferTypeDef;
+typedef int (*jpeg_get_data_func_t)(void);
 
-/**********************
- *      TYPEDEFS
- **********************/
-
-/**********************
- *  STATIC PROTOTYPES
- **********************/
 static lv_res_t decoder_info(struct _lv_img_decoder_t *decoder, const void *src,
                              lv_img_header_t *header);
 static lv_res_t decoder_open(lv_img_decoder_t *dec, lv_img_decoder_dsc_t *dsc);
 static void decoder_close(lv_img_decoder_t *dec, lv_img_decoder_dsc_t *dsc);
+static void jpeg_setup_data_from_file(void);
+static void jpeg_setup_data_from_buffer(uint8_t *p, size_t size);
+static int jpeg_get_data_from_file(void);
+static int jpeg_get_data_from_buffer(void);
 
-/**********************
- *  STATIC VARIABLES
- **********************/
-
-static JPEG_HandleTypeDef JPEG_Handle;
-static JPEG_ConfTypeDef JPEG_Info;
+static JPEG_HandleTypeDef JPEG_Handle = {0};
+static JPEG_ConfTypeDef JPEG_Info = {0};
 
 static lv_fs_file_t f;
 volatile uint32_t Jpeg_HWDecodingEnd = 0, Jpeg_HWDecodingError = 0;
 static uint32_t FrameBufferAddress;
-
-static uint8_t JPEG_Data_InBuffer0[CHUNK_SIZE_IN];
-static uint8_t JPEG_Data_InBuffer1[CHUNK_SIZE_IN];
-
-static JPEG_Data_BufferTypeDef Jpeg_IN_BufferTab[NB_INPUT_DATA_BUFFERS] = {
-    {JPEG_BUFFER_EMPTY, JPEG_Data_InBuffer0, 0},
-    {JPEG_BUFFER_EMPTY, JPEG_Data_InBuffer1, 0}};
-
-static uint32_t JPEG_IN_Read_BufferIndex = 0;
-static uint32_t JPEG_IN_Write_BufferIndex = 0;
-volatile uint32_t Input_Is_Paused = 0;
-
-/**********************
- *      MACROS
- **********************/
-
-/**********************
- *   GLOBAL FUNCTIONS
- **********************/
+static uint8_t jpeg_file_data_cache_buffer[CHUNK_SIZE_IN];
+static jpeg_data_t jpeg_in_data = {NULL, 0};
+static jpeg_get_data_func_t jpeg_get_data_func = NULL;
 
 void HAL_JPEG_MspInit(JPEG_HandleTypeDef *hjpeg) {
   static MDMA_HandleTypeDef hmdmaIn;
@@ -175,87 +147,20 @@ void MDMA_IRQHandler() {
   HAL_MDMA_IRQHandler(JPEG_Handle.hdmaout);
 }
 
-uint32_t JPEG_InputHandler(JPEG_HandleTypeDef *hjpeg) {
-  if (Jpeg_HWDecodingEnd == 0 && Jpeg_HWDecodingError == 0) {
-    if (Jpeg_IN_BufferTab[JPEG_IN_Write_BufferIndex].State ==
-        JPEG_BUFFER_EMPTY) {
-      if (lv_fs_read(&f,
-                     Jpeg_IN_BufferTab[JPEG_IN_Write_BufferIndex].DataBuffer,
-                     CHUNK_SIZE_IN,
-                     (uint32_t *)(&Jpeg_IN_BufferTab[JPEG_IN_Write_BufferIndex]
-                                       .DataBufferSize)) == LV_FS_RES_OK) {
-        Jpeg_IN_BufferTab[JPEG_IN_Write_BufferIndex].State = JPEG_BUFFER_FULL;
-      } else {
-        return 1;
-      }
-
-      if ((Input_Is_Paused == 1) &&
-          (JPEG_IN_Write_BufferIndex == JPEG_IN_Read_BufferIndex)) {
-        Input_Is_Paused = 0;
-        HAL_JPEG_ConfigInputBuffer(
-            hjpeg, Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBuffer,
-            Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize);
-
-        HAL_JPEG_Resume(hjpeg, JPEG_PAUSE_RESUME_INPUT);
-      }
-
-      JPEG_IN_Write_BufferIndex++;
-      if (JPEG_IN_Write_BufferIndex >= NB_INPUT_DATA_BUFFERS) {
-        JPEG_IN_Write_BufferIndex = 0;
-      }
-    }
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
 void HAL_JPEG_GetDataCallback(JPEG_HandleTypeDef *hjpeg,
                               uint32_t NbDecodedData) {
-#if 0
-  if (NbDecodedData ==
-      Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize) {
-    Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].State = JPEG_BUFFER_EMPTY;
-    Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize = 0;
 
-    JPEG_IN_Read_BufferIndex++;
-    if (JPEG_IN_Read_BufferIndex >= NB_INPUT_DATA_BUFFERS) {
-      JPEG_IN_Read_BufferIndex = 0;
-    }
-
-    if (Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].State ==
-        JPEG_BUFFER_EMPTY) {
-      HAL_JPEG_Pause(hjpeg, JPEG_PAUSE_RESUME_INPUT);
-      Input_Is_Paused = 1;
-    } else {
-      HAL_JPEG_ConfigInputBuffer(
-          hjpeg, Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBuffer,
-          Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize);
-    }
-  } else {
-    HAL_JPEG_ConfigInputBuffer(
-        hjpeg,
-        Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBuffer +
-        NbDecodedData,
-        Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize -
-            NbDecodedData);
-  }
-#endif
-  if (NbDecodedData ==
-      Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize) {
-    lv_fs_read(&f, Jpeg_IN_BufferTab[0].DataBuffer, CHUNK_SIZE_IN,
-               (uint32_t *)(&Jpeg_IN_BufferTab[0].DataBufferSize));
-    HAL_JPEG_ConfigInputBuffer(hjpeg, Jpeg_IN_BufferTab[0].DataBuffer,
-                               Jpeg_IN_BufferTab[0].DataBufferSize);
-  } else if (NbDecodedData <
-             Jpeg_IN_BufferTab[JPEG_IN_Read_BufferIndex].DataBufferSize) {
-    HAL_JPEG_ConfigInputBuffer(
-        hjpeg, Jpeg_IN_BufferTab[0].DataBuffer + NbDecodedData,
-        Jpeg_IN_BufferTab[0].DataBufferSize - NbDecodedData);
-    Jpeg_IN_BufferTab[0].DataBufferSize -= NbDecodedData;
+  if (NbDecodedData == jpeg_in_data.size) {
+    // consume all data, read an new block
+    jpeg_get_data_func();
+    HAL_JPEG_ConfigInputBuffer(hjpeg, jpeg_in_data.p, jpeg_in_data.size);
+  } else if (NbDecodedData < jpeg_in_data.size) {
+    // consume part, goon
+    HAL_JPEG_ConfigInputBuffer( hjpeg, jpeg_in_data.p + NbDecodedData, jpeg_in_data.size - NbDecodedData);
+    jpeg_in_data.size -= NbDecodedData;
   } else {
     HAL_JPEG_ConfigInputBuffer(hjpeg, NULL, 0);
-    Jpeg_IN_BufferTab[0].DataBufferSize = 0;
+    jpeg_in_data.size = 0;
   }
 }
 
@@ -263,9 +168,7 @@ void HAL_JPEG_DataReadyCallback(JPEG_HandleTypeDef *hjpeg, uint8_t *pDataOut,
                                 uint32_t OutDataLength) {
   /* Update JPEG encoder output buffer address*/
   FrameBufferAddress += OutDataLength;
-
-  HAL_JPEG_ConfigOutputBuffer(hjpeg, (uint8_t *)FrameBufferAddress,
-                              CHUNK_SIZE_OUT);
+  HAL_JPEG_ConfigOutputBuffer(hjpeg, (uint8_t *)FrameBufferAddress, CHUNK_SIZE_OUT);
 }
 
 void HAL_JPEG_InfoReadyCallback(JPEG_HandleTypeDef *hjpeg,
@@ -283,6 +186,9 @@ void HAL_JPEG_DecodeCpltCallback(JPEG_HandleTypeDef *hjpeg) {
  * Register the PNG decoder functions in LVGL
  */
 void lv_st_jpeg_init(void) {
+  if (JPEG_Handle.Instance == JPEG) {
+    return;
+  }
   JPEG_Handle.Instance = JPEG;
   HAL_JPEG_Init(&JPEG_Handle);
 
@@ -414,67 +320,55 @@ static lv_res_t decoder_open(lv_img_decoder_t *decoder,
 
   uint8_t *img_data = NULL;
 
-  /*If it's a PNG file...*/
-  if (dsc->src_type == LV_IMG_SRC_FILE) {
-    const char *fn = dsc->src;
-    if (strncmp(lv_fs_get_ext(fn), "jpg", strlen("jpg")) == 0 ||
-        strncmp(lv_fs_get_ext(fn), "jpeg", strlen("jpeg")) == 0) {
-      /*Check the extension*/
-      // volatile uint32_t JpegProcessing_End = 0;
-      Jpeg_HWDecodingEnd = 0;
-      Jpeg_HWDecodingError = 0;
-      FrameBufferAddress = FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS;
-
-      lv_fs_res_t res = lv_fs_open(&f, fn, LV_FS_MODE_RD);
-      if (res != LV_FS_RES_OK) {
-        return LV_RES_INV;
-      }
-
-      /* Read from JPG file and fill input buffers */
-      for (uint32_t i = 0; i < 1; i++) {
-        if (lv_fs_read(&f, Jpeg_IN_BufferTab[i].DataBuffer, CHUNK_SIZE_IN,
-                       (uint32_t *)(&Jpeg_IN_BufferTab[i].DataBufferSize)) ==
-            LV_FS_RES_OK) {
-          Jpeg_IN_BufferTab[i].State = JPEG_BUFFER_FULL;
-        } else {
-          return LV_RES_INV;
-        }
-      }
-
-      /* Start JPEG decoding with DMA method */
-      HAL_JPEG_Decode_DMA(&JPEG_Handle, Jpeg_IN_BufferTab[0].DataBuffer,
-                          Jpeg_IN_BufferTab[0].DataBufferSize,
-                          (uint8_t *)FrameBufferAddress, CHUNK_SIZE_OUT);
-
-      // do {
-      //   JpegProcessing_End = JPEG_InputHandler(&JPEG_Handle);
-      // } while (JpegProcessing_End == 0);
-
-      while ((Jpeg_HWDecodingEnd == 0) && (Jpeg_HWDecodingError == 0))
-        ;
-
-      lv_fs_close(&f);
-      if (Jpeg_HWDecodingError == 1) {
-        return LV_RES_INV;
-      }
-      HAL_JPEG_GetInfo(&JPEG_Handle, &JPEG_Info);
-
-      img_data =
-          lodepng_malloc(JPEG_Info.ImageWidth * JPEG_Info.ImageHeight * 2);
-      if (!img_data) {
-        return LV_RES_INV;
-      }
-      dma2d_copy_ycbcr_to_rgb(
-          (uint32_t *)FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS,
-          (uint32_t *)img_data, JPEG_Info.ImageWidth, JPEG_Info.ImageHeight,
-          JPEG_Info.ChromaSubsampling);
-
-      dsc->img_data = img_data;
-      return LV_RES_OK; /*The image is fully decoded. Return with its pointer*/
-    }
+  /*If it's not a file...*/
+  if (dsc->src_type != LV_IMG_SRC_FILE) {
+    return LV_RES_INV;
   }
 
-  return LV_RES_INV; /*If not returned earlier then it failed*/
+  const char *fn = dsc->src;
+  // if it's not a jpeg file
+  if (strncmp(lv_fs_get_ext(fn), "jpg", strlen("jpg")) != 0 &&
+      strncmp(lv_fs_get_ext(fn), "jpeg", strlen("jpeg")) != 0) {
+        return LV_RES_INV;
+  }
+
+  Jpeg_HWDecodingEnd = 0;
+  Jpeg_HWDecodingError = 0;
+  FrameBufferAddress = FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS;
+
+  lv_fs_res_t res = lv_fs_open(&f, fn, LV_FS_MODE_RD);
+  if (res != LV_FS_RES_OK) {
+    return LV_RES_INV;
+  }
+  // decode from file
+  jpeg_setup_data_from_file();
+  if (lv_fs_read(&f, jpeg_in_data.p, CHUNK_SIZE_IN, (uint32_t *)(&jpeg_in_data.size)) != LV_FS_RES_OK) {
+    lv_fs_close(&f);
+    return LV_RES_INV;
+  }
+
+  /* Start JPEG decoding with DMA method */
+  HAL_JPEG_Decode_DMA(&JPEG_Handle, jpeg_in_data.p,
+                      jpeg_in_data.size,
+                      (uint8_t *)FrameBufferAddress, CHUNK_SIZE_OUT);
+
+  while ((Jpeg_HWDecodingEnd == 0) && (Jpeg_HWDecodingError == 0));
+  lv_fs_close(&f);
+  if (Jpeg_HWDecodingError == 1) {
+    return LV_RES_INV;
+  }
+  HAL_JPEG_GetInfo(&JPEG_Handle, &JPEG_Info);
+
+  img_data = lodepng_malloc(JPEG_Info.ImageWidth * JPEG_Info.ImageHeight * 2);
+  if (!img_data) {
+    return LV_RES_INV;
+  }
+  dma2d_copy_ycbcr_to_rgb(
+      (uint32_t *)FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS,
+      (uint32_t *)img_data, JPEG_Info.ImageWidth, JPEG_Info.ImageHeight,
+      JPEG_Info.ChromaSubsampling);
+  dsc->img_data = img_data;
+  return LV_RES_OK;
 }
 
 /**
@@ -488,5 +382,45 @@ static void decoder_close(lv_img_decoder_t *decoder,
     dsc->img_data = NULL;
   }
 }
+static void jpeg_setup_data_from_file(void) {
+  jpeg_in_data.p = jpeg_file_data_cache_buffer;
+  jpeg_in_data.size = 0;
+  jpeg_get_data_func = jpeg_get_data_from_file;
+}
 
+static void jpeg_setup_data_from_buffer(uint8_t* p, size_t size) {
+  jpeg_in_data.p = p;
+  jpeg_in_data.size = size;
+  jpeg_get_data_func = jpeg_get_data_from_buffer;
+}
+
+static int jpeg_get_data_from_file(void) {
+  return lv_fs_read(&f, jpeg_in_data.p, CHUNK_SIZE_IN, (uint32_t *)(&jpeg_in_data.size));
+}
+static int jpeg_get_data_from_buffer(void) {
+  // do nothing
+  return 0;
+}
+
+void decode_to_lcd(const uint8_t* buf, size_t size) {
+  Jpeg_HWDecodingEnd = 0;
+  Jpeg_HWDecodingError = 0;
+  jpeg_setup_data_from_buffer((uint8_t*)buf, size);
+  FrameBufferAddress = FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS;
+  /* Start JPEG decoding with DMA method */
+  HAL_JPEG_Decode_DMA(&JPEG_Handle, jpeg_in_data.p,
+                      jpeg_in_data.size,
+                      (uint8_t *)FrameBufferAddress, CHUNK_SIZE_OUT);
+
+  while ((Jpeg_HWDecodingEnd == 0) && (Jpeg_HWDecodingError == 0));
+
+  HAL_JPEG_GetInfo(&JPEG_Handle, &JPEG_Info);
+  dma2d_copy_ycbcr_to_rgb(
+    (uint32_t*)FMC_SDRAM_JPEG_OUTPUT_DATA_BUFFER_ADDRESS,
+    (uint32_t*)FMC_SDRAM_LTDC_BUFFER_ADDRESS,
+    JPEG_Info.ImageWidth,
+    JPEG_Info.ImageHeight,
+    JPEG_Info.ChromaSubsampling
+  );
+}
 #endif

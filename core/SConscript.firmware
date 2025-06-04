@@ -473,6 +473,7 @@ SOURCE_TREZORHAL = [
     'embed/trezorhal/touch.c',
     'embed/trezorhal/button.c',
     'embed/trezorhal/power_manager.c',
+    'embed/trezorhal/avi_parser.c',
 ]
 
 SOURCE_NANOPB = [

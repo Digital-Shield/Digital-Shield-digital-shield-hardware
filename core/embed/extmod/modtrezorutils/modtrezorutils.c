@@ -19,6 +19,8 @@
 
 #include "py/objstr.h"
 #include "py/runtime.h"
+#include "sdram.h"
+#include "stm32h7xx_hal.h"
 #ifndef TREZOR_EMULATOR
 #include "supervise.h"
 #endif
@@ -31,6 +33,7 @@
 #include "embed/extmod/trezorobj.h"
 
 #include <string.h>
+#include <stdio.h>
 #include "blake2s.h"
 #include "device.h"
 #include "common.h"
@@ -40,7 +43,9 @@
 #ifndef TREZOR_EMULATOR
 #include "br_check.h"
 #include "image.h"
-#include "mini_printf.h"
+#include "fatfs/ff.h"
+#include "avi_parser.h"
+#include "lv_jpeg_stm32.h"
 #endif
 
 static void ui_progress(mp_obj_t ui_wait_callback, uint32_t current,
@@ -264,7 +269,7 @@ STATIC mp_obj_t mod_trezorutils_boot_version(void) {
 
   memcpy(&version, boot_header + 16, 4);
 
-  mini_snprintf(ver_str, sizeof(ver_str), "%d.%d.%d", (int)(version & 0xFF),
+  snprintf(ver_str, sizeof(ver_str), "%d.%d.%d", (int)(version & 0xFF),
                 (int)((version >> 8) & 0xFF), (int)((version >> 16) & 0xFF));
   return mp_obj_new_str_copy(&mp_type_str, (const uint8_t *)ver_str,
                              strlen(ver_str));
@@ -319,6 +324,67 @@ static mp_obj_t mod_trezorutils_power_off(void) {
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_off_obj, mod_trezorutils_power_off);
 
+/// def avi_play(path) -> None:
+///     """
+///     Play a video on screen
+///     """
+///
+static mp_obj_t mod_trezorutils_avi_play(mp_obj_t path) {
+  if (!MP_OBJ_IS_STR(path)) {
+    mp_raise_msg(&mp_type_ValueError, "Invalid path type");
+    return mp_const_none;
+  }
+  mp_buffer_info_t bi;
+  if (!mp_get_buffer(path, &bi, MP_BUFFER_READ)) {
+    mp_raise_msg(&mp_type_ValueError, "Invalid path type");
+    return mp_const_none;
+  }
+  if (bi.len == 0) {
+    mp_raise_msg(&mp_type_ValueError, "Invalid path, empty string");
+    return mp_const_none;
+  }
+
+  FIL f;
+  if (f_open(&f, (const char *)bi.buf, FA_READ) != FR_OK) {
+    // can't open the avi file
+    mp_raise_msg(&mp_type_ValueError, "Invalid path, can't open file");
+    return mp_const_none;
+  }
+
+  AVI_CONTEXT avi;
+  // reuse a buffer
+  uint8_t *video = (uint8_t*) FMC_SDRAM_IMAGE_BUFFER_ADDRESS;
+  if (AVI_ParserInit(&avi, &f, video, FMC_SDRAM_IMAGE_BUFFER_LEN, NULL, 0) != 0) {
+    goto err;
+  }
+
+  // reuse lvgl `lv_jpeg_stm32.h`
+  lv_st_jpeg_init();
+  // decode avi
+  volatile uint32_t start = HAL_GetTick();
+
+  do {
+    uint32_t frame_type = AVI_GetFrame(&avi, &f);
+    if (frame_type != AVI_VIDEO_FRAME) {
+      continue;
+    }
+    avi.CurrentImage++;
+    extern void decode_to_lcd(const uint8_t* buf, size_t size);
+    decode_to_lcd(video, avi.FrameSize);
+    uint32_t duration = (HAL_GetTick() - start) + 1;
+    uint32_t cur_frame_until = (avi.aviInfo.SecPerFrame/1000) * avi.CurrentImage;
+    if (duration < cur_frame_until) {
+      HAL_Delay(cur_frame_until - duration);
+    }
+  }while (avi.CurrentImage < avi.aviInfo.TotalFrame);
+
+err:
+  f_close(&f);
+  memset(video, 0, FMC_SDRAM_IMAGE_BUFFER_LEN);
+  return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorutils_avi_play_obj, mod_trezorutils_avi_play);
+
 /// SCM_REVISION: bytes
 /// BUILD_ID: bytes
 /// VERSION_MAJOR: int
@@ -350,6 +416,7 @@ STATIC const mp_rom_map_elem_t mp_module_trezorutils_globals_table[] = {
 
     {MP_ROM_QSTR(MP_QSTR_usb_data_connected),
      MP_ROM_PTR(&mod_trezorutils_usb_data_connected_obj)},
+    {MP_ROM_QSTR(MP_QSTR_avi_play), MP_ROM_PTR(&mod_trezorutils_avi_play_obj)},
     // various built-in constants
     {MP_ROM_QSTR(MP_QSTR_SCM_REVISION),
      MP_ROM_PTR(&mod_trezorutils_revision_obj)},
