@@ -123,7 +123,7 @@ async def sign_tx_eip1559(
             contract_addr=address_from_bytes(address_bytes, network)
             if token_id is not None
             else None,
-            token_id=token_id,
+            token_id=None,
             evm_chain_id=None
             if network is not networks.UNKNOWN_NETWORK
             else msg.chain_id,
