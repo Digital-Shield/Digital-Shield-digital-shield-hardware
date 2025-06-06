@@ -34,8 +34,10 @@ clear()
 import trezor.ui
 
 log.info("init", "trezor.ui successfully")
-
-utils.avi_play("0:/res/booting.avi")
+try:
+    utils.avi_play("0:/res/booting.avi")
+except Exception as e:
+    log.exception(__name__, e)
 
 if not utils.BITCOIN_ONLY:
     # storage.fido2 only imports C modules
