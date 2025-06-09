@@ -47,7 +47,8 @@ from trezor.wire.errors import ActionCancelled, DataError, Error
 # Import all errors into namespace, so that `wire.Error` is available from
 # other packages.
 from trezor.wire.errors import *  # isort:skip # noqa: F401,F403
-from trezor.utils import dump_protobuf_lines
+if __debug__:
+    from trezor.utils import dump_protobuf_lines
 
 if TYPE_CHECKING:
     from typing import (
@@ -318,9 +319,9 @@ class Context:
 
     async def write(self, msg: protobuf.MessageType) -> None:
         #格式化打印下res_msg
-        print("\n".join(dump_protobuf_lines(msg)))
-        print("res_msg--"+str(msg))
         if __debug__:
+            print("\n".join(dump_protobuf_lines(msg)))
+            print("res_msg--"+str(msg))
             log.debug(
                 __name__,
                 "%s:%x write: %s",

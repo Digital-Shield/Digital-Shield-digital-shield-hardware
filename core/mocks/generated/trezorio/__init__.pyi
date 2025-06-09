@@ -10,12 +10,12 @@ class Battery:
         """
         """
 
-    def exist(self) -> bool:
+    def exist(self) -> bool
         """
-        check battery is present
+        check weather battery is present
         """
 
-    def charging(self) -> bool:
+    def charging(self) -> bool
         """
         check weather battery is charging
         """

@@ -31,6 +31,7 @@ enum MessageType {
     MessageType_SEMessageSignature = 10013;
     MessageType_SEInitialize = 10025;
     MessageType_SEInitializeDone = 10026;
+    MessageType_SEBackToRomBoot = 10027;
 
     MessageType_Reboot = 30000;
     MessageType_FirmwareUpdateEmmc = 30001;
@@ -496,4 +497,11 @@ message SEInitialize {
   * @end
   */
  message SEInitializeDone {
+ }
+
+ /**
+  * Request: SE back to rom boot
+  * @end
+  */
+ message SEBackToRomBoot {
  }

@@ -3240,6 +3240,12 @@ if TYPE_CHECKING:
         def is_type_of(cls, msg: Any) -> TypeGuard["SEInitializeDone"]:
             return isinstance(msg, cls)
 
+    class SEBackToRomBoot(protobuf.MessageType):
+
+        @classmethod
+        def is_type_of(cls, msg: Any) -> TypeGuard["SEBackToRomBoot"]:
+            return isinstance(msg, cls)
+
     class ResourceUpload(protobuf.MessageType):
         extension: "str"
         data_length: "int"

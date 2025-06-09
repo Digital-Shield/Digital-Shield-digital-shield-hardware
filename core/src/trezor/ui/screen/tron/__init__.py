@@ -116,6 +116,8 @@ class TransactionDetail(Modal):
             item = LabeledText(self.content)
             item.set_label(label)
             item.set_text(text)
+            #设置颜色为白色
+            item.set_style_text_color(colors.STD.WHITE, lv.PART.MAIN)
             return item
 
         # amount
@@ -133,7 +135,7 @@ class TransactionDetail(Modal):
         # total
         if total is not None:
             item = labeled(i18n.Text.total, total)
-            item.label.set_style_text_color(colors.DS.BLACK, lv.PART.MAIN)
+            item.label.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
             item.label.set_style_text_font(font.bold, lv.PART.MAIN)
 
         self.btn_reject = self.btn_left

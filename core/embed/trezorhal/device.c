@@ -9,7 +9,6 @@
 #include "display.h"
 #include "emmc.h"
 #include "flash.h"
-#include "mini_printf.h"
 #include "qspi_flash.h"
 #include "rand.h"
 #include "sha2.h"

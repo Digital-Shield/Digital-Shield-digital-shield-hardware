@@ -791,3 +791,20 @@ def se_initialize(client: "TrezorClient") -> None:
 @with_client
 def se_initialize_done(client: "TrezorClient") -> None:
     device.se_initialize_done(client)
+
+@cli.command()
+@click.pass_obj
+@click.argument("csr")
+def se_sign_cert_request(obj: "TrezorConnection", csr: str) -> dict:
+    csr = bytes.fromhex(csr)
+    with obj.client_context() as client:
+        sig = device.se_sign_message(client, csr).signature
+        return {
+            "signature": sig.hex()
+        }
+
+# se-initialize
+@cli.command()
+@with_client
+def se_back_to_rom_boot(client: "TrezorClient") -> None:
+    device.se_back_to_rom_boot(client)

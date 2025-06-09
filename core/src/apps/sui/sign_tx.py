@@ -10,6 +10,7 @@ from .helper import INTENT_BYTES, sui_address_from_pubkey
 from . import ICON
 from ..ethereum.layout import (
     require_show_overview_ton,
+    require_confirm_fee_ton
 )
 
 @auto_keychain(__name__)
@@ -38,9 +39,23 @@ async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiS
         "SUI",
         msg.destination,
         msg.sui_amount,
-        0,
+        -10,
         None,
         False,
+    )
+    await require_confirm_fee_ton(
+        ctx,
+        msg.sui_amount,
+        0,
+        1,
+        -10,
+        token=None,
+        from_address=address,
+        to_address=msg.destination,
+        contract_addr=None,
+        token_id=None,
+        evm_chain_id=None,
+        raw_data=None,
     )
     await confirm_final(ctx, "SUI")
     signature = ed25519.sign(

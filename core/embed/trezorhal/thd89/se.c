@@ -12,6 +12,12 @@
 #include "se_spi.h"
 #include "alignment.h"
 #include "sha2.h"
+#include "device.h"
+
+bool pcbv10_se_get_pubkey(uint8_t pubkey[65]);
+bool pcbv10_se_get_certificate_len(size_t *cert_len);
+bool pcbv10_se_read_certificate(uint8_t *cert, size_t *cert_len);
+bool pcbv10_se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature);
 
 enum {
   // 设备相关指令
@@ -31,6 +37,8 @@ enum {
   // boot 下指令
   CMD_ID_VERIFY_APP = 0x90,
   CMD_ID_INSTALL_APP = 0x91,
+
+  CMD_ID_ROM_BL = 0xEF,
 };
 
 // struct for command and response
@@ -215,8 +223,29 @@ int se_launch(se_state_t state) {
     }
     return 0;
 }
+int se_back_to_rom_bl(void) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_ROM_BL);
+    REQ_EMPTY_PAYLOAD(req);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
 
 int se_get_dev_pubkey(uint8_t pubkey[65]) {
+    if (PCB_IS_V1_0()) {
+        return pcbv10_se_get_pubkey(pubkey) ? 0:1;
+    }
     uint8_t command[3] = {0};
     uint8_t response[128] = { 0 };
     size_t response_size = 0;
@@ -243,6 +272,9 @@ int se_get_dev_pubkey(uint8_t pubkey[65]) {
 
 
 int se_get_certificate_len(size_t *cert_len) {
+    if (PCB_IS_V1_0()) {
+        return pcbv10_se_get_certificate_len(cert_len) ? 0:1;
+    }
     *cert_len = 0;
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
@@ -268,6 +300,9 @@ int se_get_certificate_len(size_t *cert_len) {
 }
 
 int se_read_certificate(uint8_t *cert, size_t *cert_len) {
+    if (PCB_IS_V1_0()) {
+        return pcbv10_se_read_certificate(cert, cert_len) ? 0:1;
+    }
     uint8_t command[3] = {0};
     uint8_t response[1024] = {0};
     size_t response_size = 0;
@@ -283,12 +318,18 @@ int se_read_certificate(uint8_t *cert, size_t *cert_len) {
     if (resp->code != RESP_CODE_SUCCESS) {
         return 1;
     }
+    if (*cert_len < response_get_length(resp)) {
+        return 1;
+    }
     *cert_len = response_get_length(resp);
     memcpy(cert, resp->payload, *cert_len);
     return 0;
 }
 
 int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature) {
+    if (PCB_IS_V1_0()) {
+        return pcbv10_se_sign_message(msg, msg_len, signature) ? 0:1;
+    }
     uint8_t command[1024] = {0};
     uint8_t response[128] = {0};
     size_t response_size = 0;
@@ -406,6 +447,90 @@ void se_conn_reset(void) {
     // reset thd89 connection
     thd89_reset();
 }
+
+
+/// pcb v1.0 device cert
+typedef struct
+{
+    uint8_t tag[4]; // SK PK or CERT
+    uint32_t length; // length of item
+    uint8_t data[0]; // item data
+}se_obj_t;
+
+typedef struct {
+    uint8_t magic[16]; // 'SE-STORAGE'
+    uint8_t sk[128]; // SK item
+    uint8_t pk[256]; // PK item
+    uint8_t cert[2048]; // cert item
+} se_storage_t;
+
+#define SE_STORAGE_FILED_SIZE(filed) sizeof(((se_storage_t *)0)->filed)
+#define SE_STORAGE_MAGIC "SE-STORAGE"
+
+#include "flash.h"
+#include "stddef.h"
+#include "string.h"
+#include "nist256p1.h"
+#include "ecdsa.h"
+#include "sha2.h"
+
+static const void* se_storage_ptr(uint32_t offset, uint32_t size) {
+    return flash_get_address(FLASH_SECTOR_SE_STORAGE, offset, size);
+}
+#define se_storage_magic_ptr() se_storage_ptr(offsetof(se_storage_t, magic), SE_STORAGE_FILED_SIZE(magic))
+#define se_storage_sk_ptr() se_storage_ptr(offsetof(se_storage_t, sk), SE_STORAGE_FILED_SIZE(sk))
+#define se_storage_pk_ptr() se_storage_ptr(offsetof(se_storage_t, pk), SE_STORAGE_FILED_SIZE(pk))
+#define se_storage_cert_ptr() se_storage_ptr(offsetof(se_storage_t, cert), SE_STORAGE_FILED_SIZE(cert))
+bool pcbv10_se_get_pubkey(uint8_t pubkey[65]) {
+    se_obj_t *obj = (se_obj_t *)se_storage_pk_ptr();
+    if (memcmp(obj->tag, "PK", 2) != 0) {
+        return false;
+    }
+    memcpy(pubkey, obj->data, 65);
+    return true;
+}
+
+bool pcbv10_se_get_certificate_len(size_t *cert_len) {
+    *cert_len = 0;
+    se_obj_t *obj = (se_obj_t *)se_storage_cert_ptr();
+    if (memcmp(obj->tag, "CERT", 4) != 0) {
+        return false;
+    }
+    *cert_len = obj->length;
+    return true;
+}
+
+bool pcbv10_se_read_certificate(uint8_t *cert, size_t *cert_len) {
+    se_obj_t *obj = (se_obj_t *)se_storage_cert_ptr();
+    if (memcmp(obj->tag, "CERT", 4) != 0) {
+        *cert_len = 0;
+        return false;
+    }
+    if (*cert_len < obj->length) {
+        *cert_len = obj->length;
+        return false;
+    }
+    memcpy(cert, obj->data, obj->length);
+    *cert_len = obj->length;
+    return true;
+}
+
+bool pcbv10_se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature) {
+    // 1. digest(msg)
+    uint8_t digest[32] = {0};
+    sha256_Raw(msg, msg_len, digest);
+
+    // 2. get sk
+    se_obj_t *obj = (se_obj_t *)se_storage_sk_ptr();
+    if (memcmp(obj->tag, "SK", 2) != 0) {
+        return false;
+    }
+
+    // 2. sign
+    ecdsa_sign_digest(&nist256p1, obj->data, digest, signature, NULL, NULL);
+    return true;
+}
+/// pcb v1.0 end
 
 #include "ecdsa.h"
 #include "nist256p1.h"

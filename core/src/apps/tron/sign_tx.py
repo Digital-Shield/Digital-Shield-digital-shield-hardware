@@ -10,7 +10,9 @@ from apps.tron.address import _address_base58, get_address_from_public_key
 from apps.tron.serialize import serialize
 
 from . import ICON, PRIMARY_COLOR, layout, tokens
-
+from ..ethereum.layout import (
+    require_confirm_fee_ton
+)
 
 @auto_keychain(__name__)
 async def sign_tx(
@@ -54,11 +56,24 @@ async def _require_confirm_by_type(ctx, transaction, owner_address):
     if contract.transfer_contract:
         if contract.transfer_contract.amount is None:
             raise wire.DataError("Invalid Tron transfer amount")
-
         await layout.require_confirm_tx(
             ctx,
             contract.transfer_contract.to_address,
             contract.transfer_contract.amount,
+        )
+        await require_confirm_fee_ton(
+                ctx,
+                contract.transfer_contract.amount,
+                0,
+                1,
+                -12,
+                token=None,
+                from_address=owner_address,
+                to_address=contract.transfer_contract.to_address,
+                contract_addr=None,
+                token_id=None,
+                evm_chain_id=None,
+                raw_data=None,
         )
     elif contract.trigger_smart_contract:
         # check if TRC20 transfer/approval

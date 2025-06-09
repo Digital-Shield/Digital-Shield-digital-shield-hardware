@@ -387,6 +387,7 @@ if TYPE_CHECKING:
         FileInfoList = 10024
         SEInitialize = 10025
         SEInitializeDone = 10026
+        SEBackToRomBoot = 10027
 
     class FailureType(IntEnum):
         UnexpectedMessage = 1

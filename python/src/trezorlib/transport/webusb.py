@@ -151,6 +151,11 @@ class WebUsbTransport(ProtocolBasedTransport):
                     handle = dev.open()
                     handle.resetDevice()
                     handle.close()
+            except :
+                LOG.warning(
+                    f"Failed to enumerate WebUSB device {dev_to_str(dev)}"
+                )
+                pass
         return devices
 
     def find_debug(self) -> "WebUsbTransport":
