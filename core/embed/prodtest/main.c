@@ -99,7 +99,7 @@ static void usb_init_all(void) {
       .device_subclass = 0x02,  // Common Class
       .device_protocol = 0x01,  // Interface Association Descriptor
       .vendor_id = 0x1209,
-      .product_id = 0x53C1,
+      .product_id = 0x4444,
       .release_num = 0x0400,
       .manufacturer = "SatoshiLabs",
       .product = "TREZOR",

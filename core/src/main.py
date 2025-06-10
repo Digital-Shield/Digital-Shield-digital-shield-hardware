@@ -30,6 +30,10 @@ config.init(None)
 ui.display.backlight(storage.device.get_brightness())
 clear()
 
+if not config.has_pin():
+    config.unlock("", None)
+    storage.init_unlocked()
+
 # initialize lvgl drivers
 import trezor.ui
 
