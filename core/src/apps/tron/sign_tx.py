@@ -20,6 +20,9 @@ async def sign_tx(
 ) -> TronSignedTx:
     """Parse and sign TRX transaction"""
 
+    # if hasattr(msg, "data") and msg.data in ("\x00", b"\x00"):
+    #     msg.data = None
+
     validate(msg)
     address_n = msg.address_n or ()
     await paths.validate_path(ctx, keychain, msg.address_n)
@@ -45,8 +48,8 @@ async def sign_tx(
 
 async def _require_confirm_by_type(ctx, transaction, owner_address):
     # Confirm extra data if exist
-    if transaction.data:
-        await layout.require_confirm_data(ctx, transaction.data, len(transaction.data))
+    # if transaction.data:
+    #     await layout.require_confirm_data(ctx, transaction.data, len(transaction.data))
 
     # Confirm transaction
     contract = transaction.contract
@@ -97,6 +100,7 @@ async def _require_confirm_by_type(ctx, transaction, owner_address):
             )
             recipient = _address_base58(b"\x41" + data[16:36])
             value = int.from_bytes(data[36:68], "big")
+
             await layout.require_confirm_trigger_trc20(
                 ctx,
                 False if token is tokens.UNKNOWN_TOKEN else True,
@@ -180,7 +184,11 @@ async def _require_confirm_by_type(ctx, transaction, owner_address):
         )
     else:
         raise wire.DataError("Invalid transaction type")
-    # print("第二步确认")
+
+    # Confirm extra data if exist
+    if transaction.data:
+        await layout.require_confirm_data(ctx, transaction.data, len(transaction.data))
+
     await confirm_final(ctx, "TRON")
 
 

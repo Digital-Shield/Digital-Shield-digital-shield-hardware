@@ -347,6 +347,7 @@ static void send_msg_features(uint8_t iface_num,
     init_state |= device_serial_set() ? 1 : 0;
     init_state |= se_get_certificate_len(&cert_len) == 0 ? (1 << 2) : 0;
     MSG_SEND_ASSIGN_VALUE(initstates, init_state);
+    MSG_SEND_ASSIGN_VALUE(onekey_device_type, OneKeyDeviceType_PRO);
 
   } else {
     MSG_SEND_ASSIGN_STRING(vendor, "Digitshield.so");
@@ -387,7 +388,9 @@ static void send_msg_features(uint8_t iface_num,
     char *board_version = get_boardloader_version();
     MSG_SEND_ASSIGN_STRING_LEN(boardloader_version, board_version,
                                strlen(board_version));
+    MSG_SEND_ASSIGN_VALUE(onekey_device_type, OneKeyDeviceType_PRO);
   }
+
 
   MSG_SEND(Features);
 }

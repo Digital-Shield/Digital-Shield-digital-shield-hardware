@@ -29,7 +29,7 @@ TREZOR_T = TrezorModel(
     name="T",
     minimum_version=(1, 1, 0),
     vendors=VENDORS,
-    usb_ids=((0x1209, 0x53C1), (0x1209, 0x53C0), (0x1209, 0x4F4B), (0x1209, 0x4F4A)),
+    usb_ids=((0x1209, 0x53C1), (0x1209, 0x53C0), (0x1209, 0x4F4B), (0x1209, 0x4F4A), (0x1209, 0x4444), (0x1209, 0x4443)),
     default_mapping=mapping.DEFAULT_MAPPING,
 )
 
@@ -37,11 +37,19 @@ TREZOR_R = TrezorModel(
     name="R",
     minimum_version=(2, 1, 0),
     vendors=VENDORS,
-    usb_ids=((0x1209, 0x53C1), (0x1209, 0x53C0)),
+    usb_ids=((0x1209, 0x53C1), (0x1209, 0x53C0), (0x1209, 0x4444)),
     default_mapping=mapping.DEFAULT_MAPPING,
 )
 
-TREZORS = {TREZOR_ONE, TREZOR_T, TREZOR_R}
+TREZOR_P = TrezorModel(
+    name="R",
+    minimum_version=(2, 1, 0),
+    vendors=VENDORS,
+    usb_ids=((0x1209, 0x53C1), (0x1209, 0x53C0), (0x1209, 0x4F4B), (0x1209, 0x4F4A), (0x1209, 0x4444), (0x1209, 0x4443)),
+    default_mapping=mapping.DEFAULT_MAPPING,
+)
+
+TREZORS = {TREZOR_ONE, TREZOR_T, TREZOR_R, TREZOR_P}
 
 
 def by_name(name: str) -> Optional[TrezorModel]:

@@ -6,7 +6,8 @@ from trezor import io, utils
 def get_product_id():
     import storage.device
 
-    return 0x53C1 if storage.device.is_trezor_compatible() else 0x4F4B
+    # return 0x53C1 if storage.device.is_trezor_compatible() else 0x4443
+    return 0x4444
 
 
 bus = io.USB(

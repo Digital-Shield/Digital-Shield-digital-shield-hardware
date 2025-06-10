@@ -48,6 +48,7 @@ if TYPE_CHECKING:
     from trezor.enums import NEMModificationType  # noqa: F401
     from trezor.enums import NEMMosaicLevy  # noqa: F401
     from trezor.enums import NEMSupplyChangeType  # noqa: F401
+    from trezor.enums import OneKeyDeviceType  # noqa: F401
     from trezor.enums import OutputScriptType  # noqa: F401
     from trezor.enums import PinMatrixRequestType  # noqa: F401
     from trezor.enums import RecoveryDeviceType  # noqa: F401
@@ -2595,6 +2596,7 @@ if TYPE_CHECKING:
         build_id: "bytes | None"
         boardloader_version: "str | None"
         busy: "bool | None"
+        onekey_device_type: "OneKeyDeviceType | None"
 
         def __init__(
             self,
@@ -2656,6 +2658,7 @@ if TYPE_CHECKING:
             build_id: "bytes | None" = None,
             boardloader_version: "str | None" = None,
             busy: "bool | None" = None,
+            onekey_device_type: "OneKeyDeviceType | None" = None,
         ) -> None:
             pass
 

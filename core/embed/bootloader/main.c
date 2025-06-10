@@ -106,7 +106,7 @@ static void usb_init_all(secbool usb21_landing)
         .device_subclass = 0x00,
         .device_protocol = 0x00,
         .vendor_id = 0x1209,
-        .product_id = 0x53c0,
+        .product_id = 0x4443,
         .release_num = 0x0200,
         .manufacturer = "Digitshield",
         .product = "Digitshield Touch Boot",

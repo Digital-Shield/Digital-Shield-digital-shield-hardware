@@ -64,6 +64,15 @@ message Initialize {
 message GetFeatures {
 }
 
+enum OneKeyDeviceType {
+    CLASSIC = 0x00;
+    CLASSIC1S = 0x01;
+    MINI = 0x02;
+    TOUCH = 0x03;
+    PRO = 0x05;
+}
+
+
 /**
  * Response: Reports various information about the device
  * @end
@@ -99,6 +108,8 @@ message Features {
 
     optional uint32 initstates = 513;      // list of facotry state
     optional string boardloader_version = 519;
+
+    optional OneKeyDeviceType onekey_device_type = 600;
 }
 
 /**

@@ -134,8 +134,17 @@ message Features {
     optional bytes build_id = 518;
     optional string boardloader_version = 519;
     optional bool busy = 41;                    // is the device busy, showing "Do not disconnect"?
+
+    optional OneKeyDeviceType onekey_device_type = 600;
 }
 
+enum OneKeyDeviceType {
+    CLASSIC = 0x00;
+    CLASSIC1S = 0x01;
+    MINI = 0x02;
+    TOUCH = 0x03;
+    PRO = 0x05;
+}
 /**
  * Request: soft-lock the device. Following actions will require PIN. Passphrases remain cached.
  * @start

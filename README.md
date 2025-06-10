@@ -101,4 +101,6 @@ poetry run python ./core/tools/gen_keys.py
 其中“固件签名公私钥”和自己的“index”三个管理人员都需要进行安全的保存，后续发布固件时进行使用。
 其中“蓝牙签名公私钥”只需要一个用来发布蓝牙固件的管理人员安全的保存存，后续发布蓝牙时进行使用。
 
+# 生成protobuf
+poetry run make protobuf
 
