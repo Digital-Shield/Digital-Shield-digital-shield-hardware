@@ -100,6 +100,8 @@ secbool __wur flash_write_byte(uint8_t sector, uint32_t offset, uint8_t data);
 secbool __wur flash_write_word(uint8_t sector, uint32_t offset, uint32_t data);
 secbool __wur flash_write_words(uint8_t sector, uint32_t offset,
                                 uint32_t data[8]);
+secbool flash_write_bytes(uint8_t sector, uint32_t offset, uint8_t *data,
+                          uint32_t len);
 
 bool flash_check_ecc_fault();
 bool flash_clear_ecc_fault(uint32_t address);

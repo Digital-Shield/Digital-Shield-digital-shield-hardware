@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
-
 #include "qr-code-generator/qrcodegen.h"
 #include "stdio.h"
 
@@ -84,7 +82,9 @@ static struct {
   int x, y;
 } DISPLAY_OFFSET;
 
+#ifndef TREZOR_EMULATOR
 #include "mipi_lcd.h"
+#endif
 
 // common display functions
 static inline uint16_t interpolate_color(uint16_t color0, uint16_t color1,

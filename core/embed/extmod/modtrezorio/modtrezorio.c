@@ -46,13 +46,15 @@ bool usb_connected_previously = true;
 #include "modtrezorio-vcp.h"
 #include "modtrezorio-webusb.h"
 #include "modtrezorio-usb.h"
-#include "modtrezorio-camera.h"
 #include "modtrezorio-ble.h"
 #include "modtrezorio-fatfs.h"
 #include "modtrezorio-moto.h"
 #include "modtrezorio-sbu.h"
 #include "modtrezorio-spi.h"
+#ifndef TREZOR_EMULATOR
 #include "modtrezorio-battery.h"
+#include "modtrezorio-camera.h"
+#endif
 // clang-format on
 
 /// package: trezorio.__init__
@@ -116,8 +118,10 @@ STATIC const mp_rom_map_elem_t mp_module_trezorio_globals_table[] = {
     {MP_ROM_QSTR(MP_QSTR_POLL_WRITE), MP_ROM_INT(POLL_WRITE)},
 
     {MP_ROM_QSTR(MP_QSTR_USB_CHECK), MP_ROM_INT(USB_DATA_IFACE)},
+#ifndef TREZOR_EMULATOR
     {MP_ROM_QSTR(MP_QSTR_Camera), MP_ROM_PTR(&mod_trezorio_Camera_type)},
     {MP_ROM_QSTR(MP_QSTR_Battery), MP_ROM_PTR(&mod_trezorio_Battery_type)},
+#endif
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_trezorio_globals,

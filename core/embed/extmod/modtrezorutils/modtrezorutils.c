@@ -19,9 +19,8 @@
 
 #include "py/objstr.h"
 #include "py/runtime.h"
-#include "sdram.h"
-#include "stm32h7xx_hal.h"
 #ifndef TREZOR_EMULATOR
+#include "stm32h7xx_hal.h"
 #include "supervise.h"
 #endif
 
@@ -35,12 +34,13 @@
 #include <string.h>
 #include <stdio.h>
 #include "blake2s.h"
-#include "device.h"
 #include "common.h"
 #include "flash.h"
 #include "usb.h"
 
 #ifndef TREZOR_EMULATOR
+#include "device.h"
+#include "sdram.h"
 #include "br_check.h"
 #include "image.h"
 #include "fatfs/ff.h"
@@ -318,7 +318,9 @@ STATIC mp_obj_str_t mod_trezorutils_build_id_obj = {
 MP_DEFINE_STR_OBJ(mp_DIGITSHIELD_VERSION, DIGITSHIELD_VERSION);
 
 static mp_obj_t mod_trezorutils_power_off(void) {
+#ifndef TREZOR_EMULATOR
   device_power_off();
+#endif
   return mp_const_none;
 }
 
@@ -330,6 +332,9 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_off_obj, mod_trezorutils_
 ///     """
 ///
 static mp_obj_t mod_trezorutils_avi_play(mp_obj_t path) {
+#ifdef TREZOR_EMULATOR
+  return mp_const_none;
+#else
   if (!MP_OBJ_IS_STR(path)) {
     mp_raise_msg(&mp_type_ValueError, "Invalid path type");
     return mp_const_none;
@@ -382,6 +387,7 @@ err:
   f_close(&f);
   memset(video, 0, FMC_SDRAM_IMAGE_BUFFER_LEN);
   return mp_const_none;
+#endif
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorutils_avi_play_obj, mod_trezorutils_avi_play);
 

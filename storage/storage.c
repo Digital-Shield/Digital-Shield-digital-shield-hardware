@@ -184,14 +184,19 @@ static secbool storage_set_encrypted(const uint16_t key, const void *val,
                                      const uint16_t len);
 static secbool storage_get_encrypted(const uint16_t key, void *val_dest,
                                      const uint16_t max_len, uint16_t *len);
-
+#ifndef TREZOR_EMULATOR
 #include "device.h"
+#endif
 static secbool storage_set_edek_pvc_key(uint8_t *key, uint16_t key_len) {
   uint8_t enc_key[32];
   uint8_t key_buf[64] = {0};
   aes_encrypt_ctx ctxe;
-
+#ifndef TREZOR_EMULATOR
   device_get_enc_key(enc_key);
+#else
+  // use an mock key in emulator
+  memset(enc_key, 0xAA, sizeof(enc_key));
+#endif
 
   memcpy(key_buf, key, key_len);
   aes_encrypt_key256(enc_key, &ctxe);
@@ -214,7 +219,12 @@ static secbool storage_get_edek_pvc_key(const void **key, uint16_t *key_len) {
   uint8_t enc_key[32];
   static uint8_t key_buf[64] = {0};
   aes_decrypt_ctx ctxe;
+#ifndef TREZOR_EMULATOR
   device_get_enc_key(enc_key);
+#else
+  // use an mock key in emulator
+  memset(enc_key, 0xAA, sizeof(enc_key));
+#endif
   aes_decrypt_key256(enc_key, &ctxe);
 
   aes_ecb_decrypt((uint8_t *)val, key_buf, sizeof(key_buf), &ctxe);

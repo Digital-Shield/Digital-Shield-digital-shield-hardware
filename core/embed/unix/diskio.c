@@ -25,9 +25,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+
 #include "common.h"
 #include "profile.h"
-#include "sdcard.h"
+#include "ff.h"
+#include "diskio.h"
 
 #ifndef SDCARD_FILE
 #define SDCARD_FILE profile_sdcard_path()
@@ -45,7 +47,7 @@ static void sdcard_exit(void) {
   sdcard_buffer = NULL;
 }
 
-void sdcard_init(void) {
+DSTATUS disk_initialize (BYTE pdrv) {
   if (sdcard_buffer != NULL) {
     return;
   }
@@ -84,49 +86,56 @@ void sdcard_init(void) {
 
   atexit(sdcard_exit);
 }
-
-secbool sdcard_is_present(void) { return sectrue; }
-
-secbool sdcard_power_on(void) {
-  sdcard_init();
-  sdcard_powered = sectrue;
-  return sectrue;
+DSTATUS disk_status (BYTE pdrv) {
+  return RES_OK;
 }
 
-void sdcard_power_off(void) { sdcard_powered = secfalse; }
-
-uint64_t sdcard_get_capacity_in_bytes(void) {
-  return sdcard_powered == sectrue ? SDCARD_SIZE : 0;
-}
-
-secbool sdcard_read_blocks(uint32_t *dest, uint32_t block_num,
-                           uint32_t num_blocks) {
+DRESULT disk_read (BYTE pdrv, BYTE* buff, LBA_t sector, UINT count) {
+  (void)pdrv;
   if (sectrue != sdcard_powered) {
-    return secfalse;
+    return RES_ERROR;
   }
-  if (block_num >= SDCARD_BLOCKS) {
-    return secfalse;
+  if (sector >= SDCARD_BLOCKS) {
+    return RES_ERROR;
   }
-  if (num_blocks > SDCARD_BLOCKS - block_num) {
-    return secfalse;
+  if (count > SDCARD_BLOCKS - sector) {
+    return RES_ERROR;
   }
-  memcpy(dest, sdcard_buffer + block_num * SDCARD_BLOCK_SIZE,
-         num_blocks * SDCARD_BLOCK_SIZE);
+  memcpy(buff, sdcard_buffer + sector * SDCARD_BLOCK_SIZE,
+         count * SDCARD_BLOCK_SIZE);
+  return RES_OK;
+}
+DRESULT disk_write (BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count) {
+  (void)pdrv;
+  if (sectrue != sdcard_powered) {
+    return RES_ERROR;
+  }
+  if (sector >= SDCARD_BLOCKS) {
+    return RES_ERROR;
+  }
+  if (count > SDCARD_BLOCKS - sector) {
+    return RES_ERROR;
+  }
+  memcpy(sdcard_buffer + sector * SDCARD_BLOCK_SIZE, buff,
+         count * SDCARD_BLOCK_SIZE);
   return sectrue;
 }
+DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff) {
+  (void)pdrv;
+  switch (cmd) {
+    case CTRL_SYNC:
+      return RES_OK;
+    case GET_SECTOR_COUNT:
+      *((DWORD *)buff) = SDCARD_BLOCKS;
+      return RES_OK;
+    case GET_SECTOR_SIZE:
+      *((WORD *)buff) = SDCARD_BLOCK_SIZE;
+      return RES_OK;
+    case GET_BLOCK_SIZE:
+      *((DWORD *)buff) = 1;
+      return RES_OK;
+    default:
+      return RES_PARERR;
+  }
 
-secbool sdcard_write_blocks(const uint32_t *src, uint32_t block_num,
-                            uint32_t num_blocks) {
-  if (sectrue != sdcard_powered) {
-    return secfalse;
-  }
-  if (block_num >= SDCARD_BLOCKS) {
-    return secfalse;
-  }
-  if (num_blocks > SDCARD_BLOCKS - block_num) {
-    return secfalse;
-  }
-  memcpy(sdcard_buffer + block_num * SDCARD_BLOCK_SIZE, src,
-         num_blocks * SDCARD_BLOCK_SIZE);
-  return sectrue;
 }
