@@ -30,16 +30,40 @@ enum {
   CMD_ID_GET_DEV_CERT = 0x06,
   CMD_ID_DEV_SIGN = 0x07,
 
+  // PIN 相关指令
+  CMD_ID_HAS_PIN = 0x08,
+  CMD_ID_SET_PIN = 0x09,
+  CMD_ID_VERIFY_PIN = 0x0A,
+  CMD_ID_CHANGE_PIN = 0x0B,
+  CMD_ID_RESET_PIN = 0x0C,
+  CMD_ID_GET_PIN_MAX_RETRY = 0x0D,
+  CMD_ID_GET_PIN_RETRY = 0x0E,
+  CMD_ID_FORGET_PIN = 0x0F,
+
   // 管理指令
   CMD_ID_REBOOT = 0x10,
   CMD_ID_LAUNCH = 0x11,
 
-  // boot 下指令
+  // boot 指令
   CMD_ID_VERIFY_APP = 0x90,
   CMD_ID_INSTALL_APP = 0x91,
 
   CMD_ID_ROM_BL = 0xEF,
 };
+enum {
+  CMD_PARAM_OLD_PIN = 0x00,
+  CMD_PARAM_NEW_PIN = 0x01,
+};
+
+typedef enum {
+  RESP_CODE_SUCCESS = 0,
+  RESP_CODE_INTERNAL_FAILED,
+  RESP_CODE_INVALID_STATE,
+  RESP_CODE_INVALID_PARAM_DATA,
+  RESP_CODE_UNSUPPORTED_COMMAND,
+  RESP_CODE_OBJECT_ALREADY_EXIST,
+  RESP_CODE_OBJECT_NOT_EXIST,
+} response_code_t;
 
 // struct for command and response
 typedef struct {
@@ -53,6 +77,12 @@ typedef struct {
   uint8_t len[2];
   uint8_t payload[0];
 } __attribute__((packed)) response_t;
+
+typedef struct {
+  uint8_t tag;
+  uint8_t len[2];
+  uint8_t data[0];
+}__attribute__((packed))cmd_param_t;
 
 static inline size_t request_get_length(const request_t* req) {
   return GET_UINT16_BE(req->len, 0);
@@ -82,15 +112,26 @@ static inline size_t command_size(const request_t* req) {
   return 3 + request_get_length(req);
 }
 
-typedef enum {
-  RESP_CODE_SUCCESS = 0,
-  RESP_CODE_INTERNAL_FAILED,
-  RESP_CODE_INVALID_STATE,
-  RESP_CODE_INVALID_PARAM_DATA,
-  RESP_CODE_UNSUPPORTED_COMMAND,
-  RESP_CODE_OBJECT_ALREADY_EXIST,
-  RESP_CODE_OBJECT_NOT_EXIST,
-} response_code_t;
+static int se_sample_command(uint8_t cmd) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, cmd);
+    REQ_EMPTY_PAYLOAD(req);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
 
 int se_get_version(char version[17]) {
     uint8_t command[3] = {0};
@@ -184,22 +225,7 @@ int se_get_life_cycle(life_cycle_t *life_cycle) {
 }
 
 int se_reboot(void) {
-    uint8_t command[3] = {0};
-    uint8_t response[16] = {0};
-    size_t response_size = 0;
-
-    REQ_INIT_CMD(command, CMD_ID_REBOOT);
-    REQ_EMPTY_PAYLOAD(req);
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
-    return 0;
+    return se_sample_command(CMD_ID_REBOOT);
 }
 
 int se_launch(se_state_t state) {
@@ -224,28 +250,13 @@ int se_launch(se_state_t state) {
     return 0;
 }
 int se_back_to_rom_bl(void) {
-    uint8_t command[3] = {0};
-    uint8_t response[16] = {0};
-    size_t response_size = 0;
-    REQ_INIT_CMD(command, CMD_ID_ROM_BL);
-    REQ_EMPTY_PAYLOAD(req);
-
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
-    return 0;
+    return se_sample_command(CMD_ID_ROM_BL);
 }
 
 int se_get_dev_pubkey(uint8_t pubkey[65]) {
-    if (PCB_IS_V1_0()) {
-        return pcbv10_se_get_pubkey(pubkey) ? 0:1;
-    }
+    // if (PCB_IS_V1_0()) {
+    //     return pcbv10_se_get_pubkey(pubkey) ? 0:1;
+    // }
     uint8_t command[3] = {0};
     uint8_t response[128] = { 0 };
     size_t response_size = 0;
@@ -402,6 +413,177 @@ int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
 
 int se_ping(void) {
     return thd89_ping();
+}
+
+int se_has_pin(bool* exist) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_HAS_PIN);
+    REQ_EMPTY_PAYLOAD(req);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    if (response_get_length(resp) != 1) {
+        return 1;
+    }
+    *exist = !!resp->payload[0];
+    return 0;
+}
+
+int se_set_pin(const uint8_t *pin, size_t pin_len) {
+    if (pin_len > 255 || pin_len == 0) {
+        return 1;
+    }
+
+    uint8_t command[260] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_SET_PIN);
+    REQ_PAYLOAD(req, pin, pin_len);
+
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+
+int se_verify_pin(const uint8_t* pin, size_t pin_len) {
+    if (pin_len > 255 || pin_len == 0) {
+        return 1;
+    }
+    uint8_t command[260] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_VERIFY_PIN);
+    REQ_PAYLOAD(req, pin, pin_len);
+
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return resp->code;
+    }
+    return 0;
+}
+
+int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new_pin, size_t new_pin_len) {
+    if (old_pin_len > 255 || old_pin_len == 0 || new_pin_len > 255 || new_pin_len == 0) {
+        return 1;
+    }
+    uint8_t command[520] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_CHANGE_PIN);
+    request_set_length(req, old_pin_len + new_pin_len + 6);
+    uint8_t *p = req->payload;
+    // old pin
+    // move over `tag`
+    *p++ = CMD_PARAM_OLD_PIN;
+    PUT_UINT16_BE(old_pin_len, p, 0);
+    // move over `len`
+    p += 2;
+    memcpy(p, old_pin, old_pin_len);
+    // move over `data`
+    p += old_pin_len;
+
+
+    // new pin
+    // move over `tag`
+    *p++ = CMD_PARAM_NEW_PIN;
+    PUT_UINT16_BE(new_pin_len, p, 0);
+    // move over `len`
+    p += 2;
+    memcpy(p, new_pin, new_pin_len);
+    p += new_pin_len;
+
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return resp->code;
+    }
+    return 0;
+}
+
+int se_forget_pin(void) {
+    return se_sample_command(CMD_ID_FORGET_PIN);
+}
+
+int se_get_pin_max_retry(int *max_retry) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_GET_PIN_MAX_RETRY);
+    REQ_EMPTY_PAYLOAD(req);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    if (response_get_length(resp) != 1) {
+        return 1;
+    }
+    *max_retry = resp->payload[0];
+    return 0;
+}
+
+int se_get_pin_retry(int *retry) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+
+    REQ_INIT_CMD(command, CMD_ID_GET_PIN_RETRY);
+    REQ_EMPTY_PAYLOAD(req);
+
+    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    if (response_get_length(resp) != 1) {
+        return 1;
+    }
+    *retry = resp->payload[0];
+    return 0;
+}
+
+int se_reset_pin(void) {
+    return se_sample_command(CMD_ID_RESET_PIN);
 }
 
 bool se_check_app_binary(const uint8_t *binary, size_t binary_len) {
@@ -575,6 +757,12 @@ void se_test(void) {
         printf("erase storage failed\n");
     }
 
+    // need reboot after erase device
+    se_reboot();
+    // delay a moment wait se start up
+    HAL_Delay(50);
+    se_conn_reset();
+
     // 2. 设置序列号
     char *sn = "DS202505170001";
     if (!se_set_sn((uint8_t*)sn, strlen(sn))) {
@@ -618,6 +806,78 @@ void se_test(void) {
         printf("switch life cycle failed\n");
     }
     extern void log_data(uint8_t* data, size_t data_size);
+    // reboot for switch to user command list
+    se_reboot();
+    // delay a moment wait se start up
+    HAL_Delay(50);
+    se_conn_reset();
+
+    // pin test
+    bool exist = false;
+    if (!se_has_pin(&exist)) {
+        printf("has pin: %d\n", exist);
+    } else {
+        printf("has pin failed\n");
+    }
+
+    #define PIN_LEN 4
+    uint8_t pin[PIN_LEN] = {'1', '2', '3', '4'};
+    if (!se_set_pin(pin, PIN_LEN)) {
+        printf("set pin success\n");
+    } else {
+        printf("set pin failed\n");
+    }
+    if (!se_has_pin(&exist)) {
+        printf("has pin: %d\n", exist);
+    } else {
+        printf("has pin failed\n");
+    }
+    ret = se_verify_pin(pin, PIN_LEN);
+    if (!ret) {
+        printf("verify pin success\n");
+    } else {
+        printf("verify pin failed: %x\n", ret);
+    }
+    int retry = 0;
+    if (!se_get_pin_retry(&retry)) {
+        printf("pin retry: %d\n", retry);
+    } else {
+        printf("get pin retry failed\n");
+    }
+    // verify failed
+    uint8_t pin2[PIN_LEN] = {'1', '2', '3', '5'};
+    ret = se_verify_pin(pin2, PIN_LEN);
+    if (!ret) {
+        printf("verify pin success\n");
+    } else {
+        printf("verify pin failed: %x\n", ret);
+    }
+    if (!se_get_pin_retry(&retry)) {
+        printf("pin retry: %d\n", retry);
+    } else {
+        printf("get pin retry failed\n");
+    }
+
+    uint8_t pin3[PIN_LEN] = {'4', '3', '2', '1'};
+    if (!se_change_pin(pin, PIN_LEN, pin3, PIN_LEN)) {
+        printf("change pin success\n");
+    } else {
+        printf("change pin failed\n");
+    }
+
+    // reset pin can do when pin locked or verified
+    // change pin success will make device verified
+    if (!se_reset_pin()) {
+        printf("reset pin success\n");
+    } else {
+        printf("reset pin failed\n");
+    }
+    if (!se_has_pin(&exist)) {
+        printf("has pin: %d\n", exist);
+    } else {
+        printf("has pin failed\n");
+    }
+
     while (1) {
         HAL_Delay(1000);
         char version[17] = {0};

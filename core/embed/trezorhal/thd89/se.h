@@ -30,6 +30,16 @@ int se_get_certificate_len(size_t *cert_len);
 int se_read_certificate(uint8_t *cert, size_t *cert_len);
 int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature);
 
+int se_has_pin(bool* exist);
+int se_set_pin(const uint8_t *pin, size_t pin_len);
+int se_verify_pin(const uint8_t* pin, size_t pin_len);
+int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new_pin, size_t new_pin_len);
+// tell se forget verified state, aka `logout`
+int se_forget_pin(void);
+int se_get_pin_max_retry(int* max_retry);
+int se_get_pin_retry(int* retry);
+int se_reset_pin(void);
+
 // 系统指令
 int se_reboot(void);
 int se_launch(se_state_t state);
