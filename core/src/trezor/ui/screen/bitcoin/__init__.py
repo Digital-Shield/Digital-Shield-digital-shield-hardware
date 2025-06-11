@@ -17,7 +17,6 @@ class PublicKey(Modal):
         self.create_content(HStack)
         self.content: HStack
         self.content.add_style(theme.Styles.board, lv.PART.MAIN)
-
         # `path`
         item = self.add(LabeledText)
         item.set_label(i18n.Text.path)
@@ -56,12 +55,12 @@ class XPub(Modal):
         item = self.add(LabeledText)
         item.set_label(i18n.Text.path)
         item.set_text(path)
-
+        item.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
         # `public key`
         item = self.add(LabeledText)
         item.set_label(i18n.Text.xpub)
         item.set_text(xpub)
-
+        item.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
     def on_click_confirm(self, e):
         log.debug(__name__, "user click confirm")
         self.close(Confirm())

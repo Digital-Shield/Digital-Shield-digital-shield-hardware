@@ -137,7 +137,7 @@ class Blob(Modal):
             item.set_width(lv.pct(100))
             item.set_long_mode(lv.label.LONG.WRAP)
             item.set_text(message)
-
+            item.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
         if label is not None:
             item = self.add(LabeledText)
             item.set_label(label)
@@ -146,7 +146,7 @@ class Blob(Modal):
                 blob = '0x'+hexlify(blob).decode()
 
         item.set_text(blob)
-
+        item.set_style_text_color(colors.DS.WHITE, lv.PART.MAIN)
         # alias nick name for buttons
         self.btn_cancel = self.btn_left
         self.btn_continue = self.btn_right
