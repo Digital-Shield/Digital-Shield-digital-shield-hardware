@@ -34,30 +34,10 @@
 
 #define EMULATOR_BORDER 0
 
-#if defined TREZOR_MODEL_T
-
-#ifdef TREZOR_EMULATOR_RASPI
-#define WINDOW_WIDTH 480
-#define WINDOW_HEIGHT 320
-#define TOUCH_OFFSET_X 110
-#define TOUCH_OFFSET_Y 40
-#else
 #define WINDOW_WIDTH 480
 #define WINDOW_HEIGHT 800
 #define TOUCH_OFFSET_X 0
 #define TOUCH_OFFSET_Y 0
-#endif
-
-#elif defined TREZOR_MODEL_1 || defined TREZOR_MODEL_R
-
-#define WINDOW_WIDTH 200
-#define WINDOW_HEIGHT 340
-#define TOUCH_OFFSET_X 36
-#define TOUCH_OFFSET_Y 92
-
-#else
-#error Unknown Trezor model
-#endif
 
 static SDL_Window *WINDOW;
 static SDL_Renderer *RENDERER;
@@ -87,20 +67,13 @@ static struct {
 } PIXELWINDOW;
 
 void display_pixeldata(uint16_t c) {
-#if defined TREZOR_MODEL_1 || defined TREZOR_MODEL_R
-  // set to white if highest bits of all R, G, B values are set to 1
-  // bin(10000 100000 10000) = hex(0x8410)
-  // otherwise set to black
-  c = (c & 0x8410) ? 0xFFFF : 0x0000;
-#endif
   if (!RENDERER) {
     display_init();
   }
-  if (PIXELWINDOW.pos.x <= PIXELWINDOW.end.x &&
-      PIXELWINDOW.pos.y <= PIXELWINDOW.end.y) {
-    ((uint16_t *)
-         BUFFER->pixels)[PIXELWINDOW.pos.x + PIXELWINDOW.pos.y * BUFFER->pitch /
-                                                 sizeof(uint16_t)] = c;
+  if (PIXELWINDOW.pos.x < PIXELWINDOW.end.x &&
+      PIXELWINDOW.pos.y < PIXELWINDOW.end.y) {
+    int index = PIXELWINDOW.pos.x + PIXELWINDOW.pos.y * BUFFER->pitch / sizeof(uint16_t);
+    ((uint16_t *) BUFFER->pixels)[index] = c;
   }
   PIXELWINDOW.pos.x++;
   if (PIXELWINDOW.pos.x > PIXELWINDOW.end.x) {
@@ -150,11 +123,7 @@ void display_init(void) {
   WINDOW =
       SDL_CreateWindow(window_title, SDL_WINDOWPOS_UNDEFINED,
                        SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
-#ifdef TREZOR_EMULATOR_RASPI
-                       SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN
-#else
                        SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
-#endif
       );
   free(window_title_alloc);
   if (!WINDOW) {
@@ -180,26 +149,9 @@ void display_init(void) {
   SDL_PumpEvents();
   SDL_SetWindowSize(WINDOW, WINDOW_WIDTH, WINDOW_HEIGHT);
 #endif
-#ifdef TREZOR_EMULATOR_RASPI
-#include "background_raspi.h"
-  BACKGROUND = IMG_LoadTexture_RW(
-      RENDERER, SDL_RWFromMem(background_raspi_jpg, background_raspi_jpg_len),
-      0);
-#else
-#if defined TREZOR_MODEL_T
 #include "background_T.h"
   BACKGROUND = IMG_LoadTexture_RW(
       RENDERER, SDL_RWFromMem(background_T_jpg, background_T_jpg_len * 0), 0);
-#elif defined TREZOR_MODEL_1
-#include "background_1.h"
-  BACKGROUND = IMG_LoadTexture_RW(
-      RENDERER, SDL_RWFromMem(background_1_jpg, background_1_jpg_len), 0);
-#elif defined TREZOR_MODEL_R
-#include "background_R.h"
-  BACKGROUND = IMG_LoadTexture_RW(
-      RENDERER, SDL_RWFromMem(background_R_jpg, background_R_jpg_len), 0);
-#endif
-#endif
   if (BACKGROUND) {
     SDL_SetTextureBlendMode(BACKGROUND, SDL_BLENDMODE_NONE);
     sdl_touch_offset_x = TOUCH_OFFSET_X;
@@ -211,12 +163,7 @@ void display_init(void) {
     sdl_touch_offset_y = EMULATOR_BORDER;
   }
   DISPLAY_BACKLIGHT = 0;
-#ifdef TREZOR_EMULATOR_RASPI
-  DISPLAY_ORIENTATION = 270;
-  SDL_ShowCursor(SDL_DISABLE);
-#else
   DISPLAY_ORIENTATION = 0;
-#endif
 }
 
 void display_set_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
@@ -259,13 +206,7 @@ void display_refresh(void) {
 
 int display_orientation(int degrees) {
   if (degrees != DISPLAY_ORIENTATION) {
-#if defined TREZOR_MODEL_T
     if (degrees == 0 || degrees == 90 || degrees == 180 || degrees == 270) {
-#elif defined TREZOR_MODEL_1 || defined TREZOR_MODEL_R
-    if (degrees == 0 || degrees == 180) {
-#else
-#error Unknown Trezor model
-#endif
       DISPLAY_ORIENTATION = degrees;
       display_refresh();
     }
@@ -276,9 +217,6 @@ int display_orientation(int degrees) {
 int display_get_orientation(void) { return DISPLAY_ORIENTATION; }
 
 int display_backlight(int val) {
-#if defined TREZOR_MODEL_1
-  val = 255;
-#endif
   if (DISPLAY_BACKLIGHT != val && val >= 0 && val <= 255) {
     DISPLAY_BACKLIGHT = val;
     display_refresh();
@@ -317,10 +255,4 @@ const char *display_save(const char *prefix) {
 void display_clear_save(void) {
   SDL_FreeSurface(PREV_SAVED);
   PREV_SAVED = NULL;
-}
-
-void fb_write_pixel(uint32_t x_pos, uint32_t y_pos, uint32_t color) {
-  (void)x_pos;
-  (void)y_pos;
-  PIXELDATA(color);
 }

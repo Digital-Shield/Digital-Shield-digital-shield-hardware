@@ -24,8 +24,6 @@
 extern void __shutdown(void);
 extern const char *display_save(const char *prefix);
 
-#if defined TREZOR_MODEL_T
-
 #include "touch.h"
 
 extern int sdl_display_res_x, sdl_display_res_y;
@@ -76,43 +74,3 @@ uint32_t touch_read(void) {
   }
   return 0;
 }
-
-#elif defined TREZOR_MODEL_1 || defined TREZOR_MODEL_R
-
-#include "button.h"
-
-uint32_t button_read(void) {
-  SDL_Event event;
-  SDL_PumpEvents();
-  if (SDL_PollEvent(&event) > 0) {
-    switch (event.type) {
-      case SDL_KEYDOWN:
-        if (event.key.repeat) {
-          break;
-        }
-        switch (event.key.keysym.sym) {
-          case SDLK_LEFT:
-            return BTN_EVT_DOWN | BTN_LEFT;
-          case SDLK_RIGHT:
-            return BTN_EVT_DOWN | BTN_RIGHT;
-        }
-        break;
-      case SDL_KEYUP:
-        if (event.key.repeat) {
-          break;
-        }
-        switch (event.key.keysym.sym) {
-          case SDLK_LEFT:
-            return BTN_EVT_UP | BTN_LEFT;
-          case SDLK_RIGHT:
-            return BTN_EVT_UP | BTN_RIGHT;
-        }
-        break;
-    }
-  }
-  return 0;
-}
-
-#else
-#error Unknown Trezor model
-#endif

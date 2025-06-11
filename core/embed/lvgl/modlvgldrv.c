@@ -38,26 +38,6 @@ static void mp_disp_drv_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
   lv_disp_flush_ready(disp_drv);
 }
 
-// static bool mp_ts_read(struct _lv_indev_drv_t *indev_drv,
-//                        lv_indev_data_t *data) {
-//   TS_State_t  TS_State;
-// 	static int16_t last_x = 0;
-// 	static int16_t last_y = 0;
-// 	BSP_TS_GetState(0,&TS_State);
-// 	if(TS_State.TouchDetected != 0) {
-// 		data->point.x = TS_State.TouchX;
-// 		data->point.y = TS_State.TouchY;
-// 		last_x = data->point.x;
-// 		last_y = data->point.y;
-// 		data->state = LV_INDEV_STATE_PR;
-// 	} else {
-// 		data->point.x = last_x;
-// 		data->point.y = last_y;
-// 		data->state = LV_INDEV_STATE_REL;
-// 	}
-//   return false;
-// }
-
 static void mp_ts_read(struct _lv_indev_drv_t *indev_drv,
                        lv_indev_data_t *data) {
   static lv_coord_t last_x = 0;

@@ -36,6 +36,7 @@
 #endif
 
 #define SDCARD_SIZE (64 * 1024 * 1024)
+#define SDCARD_BLOCK_SIZE (512)
 #define SDCARD_BLOCKS (SDCARD_SIZE / SDCARD_BLOCK_SIZE)
 
 static uint8_t *sdcard_buffer = NULL;
@@ -49,7 +50,7 @@ static void sdcard_exit(void) {
 
 DSTATUS disk_initialize (BYTE pdrv) {
   if (sdcard_buffer != NULL) {
-    return;
+    return RES_OK;
   }
 
   // check whether the file exists and it has the correct size
@@ -85,6 +86,7 @@ DSTATUS disk_initialize (BYTE pdrv) {
   sdcard_powered = secfalse;
 
   atexit(sdcard_exit);
+  return RES_OK;
 }
 DSTATUS disk_status (BYTE pdrv) {
   return RES_OK;
