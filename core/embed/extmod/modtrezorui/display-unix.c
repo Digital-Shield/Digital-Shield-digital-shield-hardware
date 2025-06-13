@@ -76,7 +76,7 @@ void display_pixeldata(uint16_t c) {
     ((uint16_t *) BUFFER->pixels)[index] = c;
   }
   PIXELWINDOW.pos.x++;
-  if (PIXELWINDOW.pos.x > PIXELWINDOW.end.x) {
+  if (PIXELWINDOW.pos.x >= PIXELWINDOW.end.x) {
     PIXELWINDOW.pos.x = PIXELWINDOW.start.x;
     PIXELWINDOW.pos.y++;
   }
@@ -152,15 +152,13 @@ void display_init(void) {
       RENDERER, SDL_RWFromMem(background_png, background_png_len), 0);
   if (BACKGROUND) {
     SDL_SetTextureBlendMode(BACKGROUND, SDL_BLENDMODE_NONE);
-    sdl_touch_offset_x = EMULATOR_BORDER;
-    sdl_touch_offset_y = EMULATOR_BORDER;
   } else {
     SDL_SetWindowSize(WINDOW, DISPLAY_RESX + 2 * EMULATOR_BORDER,
                       DISPLAY_RESY + 3 * EMULATOR_BORDER);
-    sdl_touch_offset_x = EMULATOR_BORDER;
-    sdl_touch_offset_y = EMULATOR_BORDER;
   }
-  DISPLAY_BACKLIGHT = 0;
+  sdl_touch_offset_x = EMULATOR_BORDER;
+  sdl_touch_offset_y = EMULATOR_BORDER;
+  DISPLAY_BACKLIGHT = 60;
   DISPLAY_ORIENTATION = 0;
 }
 
@@ -176,21 +174,33 @@ void display_set_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
   PIXELWINDOW.pos.y = y0;
 }
 
+void log_pixels(uint16_t* data, size_t data_size) {
+  #define __FRAME_LINE__ 16
+  uint8_t count = 0;
+  while (data_size--) {
+    count++;
+    printf("%04x ", *data++);
+    if (count == __FRAME_LINE__) {
+      printf("\n");
+      count = 0;
+    }
+  }
+  printf("\n");
+}
 void display_refresh(void) {
   if (!RENDERER) {
     display_init();
   }
   if (BACKGROUND) {
-    const SDL_Rect r = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_RenderCopy(RENDERER, BACKGROUND, NULL, &r);
+    SDL_RenderCopy(RENDERER, BACKGROUND, NULL, NULL);
   } else {
     SDL_RenderClear(RENDERER);
   }
   SDL_UpdateTexture(TEXTURE, NULL, BUFFER->pixels, BUFFER->pitch);
-#define BACKLIGHT_NORMAL 150
-  SDL_SetTextureAlphaMod(TEXTURE, MIN(255, 255 * DISPLAY_BACKLIGHT / BACKLIGHT_NORMAL));
+  SDL_SetTextureAlphaMod(TEXTURE, MIN(255, 255 * DISPLAY_BACKLIGHT / 100));
   const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX, DISPLAY_RESY};
-  SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
+  // SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
+  SDL_RenderCopy(RENDERER, TEXTURE, NULL, &r);
   SDL_RenderPresent(RENDERER);
 }
 
@@ -207,7 +217,7 @@ int display_orientation(int degrees) {
 int display_get_orientation(void) { return DISPLAY_ORIENTATION; }
 
 int display_backlight(int val) {
-  if (DISPLAY_BACKLIGHT != val && val >= 0 && val <= 255) {
+  if (DISPLAY_BACKLIGHT != val && val >= 0 && val <= 100) {
     DISPLAY_BACKLIGHT = val;
     display_refresh();
   }

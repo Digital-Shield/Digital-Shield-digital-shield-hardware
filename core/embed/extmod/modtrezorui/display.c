@@ -140,7 +140,7 @@ void display_bar(int x, int y, int w, int h, uint16_t c) {
 #ifndef TREZOR_EMULATOR
   fb_fill_rect(x, y, w, h, c);
 #else
-  display_set_window(x, y, x, h);
+  display_set_window(x, y, w, h);
   for (int i = 0; i < w*h; i++) {
     PIXELDATA(c);
   }

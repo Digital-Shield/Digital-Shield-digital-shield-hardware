@@ -31,14 +31,12 @@ static mp_obj_t mp_disp_drv_framebuffer(mp_obj_t n_obj) {
 
 static void mp_disp_drv_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
                               lv_color_t *color_p) {
-  printf("area: {%d, %d, %d, %d}\n", area->x1, area->y1, area->x2, area->y2);
   display_buffer(area->x1, area->y1, area->x2 - area->x1, area->y2 - area->y1,
                  (uint16_t *)color_p);
   display_refresh();
   /*IMPORTANT!!!
    *Inform the graphics library that you are ready with the flushing*/
   lv_disp_flush_ready(disp_drv);
-  printf("lvgl flush done\n");
 }
 
 static void mp_ts_read(struct _lv_indev_drv_t *indev_drv,
