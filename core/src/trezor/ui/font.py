@@ -6,9 +6,9 @@ from trezor import utils
 class Bold:
     if utils.EMULATOR:
         SCS48 = lv.font_load("A:/res/PlusJakartaSans-Bold-48.bin")
-        SCS38 = lv.font_load("A:/res/PlusJakartaSans-Bold-36.bin")
-        SCS30 = lv.font_load("A:/res/PlusJakartaSans-Bold-30.bin")
-        SCS26 = lv.font_load("A:/res/PlusJakartaSans-Bold-26.bin")
+        SCS38 = lv.font_load("A:/res/lv_font_scs_bold_36.bin")
+        SCS30 = lv.font_load("A:/res/lv_font_scs_bold_30.bin")
+        SCS26 = lv.font_load("A:/res/lv_font_scs_bold_26.bin")
     else:
         SCS48 = lv.font_pljs_bold_48
         SCS38 = lv.font_scs_bold_38
@@ -18,9 +18,9 @@ class Bold:
 # 常规
 class Regular:
     if utils.EMULATOR:
-        SCS30 = lv.font_load("A:/res/PlusJakartaSans-Regular-30.bin")
-        SCS26 = lv.font_load("A:/res/PlusJakartaSans-Regular-26.bin")
-        SCS24 = lv.font_load("A:/res/PlusJakartaSans-Regular-24.bin")
+        SCS30 = lv.font_load("A:/res/lv_font_scs_reg_30.bin")
+        SCS26 = lv.font_load("A:/res/lv_font_scs_reg_26.bin")
+        SCS24 = lv.font_load("A:/res/lv_font_scs_reg_24.bin")
     else:
         SCS30 = lv.font_scs_reg_30
         SCS26 = lv.font_scs_reg_26

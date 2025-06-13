@@ -31,8 +31,12 @@ static mp_obj_t mp_disp_drv_framebuffer(mp_obj_t n_obj) {
 
 static void mp_disp_drv_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
                               lv_color_t *color_p) {
-  display_buffer(area->x1, area->y1, area->x2 - area->x1, area->y2 - area->y1,
-                 (uint16_t *)color_p);
+  int x, y, w, h;
+  x = area->x1;
+  y = area->y1;
+  w = area->x2 - area->x1 + 1;
+  h = area->y2 - area->y1 + 1;
+  display_buffer(x, y, w, h, (uint16_t *)color_p);
   display_refresh();
   /*IMPORTANT!!!
    *Inform the graphics library that you are ready with the flushing*/
