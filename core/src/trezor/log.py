@@ -1,7 +1,11 @@
 import sys
 import utime
 from micropython import const
-from typing import Any
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any
+    pass
+
 
 NOTSET = const(0)
 DEBUG = const(10)

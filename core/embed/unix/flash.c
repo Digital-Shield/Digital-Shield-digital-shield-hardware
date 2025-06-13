@@ -35,34 +35,6 @@
 #define FLASH_FILE profile_flash_path()
 #endif
 
-static const uint32_t FLASH_SECTOR_TABLE[FLASH_SECTOR_COUNT + 1] = {
-    [0] = 0x08000000,   // - 0x08003FFF |  16 KiB
-    [1] = 0x08004000,   // - 0x08007FFF |  16 KiB
-    [2] = 0x08008000,   // - 0x0800BFFF |  16 KiB
-    [3] = 0x0800C000,   // - 0x0800FFFF |  16 KiB
-    [4] = 0x08010000,   // - 0x0801FFFF |  64 KiB
-    [5] = 0x08020000,   // - 0x0803FFFF | 128 KiB
-    [6] = 0x08040000,   // - 0x0805FFFF | 128 KiB
-    [7] = 0x08060000,   // - 0x0807FFFF | 128 KiB
-    [8] = 0x08080000,   // - 0x0809FFFF | 128 KiB
-    [9] = 0x080A0000,   // - 0x080BFFFF | 128 KiB
-    [10] = 0x080C0000,  // - 0x080DFFFF | 128 KiB
-    [11] = 0x080E0000,  // - 0x080FFFFF | 128 KiB
-    [12] = 0x08100000,  // - 0x08103FFF |  16 KiB
-    [13] = 0x08104000,  // - 0x08107FFF |  16 KiB
-    [14] = 0x08108000,  // - 0x0810BFFF |  16 KiB
-    [15] = 0x0810C000,  // - 0x0810FFFF |  16 KiB
-    [16] = 0x08110000,  // - 0x0811FFFF |  64 KiB
-    [17] = 0x08120000,  // - 0x0813FFFF | 128 KiB
-    [18] = 0x08140000,  // - 0x0815FFFF | 128 KiB
-    [19] = 0x08160000,  // - 0x0817FFFF | 128 KiB
-    [20] = 0x08180000,  // - 0x0819FFFF | 128 KiB
-    [21] = 0x081A0000,  // - 0x081BFFFF | 128 KiB
-    [22] = 0x081C0000,  // - 0x081DFFFF | 128 KiB
-    [23] = 0x081E0000,  // - 0x081FFFFF | 128 KiB
-    [24] = 0x08200000,  // last element - not a valid sector
-};
-
 const uint8_t FIRMWARE_SECTORS[FIRMWARE_SECTORS_COUNT] = {
     FLASH_SECTOR_FIRMWARE_START,
     4,
@@ -110,7 +82,7 @@ static void flash_exit(void) {
 void flash_init(void) {
   if (FLASH_BUFFER) return;
 
-  FLASH_SIZE = FLASH_SECTOR_TABLE[FLASH_SECTOR_COUNT] - FLASH_SECTOR_TABLE[0];
+  FLASH_SIZE = STORAGE_SECTORS_COUNT * FLASH_STORAGE_SECTOR_SIZE;
 
   // check whether the file exists and it has the correct size
   struct stat sb;
@@ -148,22 +120,23 @@ secbool flash_unlock_write(void) { return sectrue; }
 secbool flash_lock_write(void) { return sectrue; }
 
 const void *flash_get_address(uint8_t sector, uint32_t offset, uint32_t size) {
-  if (sector >= FLASH_SECTOR_COUNT) {
-    return NULL;
+  if (sector >= FLASH_SECTOR_STORAGE_1 && sector <= FLASH_SECTOR_STORAGE_2) {
+    if (offset + size > FLASH_STORAGE_SECTOR_SIZE) {
+      return NULL;
+    }
+    return (const void *)(FLASH_BUFFER +
+                          (sector - FLASH_SECTOR_STORAGE_1) *
+                              FLASH_STORAGE_SECTOR_SIZE +
+                          offset);
   }
-  const uint32_t addr = FLASH_SECTOR_TABLE[sector] + offset;
-  const uint32_t next = FLASH_SECTOR_TABLE[sector + 1];
-  if (addr + size > next) {
-    return NULL;
-  }
-  return FLASH_BUFFER + addr - FLASH_SECTOR_TABLE[0];
+  return NULL;
 }
 
 uint32_t flash_sector_size(uint8_t sector) {
-  if (sector >= FLASH_SECTOR_COUNT) {
-    return 0;
+  if (sector >= FLASH_SECTOR_STORAGE_1 && sector <= FLASH_SECTOR_STORAGE_2) {
+    return FLASH_STORAGE_SECTOR_SIZE;
   }
-  return FLASH_SECTOR_TABLE[sector + 1] - FLASH_SECTOR_TABLE[sector];
+  return 0;
 }
 
 secbool flash_erase_sectors(const uint8_t *sectors, int len,
@@ -173,10 +146,11 @@ secbool flash_erase_sectors(const uint8_t *sectors, int len,
   }
   for (int i = 0; i < len; i++) {
     const uint8_t sector = sectors[i];
-    const uint32_t offset = FLASH_SECTOR_TABLE[sector] - FLASH_SECTOR_TABLE[0];
-    const uint32_t size =
-        FLASH_SECTOR_TABLE[sector + 1] - FLASH_SECTOR_TABLE[sector];
-    memset(FLASH_BUFFER + offset, 0xFF, size);
+    if (sector >= FLASH_SECTOR_STORAGE_1 && sector <= FLASH_SECTOR_STORAGE_2) {
+      const uint32_t offset = FLASH_STORAGE_SECTOR_SIZE * (sector - FLASH_SECTOR_STORAGE_1);
+      const uint32_t size = FLASH_STORAGE_SECTOR_SIZE;
+      memset(FLASH_BUFFER + offset, 0xFF, size);
+    }
     if (progress) {
       progress(i + 1, len);
     }

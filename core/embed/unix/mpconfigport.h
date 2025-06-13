@@ -38,12 +38,6 @@
 #define MICROPY_MODULE_FROZEN_MPY   (1)
 #define MICROPY_QSTR_EXTRA_POOL     (mp_qstr_frozen_const_pool)
 #define MPZ_DIG_SIZE                (16)
-// #if !defined(MICROPY_EMIT_X64) && defined(__x86_64__)
-//     #define MICROPY_EMIT_X64        (1)
-// #endif
-// #if !defined(MICROPY_EMIT_X86) && defined(__i386__)
-//     #define MICROPY_EMIT_X86        (1)
-// #endif
 #endif
 
 // memory allocation policies
@@ -153,6 +147,13 @@
 #define MICROPY_PY_UCTYPES          (1)
 #define MICROPY_PY_UZLIB            (0)
 #define MICROPY_PY_UJSON            (1)
+#define MICROPY_PY_UOS              (1)
+#define MICROPY_PY_UOS_INCLUDEFILE  "ports/unix/moduos.c"
+#define MICROPY_PY_UOS_ERRNO        (1)
+#define MICROPY_PY_UOS_GETENV_PUTENV_UNSETENV (1)
+#define MICROPY_PY_UOS_SEP          (1)
+#define MICROPY_PY_UOS_SYSTEM       (1)
+#define MICROPY_PY_UOS_URANDOM      (1)
 #define MICROPY_PY_URE              (1)
 #define MICROPY_PY_URE_SUB          (0)
 #define MICROPY_PY_UHEAPQ           (0)
@@ -272,7 +273,6 @@ extern const struct _mp_obj_module_t mp_module_lodepng;
 #endif
 
 #define MICROPY_PORT_BUILTIN_MODULES \
-    { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&mp_module_os) }, \
     MICROPY_PY_LVGL_DEF \
     MICROPY_PY_LVGL_SDL_DEF \
     MICROPY_PY_LVGL_FB_DEF \

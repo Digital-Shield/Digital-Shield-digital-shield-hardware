@@ -32,10 +32,10 @@
 #include "display_interface.h"
 #include "profile.h"
 
-#define EMULATOR_BORDER 0
+#define EMULATOR_BORDER 62 
 
-#define WINDOW_WIDTH 480
-#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 604
+#define WINDOW_HEIGHT 979
 #define TOUCH_OFFSET_X 0
 #define TOUCH_OFFSET_Y 0
 
@@ -120,11 +120,9 @@ void display_init(void) {
     window_title_alloc = NULL;
   }
 
-  WINDOW =
-      SDL_CreateWindow(window_title, SDL_WINDOWPOS_UNDEFINED,
+  WINDOW = SDL_CreateWindow(window_title, SDL_WINDOWPOS_UNDEFINED,
                        SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
-                       SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
-      );
+                       SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
   free(window_title_alloc);
   if (!WINDOW) {
     printf("%s\n", SDL_GetError());
@@ -149,16 +147,16 @@ void display_init(void) {
   SDL_PumpEvents();
   SDL_SetWindowSize(WINDOW, WINDOW_WIDTH, WINDOW_HEIGHT);
 #endif
-#include "background_T.h"
+#include "background.h"
   BACKGROUND = IMG_LoadTexture_RW(
-      RENDERER, SDL_RWFromMem(background_T_jpg, background_T_jpg_len * 0), 0);
+      RENDERER, SDL_RWFromMem(background_png, background_png_len), 0);
   if (BACKGROUND) {
     SDL_SetTextureBlendMode(BACKGROUND, SDL_BLENDMODE_NONE);
-    sdl_touch_offset_x = TOUCH_OFFSET_X;
-    sdl_touch_offset_y = TOUCH_OFFSET_Y;
+    sdl_touch_offset_x = EMULATOR_BORDER;
+    sdl_touch_offset_y = EMULATOR_BORDER;
   } else {
     SDL_SetWindowSize(WINDOW, DISPLAY_RESX + 2 * EMULATOR_BORDER,
-                      DISPLAY_RESY + 2 * EMULATOR_BORDER);
+                      DISPLAY_RESY + 3 * EMULATOR_BORDER);
     sdl_touch_offset_x = EMULATOR_BORDER;
     sdl_touch_offset_y = EMULATOR_BORDER;
   }
@@ -190,17 +188,9 @@ void display_refresh(void) {
   }
   SDL_UpdateTexture(TEXTURE, NULL, BUFFER->pixels, BUFFER->pitch);
 #define BACKLIGHT_NORMAL 150
-  SDL_SetTextureAlphaMod(TEXTURE,
-                         MIN(255, 255 * DISPLAY_BACKLIGHT / BACKLIGHT_NORMAL));
-  if (BACKGROUND) {
-    const SDL_Rect r = {TOUCH_OFFSET_X, TOUCH_OFFSET_Y, DISPLAY_RESX,
-                        DISPLAY_RESY};
-    SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
-  } else {
-    const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX,
-                        DISPLAY_RESY};
-    SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
-  }
+  SDL_SetTextureAlphaMod(TEXTURE, MIN(255, 255 * DISPLAY_BACKLIGHT / BACKLIGHT_NORMAL));
+  const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX, DISPLAY_RESY};
+  SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
   SDL_RenderPresent(RENDERER);
 }
 
