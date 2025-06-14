@@ -18,6 +18,16 @@ typedef enum {
   STATE_APP,
 }se_state_t;
 
+enum {
+  USER_OBJ_OP_EXECUTE = 0x01,
+  USER_OBJ_OP_READ = 0x02,
+  USER_OBJ_OP_WRITE = 0x04,
+  USER_OBJ_OP_DELETE = 0x04, // can delete when can write
+};
+
+// 用户对象的起始ID
+#define OID_USER_OBJ_BASE  0xF000
+
 void se_init(void);
 void se_conn_reset(void);
 int se_get_life_cycle(life_cycle_t *life_cycle);
@@ -34,7 +44,7 @@ int se_has_pin(bool* exist);
 int se_set_pin(const uint8_t *pin, size_t pin_len);
 int se_verify_pin(const uint8_t* pin, size_t pin_len);
 int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new_pin, size_t new_pin_len);
-// tell se forget verified state, aka `logout`
+// tell SE forget verified state, aka `logout`
 int se_forget_pin(void);
 int se_get_pin_max_retry(int* max_retry);
 int se_get_pin_retry(int* retry);
@@ -44,6 +54,14 @@ int se_reset_pin(void);
 int se_reboot(void);
 int se_launch(se_state_t state);
 int se_back_to_rom_bl(void);
+int se_wipe_user_storage(void); // need pin verified
+
+// 文件指令
+int se_write_file(uint16_t id, const uint8_t *data, size_t data_len);
+int se_read_file(uint16_t id, uint8_t *data, size_t *data_len);
+int se_delete_file(uint16_t id);
+int se_get_file_size(uint16_t id, size_t *size);
+int se_set_file_access(uint16_t id, uint8_t access);
 
 // boot 下的指令
 int se_verify_app(void);

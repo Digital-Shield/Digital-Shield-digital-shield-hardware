@@ -43,6 +43,14 @@ enum {
   // 管理指令
   CMD_ID_REBOOT = 0x10,
   CMD_ID_LAUNCH = 0x11,
+  CMD_ID_WIPE_USER_STORAGE = 0x12,
+
+    // 文件 指令
+  CMD_ID_WRITE_FILE = 0x20,
+  CMD_ID_READ_FILE = 0x21,
+  CMD_ID_DELETE_FILE = 0x22,
+  CMD_ID_GET_FILE_SIZE = 0x23,
+  CMD_ID_SET_FILE_ACCESS = 0x24,
 
   // boot 指令
   CMD_ID_VERIFY_APP = 0x90,
@@ -63,6 +71,10 @@ typedef enum {
   RESP_CODE_UNSUPPORTED_COMMAND,
   RESP_CODE_OBJECT_ALREADY_EXIST,
   RESP_CODE_OBJECT_NOT_EXIST,
+  RESP_CODE_PIN_LOCKED,
+  RESP_CODE_ACCESS_DENIED,
+
+  RESP_CODE_VERIFY_PIN_FAIL_X = 0x80,
 } response_code_t;
 
 // struct for command and response
@@ -251,6 +263,142 @@ int se_launch(se_state_t state) {
 }
 int se_back_to_rom_bl(void) {
     return se_sample_command(CMD_ID_ROM_BL);
+}
+
+int se_wipe_user_storage(void) {
+    return se_sample_command(CMD_ID_WIPE_USER_STORAGE);
+}
+
+int se_write_file(uint16_t id, const uint8_t *data, size_t data_len) {
+    uint8_t command[1024] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_WRITE_FILE);
+    uint8_t *p = req->payload;
+    // id
+    PUT_UINT16_BE(id, p, 0);
+    // move over `id`
+    p += 2;
+
+    // len
+    PUT_UINT16_BE(data_len, p, 0);
+    // move over `len`
+    p += 2;
+
+    memcpy(p, data, data_len);
+    request_set_length(req, 4 + data_len);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+
+
+int se_read_file(uint16_t id, uint8_t *data, size_t *data_len) {
+    uint8_t command[16] = {0};
+    uint8_t response[1024] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_READ_FILE);
+    uint8_t *p = req->payload;
+    // id
+    PUT_UINT16_BE(id, p, 0);
+    request_set_length(req, 2);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    *data_len = response_get_length(resp);
+    if (*data_len) {
+        memcpy(data, resp->payload, *data_len);
+    }
+    return 0;
+}
+
+int se_delete_file(uint16_t id) {
+    uint8_t command[16] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_DELETE_FILE);
+    uint8_t *p = req->payload;
+    // id
+    PUT_UINT16_BE(id, p, 0);
+    request_set_length(req, 2);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
+
+int se_get_file_size(uint16_t id, size_t *size) {
+    uint8_t command[16] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_GET_FILE_SIZE);
+    uint8_t *p = req->payload;
+    // id
+    PUT_UINT16_BE(id, p, 0);
+    request_set_length(req, 2);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    if (response_get_length(resp) != 2) {
+        return 1;
+    }
+    *size = GET_UINT16_BE(resp->payload, 0);
+    return 0;
+}
+
+int se_set_file_access(uint16_t id, uint8_t access) {
+    uint8_t command[16] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = 0;
+    REQ_INIT_CMD(command, CMD_ID_SET_FILE_ACCESS);
+    uint8_t *p = req->payload;
+    // id
+    PUT_UINT16_BE(id, p, 0);
+    // move over `id`
+    p += 2;
+    // access
+    *p++ = access;
+    request_set_length(req, 3);
+    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
+    // transmit result
+    if (ret != THD89_SUCCESS) {
+        return 1;
+    }
+
+    RESP_INIT(response);
+    if (resp->code != RESP_CODE_SUCCESS) {
+        return 1;
+    }
+    return 0;
 }
 
 int se_get_dev_pubkey(uint8_t pubkey[65]) {
@@ -876,6 +1024,73 @@ void se_test(void) {
         printf("has pin: %d\n", exist);
     } else {
         printf("has pin failed\n");
+    }
+
+    // set a pin for file test
+    if (!se_set_pin(pin, PIN_LEN)) {
+        printf("set pin success\n");
+    } else {
+        printf("set pin failed\n");
+    }
+    se_forget_pin();
+
+    uint8_t __data__[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
+    uint16_t __id__ = OID_USER_OBJ_BASE + 0;
+    if (!se_write_file(__id__, __data__, sizeof(__data__))) {
+        printf("write file success\n");
+    } else {
+        printf("write file failed\n");
+    }
+
+    // the default access is public
+
+    size_t __data_size__ = 0;
+    if (!se_get_file_size(__id__, &__data_size__) && __data_size__ == sizeof(__data__)) {
+        printf("get file size success\n");
+    } else {
+        printf("get file size failed\n");
+    }
+
+    uint8_t __data2__[8] = {0};
+    size_t __data2_size__ = 0;
+    if (!se_read_file(__id__, __data2__, &__data2_size__)) {
+        printf("read file success\n");
+    } else {
+        printf("read file failed\n");
+    }
+    if (__data2_size__ != __data_size__ || memcmp(__data2__, __data__, __data_size__) != 0) {
+        printf("read file data error\n");
+    }
+
+    // set access to private
+    if (!se_set_file_access(__id__, 0)) {
+        printf("set file access success\n");
+    } else {
+        printf("set file access failed\n");
+    }
+
+    // can't delete, because have write access
+    printf("can't delete file, because have write access\n");
+    if (!se_delete_file(__id__)) {
+        printf("delete file success\n");
+    } else {
+        printf("delete file failed\n");
+    }
+
+    // verify user pin
+    ret = se_verify_pin(pin, PIN_LEN);
+    if (!ret) {
+        printf("verify pin success\n");
+    } else {
+        printf("verify pin failed: %x\n", ret);
+    }
+
+    // now can delete file
+    printf("now can delete file, because have verify pin\n");
+    if (!se_delete_file(__id__)) {
+        printf("delete file success\n");
+    } else {
+        printf("delete file failed\n");
     }
 
     while (1) {
