@@ -1093,6 +1093,12 @@ void se_test(void) {
         printf("delete file failed\n");
     }
 
+    // pin have verified we can wipe user storeage
+    if (!se_wipe_user_storage()) {
+        printf("wipe user storage success\n");
+    } else {
+        printf("wipe user storage failed\n");
+    }
     while (1) {
         HAL_Delay(1000);
         char version[17] = {0};
