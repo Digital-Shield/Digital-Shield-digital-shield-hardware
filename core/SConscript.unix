@@ -503,7 +503,7 @@ env.Replace(
         ('LVGL_UI', '$LVGL_UI'),
         ('MP_CONFIGFILE', '\\"embed/unix/mpconfigport.h\\"'),
         ('CURRENT_DIR', '$CURRENT_DIR'),
-        ('RES_DIR', '\\"/src/trezor/lvglui\\"'),
+        ('RES_DIR', '\\"/src/trezor\\"'),
     ] + CPPDEFINES_MOD,
     ASPPFLAGS='$CFLAGS $CCFLAGS', )
 

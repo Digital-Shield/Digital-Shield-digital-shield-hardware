@@ -50,16 +50,29 @@ def init_lvgl():
     indev_drv.long_press_time = 2000
     indev_drv.register()
 
+def init_theme() -> None:
+    from . import colors
+    from . import font
+    dispp = lv.disp_get_default()
+    theme = lv.theme_default_init(
+        dispp,
+        colors.DS.PRIMARY,
+        colors.DS.SECONDARY,
+        False,
+        font.default
+    )
+    dispp.set_theme(theme)
 
 ## init lvgl first, then do setting for it
 try:
     from trezor import log
     init_file_system()
     init_lvgl()
-    log.debug("ui", "initialized successfully")
+    init_theme()
+    log.debug(__name__, "lvgl initialized successfully")
 except BaseException as e:
-    log.error("ui", "initialized failed")
-    log.exception("ui", e)
+    log.error(__name__, "lvgl initialized failed")
+    log.exception(__name__, e)
     raise e
 
 # under code all need lvgl
