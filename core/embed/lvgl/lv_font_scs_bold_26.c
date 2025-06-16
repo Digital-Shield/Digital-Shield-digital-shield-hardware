@@ -21,7 +21,7 @@ static int __user_font_getdata(uint8_t *data_buf, int offset, int size) {
   if (!is_opend) {
     uint8_t buf[4] = {0};
     uint32_t len = 0;
-    res = f_open(&font_f, "/res/lv_font_scs_bold_26.bin", FA_READ);
+    res = f_open(&font_f, "/res/lv_font_source_han_bold_26.bin", FA_READ);
     if (FR_OK == res) {
       font_f.cltbl = clmt; /* Enable fast seek mode (cltbl != NULL) */
       clmt[0] = SZ_TBL;    /* Set table size */
