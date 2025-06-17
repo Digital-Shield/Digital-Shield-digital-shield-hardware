@@ -1,4 +1,5 @@
 from trezor import utils
+from micropython import const
 
 SCREEN_WIDTH = const(480)
 SCREEN_HEIGHT = const(800)

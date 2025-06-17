@@ -9,7 +9,10 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/core/build/unix/trezor-emu-core",
-      "args": [],
+      "args": [
+        "-X",
+        "heapsize=512M"
+      ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/core/src",
       "environment": [],

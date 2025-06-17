@@ -7,7 +7,6 @@
 #define font_free vPortFree
 
 #define SRAM1 __attribute__((section("sram1")))
-#define EXRAM __attribute__((section("exram")))
 
 // 缓存的fat文件不连续的簇数量，用于提高 f_seek 的速度
 // 这个值和文件碎片化有关，文件碎片化越严重，需要缓存的数量越多

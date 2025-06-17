@@ -284,6 +284,7 @@ SOURCE_MICROPYTHON = [
     'vendor/micropython/extmod/moduos.c',
     'vendor/micropython/shared/readline/readline.c',
     'vendor/micropython/shared/timeutils/timeutils.c',
+    'vendor/micropython/shared/libc/printf.c',
     'vendor/micropython/py/argcheck.c',
     'vendor/micropython/py/asmarm.c',
     'vendor/micropython/py/asmbase.c',
@@ -484,7 +485,7 @@ env.Replace(
     '-g3 '
     '-std=gnu99 -Wall -Werror -Wuninitialized -Wno-missing-braces '
     '-fdata-sections -ffunction-sections -fPIE ' + CCFLAGS_MOD,
-    CCFLAGS_QSTR='-DNO_QSTR -DN_X64 -DN_X86 -DN_THUMB',
+    CCFLAGS_QSTR='-DNO_QSTR',
     LIBS=['m', 'pthread'],
     CPPPATH=[
         '.',
