@@ -808,7 +808,7 @@ obj_program.extend(env.Object(source=SOURCE_UNIX))
 if FROZEN:
     obj_program.extend(env.Object(source=source_mpyc))
 if FEATURE_FLAGS["LVGL"]:
-    obj_program.extend(env.Object(source=SOURCE_LVGL, CCFLAGS='$CCFLAGS -Wno-unused-function'))
+    obj_program.extend(env.Object(source=SOURCE_LVGL, CCFLAGS='$CCFLAGS -Wno-unused-function -Wno-unused-but-set-variable'))
 
 env.Depends(obj_program, qstr_generated)
 

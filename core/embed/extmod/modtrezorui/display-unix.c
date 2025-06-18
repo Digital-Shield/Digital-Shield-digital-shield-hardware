@@ -38,7 +38,9 @@
 #define WINDOW_HEIGHT 979
 #define TOUCH_OFFSET_X 0
 #define TOUCH_OFFSET_Y 0
-
+#if __APPLE__
+#define WINDOW_SCALE 0.6
+#endif
 static SDL_Window *WINDOW;
 static SDL_Renderer *RENDERER;
 static SDL_Surface *BUFFER;
@@ -120,9 +122,18 @@ void display_init(void) {
     window_title_alloc = NULL;
   }
 
+  int w, h;
+#if __APPLE__
+  w = WINDOW_WIDTH * WINDOW_SCALE;
+  h = WINDOW_HEIGHT * WINDOW_SCALE;
+#else
+  w = WINDOW_WIDTH;
+  h = WINDOW_HEIGHT;
+#endif
   WINDOW = SDL_CreateWindow(window_title, SDL_WINDOWPOS_UNDEFINED,
-                       SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
-                       SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+                       SDL_WINDOWPOS_UNDEFINED, w, h,
+                       SDL_WINDOW_SHOWN);
+
   free(window_title_alloc);
   if (!WINDOW) {
     printf("%s\n", SDL_GetError());
@@ -134,6 +145,9 @@ void display_init(void) {
     SDL_DestroyWindow(WINDOW);
     ensure(secfalse, "SDL_CreateRenderer error");
   }
+
+  // 设置逻辑分辨率大小
+  SDL_RenderSetLogicalSize(RENDERER, WINDOW_WIDTH, WINDOW_HEIGHT);
   SDL_SetRenderDrawColor(RENDERER, 0, 0, 0, 255);
   SDL_RenderClear(RENDERER);
   BUFFER = SDL_CreateRGBSurface(0, MAX_DISPLAY_RESX, MAX_DISPLAY_RESY, 16,
@@ -145,7 +159,7 @@ void display_init(void) {
 #ifdef __APPLE__
   // macOS Mojave SDL black screen workaround
   SDL_PumpEvents();
-  SDL_SetWindowSize(WINDOW, WINDOW_WIDTH, WINDOW_HEIGHT);
+  SDL_SetWindowSize(WINDOW, w, h);
 #endif
 #include "background.h"
   BACKGROUND = IMG_LoadTexture_RW(

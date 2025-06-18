@@ -80,19 +80,6 @@ log.info("main", "usb successfully")
 import storage.device
 
 usb.bus.open(storage.device.get_device_id())
-    
-from trezor import loop
-from trezor.ui import lvgl_tick
-loop.schedule(lvgl_tick())
-import lvgl as lv
-
-o = lv.obj(lv.scr_act())
-o.set_pos(0, 0)
-o.set_size(480, 800)
-o.set_style_bg_color(lv.color_make(0xCD, 0x2B, 0x31), 0)
-
-
-loop.run()
 
 # initialize the status bar
 from trezor.ui.screen.statusbar import StatusBar
