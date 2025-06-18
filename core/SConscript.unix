@@ -69,6 +69,9 @@ if FEATURE_FLAGS["LVGL"]:
     CPPPATH_MOD += [LVGL_BINDING_DIR]
 #====================================LVGL BINDING END===========================================
 
+# lvgl fonts
+SOURCE_MOD.extend(Glob('embed/unix/fonts/*.c'))
+
 CPPDEFINES_MOD = []
 SOURCE_MOD += [
     'vendor/micropython/extmod/vfs_posix_file.c',

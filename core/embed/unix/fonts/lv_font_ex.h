@@ -1,12 +1,13 @@
 #ifndef LV_FONT_EX_H
 #define LV_FONT_EX_H
+#include <stdint.h>
+#include <stdlib.h>
 
-#include "secure_heap.h"
 
-#define font_malloc pvPortMalloc
-#define font_free vPortFree
+#define font_malloc malloc
+#define font_free free
 
-#define FONT_CACHE __attribute__((section("sram1")))
+#define FONT_CACHE
 
 // 缓存的fat文件不连续的簇数量，用于提高 f_seek 的速度
 // 这个值和文件碎片化有关，文件碎片化越严重，需要缓存的数量越多
