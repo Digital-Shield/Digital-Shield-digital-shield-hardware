@@ -7,6 +7,7 @@
 #define font_malloc malloc
 #define font_free free
 
+#define FONT_DIR CURRENT_DIR RES_DIR
 #define FONT_CACHE
 
 // 缓存的fat文件不连续的簇数量，用于提高 f_seek 的速度

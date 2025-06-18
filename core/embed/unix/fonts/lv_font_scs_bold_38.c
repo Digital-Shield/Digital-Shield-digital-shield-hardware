@@ -1,6 +1,11 @@
-#include "ff.h"
 #include "lv_font_ex.h"
+
+#include <stdio.h>
+#include <stdint.h>
+
 #include "lvgl.h"
+
+#define FONT_BIN_FILE FONT_DIR"/res/lv_font_source_han_bold_38.bin"
 
 static x_header_t __g_xbf_hd = {
     .min = 0x0020,
@@ -8,48 +13,47 @@ static x_header_t __g_xbf_hd = {
     .bpp = 4,
 };
 
-static FONT_CACHE DWORD clmt[SZ_TBL];
-static FIL font_f;
-static FRESULT res;
-static UINT nums = 0;
-static bool is_opend = false;
+static FILE* f = NULL;
 static uint32_t glyph_location = 0;
 
 static font_data_cache font_cache = {0};
 
+static void __exit(void) {
+  fclose(f);
+}
 static int __user_font_getdata(uint8_t *data_buf, int offset, int size) {
-  if (!is_opend) {
+  int ret;
+  if (!f) {
     uint8_t buf[4] = {0};
     uint32_t len = 0;
-    // res = f_open(&font_f, "/res/lv_font_scs_bold_38.bin", FA_READ);
-    res = f_open(&font_f, "/res/lv_font_source_han_bold_38.bin", FA_READ);
-    if (FR_OK == res) {
-      font_f.cltbl = clmt; /* Enable fast seek mode (cltbl != NULL) */
-      clmt[0] = SZ_TBL;    /* Set table size */
-      f_lseek(&font_f, CREATE_LINKMAP); /* Create CLMT */
-
-      res = f_lseek(&font_f, LOCA_OFFSET);
-      if (FR_OK != res) {
-        return -1;
-      }
-      if (f_read(&font_f, &len, 4, &nums) != FR_OK ||
-          f_read(&font_f, buf, 4, &nums) != FR_OK ||
-          memcmp("loca", buf, 4) != 0) {
-        return -1;
-      }
-      glyph_location = len + LOCA_OFFSET;
-
-      is_opend = true;
-    } else {
+    f = fopen(FONT_BIN_FILE, "r");
+    if (!f) {
       return -1;
     }
+    ret  = fseek(f, LOCA_OFFSET, SEEK_SET);
+    if (ret) {
+      return -1;
+    }
+    atexit(__exit);
+    ret = fread(&len, 1, 4, f);
+    if (ret != 4) {
+      return -1;
+    }
+    ret = fread(buf, 1, 4, f);
+    if (ret != 4) {
+      return -1;
+    }
+    if (memcmp("loca", buf, 4) != 0) {
+      return -1;
+    }
+    glyph_location = len + LOCA_OFFSET;
   }
-  res = f_lseek(&font_f, offset);
-  if (FR_OK != res) {
+  ret = fseek(f, offset, SEEK_SET);
+  if (ret) {
     return -1;
   }
-  res = f_read(&font_f, data_buf, size, &nums);
-  if (FR_OK != res) {
+  ret = fread(data_buf, 1, size, f);
+  if (ret != size) {
     return -1;
   }
   return 0;
