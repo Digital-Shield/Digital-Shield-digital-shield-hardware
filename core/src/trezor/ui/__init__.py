@@ -7,9 +7,6 @@ from typing import TYPE_CHECKING
 
 def init_file_system():
     from trezor import utils
-    if utils.EMULATOR:
-        return
-
     import trezorio as io
     io.fatfs.mount()
     io.fatfs.mkdir("1:res", True)

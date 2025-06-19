@@ -29,6 +29,7 @@
 #include "common.h"
 #include "profile.h"
 #include "ff.h"
+#include "secbool.h"
 #include "diskio.h"
 
 #ifndef SDCARD_FILE
@@ -42,7 +43,7 @@
 static uint8_t *sdcard_buffer = NULL;
 static secbool sdcard_powered = secfalse;
 
-static void sdcard_exit(void) {
+static void diskio_exit(void) {
   int r = munmap(sdcard_buffer, SDCARD_SIZE);
   ensure(sectrue * (r == 0), "munmap failed");
   sdcard_buffer = NULL;
@@ -83,9 +84,9 @@ DSTATUS disk_initialize (BYTE pdrv) {
     for (int i = 0; i < SDCARD_SIZE; ++i) sdcard_buffer[i] = 0xFF;
   }
 
-  sdcard_powered = secfalse;
+  sdcard_powered = sectrue;
 
-  atexit(sdcard_exit);
+  atexit(diskio_exit);
   return RES_OK;
 }
 DSTATUS disk_status (BYTE pdrv) {
