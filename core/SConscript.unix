@@ -205,11 +205,6 @@ if FEATURE_FLAGS["SECP256K1_ZKP"]:
 SOURCE_MOD += [
     'embed/extmod/modtrezorio/modtrezorio.c',
 ]
-if TREZOR_MODEL in ('T',):
-    SOURCE_MOD += [
-        'embed/trezorhal/fatfs/ff.c',
-        'embed/trezorhal/fatfs/ffunicode.c',
-    ]
 
 # modtrezorui
 if FEATURE_FLAGS["TREZOR_UI"]:
@@ -416,7 +411,7 @@ SOURCE_UNIX = [
     'embed/unix/rng.c',
     'embed/unix/touch.c',
     'embed/unix/usb.c',
-    'embed/unix/diskio.c',
+    'embed/unix/ff.c',
     'vendor/micropython/shared/runtime/gchelper_generic.c',
     'vendor/micropython/ports/unix/alloc.c',
     'vendor/micropython/ports/unix/gccollect.c',
@@ -494,7 +489,6 @@ env.Replace(
         '.',
         'embed/rust',
         'embed/unix',
-        'embed/trezorhal/fatfs',
         'embed/extmod/modtrezorui' if FEATURE_FLAGS['TREZOR_UI'] else '',
         'vendor/micropython',
         'vendor/micropython/ports/unix',

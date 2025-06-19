@@ -60,14 +60,14 @@ const char *profile_flash_path(void) {
   return _flash_path;
 }
 
-const char *profile_sdcard_path(void) {
-  SVAR(_sdcard_path);
-  FILE_PATH(_sdcard_path, "/Digitshield.sdcard");
-  return _sdcard_path;
-}
-
 const char *profile_usb_disconnect_path(void) {
   SVAR(_disconnect_path);
   FILE_PATH(_disconnect_path, "/Digitshield.usb_data_disconnected");
   return _disconnect_path;
+}
+
+const char *profile_user_data_path(void) {
+  SVAR(_user_data_path);
+  FILE_PATH(_user_data_path, "/Digitshield.user_data");
+  return _user_data_path;
 }
