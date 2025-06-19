@@ -217,6 +217,9 @@ FRESULT f_mkdir (const TCHAR* path){
     if (vol < 0) return FR_INVALID_DRIVE;
     char full_path[FF_MAX_LFN];
     get_full_path(vol, path, full_path);
+    if (access(full_path, F_OK) == 0) {
+        return FR_EXIST;
+    }
     return mkdir(full_path, 0755) < 0 ? FR_DISK_ERR : FR_OK;
 }
 FRESULT f_unlink (const TCHAR* path) {
