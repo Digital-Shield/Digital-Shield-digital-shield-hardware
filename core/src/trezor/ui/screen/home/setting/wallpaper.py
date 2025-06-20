@@ -43,15 +43,9 @@ class ImageSource:
         self.name = name
 
     def thumbnail(self) -> str:
-        if utils.EMULATOR:
-            s = f"{self.path}/thumbnail/{self.name}"
-            return f'A{s[1:]}'
         return f"A:{self.path}/thumbnail/{self.name}"
 
     def source(self) -> str:
-        if utils.EMULATOR:
-            s = f"{self.path}/{self.name}"
-            return f'A{s[1:]}'
         return f"A:{self.path}/{self.name}"
 
 class WallpaperDetail(Navigation):
@@ -165,10 +159,6 @@ class WallpaperDetail(Navigation):
             except:
                 continue
 
-        # 真实机器 lvgl底层文件系统是fat，可以通过卷标区分系统区和用户区
-        # 模拟器 lvgl 文件系统，是直接用的本机的目录，从lvgl角度来看只存在系统区存储
-        if utils.EMULATOR:
-            return
         USER_WALLPAPER_PATH = "1:/res/wallpapers"
         # user wallpapers
         for _, _, name in io.fatfs.listdir(USER_WALLPAPER_PATH):
