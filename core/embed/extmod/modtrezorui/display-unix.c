@@ -113,14 +113,7 @@ void display_init(void) {
   }
   atexit(display_deinit);
 
-  char *window_title = NULL;
-  char *window_title_alloc = NULL;
-  if (asprintf(&window_title_alloc, "Digitshield^emu: %s", profile_name()) > 0) {
-    window_title = window_title_alloc;
-  } else {
-    window_title = "Digitshield^emu";
-    window_title_alloc = NULL;
-  }
+  char *window_title = "Digitshield^emu";
 
   int w, h;
 #if __APPLE__
@@ -134,7 +127,6 @@ void display_init(void) {
                        SDL_WINDOWPOS_UNDEFINED, w, h,
                        SDL_WINDOW_SHOWN);
 
-  free(window_title_alloc);
   if (!WINDOW) {
     printf("%s\n", SDL_GetError());
     ensure(secfalse, "SDL_CreateWindow error");
