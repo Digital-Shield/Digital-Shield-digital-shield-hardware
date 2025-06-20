@@ -306,3 +306,13 @@ FRESULT f_mkfs (const TCHAR* path, const MKFS_PARM* opt, void* work, UINT len){
 // int f_puts (const TCHAR* str, FIL* cp);								/* Put a string to the file */
 // int f_printf (FIL* fp, const TCHAR* str, ...);						/* Put a formatted string to the file */
 // TCHAR* f_gets (TCHAR* buff, int len, FIL* fp);						/* Get a string from the file */
+
+FSIZE_t f_tell(FIL *fp) {
+    return lseek(fp->fd, 0, SEEK_CUR);
+}
+
+FSIZE_t f_size(FIL *fp) {
+    struct stat st;
+    fstat(fp->fd, &st);
+    return st.st_size;
+}
