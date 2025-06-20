@@ -32,7 +32,7 @@
 #include "display_interface.h"
 #include "profile.h"
 
-#define EMULATOR_BORDER 62 
+#define EMULATOR_BORDER 62
 
 #define WINDOW_WIDTH 604
 #define WINDOW_HEIGHT 979
@@ -261,4 +261,16 @@ const char *display_save(const char *prefix) {
 void display_clear_save(void) {
   SDL_FreeSurface(PREV_SAVED);
   PREV_SAVED = NULL;
+}
+
+void decode_to_lcd(const uint8_t* buf, size_t size) {
+  SDL_RWops* rw = SDL_RWFromConstMem(buf, size);
+  if (!rw) return;
+  SDL_Surface* surface = IMG_Load_RW(rw, 1);
+  SDL_UpdateTexture(TEXTURE, NULL, surface->pixels, surface->pitch);
+  SDL_SetTextureAlphaMod(TEXTURE, MIN(255, 255 * DISPLAY_BACKLIGHT / 100));
+  const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX, DISPLAY_RESY};
+  // SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
+  SDL_RenderCopy(RENDERER, TEXTURE, NULL, &r);
+  SDL_RenderPresent(RENDERER);
 }

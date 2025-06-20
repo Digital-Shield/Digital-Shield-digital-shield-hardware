@@ -37,14 +37,14 @@
 #include "common.h"
 #include "flash.h"
 #include "usb.h"
+#include "avi_parser.h"
+#include "ff.h"
 
 #ifndef TREZOR_EMULATOR
 #include "device.h"
 #include "sdram.h"
 #include "br_check.h"
 #include "image.h"
-#include "fatfs/ff.h"
-#include "avi_parser.h"
 #include "lv_jpeg_stm32.h"
 #endif
 
@@ -332,9 +332,6 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_trezorutils_power_off_obj, mod_trezorutils_
 ///     """
 ///
 static mp_obj_t mod_trezorutils_avi_play(mp_obj_t path) {
-#ifdef TREZOR_EMULATOR
-  return mp_const_none;
-#else
   if (!MP_OBJ_IS_STR(path)) {
     mp_raise_msg(&mp_type_ValueError, "Invalid path type");
     return mp_const_none;
@@ -358,15 +355,25 @@ static mp_obj_t mod_trezorutils_avi_play(mp_obj_t path) {
 
   AVI_CONTEXT avi;
   // reuse a buffer
-  uint8_t *video = (uint8_t*) FMC_SDRAM_IMAGE_BUFFER_ADDRESS;
-  if (AVI_ParserInit(&avi, &f, video, FMC_SDRAM_IMAGE_BUFFER_LEN, NULL, 0) != 0) {
+  uint8_t* video = NULL;
+  size_t video_buffer_size = 0;
+#ifndef TREZOR_EMULATOR
+  video = (uint8_t*) FMC_SDRAM_IMAGE_BUFFER_ADDRESS;
+  video_buffer_size = FMC_SDRAM_IMAGE_BUFFER_LEN;
+#else
+  uint8_t __video__[512*1024] = {0};
+  video = __video__;
+  video_buffer_size = sizeof(__video__);
+#endif
+  if (AVI_ParserInit(&avi, &f, video, video_buffer_size, NULL, 0) != 0) {
     goto err;
   }
-
+#ifndef TREZOR_EMULATOR
   // reuse lvgl `lv_jpeg_stm32.h`
   lv_st_jpeg_init();
+#endif
   // decode avi
-  volatile uint32_t start = HAL_GetTick();
+  volatile uint32_t start = hal_ticks_ms();
 
   do {
     uint32_t frame_type = AVI_GetFrame(&avi, &f);
@@ -376,18 +383,17 @@ static mp_obj_t mod_trezorutils_avi_play(mp_obj_t path) {
     avi.CurrentImage++;
     extern void decode_to_lcd(const uint8_t* buf, size_t size);
     decode_to_lcd(video, avi.FrameSize);
-    uint32_t duration = (HAL_GetTick() - start) + 1;
+    uint32_t duration = (hal_ticks_ms() - start) + 1;
     uint32_t cur_frame_until = (avi.aviInfo.SecPerFrame/1000) * avi.CurrentImage;
     if (duration < cur_frame_until) {
-      HAL_Delay(cur_frame_until - duration);
+      hal_delay(cur_frame_until - duration);
     }
   }while (avi.CurrentImage < avi.aviInfo.TotalFrame);
 
 err:
   f_close(&f);
-  memset(video, 0, FMC_SDRAM_IMAGE_BUFFER_LEN);
+  memset(video, 0, video_buffer_size);
   return mp_const_none;
-#endif
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorutils_avi_play_obj, mod_trezorutils_avi_play);
 
