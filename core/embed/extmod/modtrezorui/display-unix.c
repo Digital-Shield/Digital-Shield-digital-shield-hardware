@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "SDL_render.h"
+#include "SDL_surface.h"
 #include "common.h"
 #include "display_defs.h"
 #include "display_interface.h"
@@ -267,10 +269,13 @@ void decode_to_lcd(const uint8_t* buf, size_t size) {
   SDL_RWops* rw = SDL_RWFromConstMem(buf, size);
   if (!rw) return;
   SDL_Surface* surface = IMG_Load_RW(rw, 1);
-  SDL_UpdateTexture(TEXTURE, NULL, surface->pixels, surface->pitch);
-  SDL_SetTextureAlphaMod(TEXTURE, MIN(255, 255 * DISPLAY_BACKLIGHT / 100));
+  if (!surface) return;
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(RENDERER,  surface);
+  SDL_FreeSurface(surface);
+  if (texture) return;
+  SDL_SetTextureAlphaMod(texture, MIN(255, 255 * DISPLAY_BACKLIGHT / 100));
   const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX, DISPLAY_RESY};
-  // SDL_RenderCopyEx(RENDERER, TEXTURE, NULL, &r, DISPLAY_ORIENTATION, NULL, 0);
-  SDL_RenderCopy(RENDERER, TEXTURE, NULL, &r);
+  SDL_RenderCopy(RENDERER, texture, NULL, &r);
   SDL_RenderPresent(RENDERER);
+  SDL_DestroyTexture(texture);
 }
