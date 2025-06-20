@@ -53,12 +53,6 @@
 /// FR_NO_SPACE: int             # (64) No space left on device
 // clang-format on
 
-#if TREZOR_EMULATOR
-#define FAT_DIR FAT_DIR
-#else
-#define FAT_DIR DIR
-#endif
-
 static FATFS fs_instance;
 static FATFS fs_instance_slave;
 
@@ -280,7 +274,7 @@ STATIC const mp_obj_type_t mod_trezorio_FatFSFile_type = {
 ///     """
 typedef struct _mp_obj_FatFSDir_t {
   mp_obj_base_t base;
-  FAT_DIR dp;
+  DIR dp;
 } mp_obj_FatFSDir_t;
 
 /// def __next__(self) -> tuple[int, str, str]:
@@ -364,7 +358,7 @@ STATIC mp_obj_t mod_trezorio_fatfs_listdir(mp_obj_t path) {
   FATFS_ONLY_MOUNTED;
   mp_buffer_info_t _path = {0};
   mp_get_buffer_raise(path, &_path, MP_BUFFER_READ);
-  FAT_DIR dp = {0};
+  DIR dp = {0};
   FRESULT res = f_opendir(&dp, _path.buf);
   if (res != FR_OK) {
     FATFS_RAISE(FatFSError, res);

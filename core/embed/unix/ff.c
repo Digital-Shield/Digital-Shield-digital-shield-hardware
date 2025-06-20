@@ -1,6 +1,9 @@
 /// use posix api implement fatfs api
 #include "ff.h"
 
+// undef `DIR` symbol for posix api
+#undef DIR
+
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
@@ -155,7 +158,7 @@ FRESULT f_sync (FIL* fp) {
     return FR_OK;
 }
 
-FRESULT f_opendir (FAT_DIR* dp, const TCHAR* path) {
+FRESULT f_opendir (struct FAT_DIR* dp, const TCHAR* path) {
     int vol = get_ldnumber(&path);
     if (vol < 0) return FR_INVALID_DRIVE;
     char full_path[FF_MAX_LFN];
@@ -167,7 +170,7 @@ FRESULT f_opendir (FAT_DIR* dp, const TCHAR* path) {
     strcpy(dp->path, path);
     return FR_OK;
 }
-FRESULT f_closedir (FAT_DIR* dp) {
+FRESULT f_closedir (struct FAT_DIR* dp) {
     closedir(dp->dp);
     // clear cache dir
     dp->dp = NULL;
@@ -175,7 +178,7 @@ FRESULT f_closedir (FAT_DIR* dp) {
     memset(dp->path, 0, sizeof(dp->path));
     return FR_OK;
 }
-FRESULT f_readdir (FAT_DIR* dp, FILINFO* fno) {
+FRESULT f_readdir (struct FAT_DIR* dp, FILINFO* fno) {
     struct dirent *entry;
     while ((entry = readdir(dp->dp)) != NULL) {
         // skip `..` and `.`
