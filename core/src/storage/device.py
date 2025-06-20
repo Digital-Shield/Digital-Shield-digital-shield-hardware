@@ -352,8 +352,10 @@ def set_passphrase_enabled(enable: bool) -> None:
 
 def get_homescreen() -> str | None:
     homescreen = common.get(_NAMESPACE, _HOMESCREEN, public=True)
-    # TODO: FIX path in fatfs
-    return homescreen.decode() if homescreen else "A:/res/wallpapers/0.png"
+    if utils.EMULATOR:
+        return homescreen.decode() if homescreen else "A:/res/wallpapers/0.png"
+    else:
+        return homescreen.decode() if homescreen else "A:0:/res/wallpapers/0.png"
 
 def set_homescreen(full_path: str) -> None:
     common.set(_NAMESPACE, _HOMESCREEN, full_path.encode(), public=True)
