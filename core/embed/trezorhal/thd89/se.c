@@ -852,6 +852,12 @@ void se_conn_reset(void) {
     thd89_reset();
 }
 
+int se_handshake(uint8_t *secret, size_t secret_len) {
+    if (thd89_handshake(secret, secret_len) != THD89_SUCCESS) {
+        return 1;
+    }
+    return 0;
+}
 
 /// pcb v1.0 device cert
 typedef struct
