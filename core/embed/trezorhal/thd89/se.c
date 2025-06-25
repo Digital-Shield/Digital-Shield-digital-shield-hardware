@@ -6,7 +6,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-
 #include "stm32h7xx_hal.h"
 #include "thd89.h"
 #include "se_spi.h"
@@ -45,12 +44,32 @@ enum {
   CMD_ID_LAUNCH = 0x11,
   CMD_ID_WIPE_USER_STORAGE = 0x12,
 
-    // 文件 指令
+  // 文件指令
   CMD_ID_WRITE_FILE = 0x20,
   CMD_ID_READ_FILE = 0x21,
   CMD_ID_DELETE_FILE = 0x22,
   CMD_ID_GET_FILE_SIZE = 0x23,
   CMD_ID_SET_FILE_ACCESS = 0x24,
+
+  // 密码算法指令
+  CMD_ID_RANDOM = 0x30,
+  CMD_ID_GEN_SECRET = 0x31,
+  CMD_ID_GEN_KEY = 0x32,
+  CMD_ID_SET_KEY = 0x33,
+  CMD_ID_GEN_KEY_PAIR = 0x34,
+  CMD_ID_GET_PUB_KEY = 0x35,
+  CMD_ID_DERIVE_KEY = 0x36,
+
+  CMD_ID_ENCRYPT_SYM = 0x40,
+  CMD_ID_DECRYPT_SYM = 0x41,
+  CMD_ID_ENCRYPT_ASYM = 0x42,
+  CMD_ID_DECRYPT_ASYM = 0x43,
+  CMD_ID_CMAC = 0x44,
+  CMD_ID_HASH = 0x45,
+  CMD_ID_HMAC = 0x46,
+  CMD_ID_SIGN = 0x47,
+  CMD_ID_VERIFY = 0x48,
+  CMD_ID_ECDH = 0x49,
 
   // boot 指令
   CMD_ID_VERIFY_APP = 0x90,
@@ -76,6 +95,18 @@ typedef enum {
 
   RESP_CODE_VERIFY_PIN_FAIL_X = 0x80,
 } response_code_t;
+
+#define CHECK_FID(id) do {          \
+    if (id < OID_USER_OBJ_BASE) {   \
+        return 1;                   \
+    }                               \
+} while (0)
+
+#define CHECK_CMD_RESULT(ret) do {  \
+    if (ret != 0) {     \
+        return ret;                 \
+    }                               \
+} while (0)
 
 // struct for command and response
 typedef struct {
@@ -123,16 +154,10 @@ static inline void response_set_length(response_t* resp, size_t len) {
 static inline size_t command_size(const request_t* req) {
   return 3 + request_get_length(req);
 }
-
-static int se_sample_command(uint8_t cmd) {
-    uint8_t command[3] = {0};
-    uint8_t response[16] = {0};
-    size_t response_size = 0;
-
-    REQ_INIT_CMD(command, cmd);
-    REQ_EMPTY_PAYLOAD(req);
-
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
+static int se_execute_command(const uint8_t* command, uint8_t* response, size_t* response_size) {
+    const request_t *req = (void*)command;
+    size_t req_size = command_size(req);
+    thd89_result_t ret = thd89_execute_command(command, req_size, response, *response_size, response_size);
     // transmit result
     if (ret != THD89_SUCCESS) {
         return 1;
@@ -140,29 +165,35 @@ static int se_sample_command(uint8_t cmd) {
 
     RESP_INIT(response);
     if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
+        return resp->code;
     }
+    return 0;
+}
+
+static int se_sample_command(uint8_t cmd_id) {
+    uint8_t command[3] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = sizeof(response);
+
+    REQ_INIT_CMD(command, cmd_id);
+    REQ_EMPTY_PAYLOAD(req);
+
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
 int se_get_version(char version[17]) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_VERSION);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    // command result
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 4) {
         return 1;
     }
@@ -179,20 +210,14 @@ int se_get_version(char version[17]) {
 int se_get_sn(char serial[33]) {
     uint8_t command[3] = {0};
     uint8_t response[64] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_SN);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     memcpy(serial, resp->payload, response_get_length(resp));
     return 0;
 }
@@ -200,16 +225,13 @@ int se_get_sn(char serial[33]) {
 int se_get_running_state(se_state_t *state) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_STATE);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
     *state = (se_state_t)resp->payload[0];
     return 0;
@@ -218,20 +240,14 @@ int se_get_running_state(se_state_t *state) {
 int se_get_life_cycle(life_cycle_t *life_cycle) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_LIFE_CYCLE);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     *life_cycle = (life_cycle_t)resp->payload[0];
     return 0;
 }
@@ -243,22 +259,15 @@ int se_reboot(void) {
 int se_launch(se_state_t state) {
     uint8_t command[4] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     // 注意 boot状态下只能启动 app, app状态下只能启动到boot
     // boot -> app, app -> boot
     // 其他状态下会失败
     REQ_INIT_CMD(command, CMD_ID_LAUNCH);
     REQ_PAYLOAD(req, &state, 1);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 int se_back_to_rom_bl(void) {
@@ -272,7 +281,7 @@ int se_wipe_user_storage(void) {
 int se_write_file(uint16_t id, const uint8_t *data, size_t data_len) {
     uint8_t command[1024] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_WRITE_FILE);
     uint8_t *p = req->payload;
     // id
@@ -287,16 +296,8 @@ int se_write_file(uint16_t id, const uint8_t *data, size_t data_len) {
 
     memcpy(p, data, data_len);
     request_set_length(req, 4 + data_len);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
@@ -304,22 +305,15 @@ int se_write_file(uint16_t id, const uint8_t *data, size_t data_len) {
 int se_read_file(uint16_t id, uint8_t *data, size_t *data_len) {
     uint8_t command[16] = {0};
     uint8_t response[1024] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_READ_FILE);
     uint8_t *p = req->payload;
     // id
     PUT_UINT16_BE(id, p, 0);
     request_set_length(req, 2);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     *data_len = response_get_length(resp);
     if (*data_len) {
         memcpy(data, resp->payload, *data_len);
@@ -330,44 +324,29 @@ int se_read_file(uint16_t id, uint8_t *data, size_t *data_len) {
 int se_delete_file(uint16_t id) {
     uint8_t command[16] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_DELETE_FILE);
     uint8_t *p = req->payload;
     // id
     PUT_UINT16_BE(id, p, 0);
     request_set_length(req, 2);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
 int se_get_file_size(uint16_t id, size_t *size) {
     uint8_t command[16] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_GET_FILE_SIZE);
     uint8_t *p = req->payload;
     // id
     PUT_UINT16_BE(id, p, 0);
     request_set_length(req, 2);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 2) {
         return 1;
     }
@@ -378,7 +357,7 @@ int se_get_file_size(uint16_t id, size_t *size) {
 int se_set_file_access(uint16_t id, uint8_t access) {
     uint8_t command[16] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_SET_FILE_ACCESS);
     uint8_t *p = req->payload;
     // id
@@ -388,16 +367,187 @@ int se_set_file_access(uint16_t id, uint8_t access) {
     // access
     *p++ = access;
     request_set_length(req, 3);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    return 0;
+}
+
+int se_random(size_t len, uint8_t *rnd) {
+    uint8_t command[16] = {0};
+    uint8_t response[1024] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_RANDOM);
+    // len[1]
+    req->payload[0] = len & 0xFF;
+    request_set_length(req, 1);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    if (response_get_length(resp) != len) {
         return 1;
     }
+    memcpy(rnd, resp->payload, len);
+    return 0;
+}
 
+int se_gen_secret(uint16_t fid, size_t len) {
+    CHECK_FID(fid);
+    uint8_t command[16] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_GEN_SECRET);
+    // id[2]|len[1]
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    p += 2;
+    *p++ = len & 0xFF;
+    request_set_length(req, 3);
+
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
     if (resp->code != RESP_CODE_SUCCESS) {
         return 1;
     }
+    return 0;
+}
+
+int se_gen_sym_key(uint16_t fid, uint8_t key_type) {
+    CHECK_FID(fid);
+    uint8_t command[16] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_GEN_KEY);
+    // id[2]|type[1]
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    p += 2;
+    *p++ = key_type;
+
+    request_set_length(req, 3);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    return 0;
+}
+
+int se_gen_keypair(uint16_t fid, uint8_t key_type) {
+    CHECK_FID(fid);
+    uint8_t command[16] = {0};
+    uint8_t response[128] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_GEN_KEY_PAIR);
+    // id[2]|type[1]
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    p += 2;
+    *p++ = key_type;
+    request_set_length(req, 3);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    return 0;
+}
+
+int se_get_pubkey(uint16_t fid, uint8_t *pk, size_t *pk_len) {
+    CHECK_FID(fid);
+    uint8_t command[16] = {0};
+    uint8_t response[128] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_GET_PUB_KEY);
+    // id[2]
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    request_set_length(req, 2);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    if (response_get_length(resp) != 65) {
+        return 1;
+    }
+    *pk_len = response_get_length(resp);
+    memcpy(pk, resp->payload, *pk_len);
+    return 0;
+}
+
+int se_cmac(uint16_t fid, const uint8_t *msg, size_t msg_len, uint8_t *cmac) {
+    CHECK_FID(fid);
+    uint8_t command[1024] = {0};
+    uint8_t response[64] = {0};
+    size_t response_size = sizeof(response);
+
+    REQ_INIT_CMD(command, CMD_ID_CMAC);
+    // id[2]|mode[1]|len[2]|data
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    p += 2;
+    // mode
+    *p++ = 0;
+    // len
+    PUT_UINT16_BE(msg_len, p, 0);
+    // move over `len`
+    p += 2;
+    memcpy(p, msg, msg_len);
+    request_set_length(req, 5 + msg_len);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    if (response_get_length(resp) != 16) {
+        return 1;
+    }
+    memcpy(cmac, resp->payload, response_get_length(resp));
+    return 0;
+}
+
+int se_hmac(uint16_t fid, const uint8_t *msg, size_t msg_len, uint8_t *hmac) {
+    CHECK_FID(fid);
+    uint8_t command[1024] = {0};
+    uint8_t response[64] = {0};
+    size_t response_size = sizeof(response);
+
+    REQ_INIT_CMD(command, CMD_ID_HMAC);
+    // id[2]|mode[1]|len[2]|data
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    // move over `fid`
+    p += 2;
+    // mode
+    *p++ = 0;
+    // len
+    PUT_UINT16_BE(msg_len, p, 0);
+    // move over `len`
+    p += 2;
+    memcpy(p, msg, msg_len);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    // the sha256_hamc
+    if (response_get_length(resp) != 32) {
+        return 1;
+    }
+    memcpy(hmac, resp->payload, response_get_length(resp));
+    return 0;
+}
+
+int se_ecdh(uint16_t fid, const uint8_t *pk, size_t pk_len, uint8_t *secret) {
+    CHECK_FID(fid);
+    uint8_t command[128] = {0};
+    uint8_t response[128] = {0};
+    size_t response_size = sizeof(response);
+
+    REQ_INIT_CMD(command, CMD_ID_ECDH);
+    // id[2]|<uncompressed public key>
+    uint8_t *p = req->payload;
+    PUT_UINT16_BE(fid, p, 0);
+    // move over `fid`
+    p += 2;
+    memcpy(p, pk, pk_len);
+    request_set_length(req, 2 + pk_len);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    if (response_get_length(resp) != 32) {
+        return 1;
+    }
+    memcpy(secret, resp->payload, response_get_length(resp));
     return 0;
 }
 
@@ -407,20 +557,14 @@ int se_get_dev_pubkey(uint8_t pubkey[65]) {
     // }
     uint8_t command[3] = {0};
     uint8_t response[128] = { 0 };
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_DEV_PUBKEY);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 65) {
         return 1;
     }
@@ -437,20 +581,14 @@ int se_get_certificate_len(size_t *cert_len) {
     *cert_len = 0;
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_DEV_CERT_LENGTH);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 2) {
         return 1;
     }
@@ -464,19 +602,13 @@ int se_read_certificate(uint8_t *cert, size_t *cert_len) {
     }
     uint8_t command[3] = {0};
     uint8_t response[1024] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_GET_DEV_CERT);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (*cert_len < response_get_length(resp)) {
         return 1;
     }
@@ -491,19 +623,13 @@ int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature) {
     }
     uint8_t command[1024] = {0};
     uint8_t response[128] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_DEV_SIGN);
     REQ_PAYLOAD(req, msg, msg_len);
 
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 64) {
         return 1;
     }
@@ -515,19 +641,13 @@ int se_sign_message(uint8_t *msg, size_t msg_len, uint8_t *signature) {
 int se_verify_app(void) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_VERIFY_APP);
     REQ_EMPTY_PAYLOAD(req);
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     // we use 0 as success
     return *resp->payload == 1? 0: 1;
 }
@@ -535,7 +655,7 @@ int se_verify_app(void) {
 int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
     uint8_t command[1024] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
     REQ_INIT_CMD(command, CMD_ID_INSTALL_APP);
     struct {
         uint8_t block_index_bytes[2];
@@ -547,15 +667,8 @@ int se_install_app(size_t index, const uint8_t* block, size_t block_size) {
     PUT_UINT16_BE(block_size, app_block->block_size_bytes, 0);
     memcpy(app_block->data, block, block_size);
     request_set_length(req, block_size + 4);
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
@@ -566,20 +679,14 @@ int se_ping(void) {
 int se_has_pin(bool* exist) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_HAS_PIN);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 1) {
         return 1;
     }
@@ -594,20 +701,13 @@ int se_set_pin(const uint8_t *pin, size_t pin_len) {
 
     uint8_t command[260] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_SET_PIN);
     REQ_PAYLOAD(req, pin, pin_len);
 
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
@@ -617,20 +717,13 @@ int se_verify_pin(const uint8_t* pin, size_t pin_len) {
     }
     uint8_t command[260] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_VERIFY_PIN);
     REQ_PAYLOAD(req, pin, pin_len);
 
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return resp->code;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
@@ -640,7 +733,7 @@ int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new
     }
     uint8_t command[520] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_CHANGE_PIN);
     request_set_length(req, old_pin_len + new_pin_len + 6);
@@ -665,15 +758,8 @@ int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new
     memcpy(p, new_pin, new_pin_len);
     p += new_pin_len;
 
-    thd89_result_t ret = thd89_execute_command(command, command_size(req), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-    RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return resp->code;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     return 0;
 }
 
@@ -684,21 +770,14 @@ int se_forget_pin(void) {
 int se_get_pin_max_retry(int *max_retry) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_PIN_MAX_RETRY);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
-
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 1) {
         return 1;
     }
@@ -709,20 +788,14 @@ int se_get_pin_max_retry(int *max_retry) {
 int se_get_pin_retry(int *retry) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
-    size_t response_size = 0;
+    size_t response_size = sizeof(response);
 
     REQ_INIT_CMD(command, CMD_ID_GET_PIN_RETRY);
     REQ_EMPTY_PAYLOAD(req);
 
-    thd89_result_t ret = thd89_execute_command(command, sizeof(command), response, sizeof(response), &response_size);
-    // transmit result
-    if (ret != THD89_SUCCESS) {
-        return 1;
-    }
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
-    if (resp->code != RESP_CODE_SUCCESS) {
-        return 1;
-    }
     if (response_get_length(resp) != 1) {
         return 1;
     }

@@ -25,6 +25,16 @@ enum {
   USER_OBJ_OP_DELETE = 0x04, // can delete when can write
 };
 
+// key types, which storead in SE, can't be readout
+enum {
+  KEY_TYPE_SECRET = 0x80,  // a secret key
+  KEY_TYPE_AES_128 = 0x81,  // a AES 128 key
+  KEY_TYPE_AES_192 = 0x82,  // a AES 192 key
+  KEY_TYPE_AES_256 = 0x83,  // a AES 256 key
+
+  KEY_TYPE_NISTP256 = 0x90,  // a Nistp256 keypair(256r1)
+};
+
 // 用户对象的起始ID
 #define OID_USER_OBJ_BASE  0xF000
 
@@ -62,6 +72,16 @@ int se_read_file(uint16_t id, uint8_t *data, size_t *data_len);
 int se_delete_file(uint16_t id);
 int se_get_file_size(uint16_t id, size_t *size);
 int se_set_file_access(uint16_t id, uint8_t access);
+
+// 密码算法指令
+int se_random(size_t len, uint8_t *rnd);
+int se_gen_secret(uint16_t fid, size_t len);
+int se_gen_sym_key(uint16_t fid, uint8_t key_type);
+int se_gen_keypair(uint16_t fid, uint8_t key_type);
+int se_get_pubkey(uint16_t fid, uint8_t *pk, size_t *pk_len);
+int se_cmac(uint16_t fid, const uint8_t *msg, size_t msg_len, uint8_t *cmac);
+int se_hmac(uint16_t fid, const uint8_t *msg, size_t msg_len, uint8_t *hmac);
+int se_ecdh(uint16_t fid, const uint8_t *pk, size_t pk_len, uint8_t *secret);
 
 // boot 下的指令
 int se_verify_app(void);
