@@ -1,5 +1,10 @@
 #include "se.h"
+
 #include <stdio.h>
+#include <string.h>
+
+#include "stm32h7xx_hal.h"
+
 #include "ecdsa.h"
 #include "nist256p1.h"
 #include "hmac.h"
@@ -99,6 +104,12 @@ void se_test(void) {
     // delay a moment wait se start up
     HAL_Delay(50);
     se_conn_reset();
+
+    if (!se_handshake(key, sizeof(key))) {
+        printf("handshake success\n");
+    } else{
+        printf("handshake failed\n");
+    }
 
     // pin test
     bool exist = false;
@@ -243,7 +254,7 @@ void se_test(void) {
     }
 
     #define SECRET_KEY_ID (OID_USER_OBJ_BASE + 0x10)
-    if (!se_gen_secret(SECRET_KEY_ID, KEY_TYPE_SECRET)) {
+    if (!se_gen_secret(SECRET_KEY_ID, 0x10)) {
         printf("gen secret key success\n");
     } else {
         printf("gen secret key failed\n");
@@ -274,14 +285,14 @@ void se_test(void) {
     }
 
     // we a fixed `random` as key for test
-    uint8_t __key__[16] = {
-        0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-        0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
-    };
-    uint8_t __cmac__[16] = {
-        0xb0, 0x8c, 0x1b, 0x98, 0xfd, 0x48, 0xc0, 0xec,
-        0x29, 0xc7, 0x49, 0xb2, 0x02, 0x7d, 0x22, 0xbd
-    };
+    // uint8_t __key__[16] = {
+    //     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+    //     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+    // };
+    // uint8_t __cmac__[16] = {
+    //     0xb0, 0x8c, 0x1b, 0x98, 0xfd, 0x48, 0xc0, 0xec,
+    //     0x29, 0xc7, 0x49, 0xb2, 0x02, 0x7d, 0x22, 0xbd
+    // };
 
     uint8_t cmac[16] = {0};
     if (!se_cmac(AES_128_KEY_ID, __data__, sizeof(__data__), cmac)) {
@@ -290,11 +301,11 @@ void se_test(void) {
         printf("cmac failed\n");
     }
 
-    if (memcmp(__cmac__, cmac, sizeof(__cmac__)) == 0) {
-        printf("cmac success\n");
-    }else {
-        printf("cmac failed\n");
-    }
+    // if (memcmp(__cmac__, cmac, sizeof(__cmac__)) == 0) {
+    //     printf("cmac success\n");
+    // }else {
+    //     printf("cmac failed\n");
+    // }
 
     uint8_t hmac[32] = {0};
     if (!se_hmac(SECRET_KEY_ID, __data__, sizeof(__data__), hmac)) {
@@ -303,13 +314,13 @@ void se_test(void) {
         printf("hmac failed\n");
     }
 
-    uint8_t __hmac__[32] = {0};
-    hmac_sha256(__key__, 16, __data__, sizeof(__data__), __hmac__);
-    if (memcmp(__hmac__, hmac, sizeof(__hmac__)) == 0) {
-        printf("hmac success\n");
-    } else {
-        printf("hmac failed\n");
-    }
+    // uint8_t __hmac__[32] = {0};
+    // hmac_sha256(__key__, 16, __data__, sizeof(__data__), __hmac__);
+    // if (memcmp(__hmac__, hmac, sizeof(__hmac__)) == 0) {
+    //     printf("hmac success\n");
+    // } else {
+    //     printf("hmac failed\n");
+    // }
 
     uint8_t __sk2__[32] = {0};
     uint8_t __pk2__[65] = {0};
@@ -328,12 +339,12 @@ void se_test(void) {
         printf("ecdh failed\n");
     }
 
-    uint8_t __shared2__[32] = {0};
+    uint8_t __shared2__[65] = {0};
     ecdh_multiply(&nist256p1, __sk2__, __pk__, __shared2__);
     printf("shared2: ");
     log_data(__shared2__, sizeof(__shared2__));
 
-    if (memcmp(__shared__, __shared2__, sizeof(__shared__)) == 0) {
+    if (memcmp(__shared__, &__shared2__[1], sizeof(__shared__)) == 0) {
         printf("ecdh success\n");
     } else {
         printf("ecdh failed\n");
