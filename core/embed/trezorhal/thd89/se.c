@@ -516,6 +516,7 @@ int se_hmac(uint16_t fid, const uint8_t *msg, size_t msg_len, uint8_t *hmac) {
     // move over `len`
     p += 2;
     memcpy(p, msg, msg_len);
+    request_set_length(req, 5 + msg_len);
     int ret = se_execute_command(command, response, &response_size);
     CHECK_CMD_RESULT(ret);
     RESP_INIT(response);
