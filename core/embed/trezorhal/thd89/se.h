@@ -40,7 +40,7 @@ enum {
 
 void se_init(void);
 void se_conn_reset(void);
-int se_handshake(uint8_t *secret, size_t secret_len);
+int se_handshake(const uint8_t *secret, size_t secret_len);
 int se_get_life_cycle(life_cycle_t *life_cycle);
 int se_get_version(char version[17]);
 int se_get_sn(char serial[33]);
