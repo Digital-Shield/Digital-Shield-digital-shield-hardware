@@ -116,4 +116,8 @@ int se_ping(void);
 bool se_check_app_binary(const uint8_t *binary, size_t binary_len);
 void se_binary_version(const uint8_t *binary, char version[17]);
 
+// helper user function
+int se_set_user_pin(uint8_t pin[32]);
+int se_verify_user_pin(uint8_t pin[32]);
+
 #endif

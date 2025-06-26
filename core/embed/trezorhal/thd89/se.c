@@ -1,4 +1,4 @@
-#include "thd89/se.h"
+#include "se.h"
 
 #include <stdbool.h>
 #include <stdint.h>
