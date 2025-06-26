@@ -477,11 +477,62 @@ static void test_crypto(void) {
 
 }
 
+__attribute__((noreturn))
+static void test_create_files(void) {
+
+    if (!se_set_pin(pin, PIN_LEN)) {
+        printf("set pin success\n");
+    } else {
+        printf("set pin failed\n");
+        ERROR();
+    }
+    int count = 0;
+    uint8_t buf[128] = {0};
+    while (1) {
+        HAL_Delay(100);
+        size_t size = 0;
+        if (!se_user_storage_size(&size)) {
+            printf("[%03d] get user storage size: %d\n", count, size);
+        } else {
+            printf("[%03d] get user storage size failed\n", count);
+            ERROR();
+        }
+        if (!se_verify_pin(pin, PIN_LEN)) {
+            printf("[%03d] verify pin success\n", count);
+        } else {
+            printf("[%03d] verify pin failed\n", count);
+            ERROR();
+        }
+        // test_crypto();
+        random_buffer(buf, sizeof(buf));
+        if (!se_write_file(OID_USER_OBJ_BASE + 0x20, buf, sizeof(buf))) {
+            printf("[%03d] write file success\n", count);
+        } else {
+            printf("[%03d] write file failed\n", count);
+            ERROR();
+        }
+        uint8_t buf2[128] = {0};
+        size_t buf2_size = 0;
+        if (!se_read_file(OID_USER_OBJ_BASE + 0x20, buf2, &buf2_size)) {
+            printf("[%03d] read file success\n", count);
+        } else {
+            printf("[%03d] read file failed\n", count);
+            ERROR();
+        }
+        if (memcmp(buf, buf2, sizeof(buf)) != 0) {
+            printf("[%03d] read file data error\n", count);
+            ERROR();
+        }
+        count++;
+    }
+}
+
 void se_test(void) {
     se_init();
 
     test_common();
     test_factory();
+    test_device();
 
     if (!se_handshake(__pre_shared_key__, sizeof(__pre_shared_key__))) {
         printf("handshake success\n");
@@ -494,6 +545,10 @@ void se_test(void) {
     test_file();
     test_crypto();
 
+    // test create file to compact storage
+    (void)test_create_files;
+    // test_create_files();
+
     // set a pin for regenerate keys
     if (!se_set_pin(pin, PIN_LEN)) {
         printf("set pin success\n");
@@ -501,9 +556,12 @@ void se_test(void) {
         printf("set pin failed\n");
         ERROR();
     }
+    int count = 0;
     while (1) {
+        printf("[%06d] test regenerate keys\n", count);
         HAL_Delay(1000);
         test_device();
+        // re-generate need verify pin
         if (!se_verify_pin(pin, PIN_LEN)) {
             printf("verify pin success\n");
         } else {
@@ -511,6 +569,8 @@ void se_test(void) {
             ERROR();
         }
         test_crypto();
+        printf("[%06d] test regenerate keys\n", count);
+        count++;
     }
 
 }
