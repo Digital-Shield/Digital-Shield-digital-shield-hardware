@@ -395,7 +395,7 @@ bool hash_to_curve_p256(const uint8_t *msg, size_t msg_len, const uint8_t *dst,
   return true;
 }
 
-bool hash_to_curve_optiga(const uint8_t input[32], uint8_t public_key[65]) {
+bool hash_to_curve_thd89(const uint8_t input[32], uint8_t public_key[65]) {
   char dst[] = "THD89-SECRET-V0-P256_XMD:SHA-256_SSWU_RO_";
   curve_point point = {0};
 

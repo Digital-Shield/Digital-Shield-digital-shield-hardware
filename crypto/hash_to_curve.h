@@ -28,5 +28,5 @@ bool expand_message_xmd_sha256(const uint8_t *msg, size_t msg_len,
                                uint8_t *output, size_t output_len);
 bool hash_to_curve_p256(const uint8_t *msg, size_t msg_len, const uint8_t *dst,
                         size_t dst_len, curve_point *point);
-bool hash_to_curve_optiga(const uint8_t input[32], uint8_t public_key[65]);
+bool hash_to_curve_thd89(const uint8_t input[32], uint8_t public_key[65]);
 #endif

@@ -32,9 +32,7 @@
 #include "random_delays.h"
 #include "sha2.h"
 #include "storage.h"
-#ifndef TREZOR_EMULATOR
-#include "thd89/se.h"
-#endif
+#include "se.h"
 
 #define LOW_MASK 0x55555555
 
@@ -102,7 +100,7 @@ const uint32_t V0_PIN_EMPTY = 1;
 #define HARDWARE_SALT_SIZE SHA256_DIGEST_LENGTH
 
 // The length of the random salt in bytes.
-#define RANDOM_SALT_SIZE 4
+#define STORAGE_SALT_SIZE 4
 
 // The length of the data encryption key in bytes.
 #define DEK_SIZE 32
@@ -220,7 +218,7 @@ static secbool storage_get_edek_pvc_key(const void **key, uint16_t *key_len) {
   aes_ecb_decrypt((uint8_t *)val, key_buf, sizeof(key_buf), &ctxe);
 
   *key = key_buf;
-  *key_len = RANDOM_SALT_SIZE + KEYS_SIZE + PVC_SIZE;
+  *key_len = STORAGE_SALT_SIZE + KEYS_SIZE + PVC_SIZE;
   return sectrue;
 }
 
@@ -511,19 +509,18 @@ static secbool is_not_wipe_code(const uint8_t *pin, size_t pin_len) {
   return sectrue;
 }
 
-static void derive_kek(const uint8_t *pin, size_t pin_len,
-                       const uint8_t *random_salt, const uint8_t *ext_salt,
-                       uint8_t kek[SHA256_DIGEST_LENGTH],
-                       uint8_t keiv[SHA256_DIGEST_LENGTH]) {
-  uint8_t salt[HARDWARE_SALT_SIZE + RANDOM_SALT_SIZE + EXTERNAL_SALT_SIZE] = {
-      0};
+static void derive_kek_v4(const uint8_t *pin, size_t pin_len,
+                          const uint8_t *storage_salt, const uint8_t *ext_salt,
+                          uint8_t kek[SHA256_DIGEST_LENGTH],
+                          uint8_t keiv[SHA256_DIGEST_LENGTH]) {
+  uint8_t salt[HARDWARE_SALT_SIZE + STORAGE_SALT_SIZE + EXTERNAL_SALT_SIZE] = {0};
   size_t salt_len = 0;
 
   memcpy(salt + salt_len, hardware_salt, HARDWARE_SALT_SIZE);
   salt_len += HARDWARE_SALT_SIZE;
 
-  memcpy(salt + salt_len, random_salt, RANDOM_SALT_SIZE);
-  salt_len += RANDOM_SALT_SIZE;
+  memcpy(salt + salt_len, storage_salt, STORAGE_SALT_SIZE);
+  salt_len += STORAGE_SALT_SIZE;
 
   if (ext_salt != NULL) {
     memcpy(salt + salt_len, ext_salt, EXTERNAL_SALT_SIZE);
@@ -563,27 +560,83 @@ static void derive_kek(const uint8_t *pin, size_t pin_len,
   memzero(&salt, sizeof(salt));
 }
 
+static void stretch_pin(const uint8_t *pin, size_t pin_len,
+                        const uint8_t storage_salt[STORAGE_SALT_SIZE],
+                        const uint8_t *ext_salt,
+                        uint8_t stretched_pin[SHA256_DIGEST_LENGTH]) {
+  uint8_t salt[HARDWARE_SALT_SIZE + STORAGE_SALT_SIZE + EXTERNAL_SALT_SIZE] = {0};
+  size_t salt_len = 0;
+
+  memcpy(salt + salt_len, hardware_salt, HARDWARE_SALT_SIZE);
+  salt_len += HARDWARE_SALT_SIZE;
+
+  memcpy(salt + salt_len, storage_salt, STORAGE_SALT_SIZE);
+  salt_len += STORAGE_SALT_SIZE;
+
+  if (ext_salt != NULL) {
+    memcpy(salt + salt_len, ext_salt, EXTERNAL_SALT_SIZE);
+    salt_len += EXTERNAL_SALT_SIZE;
+  }
+
+  PBKDF2_HMAC_SHA256_CTX ctx = {0};
+  pbkdf2_hmac_sha256_Init(&ctx, pin, pin_len, salt, salt_len, 1);
+  memzero(&salt, sizeof(salt));
+
+  for (int i = 1; i <= 10; i++) {
+    pbkdf2_hmac_sha256_Update(&ctx, PIN_ITER_COUNT / 10);
+  }
+  pbkdf2_hmac_sha256_Final(&ctx, stretched_pin);
+  memzero(&ctx, sizeof(ctx));
+}
+
+
+static secbool __wur derive_kek_unlock_v4(const uint8_t *pin, size_t pin_len,
+                                          const uint8_t *storage_salt, const uint8_t *ext_salt,
+                                          uint8_t kek[SHA256_DIGEST_LENGTH], uint8_t keiv[SHA256_DIGEST_LENGTH]) {
+  derive_kek_v4(pin, pin_len, storage_salt, ext_salt, kek, keiv);
+  return sectrue;
+}
+
+static secbool __wur derive_kek_set(const uint8_t *pin, size_t pin_len,
+                                    const uint8_t *storage_salt, const uint8_t *ext_salt,
+                                    uint8_t stretched_pin[SHA256_DIGEST_LENGTH]) {
+  stretch_pin(pin, pin_len, storage_salt, ext_salt, stretched_pin);
+  if (0 != se_set_user_pin(stretched_pin)) {
+    return secfalse;
+  }
+  return sectrue;
+}
+
+static secbool __wur derive_kek_unlock(
+  const uint8_t *pin, size_t pin_len, const uint8_t *storage_salt,
+  const uint8_t *ext_salt, uint8_t stretched_pin[SHA256_DIGEST_LENGTH]) {
+  stretch_pin(pin, pin_len, storage_salt, ext_salt, stretched_pin);
+  if (0 != se_verify_user_pin(stretched_pin)) {
+    return secfalse;
+  }
+  return sectrue;
+}
+
 static secbool set_pin(const uint8_t *pin, size_t pin_len,
                        const uint8_t *ext_salt) {
   // Encrypt the cached keys using the new PIN and set the new PVC.
-  uint8_t buffer[RANDOM_SALT_SIZE + KEYS_SIZE + POLY1305_TAG_SIZE] = {0};
+  uint8_t buffer[STORAGE_SALT_SIZE + KEYS_SIZE + POLY1305_TAG_SIZE] = {0};
   uint8_t *rand_salt = buffer;
-  uint8_t *ekeys = buffer + RANDOM_SALT_SIZE;
-  uint8_t *pvc = buffer + RANDOM_SALT_SIZE + KEYS_SIZE;
+  uint8_t *ekeys = buffer + STORAGE_SALT_SIZE;
+  uint8_t *pvc = buffer + STORAGE_SALT_SIZE + KEYS_SIZE;
 
   uint8_t kek[SHA256_DIGEST_LENGTH] = {0};
   uint8_t keiv[SHA256_DIGEST_LENGTH] = {0};
   chacha20poly1305_ctx ctx = {0};
-  random_buffer(rand_salt, RANDOM_SALT_SIZE);
-  derive_kek(pin, pin_len, rand_salt, ext_salt, kek, keiv);
+  random_buffer(rand_salt, STORAGE_SALT_SIZE);
+  ensure(derive_kek_set(pin, pin_len, rand_salt, ext_salt, kek), "derive_kek_set failed");
   rfc7539_init(&ctx, kek, keiv);
   memzero(kek, sizeof(kek));
   memzero(keiv, sizeof(keiv));
   chacha20poly1305_encrypt(&ctx, cached_keys, ekeys, KEYS_SIZE);
   rfc7539_finish(&ctx, 0, KEYS_SIZE, pvc);
   memzero(&ctx, sizeof(ctx));
-  secbool ret =
-      storage_set_edek_pvc_key(buffer, RANDOM_SALT_SIZE + KEYS_SIZE + PVC_SIZE);
+  secbool ret = storage_set_edek_pvc_key(buffer, STORAGE_SALT_SIZE + KEYS_SIZE + PVC_SIZE);
   memzero(buffer, sizeof(buffer));
 
   if (ret == sectrue) {
@@ -991,23 +1044,37 @@ secbool check_storage_version(void) {
   return sectrue;
 }
 
-static secbool decrypt_dek(const uint8_t *kek, const uint8_t *keiv) {
+static secbool decrypt_dek(const uint8_t *pin, size_t pin_len, const uint8_t* ext_salt) {
   const void *buffer = NULL;
   uint16_t len = 0;
 
   secbool ret = storage_get_edek_pvc_key(&buffer, &len);
   if (sectrue != initialized || sectrue != ret ||
-      len != RANDOM_SALT_SIZE + KEYS_SIZE + PVC_SIZE) {
+      len != STORAGE_SALT_SIZE + KEYS_SIZE + PVC_SIZE) {
     handle_fault("no EDEK");
     return secfalse;
   }
-
-  const uint8_t *ekeys = (const uint8_t *)buffer + RANDOM_SALT_SIZE;
-  const uint32_t *pvc = (const uint32_t *)buffer +
-                        (RANDOM_SALT_SIZE + KEYS_SIZE) / sizeof(uint32_t);
-  _Static_assert(((RANDOM_SALT_SIZE + KEYS_SIZE) & 3) == 0, "PVC unaligned");
+  const uint8_t* storage_salt = (const uint8_t *)buffer;
+  const uint8_t *ekeys = (const uint8_t *)buffer + STORAGE_SALT_SIZE;
+  const uint32_t *pvc = (const uint32_t *)((uint8_t*)buffer + (STORAGE_SALT_SIZE + KEYS_SIZE));
+  _Static_assert(((STORAGE_SALT_SIZE + KEYS_SIZE) & 3) == 0, "PVC unaligned");
   _Static_assert((PVC_SIZE & 3) == 0, "PVC size unaligned");
 
+  // derive the key encryption key from pin
+  uint8_t kek[SHA256_DIGEST_LENGTH] = {0};
+  uint8_t keiv[SHA256_DIGEST_LENGTH] = {0};
+
+  if (get_lock_version() >= 5) {
+    if (sectrue != derive_kek_unlock(pin, pin_len, storage_salt, ext_salt, kek)){
+      return secfalse;
+    }
+  } else {
+    if (sectrue != derive_kek_unlock_v4(pin, pin_len, storage_salt, ext_salt, kek, keiv)) {
+      return secfalse;
+    }
+  }
+
+  // decrypt)
   uint8_t keys[KEYS_SIZE] = {0};
   uint8_t tag[POLY1305_TAG_SIZE] __attribute__((aligned(sizeof(uint32_t))));
   chacha20poly1305_ctx ctx = {0};
@@ -1015,6 +1082,8 @@ static secbool decrypt_dek(const uint8_t *kek, const uint8_t *keiv) {
   // Decrypt the data encryption key and the storage authentication key and
   // check the PIN verification code.
   rfc7539_init(&ctx, kek, keiv);
+  memzero(kek, sizeof(kek));
+  memzero(keiv, sizeof(keiv));
   chacha20poly1305_decrypt(&ctx, ekeys, keys, KEYS_SIZE);
   rfc7539_finish(&ctx, 0, KEYS_SIZE, tag);
   memzero(&ctx, sizeof(ctx));
@@ -1073,46 +1142,6 @@ static secbool unlock(const uint8_t *pin, size_t pin_len,
     return secfalse;
   }
 
-#if 0
-  // Sleep for 2^ctr - 1 seconds before checking the PIN.
-  uint32_t wait = (1 << ctr) - 1;
-  ui_total += wait;
-  uint32_t progress = 0;
-  for (ui_rem = ui_total; ui_rem > ui_total - wait; ui_rem--) {
-    for (int i = 0; i < 10; i++) {
-      if (ui_callback && ui_message) {
-        if (ui_total > 1000000) {  // precise enough
-          progress = (ui_total - ui_rem) / (ui_total / 1000);
-        } else {
-          progress = ((ui_total - ui_rem) * 10 + i) * 100 / ui_total;
-        }
-        if (sectrue == ui_callback(ui_rem, progress, ui_message)) {
-          memzero(&legacy_pin, sizeof(legacy_pin));
-          return secfalse;
-        }
-      }
-      hal_delay(100);
-    }
-  }
-#endif
-
-  // Read the random salt from EDEK_PVC_KEY and use it to derive the KEK and
-  // KEIV from the PIN.
-  const void *rand_salt = NULL;
-  uint16_t len = 0;
-  secbool ret = storage_get_edek_pvc_key(&rand_salt, &len);
-  if (sectrue != initialized || sectrue != ret ||
-      len != RANDOM_SALT_SIZE + KEYS_SIZE + PVC_SIZE) {
-    memzero(&legacy_pin, sizeof(legacy_pin));
-    handle_fault("no EDEK");
-    return secfalse;
-  }
-  uint8_t kek[SHA256_DIGEST_LENGTH] = {0};
-  uint8_t keiv[SHA256_DIGEST_LENGTH] = {0};
-  derive_kek(unlock_pin, unlock_pin_len, (const uint8_t *)rand_salt, ext_salt,
-             kek, keiv);
-  memzero(&legacy_pin, sizeof(legacy_pin));
-
   // First, we increase PIN fail counter in storage, even before checking the
   // PIN.  If the PIN is correct, we reset the counter afterwards.  If not, we
   // check if this is the last allowed attempt.
@@ -1128,7 +1157,8 @@ static secbool unlock(const uint8_t *pin, size_t pin_len,
   }
 
   // Check whether the entered PIN is correct.
-  if (sectrue != decrypt_dek(kek, keiv)) {
+  if (sectrue != decrypt_dek(unlock_pin, unlock_pin_len, ext_salt)) {
+    memzero(&legacy_pin, sizeof(legacy_pin));
     // Wipe storage if too many failures
     wait_random();
     if (ctr + 1 >= PIN_MAX_TRIES) {
@@ -1137,8 +1167,6 @@ static secbool unlock(const uint8_t *pin, size_t pin_len,
     }
     return secfalse;
   }
-  memzero(kek, sizeof(kek));
-  memzero(keiv, sizeof(keiv));
 
   // Check for storage upgrades that need to be performed after unlocking and
   // check that the authenticated version number matches the unauthenticated
@@ -1519,17 +1547,14 @@ secbool storage_change_wipe_code(const uint8_t *pin, size_t pin_len,
 
 void _storage_wipe(void) {
   norcow_wipe();
+  se_wipe_user_storage();
   norcow_active_version = NORCOW_VERSION;
   memzero(authentication_sum, sizeof(authentication_sum));
   memzero(cached_keys, sizeof(cached_keys));
   init_wiped_storage();
 }
 void storage_wipe(void) {
-#ifdef TREZOR_EMULATOR
   _storage_wipe();
-#else
-  _storage_wipe();
-#endif
 }
 
 static void __handle_fault(const char *msg, const char *file, int line,
@@ -1760,6 +1785,15 @@ static secbool storage_upgrade_unlocked(const uint8_t *pin, size_t pin_len,
   if (version <= 2) {
     // Upgrade EDEK_PVC_KEY from the old uint32 PIN scheme to the new
     // variable-length PIN scheme.
+    if (sectrue != set_pin(pin, pin_len, ext_salt)) {
+      return secfalse;
+    }
+  }
+
+  if (version <= 4) {
+    // Upgrade EDEK_PVC_KEY from the uint32 PIN scheme (versions 1 and 2) or
+    // from the version 3 and 4 variable-length PIN scheme to the unified PIN
+    // scheme.
     if (sectrue != set_pin(pin, pin_len, ext_salt)) {
       return secfalse;
     }
