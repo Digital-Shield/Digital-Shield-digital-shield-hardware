@@ -9,10 +9,17 @@
 #include "nist256p1.h"
 #include "hmac.h"
 #include "rand.h"
-void se_test(void) {
-    se_init();
 
+#define ERROR() do { \
+    printf("failed at %s: %d\n", __FILE__, __LINE__); \
+    while(1); \
+} while(0)
+
+extern void log_data(uint8_t* data, size_t data_size);
+
+static void test_common(void) {
     int ret = se_verify_app();
+    // in se app state, this command is not supported
     printf("verify app: 0x%02x \n", ret);
 
     // 0. 获取设备状态
@@ -27,8 +34,17 @@ void se_test(void) {
         }
     } else {
         printf("get state failed\n");
+        ERROR();
     }
+}
 
+static const uint8_t __pre_shared_key__[] = {
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+};
+static void test_factory(void) {
     // 0. 获取生产状态
     life_cycle_t life_cycle;
     if (!se_get_life_cycle(&life_cycle)) {
@@ -41,6 +57,7 @@ void se_test(void) {
         }
     } else {
         printf("get life cycle failed\n");
+        ERROR();
     }
 
     // 1. 擦除设备信息
@@ -48,6 +65,7 @@ void se_test(void) {
         printf("erase storage success\n");
     } else {
         printf("erase storage failed\n");
+        ERROR();
     }
 
     // need reboot after erase device
@@ -62,19 +80,15 @@ void se_test(void) {
         printf("set sn success\n");
     } else {
         printf("set sn failed\n");
+        ERROR();
     }
 
     // 3. 绑定密钥
-    uint8_t key[] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-    };
-    if (!se_set_sheared_key(key, sizeof(key))) {
+    if (!se_set_sheared_key(__pre_shared_key__, sizeof(__pre_shared_key__))) {
         printf("set sheared key success\n");
     } else {
         printf("set sheared key failed\n");
+        ERROR();
     }
 
     // 4. 生成设备密钥
@@ -82,6 +96,7 @@ void se_test(void) {
         printf("gen dev keypair success\n");
     } else {
         printf("gen dev keypair failed\n");
+        ERROR();
     }
 
     // 5. 写入设备证书
@@ -90,6 +105,7 @@ void se_test(void) {
         printf("write certificate success\n");
     } else {
         printf("write certificate failed\n");
+        ERROR();
     }
 
     // 6. 切换生命周期
@@ -97,57 +113,121 @@ void se_test(void) {
         printf("switch life cycle success\n");
     } else {
         printf("switch life cycle failed\n");
+        ERROR();
     }
-    extern void log_data(uint8_t* data, size_t data_size);
     // reboot for switch to user command list
     se_reboot();
     // delay a moment wait se start up
     HAL_Delay(50);
     se_conn_reset();
 
-    if (!se_handshake(key, sizeof(key))) {
-        printf("handshake success\n");
-    } else{
-        printf("handshake failed\n");
+}
+
+static void test_device(void) {
+    char version[17] = {0};
+    if (!se_get_version(version)) {
+        printf("version: %s\n", version);
+    } else {
+        printf("get version failed\n");
+        ERROR();
     }
 
+    char sn[33] = {0};
+    if (!se_get_sn(sn)) {
+        printf("sn: %s\n", sn);
+    } else {
+        printf("get sn failed\n");
+        ERROR();
+    }
+
+    uint8_t pubkey[65] = {0};
+    if (!se_get_dev_pubkey(pubkey)) {
+        printf("pubkey: \n");
+        log_data(pubkey, sizeof(pubkey));
+    } else {
+        printf("get pubkey failed\n");
+        ERROR();
+    }
+
+    uint8_t cert[0x201] = {0};
+    size_t cert_len = 0;
+    if (!se_get_certificate_len(&cert_len)) {
+        printf("cert len: %d\n", cert_len);
+    } else {
+        printf("get cert len failed\n");
+        ERROR();
+    }
+    if (!se_read_certificate(cert, &cert_len)) {
+        printf("read certificate success\n");
+    } else {
+        printf("read certificate failed\n");
+        ERROR();
+    }
+
+    char* msg = "1234567890ABCDEF";
+    uint8_t sig[64] = {0};
+    if (!se_sign_message((uint8_t*)msg, strlen(msg), sig)) {
+        printf("sign message success\n");
+    } else {
+        printf("sign message failed\n");
+        ERROR();
+    }
+    uint8_t digest[32] = {0};
+    sha256_Raw((uint8_t*)msg, strlen(msg), digest);
+    if (!ecdsa_verify_digest(&nist256p1, pubkey,  sig, digest)) {
+        printf("verify success\n");
+    } else {
+        printf("verify failed\n");
+        ERROR();
+    }
+}
+
+#define PIN_LEN 4
+static const uint8_t pin[PIN_LEN] = {'1', '2', '3', '4'};
+static void test_pin(void) {
+    int ret = 0;
     // pin test
     bool exist = false;
     if (!se_has_pin(&exist)) {
         printf("has pin: %d\n", exist);
     } else {
         printf("has pin failed\n");
+        ERROR();
     }
 
-    #define PIN_LEN 4
-    uint8_t pin[PIN_LEN] = {'1', '2', '3', '4'};
     if (!se_set_pin(pin, PIN_LEN)) {
         printf("set pin success\n");
     } else {
         printf("set pin failed\n");
+        ERROR();
     }
     if (!se_has_pin(&exist)) {
         printf("has pin: %d\n", exist);
     } else {
         printf("has pin failed\n");
+        ERROR();
     }
     ret = se_verify_pin(pin, PIN_LEN);
     if (!ret) {
         printf("verify pin success\n");
     } else {
         printf("verify pin failed: %x\n", ret);
+        ERROR();
     }
     int retry = 0;
     if (!se_get_pin_retry(&retry)) {
         printf("pin retry: %d\n", retry);
     } else {
         printf("get pin retry failed\n");
+        ERROR();
     }
     // verify failed
+    printf("use wrong pin to verify, should failed\n");
     uint8_t pin2[PIN_LEN] = {'1', '2', '3', '5'};
     ret = se_verify_pin(pin2, PIN_LEN);
     if (!ret) {
         printf("verify pin success\n");
+        ERROR();
     } else {
         printf("verify pin failed: %x\n", ret);
     }
@@ -155,6 +235,7 @@ void se_test(void) {
         printf("pin retry: %d\n", retry);
     } else {
         printf("get pin retry failed\n");
+        ERROR();
     }
 
     uint8_t pin3[PIN_LEN] = {'4', '3', '2', '1'};
@@ -162,6 +243,16 @@ void se_test(void) {
         printf("change pin success\n");
     } else {
         printf("change pin failed\n");
+        ERROR();
+    }
+
+    // other way to change pin
+    // user can set pin again when verified
+    if (!se_set_pin(pin, PIN_LEN)) {
+        printf("set pin success\n");
+    } else {
+        printf("set pin failed\n");
+        ERROR();
     }
 
     // reset pin can do when pin locked or verified
@@ -170,27 +261,34 @@ void se_test(void) {
         printf("reset pin success\n");
     } else {
         printf("reset pin failed\n");
+        ERROR();
     }
     if (!se_has_pin(&exist)) {
         printf("has pin: %d\n", exist);
     } else {
         printf("has pin failed\n");
+        ERROR();
     }
+}
 
+uint8_t __data__[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
+static void test_file(void) {
+    int ret = 0;
     // set a pin for file test
     if (!se_set_pin(pin, PIN_LEN)) {
         printf("set pin success\n");
     } else {
         printf("set pin failed\n");
+        ERROR();
     }
     se_forget_pin();
 
-    uint8_t __data__[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
     uint16_t __id__ = OID_USER_OBJ_BASE + 0;
     if (!se_write_file(__id__, __data__, sizeof(__data__))) {
         printf("write file success\n");
     } else {
         printf("write file failed\n");
+        ERROR();
     }
 
     // the default access is public
@@ -200,6 +298,7 @@ void se_test(void) {
         printf("get file size success\n");
     } else {
         printf("get file size failed\n");
+        ERROR();
     }
 
     uint8_t __data2__[8] = {0};
@@ -208,9 +307,11 @@ void se_test(void) {
         printf("read file success\n");
     } else {
         printf("read file failed\n");
+        ERROR();
     }
     if (__data2_size__ != __data_size__ || memcmp(__data2__, __data__, __data_size__) != 0) {
         printf("read file data error\n");
+        ERROR();
     }
 
     // set access to private
@@ -218,12 +319,14 @@ void se_test(void) {
         printf("set file access success\n");
     } else {
         printf("set file access failed\n");
+        ERROR();
     }
 
     // can't delete, because have write access
     printf("can't delete file, because have write access\n");
     if (!se_delete_file(__id__)) {
         printf("delete file success\n");
+        ERROR();
     } else {
         printf("delete file failed\n");
     }
@@ -234,6 +337,7 @@ void se_test(void) {
         printf("verify pin success\n");
     } else {
         printf("verify pin failed: %x\n", ret);
+        ERROR();
     }
 
     // now can delete file
@@ -242,8 +346,20 @@ void se_test(void) {
         printf("delete file success\n");
     } else {
         printf("delete file failed\n");
+        ERROR();
     }
 
+    // pin have verified we can wipe user storeage
+    if (!se_wipe_user_storage()) {
+        printf("wipe user storage success\n");
+    } else {
+        printf("wipe user storage failed\n");
+        ERROR();
+    }
+    // after wipe user storage, `ALL` object be deleted, include the user pin
+}
+
+static void test_crypto(void) {
     uint8_t rnd[32] = {0};
     if (!se_random(sizeof(rnd), rnd)) {
         printf("random success\n");
@@ -251,6 +367,7 @@ void se_test(void) {
         log_data(rnd, sizeof(rnd));
     } else {
         printf("random failed\n");
+        ERROR();
     }
 
     #define SECRET_KEY_ID (OID_USER_OBJ_BASE + 0x10)
@@ -258,6 +375,7 @@ void se_test(void) {
         printf("gen secret key success\n");
     } else {
         printf("gen secret key failed\n");
+        ERROR();
     }
 
     #define AES_128_KEY_ID (OID_USER_OBJ_BASE + 0x11)
@@ -265,6 +383,7 @@ void se_test(void) {
         printf("gen sym key success\n");
     } else {
         printf("gen sym key failed\n");
+        ERROR();
     }
 
     #define ECC_KEY_ID (OID_USER_OBJ_BASE + 0x12)
@@ -272,6 +391,7 @@ void se_test(void) {
         printf("gen sym key success\n");
     } else {
         printf("gen sym key failed\n");
+        ERROR();
     }
 
     uint8_t __pk__[65] = {0};
@@ -282,6 +402,7 @@ void se_test(void) {
         log_data(__pk__, sizeof(__pk__));
     } else {
         printf("get public key failed\n");
+        ERROR();
     }
 
     // we a fixed `random` as key for test
@@ -299,6 +420,7 @@ void se_test(void) {
         printf("cmac success\n");
     } else {
         printf("cmac failed\n");
+        ERROR();
     }
 
     // if (memcmp(__cmac__, cmac, sizeof(__cmac__)) == 0) {
@@ -312,6 +434,7 @@ void se_test(void) {
         printf("hmac success\n");
     } else {
         printf("hmac failed\n");
+        ERROR();
     }
 
     // uint8_t __hmac__[32] = {0};
@@ -337,6 +460,7 @@ void se_test(void) {
         log_data(__shared__, sizeof(__shared__));
     } else {
         printf("ecdh failed\n");
+        ERROR();
     }
 
     uint8_t __shared2__[65] = {0};
@@ -348,65 +472,45 @@ void se_test(void) {
         printf("ecdh success\n");
     } else {
         printf("ecdh failed\n");
+        ERROR();
     }
 
-    // pin have verified we can wipe user storeage
-    if (!se_wipe_user_storage()) {
-        printf("wipe user storage success\n");
+}
+
+void se_test(void) {
+    se_init();
+
+    test_common();
+    test_factory();
+
+    if (!se_handshake(__pre_shared_key__, sizeof(__pre_shared_key__))) {
+        printf("handshake success\n");
+    } else{
+        printf("handshake failed\n");
+        ERROR();
+    }
+
+    test_pin();
+    test_file();
+    test_crypto();
+
+    // set a pin for regenerate keys
+    if (!se_set_pin(pin, PIN_LEN)) {
+        printf("set pin success\n");
     } else {
-        printf("wipe user storage failed\n");
+        printf("set pin failed\n");
+        ERROR();
     }
     while (1) {
         HAL_Delay(1000);
-        char version[17] = {0};
-        if (!se_get_version(version)) {
-            printf("version: %s\n", version);
+        test_device();
+        if (!se_verify_pin(pin, PIN_LEN)) {
+            printf("verify pin success\n");
         } else {
-            printf("get version failed\n");
+            printf("verify pin failed\n");
+            ERROR();
         }
-
-        char sn[33] = {0};
-        if (!se_get_sn(sn)) {
-            printf("sn: %s\n", sn);
-        } else {
-            printf("get sn failed\n");
-        }
-
-        uint8_t pubkey[65] = {0};
-        if (!se_get_dev_pubkey(pubkey)) {
-            printf("pubkey: \n");
-            log_data(pubkey, sizeof(pubkey));
-        } else {
-            printf("get pubkey failed\n");
-        }
-
-        uint8_t cert[0x201] = {0};
-        size_t cert_len = 0;
-        if (!se_get_certificate_len(&cert_len)) {
-            printf("cert len: %d\n", cert_len);
-        } else {
-            printf("get cert len failed\n");
-        }
-        if (!se_read_certificate(cert, &cert_len)) {
-            printf("read certificate success\n");
-        } else {
-            printf("read certificate failed\n");
-        }
-
-        char* msg = "1234567890ABCDEF";
-        uint8_t sig[64] = {0};
-        if (!se_sign_message((uint8_t*)msg, strlen(msg), sig)) {
-            printf("sign message success\n");
-        } else {
-            printf("sign message failed\n");
-        }
-        uint8_t digest[32] = {0};
-        sha256_Raw((uint8_t*)msg, strlen(msg), digest);
-        if (!ecdsa_verify_digest(&nist256p1, pubkey,  sig, digest)) {
-            printf("verify success\n");
-        } else {
-            printf("verify failed\n");
-        }
+        test_crypto();
     }
 
 }
