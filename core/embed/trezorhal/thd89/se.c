@@ -42,7 +42,8 @@ enum {
   // 管理指令
   CMD_ID_REBOOT = 0x10,
   CMD_ID_LAUNCH = 0x11,
-  CMD_ID_WIPE_USER_STORAGE = 0x12,
+  CMD_ID_USER_STORAGE_SIZE = 0x12,
+  CMD_ID_WIPE_USER_STORAGE = 0x13,
 
   // 文件指令
   CMD_ID_WRITE_FILE = 0x20,
@@ -276,6 +277,23 @@ int se_back_to_rom_bl(void) {
 
 int se_wipe_user_storage(void) {
     return se_sample_command(CMD_ID_WIPE_USER_STORAGE);
+}
+
+int se_user_storage_size(size_t *size) {
+    uint8_t command[4] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = sizeof(response);
+
+    REQ_INIT_CMD(command, CMD_ID_USER_STORAGE_SIZE);
+    REQ_EMPTY_PAYLOAD(req);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    RESP_INIT(response);
+    if (response_get_length(resp) != 2) {
+        return 1;
+    }
+    *size = GET_UINT16_BE(resp->payload, 0);
+    return 0;
 }
 
 int se_write_file(uint16_t id, const uint8_t *data, size_t data_len) {

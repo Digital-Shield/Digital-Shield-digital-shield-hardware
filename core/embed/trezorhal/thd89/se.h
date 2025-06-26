@@ -66,6 +66,7 @@ int se_reboot(void);
 int se_launch(se_state_t state);
 int se_back_to_rom_bl(void);
 int se_wipe_user_storage(void); // need pin verified
+int se_user_storage_size(size_t *size);
 
 // 文件指令
 int se_write_file(uint16_t id, const uint8_t *data, size_t data_len);
