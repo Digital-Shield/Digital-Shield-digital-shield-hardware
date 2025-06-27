@@ -57,6 +57,7 @@ int se_verify_pin(const uint8_t* pin, size_t pin_len);
 int se_change_pin(const uint8_t *old_pin, size_t old_pin_len, const uint8_t *new_pin, size_t new_pin_len);
 // tell SE forget verified state, aka `logout`
 int se_forget_pin(void);
+int se_set_pin_user_max_retry(int max_retry);
 int se_get_pin_max_retry(int* max_retry);
 int se_get_pin_retry(int* retry);
 int se_reset_pin(void);

@@ -38,6 +38,8 @@ enum {
   CMD_ID_GET_PIN_MAX_RETRY = 0x0D,
   CMD_ID_GET_PIN_RETRY = 0x0E,
   CMD_ID_FORGET_PIN = 0x0F,
+  CMD_ID_SET_USER_PIN_MAX_RETRY = 0xD8,
+
 
   // 管理指令
   CMD_ID_REBOOT = 0x10,
@@ -786,6 +788,17 @@ int se_forget_pin(void) {
     return se_sample_command(CMD_ID_FORGET_PIN);
 }
 
+int se_set_pin_user_max_retry(int max_retry) {
+    uint8_t command[4] = {0};
+    uint8_t response[16] = {0};
+    size_t response_size = sizeof(response);
+    REQ_INIT_CMD(command, CMD_ID_SET_USER_PIN_MAX_RETRY);
+    req->payload[0] = max_retry;
+    request_set_length(req, 1);
+    int ret = se_execute_command(command, response, &response_size);
+    CHECK_CMD_RESULT(ret);
+    return 0;
+}
 int se_get_pin_max_retry(int *max_retry) {
     uint8_t command[3] = {0};
     uint8_t response[16] = {0};
