@@ -1102,6 +1102,12 @@ void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
   MSG_RECV_INIT(SEInitialize);
   MSG_RECV(SEInitialize);
   int retry = 5;
+#ifndef PRODUCTION
+  se_erase_storage();
+  se_reboot();
+  hal_delay(50);
+  se_conn_reset();
+#endif
   if (!se_is_running_app()) {
     send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
     return;

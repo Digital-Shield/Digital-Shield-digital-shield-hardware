@@ -139,10 +139,13 @@ int main(void) {
 #endif
 
   se_init();
-  // #if !defined TREZOR_MODEL_1
-  //   parse_boardloader_capabilities();
 
-  // #endif
+#ifdef PRODUCTION
+  uint8_t secret[32] = {0};
+  if (device_get_pre_shared_key(secret)) {
+    se_handshake(secret, sizeof(secret));
+  }
+#endif
 
   // Init peripherals
   // pendsv_init();
