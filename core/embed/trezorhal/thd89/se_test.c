@@ -221,6 +221,18 @@ static void test_pin(void) {
         printf("get pin retry failed\n");
         ERROR();
     }
+    if (!se_set_pin_user_max_retry(10)) {
+        printf("set pin user max retry success\n");
+    } else {
+        printf("set pin user max retry failed\n");
+        ERROR();
+    }
+    if (!se_get_pin_retry(&retry)) {
+        printf("pin retry: %d\n", retry);
+    } else {
+        printf("get pin retry failed\n");
+        ERROR();
+    }
     // verify failed
     printf("use wrong pin to verify, should failed\n");
     uint8_t pin2[PIN_LEN] = {'1', '2', '3', '5'};
