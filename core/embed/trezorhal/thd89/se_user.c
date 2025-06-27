@@ -122,10 +122,10 @@ int se_set_user_pin(uint8_t pin[32]) {
 
   hmac_sha256(pin, SE_USER_PIN_SIZE, NULL, 0, digest);
 
-  if ((ret = se_set_pin_user_max_retry(PIN_MAX_TRIES)) != 0) {
+  if ((ret = se_set_pin(digest, sizeof(digest))) != 0) {
     goto err;
   }
-  if ((ret = se_set_pin(digest, sizeof(digest))) != 0) {
+  if ((ret = se_set_pin_user_max_retry(PIN_MAX_TRIES)) != 0) {
     goto err;
   }
 

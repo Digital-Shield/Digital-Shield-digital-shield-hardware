@@ -716,7 +716,7 @@ int se_has_pin(bool* exist) {
 }
 
 int se_set_pin(const uint8_t *pin, size_t pin_len) {
-    if (pin_len > 255 || pin_len == 0) {
+    if (pin_len > 255) {
         return 1;
     }
 
@@ -733,7 +733,7 @@ int se_set_pin(const uint8_t *pin, size_t pin_len) {
 }
 
 int se_verify_pin(const uint8_t* pin, size_t pin_len) {
-    if (pin_len > 255 || pin_len == 0) {
+    if (pin_len > 255) {
         return 1;
     }
     uint8_t command[260] = {0};

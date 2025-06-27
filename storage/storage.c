@@ -976,6 +976,7 @@ secbool storage_is_unlocked(void) {
 
 void storage_lock(void) {
   unlocked = secfalse;
+  se_lock();
   memzero(cached_keys, sizeof(cached_keys));
   memzero(authentication_sum, sizeof(authentication_sum));
 }
