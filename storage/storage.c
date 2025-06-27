@@ -1782,18 +1782,9 @@ static secbool storage_upgrade_unlocked(const uint8_t *pin, size_t pin_len,
   }
 
   secbool ret = sectrue;
-  if (version <= 2) {
+  if (version <= 4) {
     // Upgrade EDEK_PVC_KEY from the old uint32 PIN scheme to the new
     // variable-length PIN scheme.
-    if (sectrue != set_pin(pin, pin_len, ext_salt)) {
-      return secfalse;
-    }
-  }
-
-  if (version <= 4) {
-    // Upgrade EDEK_PVC_KEY from the uint32 PIN scheme (versions 1 and 2) or
-    // from the version 3 and 4 variable-length PIN scheme to the unified PIN
-    // scheme.
     if (sectrue != set_pin(pin, pin_len, ext_salt)) {
       return secfalse;
     }
