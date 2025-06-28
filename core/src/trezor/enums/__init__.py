@@ -388,6 +388,7 @@ if TYPE_CHECKING:
         SEInitialize = 10025
         SEInitializeDone = 10026
         SEBackToRomBoot = 10027
+        SEWipeUserStorage = 10028
 
     class FailureType(IntEnum):
         UnexpectedMessage = 1

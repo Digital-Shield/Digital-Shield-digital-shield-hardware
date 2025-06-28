@@ -1189,6 +1189,16 @@ void process_msg_SEBackToRomBoot(uint8_t iface_num, uint32_t msg_size,
 
   send_success(iface_num, "SE back to ROM boot success");
 }
+void process_msg_SEWipeUserStorage(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf) {
+  MSG_RECV_INIT(SEWipeUserStorage);
+  MSG_RECV(SEWipeUserStorage);
+  if (0 != se_wipe_user_storage()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE wipe user storage failed");
+    return;
+  }
+  send_success(iface_num, "SE wipe user storage success");
+}
 void process_msg_FirmwareEraseBLE(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf) {
   firmware_remaining = 0;

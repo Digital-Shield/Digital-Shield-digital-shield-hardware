@@ -615,6 +615,12 @@ message SEInitialize {
  message SEBackToRomBoot {
  }
 
+ /**
+  * Request: Wipe SE user storage
+  * @end
+  */
+message SEWipeUserStorage{
+}
 
 /**
  * Request: Ask for uoload resource to device (wallpaper/nft pics, mp4)

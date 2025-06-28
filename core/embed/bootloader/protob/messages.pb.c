@@ -123,6 +123,9 @@ PB_BIND(SEInitializeDone, SEInitializeDone, AUTO)
 PB_BIND(SEBackToRomBoot, SEBackToRomBoot, AUTO)
 
 
+PB_BIND(SEWipeUserStorage, SEWipeUserStorage, AUTO)
+
+
 
 
 
