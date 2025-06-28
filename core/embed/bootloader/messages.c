@@ -1105,6 +1105,12 @@ void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
   MSG_RECV_INIT(SEInitialize);
   MSG_RECV(SEInitialize);
   int retry = 5;
+#ifndef PRODUCTION
+  se_erase_storage();
+  se_reboot();
+  hal_delay(50);
+  se_conn_reset();
+#endif
   if (!se_is_running_app()) {
     send_failure(iface_num, FailureType_Failure_ProcessError, "SE invalid state");
     return;
@@ -1185,6 +1191,16 @@ void process_msg_SEBackToRomBoot(uint8_t iface_num, uint32_t msg_size,
   se_conn_reset();
 
   send_success(iface_num, "SE back to ROM boot success");
+}
+void process_msg_SEWipeUserStorage(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf) {
+  MSG_RECV_INIT(SEWipeUserStorage);
+  MSG_RECV(SEWipeUserStorage);
+  if (0 != se_wipe_user_storage()) {
+    send_failure(iface_num, FailureType_Failure_ProcessError, "SE wipe user storage failed");
+    return;
+  }
+  send_success(iface_num, "SE wipe user storage success");
 }
 void process_msg_FirmwareEraseBLE(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf) {

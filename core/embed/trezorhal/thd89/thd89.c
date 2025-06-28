@@ -484,7 +484,7 @@ thd89_result_t thd89_reset(void) {
   return THD89_SUCCESS;
 }
 
-thd89_result_t thd89_handshake(uint8_t* secret, size_t secret_size) {
+thd89_result_t thd89_handshake(const uint8_t* secret, size_t secret_size) {
   // step1. Send `Handshake.Hello` message
   // use pre shared secret key agreement
   // Message: <Handshake.Hello[1]>|PVER[1]

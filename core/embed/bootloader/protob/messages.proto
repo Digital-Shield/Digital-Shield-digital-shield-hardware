@@ -32,6 +32,7 @@ enum MessageType {
     MessageType_SEInitialize = 10025;
     MessageType_SEInitializeDone = 10026;
     MessageType_SEBackToRomBoot = 10027;
+    MessageType_SEWipeUserStorage = 10028;
 
     MessageType_Reboot = 30000;
     MessageType_FirmwareUpdateEmmc = 30001;
@@ -505,3 +506,10 @@ message SEInitialize {
   */
  message SEBackToRomBoot {
  }
+
+ /**
+  * Request: Wipe SE user storage
+  * @end
+  */
+message SEWipeUserStorage{
+}

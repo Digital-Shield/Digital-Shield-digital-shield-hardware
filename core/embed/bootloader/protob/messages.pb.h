@@ -37,6 +37,7 @@ typedef enum _MessageType {
     MessageType_MessageType_SEInitialize = 10025,
     MessageType_MessageType_SEInitializeDone = 10026,
     MessageType_MessageType_SEBackToRomBoot = 10027,
+    MessageType_MessageType_SEWipeUserStorage = 10028,
     MessageType_MessageType_Reboot = 30000,
     MessageType_MessageType_FirmwareUpdateEmmc = 30001,
     MessageType_MessageType_EmmcFixPermission = 30100,
@@ -354,6 +355,10 @@ typedef struct _SEBackToRomBoot {
     char dummy_field;
 } SEBackToRomBoot;
 
+typedef struct _SEWipeUserStorage {
+    char dummy_field;
+} SEWipeUserStorage;
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -424,6 +429,7 @@ extern "C" {
 
 
 
+
 /* Initializer values for message structs */
 #define Initialize_init_default                  {0}
 #define GetFeatures_init_default                 {0}
@@ -464,6 +470,7 @@ extern "C" {
 #define SEInitialize_init_default                {0}
 #define SEInitializeDone_init_default            {0}
 #define SEBackToRomBoot_init_default             {0}
+#define SEWipeUserStorage_init_default           {0}
 #define Initialize_init_zero                     {0}
 #define GetFeatures_init_zero                    {0}
 #define Features_init_zero                       {false, "", 0, 0, 0, false, 0, false, "", false, "", false, "", false, 0, false, {0, {0}}, false, 0, false, "", false, 0, false, 0, false, 0, false, "", false, 0, false, "", false, "", false, 0, false, 0, false, "", false, 0, false, "", false, "", false, "", false, 0, false, "", false, _OneKeyDeviceType_MIN}
@@ -503,6 +510,7 @@ extern "C" {
 #define SEInitialize_init_zero                   {0}
 #define SEInitializeDone_init_zero               {0}
 #define SEBackToRomBoot_init_zero                {0}
+#define SEWipeUserStorage_init_zero              {0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Features_vendor_tag                      1
@@ -856,6 +864,11 @@ X(a, STATIC,   REQUIRED, BYTES,    signature,         1)
 #define SEBackToRomBoot_CALLBACK NULL
 #define SEBackToRomBoot_DEFAULT NULL
 
+#define SEWipeUserStorage_FIELDLIST(X, a) \
+
+#define SEWipeUserStorage_CALLBACK NULL
+#define SEWipeUserStorage_DEFAULT NULL
+
 extern const pb_msgdesc_t Initialize_msg;
 extern const pb_msgdesc_t GetFeatures_msg;
 extern const pb_msgdesc_t Features_msg;
@@ -895,6 +908,7 @@ extern const pb_msgdesc_t SEMessageSignature_msg;
 extern const pb_msgdesc_t SEInitialize_msg;
 extern const pb_msgdesc_t SEInitializeDone_msg;
 extern const pb_msgdesc_t SEBackToRomBoot_msg;
+extern const pb_msgdesc_t SEWipeUserStorage_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define Initialize_fields &Initialize_msg
@@ -936,6 +950,7 @@ extern const pb_msgdesc_t SEBackToRomBoot_msg;
 #define SEInitialize_fields &SEInitialize_msg
 #define SEInitializeDone_fields &SEInitializeDone_msg
 #define SEBackToRomBoot_fields &SEBackToRomBoot_msg
+#define SEWipeUserStorage_fields &SEWipeUserStorage_msg
 
 /* Maximum encoded size of messages (where known) */
 /* FirmwareUpload_size depends on runtime parameters */
@@ -975,6 +990,7 @@ extern const pb_msgdesc_t SEBackToRomBoot_msg;
 #define SEPublicCert_size                        2051
 #define SEPublicKey_size                         67
 #define SESignMessage_size                       1027
+#define SEWipeUserStorage_size                   0
 #define Success_size                             258
 #define WipeDevice_size                          0
 #define WriteSEPublicCert_size                   2051

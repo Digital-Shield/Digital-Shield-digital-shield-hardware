@@ -803,8 +803,14 @@ def se_sign_cert_request(obj: "TrezorConnection", csr: str) -> dict:
             "signature": sig.hex()
         }
 
-# se-initialize
+# se-back-to-rom-boot
 @cli.command()
 @with_client
 def se_back_to_rom_boot(client: "TrezorClient") -> None:
     device.se_back_to_rom_boot(client)
+
+# se-wipe-user-storage
+@cli.command()
+@with_client
+def se_wipe_user_storage(client: "TrezorClient") -> None:
+    device.se_wipe_user_storage(client)

@@ -332,6 +332,11 @@ secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header*
         case MSG_NAME_TO_ID(SESignMessage): // SESignMessage
             process_msg_SESignMessage(USB_IFACE_NUM, msg_size, buf);
             break;
+#ifndef PRODUCTION
+        case MSG_NAME_TO_ID(SEWipeUserStorage): // SEWipeUserStorage
+            process_msg_SEWipeUserStorage(USB_IFACE_NUM, msg_size, buf);
+            break;
+#endif
         default:
             process_msg_unknown(USB_IFACE_NUM, msg_size, buf);
             break;

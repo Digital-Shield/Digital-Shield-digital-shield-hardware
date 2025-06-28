@@ -78,6 +78,8 @@ void process_msg_SEInitializeDone(uint8_t iface_num, uint32_t msg_size,
                                uint8_t *buf);
 void process_msg_SEBackToRomBoot(uint8_t iface_num, uint32_t msg_size,
                                 uint8_t *buf);
+void process_msg_SEWipeUserStorage(uint8_t iface_num, uint32_t msg_size,
+                                uint8_t *buf);
 void process_msg_FirmwareEraseBLE(uint8_t iface_num, uint32_t msg_size,
                                   uint8_t *buf);
 

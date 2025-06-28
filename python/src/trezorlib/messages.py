@@ -396,6 +396,7 @@ class MessageType(IntEnum):
     SEInitialize = 10025
     SEInitializeDone = 10026
     SEBackToRomBoot = 10027
+    SEWipeUserStorage = 10028
 
 
 class FailureType(IntEnum):
@@ -4604,6 +4605,10 @@ class SEInitializeDone(protobuf.MessageType):
 
 class SEBackToRomBoot(protobuf.MessageType):
     MESSAGE_WIRE_TYPE = 10027
+
+
+class SEWipeUserStorage(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = 10028
 
 
 class ResourceUpload(protobuf.MessageType):

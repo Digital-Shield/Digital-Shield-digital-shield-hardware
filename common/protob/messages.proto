@@ -536,4 +536,5 @@ enum MessageType {
     MessageType_SEInitialize = 10025 [(wire_in) = true, (wire_bootloader) = true];
     MessageType_SEInitializeDone = 10026 [(wire_in) = true, (wire_bootloader) = true];
     MessageType_SEBackToRomBoot = 10027 [(wire_in) = true, (wire_bootloader) = true];
+    MessageType_SEWipeUserStorage = 10028 [(wire_in) = true, (wire_bootloader) = true];
 }

@@ -370,3 +370,4 @@ if not utils.BITCOIN_ONLY:
     SEInitialize = 10025
     SEInitializeDone = 10026
     SEBackToRomBoot = 10027
+    SEWipeUserStorage = 10028
