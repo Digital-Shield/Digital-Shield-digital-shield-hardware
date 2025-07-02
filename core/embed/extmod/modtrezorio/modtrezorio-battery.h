@@ -27,11 +27,7 @@ STATIC mp_obj_t mod_trezorio_battery_make_new(const mp_obj_type_t *type, size_t 
 ///     check weather battery is present
 ///     """
 static mp_obj_t mod_trezorio_battery_is_exist(mp_obj_t self) {
-    if (PCB_IS_V1_0()) {
-        return battery_is_exist() ? mp_const_true : mp_const_false;
-    } else {
-        return pm_battery_exist() ? mp_const_true : mp_const_false;
-    }
+    return pm_battery_exist() ? mp_const_true : mp_const_false;
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_exist_obj, mod_trezorio_battery_is_exist);
 
@@ -40,10 +36,6 @@ static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_exist_obj, mod_trezorio
 ///     check weather battery is charging
 ///     """
 static mp_obj_t mod_trezorio_battery_is_charging(mp_obj_t self) {
-    if (PCB_IS_V1_0()) {
-        return battery_read_current() >= 0 ? mp_const_true : mp_const_false;
-    }
-
     return pm_get_power_source() == POWER_SOURCE_USB ? mp_const_true : mp_const_false;
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_battery_is_charging_obj, mod_trezorio_battery_is_charging);

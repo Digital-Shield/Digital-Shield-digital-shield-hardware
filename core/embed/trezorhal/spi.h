@@ -15,10 +15,6 @@
 #define SPI_BUF_MAX_IN_LEN (16 * 1024)
 #define SPI_BUF_MAX_OUT_LEN (3 * 1024)
 
-// pcb v1.0 use PE2 as handshake pin
-#define V10_BLE_CTRL_PIN_CLK_ENABLE() __HAL_RCC_GPIOE_CLK_ENABLE()
-#define V10_BLE_CTRL_PIN_GPIO_PORT GPIOE
-#define V10_BLE_CTRL_PIN_GPIO_PIN GPIO_PIN_2
 // pcb v1.1 use PD4 as handshake pin
 #define BLE_CTRL_PIN_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
 #define BLE_CTRL_PIN_GPIO_PORT GPIOD
@@ -35,19 +31,11 @@
 #define BLE_RST_PIN_LOW() HAL_GPIO_WritePin(GPIOK, GPIO_PIN_5, GPIO_PIN_RESET)
 
 #define BLE_POWER_ON() do {                             \
-  if (PCB_IS_V1_0()) {                                   \
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET); \
-  } else {                            \
-    pm_power_up(POWER_MODULE_BLUETOOTH);                \
-  }                                                     \
+  pm_power_up(POWER_MODULE_BLUETOOTH);                  \
 } while (0)
 
 #define BLE_POWER_OFF() do {                              \
-  if (PCB_IS_V1_0()) {                                     \
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET); \
-  } else {                              \
-    pm_power_down(POWER_MODULE_BLUETOOTH);                \
-  }                                                       \
+  pm_power_down(POWER_MODULE_BLUETOOTH);                  \
 } while (0)
 
 /* Definition for SPIx's DMA */

@@ -1105,7 +1105,7 @@ void process_msg_SEInitialize(uint8_t iface_num, uint32_t msg_size,
   MSG_RECV_INIT(SEInitialize);
   MSG_RECV(SEInitialize);
   int retry = 5;
-#ifndef PRODUCTION
+#if !PRODUCTION
   se_erase_storage();
   se_reboot();
   hal_delay(50);

@@ -78,6 +78,11 @@ def get_features() -> Features:
         onekey_device_type=OneKeyDeviceType.PRO,
     )
 
+    if not utils.EMULATOR:
+        import thd89
+        f.se_enable = True
+        f.se_ver = thd89.get_version()
+
     if utils.BITCOIN_ONLY:
         f.capabilities = [
             Capability.Bitcoin,

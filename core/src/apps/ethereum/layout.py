@@ -163,7 +163,7 @@ def require_show_overview_ton(
 #         return True
 #     else:
 #         return False
-    
+
 def require_confirm_fee_ton(
     ctx: Context,
     spending: int,
@@ -377,7 +377,7 @@ async def should_show_array(
         ctx,
         title=limit_str(".".join(parent_objects)),
         param=para,
-        button_text= i18n.Button.view_full_array,
+        button_str= i18n.Button.view_full_array,
     )
 
 
@@ -404,7 +404,8 @@ async def confirm_typed_value(
         await confirm_blob(
             ctx,
             title,
-            data,
+            "",
+            blob=data,
             description=description,
         )
     else:
@@ -472,13 +473,13 @@ def format_ethereum_amount(
         decimals = token.decimals
     elif chain_id == -10:
         suffix = "SUI"
-        decimals = 9    
+        decimals = 9
     elif chain_id == -11:
         suffix = "TON"
         decimals = 9
-    elif chain_id == -12: 
+    elif chain_id == -12:
         suffix = "TRON"
-        decimals = 6    
+        decimals = 6
     else:
         suffix = networks.shortcut_by_chain_id(chain_id)
         decimals = 18
@@ -507,7 +508,7 @@ def format_ethereum_amount_ton(
         decimals = 9
     elif chain_id == -12:
         suffix = "TRON"
-        decimals = 6    
+        decimals = 6
     else:
         suffix = "Ton"
         decimals = 9

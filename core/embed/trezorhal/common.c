@@ -70,11 +70,6 @@ void shutdown(void) {
 }
 
 void restart(void) {
-  if (PCB_IS_V1_0()) {
-    svc_reset_system();
-    return;
-  }
-
   // power down modules
   pm_power_down(POWER_MODULE_BLUETOOTH);
   pm_power_down(POWER_MODULE_CAMERA);

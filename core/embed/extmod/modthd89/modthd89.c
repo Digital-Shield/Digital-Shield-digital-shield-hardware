@@ -24,6 +24,20 @@
 
 /// package: thd89
 
+/// def get_version() -> str:
+///     """
+///     Read SE version
+///     """
+STATIC mp_obj_t mod_thd89_get_version(void) {
+  char version[33];
+  if (se_get_version(version)) {
+    mp_raise_ValueError("read SE version failed");
+  }
+  return mp_obj_new_str_copy(&mp_type_str, (uint8_t*)version, strlen(version));
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_0(mod_thd89_get_version_obj,
+                                 mod_thd89_get_version);
+
 /// def get_public_key(
 /// ) -> bytes:
 ///     """
@@ -76,6 +90,8 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(mod_thd89_sign_message_obj,
 
 STATIC const mp_rom_map_elem_t mod_thd89_globals_table[] = {
     {MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_se_thd89)},
+    {MP_ROM_QSTR(MP_QSTR_get_version),
+     MP_ROM_PTR(&mod_thd89_get_version_obj)},
     {MP_ROM_QSTR(MP_QSTR_get_public_key),
      MP_ROM_PTR(&mod_thd89_get_public_key_obj)},
     {MP_ROM_QSTR(MP_QSTR_read_certificate),

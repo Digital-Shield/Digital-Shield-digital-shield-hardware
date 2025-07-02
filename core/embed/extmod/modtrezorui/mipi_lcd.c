@@ -515,15 +515,9 @@ void lcd_reset(void) {
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
 
-  if (PCB_IS_V1_0()) {
-    V10_LCD_RESET_CLK_ENABLE();
-    port = V10_LCD_RESET_GPIO_PORT;
-    pin = V10_LCD_RESET_PIN;
-  } else {
-    LCD_RESET_CLK_ENABLE();
-    port = LCD_RESET_GPIO_PORT;
-    pin = LCD_RESET_PIN;
-  }
+  LCD_RESET_CLK_ENABLE();
+  port = LCD_RESET_GPIO_PORT;
+  pin = LCD_RESET_PIN;
 
   /* Configure the GPIO Reset pin */
   gpio_init_structure.Pin = pin;

@@ -31,7 +31,6 @@ void emmc_init(void) {
   PC9     ------> SDMMC1_D1
   PC7     ------> SDMMC1_D7
   PC6     ------> SDMMC1_D6
-  PI15     ------> SDMMC1_RST // pcb v1.0
   PK4     ------> SDMMC1_RST  // pcb v1.1
   */
   GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_8 |
@@ -105,22 +104,13 @@ void emmc_reset(void) {
     PI15     ------> SDMMC1_RST // pcb v1.0
     PK4     ------> SDMMC1_RST  // pcb v1.1
   */
-  if (PCB_IS_V1_0()) {
-    __HAL_RCC_GPIOI_CLK_ENABLE(); // RST PIN control
-  } else {
-    __HAL_RCC_GPIOK_CLK_ENABLE(); // RST PIN control
-  }
+  __HAL_RCC_GPIOK_CLK_ENABLE(); // RST PIN control
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_TypeDef* port = NULL;
   uint32_t pin = 0;
-  if (PCB_IS_V1_0()) {
-    port = GPIOI;
-    pin = GPIO_PIN_15;
-  } else {
-    port = GPIOK;
-    pin = GPIO_PIN_4;
-  }
+  port = GPIOK;
+  pin = GPIO_PIN_4;
 
   GPIO_InitStruct.Pin = pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;

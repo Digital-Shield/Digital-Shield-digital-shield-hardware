@@ -60,24 +60,6 @@ int se_spi_init(void) {
   // enable gpio clock
   SPI_GPIO_CLK_ENABLE();
 
-  if (PCB_IS_V1_0()) {
-    // power on
-    SE_POWER_GPIO_CLK_ENABLE();
-    gpio.Pin = SE_POWER_GPIO_PIN;
-    gpio.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull = GPIO_PULLUP;
-    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-    gpio.Alternate = 0;
-    HAL_GPIO_Init(SE_POWER_GPIO_PORT, &gpio);
-
-    // se power off
-    SE_POWER_OFF();
-    HAL_Delay(50);
-    // se power on
-    SE_POWER_ON();
-    HAL_Delay(50);
-  }
-
   // CLK
   gpio.Pin = SPI_CLK_GPIO_PIN;
   gpio.Mode = GPIO_MODE_AF_PP;

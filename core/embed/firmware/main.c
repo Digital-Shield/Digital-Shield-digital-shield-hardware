@@ -111,10 +111,6 @@ int main(void) {
   qspi_flash_config();
   qspi_flash_memory_mapped();
 
-  // power control buttons
-  if (PCB_IS_V1_0()){
-    button_init();
-  }
   device_para_init();
 
   bus_fault_disable();
@@ -140,7 +136,7 @@ int main(void) {
 
   se_init();
 
-#ifdef PRODUCTION
+#if PRODUCTION
   uint8_t secret[32] = {0};
   if (device_get_pre_shared_key(secret)) {
     se_handshake(secret, sizeof(secret));

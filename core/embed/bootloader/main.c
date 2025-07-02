@@ -137,12 +137,7 @@ static void usb_init_all(secbool usb21_landing)
 }
 
 static inline bool is_usb_connect(void){
-    if(PCB_IS_V1_0()) {
-        return battery_read_current() >= 0;
-    } else {
-        return pm_get_power_source() == POWER_SOURCE_USB;
-    }
-    return true;
+    return pm_get_power_source() == POWER_SOURCE_USB;
 }
 
 // 0: by battery, 1: by usb
@@ -332,7 +327,7 @@ secbool bootloader_usb_loop(const vendor_header* const vhdr, const image_header*
         case MSG_NAME_TO_ID(SESignMessage): // SESignMessage
             process_msg_SESignMessage(USB_IFACE_NUM, msg_size, buf);
             break;
-#ifndef PRODUCTION
+#if !PRODUCTION
         case MSG_NAME_TO_ID(SEWipeUserStorage): // SEWipeUserStorage
             process_msg_SEWipeUserStorage(USB_IFACE_NUM, msg_size, buf);
             break;
@@ -556,11 +551,6 @@ void low_power_detect(void) {
     fb_fill_rect(B_X1, B_Y2, B_WIDTH, 5, B_COLOR);
 
     hal_delay(500);
-    // pull down system power pin
-    // when user release power button, the device will shut down
-    if (PCB_IS_V1_0()) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
-    }
     while (1) {
         int soc = battery_read_SOC();
         int C = battery_read_current();

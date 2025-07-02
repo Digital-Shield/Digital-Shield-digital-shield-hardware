@@ -2,6 +2,13 @@ from typing import *
 
 
 # extmod/modthd89/modthd89.c
+def get_version() -> str:
+    """
+    Read SE version
+    """
+
+
+# extmod/modthd89/modthd89.c
 def get_public_key(
 ) -> bytes:
     """

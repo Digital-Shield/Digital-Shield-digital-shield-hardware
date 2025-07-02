@@ -140,11 +140,7 @@ STATIC mp_obj_t mod_trezorio_poll(mp_obj_t ifaces, mp_obj_t list_ref,
       // emulator not have button
       else if (iface == BUTTON_IFACE) {
         uint32_t evt = 0;
-        if (PCB_IS_V1_0()) {
-          evt = button_read();
-        } else {
-          evt = pm_button_read();
-        }
+        evt = pm_button_read();
         if (evt & (BTN_EVT_DOWN | BTN_EVT_UP)) {
           mp_obj_tuple_t *tuple = MP_OBJ_TO_PTR(mp_obj_new_tuple(2, NULL));
           uint32_t etype = (evt >> 24) & 0x3U;  // button down/up
