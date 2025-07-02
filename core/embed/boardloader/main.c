@@ -385,6 +385,7 @@ void show_poweron_bar(void) {
 static inline void set_pcb_version(void) {
   pcb_version_t v;
 #ifdef PCB_VERSION_1_0
+#error "PCB v1.0 board is no longer support"
   v = PCB_V1_0;
 #else
   v = PCB_V1_1;

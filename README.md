@@ -26,8 +26,6 @@ git lfs pull
 nix-shell
 poetry install
 poetry shell
-# 如果调试用的是老版本的PCB，需要打开下面一行
-# export PCB_VERSION=PCB_VERSION_1_0
 sh ./build-local.sh
 ```
 
