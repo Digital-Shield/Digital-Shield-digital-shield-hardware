@@ -43,6 +43,9 @@ try:
 except Exception as e:
     log.exception(__name__, e)
 
+import device_check
+del device_check
+
 if not utils.BITCOIN_ONLY:
     # storage.fido2 only imports C modules
     import storage.fido2  # noqa: F401
