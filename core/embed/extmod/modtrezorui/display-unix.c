@@ -272,7 +272,7 @@ void decode_to_lcd(const uint8_t* buf, size_t size) {
   if (!surface) return;
   SDL_Texture* texture = SDL_CreateTextureFromSurface(RENDERER,  surface);
   SDL_FreeSurface(surface);
-  if (texture) return;
+  if (!texture) return;
   SDL_SetTextureAlphaMod(texture, MIN(255, 255 * DISPLAY_BACKLIGHT / 100));
   const SDL_Rect r = {EMULATOR_BORDER, EMULATOR_BORDER, DISPLAY_RESX, DISPLAY_RESY};
   SDL_RenderCopy(RENDERER, texture, NULL, &r);
