@@ -212,7 +212,7 @@ class CoreEmulator(Emulator):
         workdir: Optional[Path] = None,
         sdcard: Optional[bytes] = None,
         disable_animation: bool = True,
-        heap_size: str = "20M",
+        heap_size: str = "128M",
         **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)

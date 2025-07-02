@@ -23,7 +23,6 @@
 
 // clang-format off
 #include "ff.h"
-#include "diskio.h"
 // clang-format on
 
 /// package: trezorio.fatfs
@@ -86,51 +85,6 @@ MP_DEFINE_EXCEPTION(NoFilesystem, FatFSError)
       FATFS_RAISE(NotMounted, FR_NOT_READY); \
     }                                        \
   }
-
-#ifdef TREZOR_EMULATOR
-DSTATUS disk_initialize(BYTE pdrv) { return disk_status(pdrv); }
-
-DSTATUS disk_status(BYTE pdrv) {
-  return (sectrue == sdcard_is_present()) ? 0 : (STA_NOINIT | STA_NODISK);
-}
-
-DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count) {
-  (void)pdrv;
-  if (sectrue == sdcard_read_blocks((uint32_t *)buff, sector, count)) {
-    return RES_OK;
-  } else {
-    return RES_ERROR;
-  }
-}
-
-DRESULT disk_write(BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count) {
-  (void)pdrv;
-  if (sectrue == sdcard_write_blocks((const uint32_t *)buff, sector, count)) {
-    return RES_OK;
-  } else {
-    return RES_ERROR;
-  }
-}
-
-DRESULT disk_ioctl(BYTE pdrv, BYTE cmd, void *buff) {
-  (void)pdrv;
-  switch (cmd) {
-    case CTRL_SYNC:
-      return RES_OK;
-    case GET_SECTOR_COUNT:
-      *((DWORD *)buff) = sdcard_get_capacity_in_bytes() / SDCARD_BLOCK_SIZE;
-      return RES_OK;
-    case GET_SECTOR_SIZE:
-      *((WORD *)buff) = SDCARD_BLOCK_SIZE;
-      return RES_OK;
-    case GET_BLOCK_SIZE:
-      *((DWORD *)buff) = 1;
-      return RES_OK;
-    default:
-      return RES_PARERR;
-  }
-}
-#endif
 
 STATIC mp_obj_t filinfo_to_tuple(const FILINFO *info) {
   mp_obj_tuple_t *tuple = MP_OBJ_TO_PTR(mp_obj_new_tuple(3, NULL));

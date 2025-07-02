@@ -27,7 +27,7 @@
 #include "display.h"
 #include "memzero.h"
 
-extern void main_clean_exit();
+extern void main_clean_exit(int status);
 
 void __shutdown(void) {
   printf("SHUTDOWN\n");

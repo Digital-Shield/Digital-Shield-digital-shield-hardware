@@ -2,14 +2,14 @@
 Creates a header file containing image data.
 """
 
-background_image = "background_R.jpg"
+background_image = "background.png"
 
-h_file_name = "background_R.h"
+h_file_name = "background.h"
 
 h_file_template = """\
 // clang-format off
-unsigned char background_R_jpg[] = {content};
-unsigned int background_R_jpg_len = {length};
+unsigned char background_png[] = {content};
+unsigned int background_png_len = {length};
 """
 
 with open(background_image, "rb") as f:

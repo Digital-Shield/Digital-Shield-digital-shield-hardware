@@ -65,7 +65,7 @@ SPI_IFACE_NUM = 6
 
 
 def set_up() -> None:
-    from trezor import wire, io, airgap
+    from trezor import wire, io
     import usb
 
     # initialize the wire codec
@@ -80,7 +80,10 @@ def set_up() -> None:
         )
     )
 
-    airgap.setup()
+    from trezor.utils import EMULATOR
+    if not EMULATOR:
+        from trezor import airgap
+        airgap.setup()
 
 
 def clear_screens() -> None:

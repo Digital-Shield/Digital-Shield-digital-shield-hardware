@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "display.h"
 
-#define _GNU_SOURCE
+#include <stdint.h>
+#include <stdio.h>
 
+#include "display_defs.h"
+#include "display_interface.h"
 #include "qr-code-generator/qrcodegen.h"
-#include "stdio.h"
 
 #include "uzlib.h"
 
 #include "common.h"
-#include "display.h"
 #include "fonts/font_bitmap.h"
 
 // TODO: use lvgl draw ui
-
-#if defined TREZOR_MODEL_T
-
 
 #ifdef TREZOR_FONT_NORMAL_ENABLE
 #include "fonts/font_plusjakartasans_regular_26.h"
@@ -73,7 +72,6 @@
 #define FONT_PJKS_BOLD26_DATA Font_PlusJakartaSans_Bold_26
 #define FONT_PJKS_BOLD26_HEIGHT 26
 #endif
-#endif
 
 #include <stdarg.h>
 #include <string.h>
@@ -84,7 +82,9 @@ static struct {
   int x, y;
 } DISPLAY_OFFSET;
 
+#ifndef TREZOR_EMULATOR
 #include "mipi_lcd.h"
+#endif
 
 // common display functions
 static inline uint16_t interpolate_color(uint16_t color0, uint16_t color1,
@@ -115,13 +115,49 @@ static inline void clamp_coords(int x, int y, int w, int h, int *x0, int *y0,
   *y1 = MIN(y + h - 1, DISPLAY_RESY - 1);
 }
 
+static void write_pixel(int x, int y, uint16_t c) {
+#ifndef TREZOR_EMULATOR
+  fb_write_pixel(x, y, c);
+#else
+  (void)x;(void)y;
+  display_pixeldata(c);
+#endif
+}
+
 void display_clear(void) {
+#ifndef TREZOR_EMULATOR
   fb_fill_rect(0, 0, MAX_DISPLAY_RESX, MAX_DISPLAY_RESY, 0x0000);
+#else
+  display_set_window(0, 0, MAX_DISPLAY_RESX, MAX_DISPLAY_RESY);
+  for (int i = 0; i < MAX_DISPLAY_RESX * MAX_DISPLAY_RESY; i++) {
+    PIXELDATA(0x0000);
+  }
+  PIXELDATA_DIRTY();
+#endif
 }
 
 void display_bar(int x, int y, int w, int h, uint16_t c) {
+#ifndef TREZOR_EMULATOR
   fb_fill_rect(x, y, w, h, c);
+#else
+  display_set_window(x, y, w, h);
+  for (int i = 0; i < w*h; i++) {
+    PIXELDATA(c);
+  }
+  PIXELDATA_DIRTY();
+#endif
 }
+
+void display_buffer(int x, int y, int w, int h, uint16_t *c) {
+  display_set_window(x, y, x + w, y + h);
+  for (int i = 0; i < w*h; i++) {
+    PIXELDATA(*c);
+    c++;
+  }
+  PIXELDATA_DIRTY();
+}
+
+void display_init_ex(void) { display_init(); }
 
 #define CORNER_RADIUS 16
 
@@ -155,26 +191,25 @@ void display_bar_radius(int x, int y, int w, int h, uint16_t c, uint16_t b,
   y += DISPLAY_OFFSET.y;
   int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
   clamp_coords(x, y, w, h, &x0, &y0, &x1, &y1);
+  display_set_window(x0, y0, x1, y1);
   for (int j = y0; j <= y1; j++) {
     for (int i = x0; i <= x1; i++) {
       int rx = i - x;
       int ry = j - y;
       if (rx < CORNER_RADIUS / r && ry < CORNER_RADIUS / r) {
-        uint8_t c = cornertable[rx * r + ry * r * CORNER_RADIUS];
-        fb_write_pixel(i, j, colortable[c]);
+        int color_index = cornertable[rx * r + ry * r * CORNER_RADIUS];
+        c = colortable[color_index];
       } else if (rx < CORNER_RADIUS / r && ry >= h - CORNER_RADIUS / r) {
-        uint8_t c = cornertable[rx * r + (h - 1 - ry) * r * CORNER_RADIUS];
-        fb_write_pixel(i, j, colortable[c]);
+        int color_index = cornertable[rx * r + (h - 1 - ry) * r * CORNER_RADIUS];
+        c = colortable[color_index];
       } else if (rx >= w - CORNER_RADIUS / r && ry < CORNER_RADIUS / r) {
-        uint8_t c = cornertable[(w - 1 - rx) * r + ry * r * CORNER_RADIUS];
-        fb_write_pixel(i, j, colortable[c]);
+        int color_index = cornertable[(w - 1 - rx) * r + ry * r * CORNER_RADIUS];
+        c = colortable[color_index];
       } else if (rx >= w - CORNER_RADIUS / r && ry >= h - CORNER_RADIUS / r) {
-        uint8_t c =
-            cornertable[(w - 1 - rx) * r + (h - 1 - ry) * r * CORNER_RADIUS];
-        fb_write_pixel(i, j, colortable[c]);
-      } else {
-        fb_write_pixel(i, j, c);
+        int color_index = cornertable[(w - 1 - rx) * r + (h - 1 - ry) * r * CORNER_RADIUS];
+        c = colortable[color_index];
       }
+      write_pixel(i, j, c);
     }
   }
 }
@@ -225,8 +260,7 @@ void display_image(int x, int y, int w, int h, const void *data,
     const int px = pos % w;
     const int py = pos / w;
     if (px >= x0 && px <= x1 && py >= y0 && py <= y1) {
-      fb_write_pixel(x_pos + px, y_pos + py,
-                     (decomp_out[0] << 8) | decomp_out[1]);
+      write_pixel(x_pos + px, y_pos + py, (decomp_out[0] << 8) | decomp_out[1]);
     }
     decomp.dest = (uint8_t *)&decomp_out;
   }
@@ -273,16 +307,14 @@ void display_avatar(int x, int y, const void *data, uint32_t datalen,
               (py - AVATAR_IMAGE_SIZE / 2) * (py - AVATAR_IMAGE_SIZE / 2);
       if (d < AVATAR_BORDER_LOW) {
         // inside border area
-        fb_write_pixel(x_pos + px, y_pos + py,
-                       (decomp_out[0] << 8) | decomp_out[1]);
+        write_pixel(x_pos + px, y_pos + py, decomp_out[0] << 8 | decomp_out[1]);
       } else if (d > AVATAR_BORDER_HIGH) {
         // outside border area
-        fb_write_pixel(x_pos + px, y_pos + py, bgcolor);
+        write_pixel(x_pos + px, y_pos + py, bgcolor);
       } else {
         // border area
 #if AVATAR_ANTIALIAS
-        d = 31 * (d - AVATAR_BORDER_LOW) /
-            (AVATAR_BORDER_HIGH - AVATAR_BORDER_LOW);
+        d = 31 * (d - AVATAR_BORDER_LOW) / (AVATAR_BORDER_HIGH - AVATAR_BORDER_LOW);
         uint16_t c = 0;
         if (d >= 16) {
           c = interpolate_color(bgcolor, fgcolor, d - 16);
@@ -290,9 +322,9 @@ void display_avatar(int x, int y, const void *data, uint32_t datalen,
           c = interpolate_color(fgcolor, (decomp_out[0] << 8) | decomp_out[1],
                                 d);
         }
-        fb_write_pixel(x_pos + px, y_pos + py, c);
+        write_pixel(x_pos + px, y_pos + py, c);
 #else
-        fb_write_pixel(x_pos + px, y_pos + py, fgcolor);
+        write_pixel(x_pos + px, y_pos + py, fgcolor);
 #endif
       }
     }
@@ -333,8 +365,8 @@ void display_icon(int x, int y, int w, int h, const void *data,
     const int px = 2 * pos % w;
     const int py = 2 * pos / w;
     if (px >= x0 && px <= x1 && py >= y0 && py <= y1) {
-      fb_write_pixel(x_pos + px, y_pos + py, colortable[decomp_out >> 4]);
-      fb_write_pixel(x_pos + px + 1, y_pos + py, colortable[decomp_out & 0x0F]);
+      write_pixel(x_pos + px, y_pos + py, colortable[decomp_out >> 4]);
+      write_pixel(x_pos + px + 1, y_pos + py, colortable[decomp_out & 0x0F]);
     }
     decomp.dest = (uint8_t *)&decomp_out;
   }
@@ -447,7 +479,7 @@ void display_loader_ex(uint16_t progress, bool indeterminate, int yoffset,
         } else {
           c = (icon[i / 2] & 0xF0) >> 4;
         }
-        fb_write_pixel(x_pos + x, y_pos + y, iconcolortable[c]);
+        write_pixel(x_pos + x, y_pos + y, iconcolortable[c]);
       } else {
         uint8_t c = 0;
         if (indeterminate) {
@@ -466,7 +498,7 @@ void display_loader_ex(uint16_t progress, bool indeterminate, int yoffset,
             c = img_loader[my][mx] & 0x000F;
           }
         }
-        fb_write_pixel(x_pos + x, y_pos + y, colortable[c]);
+        write_pixel(x_pos + x, y_pos + y, colortable[c]);
       }
     }
   }
@@ -730,7 +762,7 @@ static void display_text_render(int x, int y, const char *text, int textlen,
 #else
 #error Unsupported TREZOR_FONT_BPP value
 #endif
-          fb_write_pixel(i, j, colortable[c]);
+          write_pixel(i, j, colortable[c]);
         }
       }
     }
@@ -845,13 +877,13 @@ void display_qrcode(int x, int y, const char *data, uint32_t datalen,
       int ry = (j - y) / scale - 1;
       // 1px border
       if (rx < 0 || ry < 0 || rx >= side || ry >= side) {
-        fb_write_pixel(i, j, 0xFFFF);
+        write_pixel(i, j, 0xFFFF);
         continue;
       }
       if (qrcodegen_getModule(codedata, rx, ry)) {
-        fb_write_pixel(i, j, 0x0000);
+        write_pixel(i, j, 0x0000);
       } else {
-        fb_write_pixel(i, j, 0xFFFF);
+        write_pixel(i, j, 0xFFFF);
       }
     }
   }

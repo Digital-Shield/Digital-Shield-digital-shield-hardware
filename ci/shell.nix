@@ -1,36 +1,34 @@
 { fullDeps ? false
 , hardwareTest ? false
+, devTools ? false
  }:
 
 let
-  # the last commit from master as of 2023-04-14
+  # the last commit from master as of 2025-05-19
   rustOverlay = import (builtins.fetchTarball {
-    url = "https://github.com/oxalica/rust-overlay/archive/db7bf4a2dd295adeeaa809d36387098926a15487.tar.gz";
-    sha256 = "0gk6kag09w8lyn9was8dpjgslxw5p81bx04379m9v6ky09kw482d";
+    url = "https://github.com/oxalica/rust-overlay/archive/bd030fd9983f7fddf87be1c64aa3064c8afa24c4.tar.gz";
+    sha256 = "1j3kjh0zlanj31c14hk18nzj9j9aw6ib8lg2pjmywlicd0hmhisv";
   });
-  # the last successful build of nixpkgs-unstable as of 2023-04-14
+  # the last successful build of 25.05 release
   nixpkgs = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/25.05.tar.gz";
+    sha256 = "1915r28xc4znrh2vf4rrjnxldw2imysz819gzhk9qlrkqanmfsxd";
+  }) { overlays = [ rustOverlay ]; };
+  oldNixpkgs = import (builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/c58e6fbf258df1572b535ac1868ec42faf7675dd.tar.gz";
     sha256 = "18pna0yinvdprhhcmhyanlgrmgf81nwpc0j2z9fy9mc8cqkx3937";
-  }) { overlays = [ rustOverlay ]; };
-  # commit before python36 was removed
-  oldPythonNixpkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/b9126f77f553974c90ab65520eff6655415fc5f4.tar.gz";
-    sha256 = "02s3qkb6kz3ndyx7rfndjbvp4vlwiqc42fxypn3g6jnc0v5jyz95";
-  }) { };
-  # commit emulator works fine
-  sdlnixpkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/1882c6b7368fd284ad01b0a5b5601ef136321292.tar.gz";
-    sha256 = "0zg7ak2mcmwzi2kg29g4v9fvbvs0viykjsg2pwaphm1fi13s7s0i";
   }) { };
   moneroTests = nixpkgs.fetchurl {
-    url = "https://github.com/ph4r05/monero/releases/download/v0.18.1.1-dev-tests-u18.04-02/trezor_tests";
-    sha256 = "81424cfc3965abdc24de573274bf631337b52fd25cefc895513214c613fe05c9";
+    url = "https://github.com/ph4r05/monero/releases/download/v0.18.3.1-dev-tests-u18.04-01/trezor_tests";
+    sha256 = "d8938679b69f53132ddacea1de4b38b225b06b37b3309aa17911cfbe09b70b4a";
   };
   moneroTestsPatched = nixpkgs.runCommandCC "monero_trezor_tests" {} ''
     cp ${moneroTests} $out
     chmod +wx $out
-    ${nixpkgs.patchelf}/bin/patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" "$out"
+    ${nixpkgs.patchelf}/bin/patchelf \
+      --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
+      --add-rpath "${nixpkgs.udev}/lib" \
+      "$out"
     chmod -w $out
   '';
   # do not expose rust's gcc: https://github.com/oxalica/rust-overlay/issues/70
@@ -45,7 +43,7 @@ let
       done
     '';
   # NOTE: don't forget to update Minimum Supported Rust Version in docs/core/build/emulator.md
-  rustProfiles = nixpkgs.rust-bin.nightly."2023-04-14";
+  rustProfiles = nixpkgs.rust-bin.nightly."2025-04-15";
   rustNightly = rustProfiles.minimal.override {
     targets = [
       "thumbv7em-none-eabihf" # TT
@@ -55,9 +53,19 @@ let
     # to use official binary, remove rustfmt from buildInputs and add it to extensions:
     extensions = [ "rust-src" "clippy" "rustfmt" ];
   };
-  llvmPackages = nixpkgs.llvmPackages_15;
+  openocd-stm = (nixpkgs.openocd.overrideAttrs (oldAttrs: {
+    src = nixpkgs.fetchFromGitHub {
+      owner = "STMicroelectronics";
+      repo = "OpenOCD";
+      rev = "openocd-cubeide-v1.13.0";
+      sha256 = "a811402e19f0bfe496f6eecdc05ecea57f79a323879a810efaaff101cb0f420f";
+    };
+    version = "stm-cubeide-v1.13.0";
+    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ nixpkgs.autoreconfHook ];
+  }));
+  llvmPackages = nixpkgs.llvmPackages_17;
   # see pyright/README.md for update procedure
-  pyright = nixpkgs.callPackage ./pyright {};
+  pyright = oldNixpkgs.callPackage ./ci/pyright {};
 in
 with nixpkgs;
 stdenvNoCC.mkDerivation ({
@@ -69,17 +77,19 @@ stdenvNoCC.mkDerivation ({
     #       and poetry uses the default version (currently 3.10)
     python310
     python39
-    python38
-    oldPythonNixpkgs.python37
-    oldPythonNixpkgs.python36
+    oldNixpkgs.python3
+    python310.withPackages (ps: with ps; [ pkgs.poetry ])
   ] ++ [
-    sdlnixpkgs.SDL2
-    sdlnixpkgs.SDL2_image
+    SDL2
+    SDL2_image
     bash
+    bloaty  # for binsize
     check
+    crowdin-cli  # for translations
     curl  # for connect tests
     editorconfig-checker
-    gcc-arm-embedded
+    gcc-arm-embedded-13
+    gcc14
     git
     gitAndTools.git-subrepo
     gnumake
@@ -89,9 +99,11 @@ stdenvNoCC.mkDerivation ({
     libusb1
     llvmPackages.clang
     openssl
-    pkgconfig
+    perl
+    pkg-config
     poetry
-    protobuf3_19
+    ps
+    oldNixpkgs.protobuf3_19
     pyright
     (mkBinOnlyWrapper rustNightly)
     wget
@@ -99,7 +111,6 @@ stdenvNoCC.mkDerivation ({
     moreutils
   ] ++ lib.optionals (!stdenv.isDarwin) [
     autoPatchelfHook
-    gcc11
     procps
     valgrind
   ] ++ lib.optionals (stdenv.isDarwin) [
@@ -116,8 +127,19 @@ stdenvNoCC.mkDerivation ({
     libiconv
   ] ++ lib.optionals hardwareTest [
     uhubctl
-    ffmpeg
+    tio
+    ffmpeg_7-headless
     dejavu_fonts
+  ] ++ lib.optionals devTools [
+    shellcheck
+    openocd-stm
+  ] ++ lib.optionals (devTools && !stdenv.isDarwin) [
+    gdb
+    kcachegrind
+  ] ++ lib.optionals (devTools && acceptJlink) [
+    nrfutil
+    nrfconnect
+    nrf-command-line-tools
   ];
   LD_LIBRARY_PATH = "${libffi}/lib:${libjpeg.out}/lib:${libusb1}/lib:${libressl.out}/lib";
   DYLD_LIBRARY_PATH = "${libffi}/lib:${libjpeg.out}/lib:${libusb1}/lib:${libressl.out}/lib";
@@ -136,6 +158,11 @@ stdenvNoCC.mkDerivation ({
   # Enabling rust-analyzer extension in VSCode
   RUST_SRC_PATH = "${rustProfiles.rust-src}/lib/rustlib/src/rust/library";
 
+  shellHook = ''
+    export PATH="${pkgs.python310}/bin:$PATH"
+    export POETRY_VIRTUALENVS_PATH=".venv"
+    poetry env use python3.10
+  '';
 } // (lib.optionalAttrs fullDeps) {
   TREZOR_MONERO_TESTS_PATH = moneroTestsPatched;
 })

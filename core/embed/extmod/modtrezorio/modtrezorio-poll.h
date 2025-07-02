@@ -136,6 +136,8 @@ STATIC mp_obj_t mod_trezorio_poll(mp_obj_t ifaces, mp_obj_t list_ref,
         }
       }
 #endif
+#ifndef TREZOR_EMULATOR
+      // emulator not have button
       else if (iface == BUTTON_IFACE) {
         uint32_t evt = 0;
         if (PCB_IS_V1_0()) {
@@ -156,6 +158,7 @@ STATIC mp_obj_t mod_trezorio_poll(mp_obj_t ifaces, mp_obj_t list_ref,
           return mp_const_true;
         }
       }
+#endif
       else if (iface == USB_STATE_IFACE) {
         static bool usb_connect = false, usb_connect_bak = false;
         if (is_usb_connected() == sectrue) {

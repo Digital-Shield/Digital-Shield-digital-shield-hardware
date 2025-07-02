@@ -8,7 +8,7 @@ static x_header_t __g_xbf_hd = {
     .bpp = 4,
 };
 
-static SRAM1 DWORD clmt[SZ_TBL];
+static FONT_CACHE DWORD clmt[SZ_TBL];
 static FIL font_f;
 static FRESULT res;
 static UINT nums = 0;

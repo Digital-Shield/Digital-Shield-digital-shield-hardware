@@ -52,6 +52,7 @@ STATIC mp_obj_t mod_trezorio_MOTOR_make_new(const mp_obj_type_t *type,
 STATIC mp_obj_t mod_trezorio_MOTOR_ctrl(mp_obj_t self, mp_obj_t start) {
   bool on = mp_obj_is_true(start);
   motor_ctrl(on);
+  (void)on;
   return mp_const_none;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(mod_trezorio_MOTOR_ctrl_obj,
