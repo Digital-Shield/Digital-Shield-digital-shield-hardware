@@ -204,6 +204,7 @@ class Title:
     prepare_import = "지갑 가져오기 준비"
     prepare_check = "확인 준비"
     input_words = "니모닉 입력"
+    stop_input = "입력 중단"
     has_sub = "제출됨"
     reatart = "다시 시작"
     invalid_words = "유효하지 않은 니모닉"
@@ -490,7 +491,7 @@ class DownloadDigital:
     #header = "請下載並安裝DigitShield以進行裝置驗證"
     tips = [
         "1. '지갑 연결'을 클릭하세요",
-        "2. 장치를 연결하세요:",
+        "2. 장치를 연결하세요:{}",
         "3. 잠시 기다리면 DigitalShield 앱이 이전에 사용한 계정을 복구합니다.",
     ]
 class Solana:

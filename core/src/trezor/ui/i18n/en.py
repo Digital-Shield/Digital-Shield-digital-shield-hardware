@@ -207,6 +207,7 @@ class Title:
     prepare_import = "Prepare Import"
     prepare_check = "Prepare Check"
     input_words = "Enter recovery phrase"
+    stop_input = "Stop Input"
     has_sub = "Submitted"
     reatart = "Restart"
     invalid_words = "Invalid recovery phrase"
@@ -499,7 +500,7 @@ class DownloadDigital:
     #header = "請下載並安裝DigitShield以進行裝置驗證"
     tips = [
         "1. Click 'Connect Wallet'",
-        "2. Connect the device:",
+        "2. Connect the device:{}",
         "3. Wait a moment, the DigitalShield App will restore the accounts you have previously used.",
     ]
 class Solana:

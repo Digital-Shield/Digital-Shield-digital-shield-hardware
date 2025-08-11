@@ -1,7 +1,7 @@
 class App:
-    account = "賬戶"
-    scan = "掃描交易"
-    nft = "NFT 陳列室"
+    account = "帳戶"
+    scan = "掃描"
+    nft = "NFT陳列室"
     guide = "產品說明"
     security = "安全"
     setting = "設定"
@@ -19,21 +19,21 @@ class Setting:
     wallpaper = "壁紙"
     power_off = "關機"
     restart = "重新啟動"
-    restart_tip = "重启"
+    restart_tip = "重啟"
 
 #### Security App
 class Security:
-    change_pin = "更改PIN碼"
-    backup_mnemonic = "備份助記詞"
-    check_mnemonic = "檢查助記詞"
-    wipe_device = "抹掉裝置"
+   change_pin = "更改PIN"
+   backup_mnemonic = "備份助記詞"
+   check_mnemonic = "核對助記詞"
+   wipe_device = "抹掉設備"
 
 #### guide App
 class Guide:
-    about = "關於我們"
-    terms_of_use = '使用條款'
-    device_info = '設備資訊'
-    firmware_update = '韌體升級'
+    about = "關注我們"
+    terms_of_use = "使用條款"
+    device_info = "設備資訊"
+    firmware_update = "固件升級"
     terms_title_terms_us = 'Digit Shield使用條款'
     terms_describe_terms_us = '要訪問使用條款的完整版本，請訪問以下具體連結:\n http://digitshield.com/terms'
 
@@ -82,37 +82,37 @@ class Guide:
     service_interruption_1 = '計劃維護將提前 48 小時通過官網公告通知，緊急維護可能無預警暫停服務；'
     service_interruption_2 = '不可抗力因素導致數據丟失，我們不承擔賠償責任。'
 
-    device_label = "設備名称"
-    device_title_firmware_version = '韌體版本'
-    device_title_serial_number = '序號'
+    device_label = "設備名稱"
+    device_title_firmware_version = "固件版本"
+    device_title_serial_number = "序號"
     bluetooth_name = "藍牙名稱"
     bluetooth_version = "藍牙版本"
     attention_events = "注意事項"
-    firmware_title_1 = '1.請確保裝置電量高於20%'
-    firmware_title_2 = '2.使用USB-C線將裝置連結至電腦'
-    firmware_title_3 = '3.單擊「韌體升級」'
-    firmware_title_caution = '警告'
-    firmware_describe_caution = '升級中，請確保USB連結'
-    equipment_info = '設備資訊'
-    equipment_name = '設備名稱'
-    equipment_version = '設備版本'
+    firmware_title_1 = "1.請確保設備電量高於20%"
+    firmware_title_2 = "2.使用USB-C線將設備連接至電腦"
+    firmware_title_3 = "3.單擊「固件升級」"
+    firmware_title_caution = "警告"
+    firmware_describe_caution = "升級中，請確保USB連接"
+    equipment_info = "設備資訊"
+    equipment_name = "設備名稱"
+    equipment_version = "設備版本"
 
 class Nft:
     nft_item ="{} item"
     nft_items ="{} items"
 class Title:
-    enter_old_pin = "輸入旧PIN码"
-    enter_new_pin = "輸入新PIN码"
-    enter_pin = "請輸入PIN碼"
-    enter_pin_again = "再次輸入PIN码"
+    enter_old_pin = "輸入舊PIN"
+    enter_new_pin = "輸入新PIN"
+    enter_pin = "輸入PIN"
+    enter_pin_again = "再次輸入PIN"
     select_language = "語言"
-    create_wallet = "建立錢包"
+    create_wallet = "創建錢包"
     wallet = "錢包"
-    import_wallet = "導入钱包"
+    import_wallet = "導入錢包"
     restore_wallet = "恢復錢包"
     select_word_count = "選擇單詞數量"
     wallet_security = "錢包安全"
-    pin_security = "启用PIN码保护"
+    pin_security = "啟用PIN保護"
     mnemonic_security = "助記詞安全提示"
     backup_mnemonic = "備份助記詞"
     enter_mnemonic = "請輸入助記詞"
@@ -123,20 +123,20 @@ class Title:
     warning = "警告"
     error = "錯誤"
     invalid_mnemonic = "無效的助記詞"
-    pin_not_match = "PIN 不匹配"
+    pin_not_match = "PIN不匹配"
     check_recovery_mnemonic = "檢查恢復助記詞"
     power_off = "關機"
     restart = "重新啟動"
     change_language = "更改語言"
-    wipe_device = "抹掉裝置"
+    wipe_device = "抹掉設備"
     bluetooth_pairing = "藍牙配對"
-    address="{} 地址"
+    address= "{} 地址"
     public_key = "{} 公鑰"
     xpub = "{} XPub"
     transaction = "{} 交易"
     transaction_detail = "交易詳情"
     confirm_transaction = "確認交易"
-    confirm_message = "確認訊息"
+    confirm_message = "確認消息"
     signature = "簽名結果"
     wrong_pin = "PIN錯誤"
     pin_changed = "PIN已更改"
@@ -149,22 +149,22 @@ class Title:
     typed_data = "{} 結構化數據"
     typed_hash = "{} 結構化哈希"
     system_update = "系統升級"
-    entering_boardloader = "Entering Boardloader"
+    entering_boardloader = "進入Boardloader"
     remove_credential = "刪除憑證"
     list_credentials = "列出憑證"
     authorize_coinjoin = "授權CoinJoin"
     multisig_address_m_of_n = "{} 多重簽名地址\n({} of {})"
     u2f_register = "U2F 註冊"
-    u2f_unregister = "U2F 註銷"
+    u2f_unregister = "U2F 注銷"
     u2f_authenticate = "U2F 認證"
     fido2_register = "FIDO2 註冊"
-    fido2_unregister = "FIDO2 註銷"
+    fido2_unregister = "FIDO2 注銷"
     fido2_authenticate = "FIDO2 認證"
     finalize_transaction = "完成交易"
     meld_transaction = "融合交易"
     update_transaction = "更新交易"
     high_fee = "高費用"
-    fee_is_high = "手續費過高"
+    fee_is_high = "交易手續費過高"
     confirm_locktime = "確認鎖定時間"
     view_transaction = "查看交易"
     x_confirm_payment = "{} 確認付款"
@@ -174,13 +174,13 @@ class Title:
     change_label = "修改設備名稱"
     enable_passphrase = "啟用 Passphrase"
     disable_passphrase = "停用 Passphrase"
-    passphrase_source = "Passphrase 輸入設定"
-    enable_safety_checks ="啟用安全檢查"
-    disable_safety_checks ="停用安全檢查"
-    experiment_mode = "實驗模式"
-    set_as_homescreen = "設為主屏幕"
+    passphrase_source = "Passphrase 輸入設置"
+    enable_safety_checks = "啟用安全檢查"
+    disable_safety_checks = "停用安全檢查"
+    experimental_mode = "實驗模式"
+    set_as_homescreen = "設為主螢幕"
     get_next_u2f_counter = "獲取U2F計數器"
-    set_u2f_counter = "設定U2F計數器"
+    set_u2f_counter = "設置U2F計數器"
     encrypt_value = "加密數據"
     decrypt_value = "解密數據"
     confirm_entropy = "導出熵"
@@ -192,20 +192,21 @@ class Title:
     invalid_data = "二維碼無效"
     low_power = "電量低"
     collect_nft = "收集 NFT"
-    verify_device = "驗證裝置"
-    update_bootloader = "更新引導加載程序"
+    verify_device = "驗證設備"
+    update_bootloader = "更新引導加載程式"
     update_resource = "更新資源"
     # directions = "方向"
     # send_amount = "send\n{}"
     
     words_num = "單詞 #{}"
     download_digital = "下載"
-    connect_wallets = "連接硬體錢包"
+    connect_wallets = "連接硬件錢包"
     start_setup = "開始設置"
     prepare_create = "準備創建"
     prepare_import = "準備導入"
     prepare_check = "準備核對"
     input_words = "輸入助記詞"
+    stop_input = "終止輸入"
     has_sub = "已提交"
     reatart = "重新開始"
     invalid_words = "助記詞無效"
@@ -214,7 +215,7 @@ class Title:
     mnemonic_not_match = "助記詞不匹配"
     wallet_created = "錢包已創建"
     check_words = "核對助記詞"
-    verified = "已驗證"
+    verified = "已核對"
     wallet_is_ready = "錢包已就緒"
 
     prepare_backup = "準備備份"
@@ -223,60 +224,60 @@ class Title:
     right_word = "正確"
     wrong_word = "錯誤"
 
-    pin_not_match = "不匹配"
+    pin_not_match = "PIN不匹配"
     has_reset = "設備已重置"
     has_wipe = "設備已抹掉"
     screen_bright = "螢幕亮度"
     download_app = "下載App"
-    official_website = "官網"
+    official_website = "官方網站"
     scan_ercode = "掃描App上顯示的二維碼"
-    wipe_notice = "在抹除掉設備之前，請確認已知曉："
-    receive_tips = "僅支援接收{}資產"
+    wipe_notice = "在抹掉設備之前，請確認已知曉："
+    receive_tips = "僅支持接收{}資產"
     sign_fail = "簽名失敗"
     select_network = "選擇網絡"
     preview = "預覽"
-    go_link = "請前往連結："
+    go_link = "請前往鏈接："
     connect_again = "請嘗試重新連接。"
 
 class Text:
     start_setup = "創建一個新的助記詞錢包，或者導入已有的助記詞備份來恢復錢包。"
     select_word_count = "請選擇助記詞的單詞個數。"
-    input_words = "請按順序輸入單詞，確保其編號與您的助記詞備份完全一致"
+    input_words = "請按順序輸入單詞，確保其編號與您的助記詞備份完全一致。"
     invalid_words = "您輸入的助記詞無效，點擊單詞進行編輯，或重新開始。"
     stop_checking = "終止後所有進度都將丟失，是否確認終止？"
     import_wallet = "輸入您已有的助記詞備份，恢復錢包。"
     correct_words = "您輸入的助記詞有效，並且與設備中存儲的一致。"
     mnemonic_not_match = "您輸入的助記詞有效，但與設備中存儲的不一致。"
     wallet_created = "新錢包創建成功，請立即備份。"
-    mnemonic_word_tips = "請按順序抄寫以下{}個單詞。"
+    mnemonic_word_tips = "請按順序抄寫以下 {} 個單詞。"
     select_words = "請選擇正確的單詞"
     error_mnemonic_word = "單詞不正確，請檢查您備份的助記詞，確認無誤後重試"
-    has_reset = "PIN碼輸入錯誤次數太多，存儲空間已被清空。"
-    restart_countdown = "{}秒后重启"
+    has_reset = "輸入PIN錯誤次數太多，存儲空間已被清空。"
+    restart_countdown = "{} 秒後重啟"
     has_wipe = "設備已成功清除數據，請重啟設備。"
-    download_digital_tips = "請前往下載 Digital Shield App: \n{}"
+    download_digital_tips = "請前往下載 Digital Shield App：\n{}"
     sign_fail = "您取消了簽名，交易已取消。"
     sign_success = "交易已簽名"
     check_words_tips = "請跟隨引導，依照您手中的助記詞備份，逐一核對單詞。"
-    backup_verified = "您已完成助記詞驗證。"
+    backup_verified = "核對通過，您備份的助記詞正確。"
     create_success = "您的助記詞已備份，開始體驗。"
-    tap_to_unlock = "點擊屏幕解鎖"
-    unlocking = "正在解鎖裝置"
+    tap_to_unlock = "點擊螢幕解鎖"
+    unlocking = "正在解鎖設備"
 
     str_words = "#FFFFFF {}# 個單詞"
     backup_manual = "手動寫下助記詞並存放在安全的地方"
     check_manual = "按順序依次點擊下面的單詞"
     backup_invalid = "您輸入的助記詞不正確，請檢查備份的助記詞，再次嘗試"
-    pin_not_match = "兩次輸入的PIN碼不一致，請重試。"
+    pin_not_match = "兩次輸入的PIN不一致，請重試。"
     please_wait = "請稍等"
-    wiping_device = "正在清除裝置數據..."
-    create_wallet = "生成一組新的助記詞，建立新錢包"
+    wiping_device = "正在清除設備數據..."
+    create_wallet = "生成一組新的助記詞，創建新錢包。"
     restore_wallet = "從您備份的助記詞恢復錢包"
     restore_mnemonic_match = "您的助記詞匹配，您的助記詞備份正確"
     restore_success = "您的助記詞已導入，錢包恢復成功。"
     check_recovery_mnemonic = "請檢查您的助記詞，確認是否完全匹配"
     invalid_recovery_mnemonic = "您輸入的助記詞無效，請檢查您的助記詞，再次嘗試"
-    check_recovery_not_match = "您輸入的助記詞是有效的，但是與裝置中的助記詞不匹配"
+    check_recovery_not_match = "您輸入的助記詞是有效的，但是與設備中的助記詞不匹配"
     shutting_down = "正在關機"
     restarting = "正在重啟"
     never = "從不"
@@ -284,20 +285,20 @@ class Text:
     seconds = "秒"
     minute = "分鐘"
     minutes = "分鐘"
-    changing_language = "您正在更改語言为{} ，應用此設定將重新啟動裝置"
-    change_pin = "設定一組長度為4~16位的PIN碼。"
-    wipe_device = "警告：这将从您的设备中抹掉所有数据，并将设备恢复到出厂状态。"
+    changing_language = "您正在更改語言為 {}，應用此設置將重新啟動設備"
+    change_pin = "設置一組長度為4~16位的PIN。"
+    wipe_device = "警告：這將從您的設備中抹掉所有數據，並將設備恢復到出廠狀態。"
     wipe_device_check = [
-        "抹掉後，該設備上存儲的助記詞將被永久刪除。",
+        "抹掉後，設備上存儲的助記詞將被永久刪除。",
         "助記詞被刪除後將無法恢復。",
-        "您的助記詞已經備份，並已妥善保管。",
+        "助記詞已經備份，並已妥善保管。"
     ]
-    wipe_device_success = "裝置已成功清除數據\n 請重啟裝置 ..."
-    bluetooth_pair = "請在您的裝置上輸入配對碼"
+    wipe_device_success = "設備已成功清除數據\n 請重啟設備 ..."
+    bluetooth_pair = "請在您的設備上輸入配對碼"
     bluetooth_pair_failed = "藍牙配對失敗"
     path = "派生路徑:"
     chain_id = "Chain ID:"
-    send = "傳送"
+    send = "發送"
     to = "至"
     amount = "金額"
     from_ = "來自"
@@ -310,28 +311,28 @@ class Text:
     gas_unit_price = "燃料單價:"
     gas_price = "燃料價格"
     total = "總金額"
-    do_sign_this_transaction = "确认要签署此 {} 交易吗？"
+    do_sign_this_transaction = "確認要簽署此 {} 交易嗎？"
     transaction_signed = "交易已簽名"
-    address = '地址'
+    address = "地址:"
     public_key = "公鑰:"
     xpub = "XPub:"
     unknown_tx_type = "未知交易類型，請檢查輸入數據"
     unknown_function = "未知函數:"
-    use_app_scan_this_signature = "請使用錢包 APP 掃描簽名結果"
+    use_app_scan_this_signature = "請使用錢包 App 扫描簽名結果"
     internal_error = "內部錯誤"
-    tap_switch_to_airgap = "點擊二維碼切換為展示Airgap地址"
+    tap_switch_to_airgap = "點擊二維碼切換為展示 Airgap 地址"
     tap_switch_to_receive = "點擊二維碼切換為展示錢包收款地址"
-    incorrect_pin_times_left = "PIN不正確，剩餘 {} 次重試機會"
+    incorrect_pin_times_left = "PIN錯誤，剩餘 {} 次重試機會"
     incorrect_pin_last_time = "PIN不正確，還有最後一次機會"
-    wrong_pin = "輸入的PIN碼不正確"
+    wrong_pin = "輸入的PIN不正確"
     seedless = "缺少種子"
     backup_failed = "備份失敗！"
     need_backup = "需要備份！"
-    pin_not_set = "沒有設定PIN！"
+    pin_not_set = "沒有設置PIN！"
     experimental_mode = "實驗模式"
-    pin_change_success = "PIN碼已更改成功"
-    pin_enable_success = "PIN碼已啟用成功"
-    pin_disable_success = "PIN碼已停用成功"
+    pin_change_success = "PIN已更改成功。"
+    pin_enable_success = "PIN已啟用成功。"
+    pin_disable_success = "PIN已停用成功。"
     contract = "合約:"
     new_contract = "新合約?"
     bytes_ = "{} 位元組"
@@ -369,9 +370,9 @@ class Text:
     fee_decreased = "手續費減少"
     your_spend = "你的花費"
     change_label_to = "修改標籤為："
-    change_label_to_x = "修改裝置名稱為：{}？"
+    change_label_to_x = "修改設備名稱為：{}？"
     enable_passphrase = "你要啟用 Passphrase 加密嗎？"
-    disable_passphrase = "你确定要停用 Passphrase 加密嗎？"
+    disable_passphrase = "你確定要停用 Passphrase 加密嗎？"
     enable_passphrase_always = "總是在本機輸入 Passphrase 嗎？"
     revoke_enable_passphrase_always = "要撤銷總是在本機輸入 Passphrase 的設定嗎？"
     auto_lock_x = "確定要在 {} 之後自動鎖定裝置嗎？"
@@ -404,16 +405,16 @@ class Text:
     source = "來源"
     tip = "提示"
     keep_alive = "Keep alive"
-    invalid_ur = "不支援的二維碼類型，請重試"
+    invalid_ur = "不支持的二維碼類型，請重試。"
     sequence_number = "序號"
     expiration_time = "過期時間"
     argument_x = "參數 #{}"
-    low_power_message = "電量剩餘 {}%\n請充電"
+    low_power_message = "電量剩餘 {}%，請充電"
     collect_nft = "你確定要收集此 NFT 嗎？"
     replace_nft = "你想要收集此 NFT 嗎？你已達到存儲上限，這將移除最早上傳的 NFT。"
-    verify_device = "你確定要使用DigitShield伺服器驗證你的裝置嗎？點擊確認以檢查你的裝置是否為原裝且未被篡改。"
-    update_bootloader = "你想更新引導加載程序嗎？"
-    update_resource = "你想更新裝置資源嗎？"
+    verify_device = "你確定要使用 DigitalShield 伺服器驗證你的設備嗎？點擊確認以檢查你的設備是否為原裝且未被篡改。"
+    update_bootloader = "你想更新引導加載程式嗎？"
+    update_resource = "你想更新設備資源嗎？"
     need_input_tips = "請輸入完成所有助記詞以後再點擊下一步"
     need_select_tips = "請按助記詞順序點擊選擇完成以後再點擊下一步"
     return_check_mnemonic = "查看助記詞"
@@ -443,9 +444,9 @@ class Button:
     airgap = "Airgap"
     sign = "簽名"
     verify = "驗證"
-    view_full_array = "查看完整陣列"
+    view_full_array = "查看完整數組"
     view_full_struct = "查看完整結構"
-    view_full_message = "查看完整訊息"
+    view_full_message = "查看完整消息"
     view_data = "查看數據"
     view_more = "查看更多"
     update = "更新"
@@ -475,30 +476,30 @@ class WalletSecurity:
     ]
 
 class MnemonicSecurity:
-    header =  "助记词用于保管和恢复钱包资产，关乎资产安全和使用权限，备份时需注意："
+    header = "助記詞用於保管和恢復錢包資產，關乎資產安全和使用權限，備份時需注意："
 
     tips = [
-        "操作时确认环境安全，无他人窥视或摄像设备。",
-        "按短语顺序备份助记词，严禁与任何人分享。",
-        "选择安全场所离线保存，勿用使用电子形式备份，切勿上传网路。",
+        "操作時確認環境安全，沒有其他人和攝像頭。",
+        "按短語順序備份助記詞，嚴禁與其他人分享。",
+        "選擇安全的地方離線保存，不要使用電子形式備份，也不要上傳到網絡。"
     ]
 
 class PinSecurity:
-    # 定义类属性header，用于描述PIN码的作用和使用提示
-    header =  "PIN码是访问设备的授权密码，使用时请遵循以下规范："
-    # 定义类属性tips，用于存储PIN码使用的具体提示信息
+    # 定义类属性header，用于描述PIN的作用和使用提示
+    header = "PIN是訪問設備的授權密碼，使用時請遵循以下規範："
+    # 定义类属性tips，用于存储PIN使用的具体提示信息
     tips = [
-        "设定或输入时，请确认周围无人窥视或摄影设备监控。",  # 提示1：设置或输入PIN码时请检查环境安全，确保没有旁观者或摄像头
-        "设定 4 - 16 位高强度码，切勿使用连续或重复数字（如1234、1111）。",
-        "PIN码重试上限为10次，累计错误10次，设备将重置。",
-        "请妥善保管PIN码，切勿向任何第三人透露。",
+        "確認周圍沒有其他人和攝像頭。",  # 提示1：设置或输入PIN时请检查环境安全，确保没有旁观者或摄像头
+        "設置 4～16 位高強度碼，不要使用連續或重複數字。",
+        "輸入PIN錯誤10次，設備將重置。",
+        "妥善保管PIN，不要向其他人透露。"
     ]
 class DownloadDigital:
     #header = "請下載並安裝DigitShield以進行裝置驗證"
     tips = [
-        "1. 点击“连接硬件钱包”",
-        "2. 连接设备：",
-        "3. 稍等一会，DigitalShield App 将恢复您曾经使用过的账户。",
+        "1. 點擊「連接硬件錢包」",
+        "2. 連接設備：{}",
+        "3. 稍等一會，DigitalShield App 將恢復您曾經使用過的賬戶。"
     ]
 class Solana:
     ata_reciver = "接收者(關聯代幣帳戶)"

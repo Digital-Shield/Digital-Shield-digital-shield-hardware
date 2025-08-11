@@ -204,6 +204,7 @@ class Title:
     prepare_import = "インポートの準備"
     prepare_check = "確認の準備"
     input_words = "シードフレーズを入力"
+    stop_input = "入力を中止"
     has_sub = "送信済み"
     reatart = "再開始"
     invalid_words = "無効なシードフレーズ"
@@ -491,7 +492,7 @@ class DownloadDigital:
     #header = "請下載並安裝DigitShield以進行裝置驗證"
     tips = [
         "1.「ウォレットを接続」をタップしてください",
-        "2. デバイスを接続してください:",
+        "2. デバイスを接続してください:{}",
         "3. しばらく待つと、DigitalShieldアプリが以前使用したアカウントを復元します。",
     ]
 class Solana:

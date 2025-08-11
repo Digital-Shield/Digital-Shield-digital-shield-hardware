@@ -205,6 +205,7 @@ class Title:
     prepare_import = "Chuẩn bị nhập"
     prepare_check = "Chuẩn bị kiểm tra"
     input_words = "Nhập cụm từ khôi phục"
+    stop_input = "Dừng nhập"
     has_sub = "Đã gửi"
     reatart = "Khởi động lại"
     invalid_words = "Cụm từ khôi phục không hợp lệ"
@@ -491,7 +492,7 @@ class DownloadDigital:
     #header = "Vui lòng tải xuống và cài đặt DigitShield để xác thực thiết bị"
     tips = [
         "1. Nhấp vào 'Kết nối ví'",
-        "2. Kết nối thiết bị:",
+        "2. Kết nối thiết bị:{}",
         "3. Chờ một chút, ứng dụng DigitalShield sẽ khôi phục các tài khoản bạn đã từng sử dụng.",
     ]
 class Solana:

@@ -204,6 +204,7 @@ class Title:
     prepare_import = "Import vorbereiten"
     prepare_check = "Vorbereitung zur Überprüfung"
     input_words = "Mnemonic eingeben"
+    stop_input = "Eingabe beenden"
     has_sub = "Eingereicht"
     reatart = "Neu starten"
     invalid_words = "Ungültiger Mnemonic"
@@ -492,7 +493,7 @@ class DownloadDigital:
     #header = "請下載並安裝DigitShield以進行裝置驗證"
     tips = [
         "1. Klicken Sie auf „Wallet verbinden“",
-        "2. Gerät verbinden:",
+        "2. Gerät verbinden:{}",
         "3. Warten Sie einen Moment, die DigitalShield App stellt Ihre zuvor verwendeten Konten wieder her.",
     ]
 class Solana:
