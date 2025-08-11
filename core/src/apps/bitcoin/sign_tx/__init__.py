@@ -11,6 +11,9 @@ from . import approvers, bitcoin, helpers, progress
 if not utils.BITCOIN_ONLY:
     from . import bitcoinlike, decred, zcash_v4
     from apps.zcash.signer import Zcash
+from ...ethereum.layout import (
+    require_confirm_fee_ton,
+)
 
 if TYPE_CHECKING:
     from typing import Protocol
@@ -88,12 +91,16 @@ async def sign_tx(
             request_class, req = req
             assert TxRequest.is_type_of(req)
             if req.request_type == RequestType.TXFINISHED:
+                
                 from trezor.ui.layouts import confirm_final
-
                 await confirm_final(ctx, coin.coin_name)
                 return req
             res = await ctx.call(req, request_class)
         elif isinstance(req, helpers.UiConfirm):
+            print("走的这儿--")
+            # If you need to call request_tx_output, pass a TxRequest object, not UiConfirm.
+            # For example, if req.tx_req exists and is a TxRequest:
+            # await helpers.UiConfirmOutput.confirm_dialog(ctx)
             res = await req.confirm_dialog(ctx)
             progress.progress.report_init()
         else:

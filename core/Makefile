@@ -197,7 +197,7 @@ build_unix_debug: templates ## build unix port
 	$(SCONS) --max-drift=1 CFLAGS="$(CFLAGS)" $(UNIX_BUILD_DIR)/trezor-emu-core $(UNIX_PORT_OPTS) TREZOR_MODEL="$(TREZOR_MODEL)" BITCOIN_ONLY="$(BITCOIN_ONLY)" TREZOR_EMULATOR_ASAN=1 UI2="$(UI2)" TREZOR_EMULATOR_DEBUGGABLE=1
 
 build_cross: ## build mpy-cross port
-	$(MAKE) -C vendor/micropython/mpy-cross $(CROSS_PORT_OPTS)
+	$(MAKE) -C vendor/micropython/mpy-cross $(CROSS_PORT_OPTS) DEBUG=1
 
 ## clean commands:
 

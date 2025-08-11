@@ -19,6 +19,7 @@ class Setting:
     wallpaper = "Hình nền"
     power_off = "Tắt máy"
     restart = "Khởi động lại"
+    restart_tip = "Khởi động lại thiết bị?"
 
 #### Security App
 class Security:
@@ -87,6 +88,7 @@ class Guide:
     device_title_serial_number = 'Số serial'
     bluetooth_name = "Tên Bluetooth"
     bluetooth_version = "Phiên bản Bluetooth"
+    attention_events = "Lưu ý"
     firmware_title_1 = '1. Đảm bảo thiết bị có pin trên 20%'
     firmware_title_2 = '2. Kết nối thiết bị với máy tính bằng cáp USB-C'
     firmware_title_3 = '3. Nhấp vào "Nâng cấp firmware"'
@@ -109,10 +111,9 @@ class Title:
     wallet = "Ví"
     import_wallet = "Nhập ví"
     restore_wallet = "Khôi phục ví"
-    wallet_is_ready = "Ví đã sẵn sàng"
     select_word_count = "Chọn số lượng từ"
     wallet_security = "Bảo mật ví"
-    pin_security = "Lưu ý bảo mật PIN"
+    pin_security = "Bật bảo vệ bằng mã PIN"
     mnemonic_security = "Lưu ý bảo mật cụm từ khôi phục"
     backup_mnemonic = "Sao lưu cụm từ khôi phục"
     enter_mnemonic = "Nhập cụm từ khôi phục"
@@ -122,11 +123,9 @@ class Title:
     theme_success = "Đổi chủ đề thành công"
     warning = "Cảnh báo"
     error = "Lỗi"
-    verified = "Đã sao lưu cụm từ khôi phục"
     invalid_mnemonic = "Cụm từ khôi phục không hợp lệ"
     pin_not_match = "PIN không khớp"
     check_recovery_mnemonic = "Kiểm tra cụm từ khôi phục"
-    mnemonic_not_match = "Cụm từ khôi phục không khớp"
     power_off = "Tắt nguồn"
     restart = "Khởi động lại"
     change_language = "Thay đổi ngôn ngữ"
@@ -197,17 +196,76 @@ class Title:
     verify_device = "Xác minh thiết bị"
     update_bootloader = "Cập nhật trình引导 (bootloader)"
     update_resource = "Cập nhật tài nguyên"
-    nedd_input_tips = "Vui lòng nhập tất cả các từ nhắc nỡ trước khi nhấp vào bước tiếp theo."
-    need_select_tips = "Vui lòng nhấp và chọn theo thứ tự các từ nhắc nỡ, sau đó nhấp vào bước tiếp theo sau khi hoàn thành."
-    return_check_mnemonic = "Kiểm tra các từ nhắc nỡ"
-    
+
+    words_num = "Từ #{}"
+    download_digital = "Tải xuống"
+    connect_wallets = "Kết nối ví"
+    start_setup = "Bắt đầu thiết lập"
+    prepare_create = "Chuẩn bị tạo"
+    prepare_import = "Chuẩn bị nhập"
+    prepare_check = "Chuẩn bị kiểm tra"
+    input_words = "Nhập cụm từ khôi phục"
+    has_sub = "Đã gửi"
+    reatart = "Khởi động lại"
+    invalid_words = "Cụm từ khôi phục không hợp lệ"
+    stop_checking = "Dừng kiểm tra"
+    correct_words = "Cụm từ khôi phục chính xác"
+    mnemonic_not_match = "Cụm từ khôi phục không khớp"
+    wallet_created = "Ví đã được tạo"
+    check_words = "Kiểm tra cụm từ khôi phục"
+    verified = "Đã xác minh"
+    wallet_is_ready = "Ví đã sẵn sàng"
+
+    prepare_backup = "Chuẩn bị sao lưu"
+    mnemonic_word = "Cụm từ khôi phục"
+    error_mnemonic_word = "Từ không chính xác"
+    right_word = "Đúng"
+    wrong_word = "Sai"
+
+    pin_not_match = "Không khớp"
+    has_reset = "Thiết bị đã được đặt lại"
+    has_wipe = "Thiết bị đã bị xóa"
+    screen_bright = "Độ sáng màn hình"
+    download_app = "Tải ứng dụng"
+    official_website = "Trang web chính thức"
+    scan_ercode = "Quét mã QR hiển thị trên ứng dụng"
+    wipe_notice = "Trước khi xóa thiết bị, hãy đảm bảo bạn đã hiểu:"
+    receive_tips = "Chỉ hỗ trợ nhận tài sản {}"
+    sign_fail = "Ký thất bại"
+    select_network = "Chọn mạng"
+    preview = "Xem trước"
+    go_link = "Vui lòng truy cập liên kết:"
+    connect_again = "Vui lòng thử lại kết nối."
+
 class Text:
+    start_setup = "Tạo ví mới với cụm từ khôi phục hoặc nhập cụm từ khôi phục đã có để khôi phục ví."
+    select_word_count = "Vui lòng chọn số lượng từ của cụm từ khôi phục."
+    input_words = "Vui lòng nhập các từ của cụm từ khôi phục theo đúng thứ tự, đảm bảo số thứ tự khớp với bản sao lưu của bạn."
+    invalid_words = "Cụm từ khôi phục bạn nhập không hợp lệ, hãy nhấp vào từ để chỉnh sửa hoặc bắt đầu lại."
+    stop_checking = "Nếu dừng lại, tất cả tiến trình sẽ bị mất. Bạn có chắc chắn muốn dừng không?"
+    import_wallet = "Nhập cụm từ khôi phục đã có của bạn để khôi phục ví."
+    correct_words = "Cụm từ khôi phục bạn nhập hợp lệ và trùng khớp với thiết bị."
+    mnemonic_not_match = "Cụm từ khôi phục bạn nhập hợp lệ nhưng không khớp với thiết bị."
+    wallet_created = "Ví mới đã được tạo thành công, vui lòng sao lưu ngay."
+    mnemonic_word_tips = "Vui lòng ghi lại {} từ sau theo đúng thứ tự."
+    select_words = "Vui lòng chọn đúng các từ"
+    error_mnemonic_word = "Từ không chính xác, vui lòng kiểm tra lại cụm từ khôi phục và thử lại."
+    pin_not_match = "Mã PIN bạn nhập không khớp, vui lòng thử lại."
+    has_reset = "Nhập sai mã PIN quá nhiều lần, bộ nhớ đã bị xóa."
+    restart_countdown = "Thiết bị sẽ khởi động lại sau {} giây"
+    has_wipe = "Thiết bị đã được xóa dữ liệu thành công, vui lòng khởi động lại thiết bị."
+    download_digital_tips = "Vui lòng tải ứng dụng Digital Shield tại: \n{}"
+    sign_fail = "Bạn đã hủy ký, giao dịch đã bị hủy."
+    sign_success = "Giao dịch đã được ký"
+    check_words_tips = "Vui lòng kiểm tra từng từ theo hướng dẫn, đối chiếu với bản sao lưu cụm từ khôi phục của bạn."
+    backup_verified = "Bạn đã hoàn thành xác minh cụm từ khôi phục."
+    create_success = "Bạn đã sao lưu cụm từ khôi phục thành công. Ví đã được tạo"
     tap_to_unlock = "Chạm để mở khóa"
     unlocking = "Đang mở khóa thiết bị..."
+
     str_words = "#FFFFFF {}# từ"
     backup_manual = "Ghi lại cụm từ khôi phục thủ công và lưu trữ ở nơi an toàn"
     check_manual = "Nhấn vào các từ theo đúng thứ tự"
-    backup_verified = "Bạn đã hoàn thành sao lưu cụm từ khôi phục. Hãy lưu giữ cẩn thận và không chia sẻ với bất kỳ ai"
     backup_invalid = "Cụm từ khôi phục bạn nhập không chính xác. Vui lòng kiểm tra và thử lại"
     pin_not_match = "Mã PIN bạn nhập không chính xác. Vui lòng thử lại"
     please_wait = "Vui lòng chờ"
@@ -215,8 +273,7 @@ class Text:
     create_wallet = "Tạo cụm từ khôi phục mới để thiết lập ví"
     restore_wallet = "Khôi phục ví từ cụm từ khôi phục đã sao lưu"
     restore_mnemonic_match = "Cụm từ khôi phục của bạn khớp. Bạn đã sao lưu chính xác"
-    restore_success = "Khôi phục ví thành công"
-    create_success = "Bạn đã sao lưu cụm từ khôi phục thành công. Ví đã được tạo"
+    restore_success = "Cụm từ khôi phục của bạn đã được nhập, ví đã khôi phục thành công."
     check_recovery_mnemonic = "Vui lòng kiểm tra cụm từ khôi phục để xác nhận khớp hoàn toàn"
     invalid_recovery_mnemonic = "Cụm từ khôi phục bạn nhập không hợp lệ. Vui lòng kiểm tra và thử lại"
     check_recovery_not_match = "Cụm từ khôi phục bạn nhập hợp lệ nhưng không khớp với thiết bị",
@@ -227,8 +284,8 @@ class Text:
     seconds = "giây"
     minute = "phút"
     minutes = "phút"
-    changing_language = "Bạn đang thay đổi ngôn ngữ\nÁp dụng cài đặt này sẽ khởi động lại thiết bị"
-    change_pin = "Đặt mã PIN từ 4-16 chữ số để bảo vệ thiết bị của bạn"
+    changing_language = "Bạn đang thay đổi ngôn ngữ thành {}. Áp dụng cài đặt này sẽ khởi động lại thiết bị."
+    change_pin = "Vui lòng đặt mã PIN có độ dài từ 4 đến 16 ký tự."
     wipe_device = "Khôi phục thiết bị về trạng thái ban đầu.\nCảnh báo: Thao tác này sẽ xóa mọi dữ liệu trên thiết bị của bạn"
     wipe_device_check = [
         "Xóa thiết bị sẽ xóa tất cả dữ liệu",
@@ -251,7 +308,7 @@ class Text:
     max_fee_per_gas = "Giới hạn phí giao dịch trên mỗi Gas"
     gas_price = "Giá Gas"
     total = "Tổng cộng"
-    do_sign_this_transaction = "Xác nhận ký giao dịch {} này"
+    do_sign_this_transaction = "Bạn có chắc chắn muốn ký giao dịch {} này không?"
     transaction_signed = "Giao dịch đã được ký"
     address = 'Địa chỉ:'
     public_key = "Khóa công khai:"
@@ -369,6 +426,7 @@ class Button:
     continue_ = "Tiếp tục"
     try_again = "Thử lại"
     power_off = "Tắt nguồn"
+    hold_to_power_off = "Nhấn giữ để tắt máy"
     restart = "Khởi động lại"
     hold = "Giữ"
     address = "Địa chỉ"
@@ -385,6 +443,7 @@ class Button:
     view_full_message = "Xem tin nhắn đầy đủ"
     view_data = "Xem dữ liệu"
     view_more = "Xem thêm"
+    update = "Cập nhật"
 
 class WalletSecurity:
     header = "Ghi lại cụm từ khôi phục của bạn trên giấy và lưu trữ ở nơi an toàn"
@@ -428,7 +487,13 @@ class PinSecurity:
         "3. Số lần nhập sai mã PIN tối đa là 10 lần, sau đó thiết bị sẽ tự động thiết lập lại",
         "4. Bảo quản mã PIN cẩn thận, không chia sẻ với bất kỳ ai",
     ]
-
+class DownloadDigital:
+    #header = "Vui lòng tải xuống và cài đặt DigitShield để xác thực thiết bị"
+    tips = [
+        "1. Nhấp vào 'Kết nối ví'",
+        "2. Kết nối thiết bị:",
+        "3. Chờ một chút, ứng dụng DigitalShield sẽ khôi phục các tài khoản bạn đã từng sử dụng.",
+    ]
 class Solana:
     ata_reciver = "Người nhận (Tài khoản token liên kết)"
     ata_sender = "Người gửi (Tài khoản token liên kết)"

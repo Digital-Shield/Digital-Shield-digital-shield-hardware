@@ -1,3 +1,4 @@
+import lvgl as lv
 import utime
 from typing import Any, NoReturn
 
@@ -43,14 +44,26 @@ async def pin_mismatch(ctx) -> None:
     from trezor.ui.layouts import show_warning
     title = i18n.Title.pin_not_match
     msg = i18n.Text.pin_not_match
-
-    await show_warning(
-        ctx,
-        title=title,
-        msg=msg,
-        button=i18n.Button.try_again,
-    )
-
+    from trezor.ui.screen.confirm import SimpleConfirm, WordCheckConfirm
+    screen = WordCheckConfirm(i18n.Title.pin_not_match,i18n.Text.pin_not_match,"A:/res/mach_error.png",False)
+    # screen = SimpleConfirm("确定要终止核对吗？")
+    screen.btn_confirm.delete()
+    screen.btn_cancel.set_text(i18n.Button.try_again)
+    screen.btn_cancel.set_style_width(440, lv.PART.MAIN)
+    screen.btn_cancel.set_style_height(89, lv.PART.MAIN)
+    screen.btn_cancel.set_style_bg_color(lv.color_hex(0x0062CE), lv.PART.MAIN)  # 设置背景颜色
+    await screen.show()
+    r = await screen
+    # if isinstance(r, Confirm):
+    #     from trezor.ui import NavigationBack
+    #     ctx.publish(NavigationBack())
+    
+    # await show_warning(
+    #     ctx,
+    #     title=title,
+    #     msg=msg,
+    #     button=i18n.Button.try_again,
+    # )
 async def request_pin_and_sd_salt(
     ctx: wire.Context,
     prompt: str = "",

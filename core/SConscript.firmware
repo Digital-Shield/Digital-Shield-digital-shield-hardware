@@ -2,8 +2,11 @@
 # fmt: off
 
 import os
+import platform
 #import tools
 
+IN_NIX_SHELL = os.environ.get("IN_NIX_SHELL") == '1'
+MACOS = platform.system() == "Darwin"
 BITCOIN_ONLY = ARGUMENTS.get('BITCOIN_ONLY', '0')
 EVERYTHING = BITCOIN_ONLY != '1'
 TREZOR_MODEL = ARGUMENTS.get('TREZOR_MODEL', 'T')
@@ -160,6 +163,10 @@ SOURCE_MOD += [
     'vendor/quirc/lib/identify.c',
     'vendor/quirc/lib/quirc.c',
     'vendor/quirc/lib/version_db.c',
+]
+CPPDEFINES_MOD += [
+    'QUIRC_FLOAT_TYPE =float',
+    'QUIRC_USE_TGMATH',
 ]
 # modtrezorio
 SOURCE_MOD += [
@@ -512,10 +519,14 @@ env = Environment(ENV=os.environ, CFLAGS='%s -DPRODUCTION=%s -DPYOPT=%s -DBITCOI
 
 env.Tool('micropython')
 
+SED = 'sed'
+if MACOS and not IN_NIX_SHELL:
+    SED = 'gsed'
+
 env.Replace(
     CAT='cat',
     DD='dd',
-    SED='sed',
+    SED=SED,
     AS='arm-none-eabi-as',
     AR='arm-none-eabi-ar',
     CC='arm-none-eabi-gcc',
@@ -675,6 +686,7 @@ if FROZEN:
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/airgap/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/airgap/ur/*.py'))
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/airgap/bc_types/*.py'))
+    SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/*.json'))
 
     SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'storage/*.py'))
 

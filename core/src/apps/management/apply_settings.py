@@ -120,6 +120,7 @@ async def require_confirm_change_label(ctx: wire.GenericContext, label: str) -> 
         i18n.Title.change_label,
         i18n.Text.change_label_to_x.format(label),
         br_code=ButtonRequestType.ProtectCall,
+        names = ""
     )
 
 

@@ -14,6 +14,9 @@ from . import omni
 
 if not utils.BITCOIN_ONLY:
     from trezor.ui.layouts import altcoin
+from ...ethereum.layout import (
+    require_confirm_fee_ton,
+)
 
 
 if TYPE_CHECKING:
@@ -48,6 +51,7 @@ async def confirm_output(
 ) -> None:
     if output.script_type == OutputScriptType.PAYTOOPRETURN:
         data = output.op_return_data
+        # print("这是her1--")
         assert data is not None
         if omni.is_valid(data):
             # OMNI transaction
@@ -60,6 +64,7 @@ async def confirm_output(
             )
         else:
             # generic OP_RETURN
+            # print("这是her2--")
             layout = layouts.confirm_data(
                 ctx,
                 "OP_RETURN",
@@ -69,16 +74,53 @@ async def confirm_output(
             )
     else:
         assert output.address is not None
+        print("这是输出地址--",output.address)
         address_short = addresses.address_short(coin, output.address)
+        print("这是地址--",address_short)
+        print("金额--",format_coin_amount(output.amount, coin, amount_unit))
+        print("network--",coin.coin_name)
+        chain_id = 20
+        if coin.coin_name == "Litecoin":
+            chain_id = 2
+        elif coin.coin_name == "Dogecoin":
+            chain_id = 2000
 
-        layout = layouts.bitcoin.confirm_output(
+        decimals = coin.decimals
+        if amount_unit == AmountUnit.SATOSHI:
+            decimals = 0
+        elif amount_unit == AmountUnit.MICROBITCOIN and decimals >= 6:
+            decimals -= 6
+        elif amount_unit == AmountUnit.MILLIBITCOIN and decimals >= 3:
+            decimals -= 3
+        print("decimals--",decimals)
+        # layout = layouts.bitcoin.confirm_output(
+        #     ctx,
+        #     address_short,
+        #     format_coin_amount(output.amount, coin, amount_unit),
+        # )
+        await require_confirm_fee_ton(
             ctx,
-            address_short,
-            format_coin_amount(output.amount, coin, amount_unit),
+            output.amount,
+            0,
+            1,
+            chain_id,
+            None,
+            from_address="",
+            to_address=address_short,
+            contract_addr=None,
+            token_id=None,
+            evm_chain_id=None,
+            raw_data=None,
+            decimals=decimals,
         )
+        from trezor.ui.layouts import confirm_final
+        await confirm_final(ctx, coin.coin_name)
 
-    await layout
-
+#  # await layout
+# def format_coin_amount(amount: int, coin: CoinInfo, amount_unit: AmountUnit) -> str:
+   
+#     # we don't need to do anything for AmountUnit.BITCOIN
+#     return decimals
 
 async def confirm_decred_sstx_submission(
     ctx: wire.Context, output: TxOutput, coin: CoinInfo, amount_unit: AmountUnit

@@ -159,12 +159,17 @@ if TYPE_CHECKING:
     class AptosSignTx(protobuf.MessageType):
         address_n: "list[int]"
         raw_tx: "bytes"
+        amount: "int"
+        destination: "str"
+
 
         def __init__(
             self,
             *,
             raw_tx: "bytes",
             address_n: "list[int] | None" = None,
+            amount: "int", 
+            destination: "str",
         ) -> None:
             pass
 
@@ -6758,6 +6763,8 @@ if TYPE_CHECKING:
         address_n: "list[int]"
         raw_tx: "bytes"
         network: "str"
+        amount: "int"
+        destination: "str"
 
         def __init__(
             self,
@@ -6765,6 +6772,8 @@ if TYPE_CHECKING:
             raw_tx: "bytes",
             network: "str",
             address_n: "list[int] | None" = None,
+            amount: "int | None" = None,
+            destination: "str | None" = None,
         ) -> None:
             pass
 
@@ -6907,12 +6916,16 @@ if TYPE_CHECKING:
     class SolanaSignTx(protobuf.MessageType):
         address_n: "list[int]"
         raw_tx: "bytes"
+        amount: "int"
+        destination: "str"
 
         def __init__(
             self,
             *,
             raw_tx: "bytes",
             address_n: "list[int] | None" = None,
+            amount: "int | None" = None,
+            destination: "str | None" = None,
         ) -> None:
             pass
 
@@ -7906,11 +7919,13 @@ if TYPE_CHECKING:
 
     class TonAddress(protobuf.MessageType):
         address: "str"
+        public_key: "bytes | None"
 
         def __init__(
             self,
             *,
             address: "str",
+            public_key: "bytes | None" = None,
         ) -> None:
             pass
 

@@ -5,11 +5,15 @@ from storage import device
 from trezor.ui import i18n, Style, theme, colors
 from trezor.ui.component import HStack, VStack, LabeledText
 from trezor.ui.screen import Navigation
+from trezor.ui.screen.navaigate import Navigate
 from trezor import io, loop, uart, utils, workflow, log
-
-class NftApp(Navigation):
+ 
+class NftApp(Navigate):
     def __init__(self):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.set_title(i18n.App.nft)
 
         self.set_style_bg_img_src(None, lv.PART.MAIN)
@@ -138,7 +142,7 @@ class ImgGridItem(lv.img):
         print(metadata)
         workflow.spawn(ImgDetail(self.file_name, "A:1:/res/nfts/zooms/", metadata).show())
 
-class ImgDetail(Navigation):
+class ImgDetail(Navigate):
     """Img Item"""
     def __init__(
         self,
@@ -147,6 +151,9 @@ class ImgDetail(Navigation):
         nft_metadata
     ):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.set_title(nft_metadata["header"])
         self.create_content(HStack)
         self.content: HStack

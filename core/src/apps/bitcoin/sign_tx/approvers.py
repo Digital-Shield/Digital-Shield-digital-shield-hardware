@@ -5,7 +5,7 @@ from trezor import wire
 from trezor.crypto.curve import bip340, secp256k1
 from trezor.crypto.hashlib import sha256
 from trezor.enums import OutputScriptType
-from trezor.ui.components.common.confirm import INFO
+# from trezor.ui.components.common.confirm import INFO
 from trezor.utils import HashWriter
 
 from apps.common import safety_checks
@@ -219,7 +219,7 @@ class BasicApprover(Approver):
             raise wire.DataError("Missing payment request amount.")
 
         result = await helpers.confirm_payment_request(msg, self.coin, self.amount_unit)
-        self.show_payment_req_details = result is INFO
+        # self.show_payment_req_details = result is INFO
 
     async def approve_orig_txids(
         self, tx_info: TxInfo, orig_txs: list[OriginalTxInfo]

@@ -1,6 +1,6 @@
 from trezor import ui, wire
 from trezor.ui import i18n
-from trezor.ui.layouts import show_success, show_warning
+from trezor.ui.layouts import show_success, show_success_create, show_warning
 from trezor.ui.layouts import (  # noqa: F401
     confirm_words,
     show_words,
@@ -15,7 +15,7 @@ async def _show_confirmation_success(
 ) -> None:
     title = i18n.Title.verified
     text = i18n.Text.backup_verified
-    return await show_success(
+    return await show_success_create(
         ctx,
         text,
         title,
@@ -39,7 +39,7 @@ async def show_backup_success(ctx: wire.GenericContext) -> None:
 
     title = i18n.Title.wallet_is_ready
     text = i18n.Text.create_success
-    await show_success(
+    await show_success_create(
         ctx, text, title, button=i18n.Button.continue_
     )
 

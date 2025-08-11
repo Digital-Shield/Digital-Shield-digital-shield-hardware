@@ -3,14 +3,18 @@ from typing import TYPE_CHECKING
 from trezor.ui import Style, font, colors, i18n
 from . import *
 from trezor.ui.screen import Navigation
+from trezor.ui.screen.navaigate import Navigate
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class Terms(Navigation):
+class Terms(Navigate):
     def __init__(self,title):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.set_title(title)
         self.create_content(HStack)
         self.content: HStack
@@ -125,8 +129,10 @@ class Text(LabeledText):
     def set_text(self, text: str):
         self._text = text  # 更新 _text 属性
         super().set_text(text)  # 调用父类的 set_text 方
+        #设置字号28
+        self.item.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)
     def get_text(self) -> str:
         #文本加粗
-        self.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
+        self.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)
         return self._text  # 返回存储的文本内容
     

@@ -39,6 +39,8 @@ BOOTLOADER_TEMP_NAME = BOOTLOADER_NAME + ".tmp"
 
 
 async def update_res(ctx: wire.Context, msg: ResourceUpdate) -> Success:
+    # 打印
+    print("update_res", msg)
     is_update_boot = msg.file_name == BOOTLOADER_NAME
     if show_update_res_confirm(is_update_boot):
         await confirm_update_res(ctx, is_update_boot)

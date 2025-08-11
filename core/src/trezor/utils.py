@@ -534,3 +534,18 @@ def count(init: int = 0, step: int = 1) -> Iterator[int]:
     while True:
         yield init
         init += step
+
+    #####
+def bit_length(n: int) -> int:
+    """
+    return bit count
+    """
+    return len(bin(n)) - 2
+
+def byte_length(n: int) -> int:
+    """
+    return byte count
+    """
+
+    return (bit_length(n) + 7) // 8
+########

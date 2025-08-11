@@ -320,6 +320,7 @@ class Context:
     async def write(self, msg: protobuf.MessageType) -> None:
         #格式化打印下res_msg
         if __debug__:
+            print("receiver. params-----")
             print("\n".join(dump_protobuf_lines(msg)))
             print("res_msg--"+str(msg))
             log.debug(

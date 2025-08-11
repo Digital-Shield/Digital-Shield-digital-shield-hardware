@@ -7,10 +7,17 @@ from storage import device
 
 class AutoLock(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.auto_lock, "A:/res/lock-setting-two.png")
-
+        super().__init__(parent, i18n.Setting.auto_lock, "A:/res/lock-setting-new.png")
+        #设置self.arrow箭头为不显示
+        self.arrow.add_flag(lv.obj.FLAG.HIDDEN)
         # seconds, -1 means never
         self.times = [30, 60, 120, 300, 600, -1]
+        # arrow
+        self.arrow = lv.img(self)
+        #设置箭头背景图
+        self.arrow.set_src("A:/res/a_right_arrow.png")
+        #设置在self.option最右边
+        self.arrow.align_to(self.option, lv.ALIGN.OUT_RIGHT_MID, 0,0)
 
     def current(self):
         cur = AutoLockDetails.current()
@@ -37,9 +44,19 @@ class AutoLockDetails(TimeOptionDetails):
 
 class AutoShutdown(OptionsItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.auto_shutdown, "A:/res/auto-power-off-two.png")
+        super().__init__(parent, i18n.Setting.auto_shutdown, "A:/res/auto-power-off-new.png")
+        #设置self.arrow箭头为不显示
+        self.arrow.add_flag(lv.obj.FLAG.HIDDEN)
+        #边框为0
+        self.set_style_border_width(0, 0)
         # seconds, -1 means never
         self.times = [60, 120, 300, 600, 900, 1800, -1]
+        # arrow
+        self.arrow = lv.img(self)
+        #设置箭头背景图
+        self.arrow.set_src("A:/res/a_right_arrow.png")
+        #设置在self.option最右边
+        self.arrow.align_to(self.option, lv.ALIGN.OUT_RIGHT_MID, 0,0)
 
     def current(self):
         cur = AutoShutdownDetails.current()

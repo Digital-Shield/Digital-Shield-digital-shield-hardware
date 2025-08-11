@@ -7,12 +7,15 @@ from trezor.crypto import bip39, hashlib, random
 from trezor.enums import BackupType
 from trezor.messages import EntropyAck, EntropyRequest, Success
 from trezor.ui.layouts import (
+    wallet_colleted_tip,
     mnemonic_security_tip,
     confirm_reset_device,
     confirm_pin_security,
     request_strength,
+    wallet_download_tip,
+    wallet_connect_tip
 )
-from trezor.ui.layouts import show_popup
+from trezor.ui.layouts import show_popup, load_popup
 from .. import backup_types
 from ..change_pin import request_pin_confirm
 from . import layout
@@ -30,10 +33,10 @@ _DEFAULT_BACKUP_TYPE = BackupType.Bip39
 async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
     # validate parameters and device state
     _validate_reset_device(msg)
-
+    
     if msg.language is not None:
         i18n.change_language(msg.language)
-    await show_popup(i18n.Text.wiping_device, timeout_ms=2000)
+    await load_popup(i18n.Text.wiping_device, timeout_ms=1000)
     storage.reset()
     if msg.language is not None:
         storage.device.set_language(msg.language)
@@ -46,7 +49,7 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
         # prompt = "Create a new wallet\nwith Super Shamir?"
         raise wire.ProcessError("Super Shamir not supported")
 
-    await confirm_reset_device(ctx, i18n.Text.create_wallet)
+    # await confirm_reset_device(ctx, i18n.Text.create_wallet) #旧弹框去除
     if isinstance(ctx, wire.DummyContext):
         utils.play_dead()
 
@@ -60,11 +63,13 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
 
         if isinstance(ctx, wire.DummyContext):
             # on device reset, we need to ask for a new strength to override the default  value 12
-            msg.strength = await request_strength(ctx)
+            msg.label = "create"
+            msg.strength = await request_strength(ctx, msg.label)
 
         # If either of skip_backup or no_backup is specified, we are not doing backup now.
         # Otherwise, we try to do it.
         perform_backup = not msg.no_backup and not msg.skip_backup
+        await wallet_colleted_tip(ctx,i18n.Title.wallet_created, i18n.Text.wallet_created,"A:/res/wallet_ready.png")
         await mnemonic_security_tip(ctx)
 
         while True:
@@ -111,6 +116,9 @@ async def reset_device(ctx: wire.Context, msg: ResetDevice) -> Success:
         # if we backed up the wallet, show success message
         if perform_backup:
             await layout.show_backup_success(ctx)
+            await wallet_download_tip(ctx,i18n.Title.download_digital, i18n.Text.download_digital_tips.format("https://ds.pro/download"))
+            await wallet_connect_tip(ctx,i18n.Title.connect_wallets, "")
+            
 
     except BaseException as e:
         raise e

@@ -21,13 +21,15 @@ async def get_address(
     ctx: Context, msg: AptosGetAddress, keychain: Keychain
 ) -> AptosAddress:
     await paths.validate_path(ctx, keychain, msg.address_n)
-
+    print("aaaaaa")
     node = keychain.derive(msg.address_n)
     pub_key_bytes = seed.remove_ed25519_prefix(node.public_key())
     address = AccountAddress.from_key(pub_key_bytes).__str__()
     ctx.icon_path = ICON
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)
+        print("aptos--path", path)
+        print("aptos--address", address)
         await show_address(
             ctx,
             address=address,

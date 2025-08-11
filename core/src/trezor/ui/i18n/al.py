@@ -19,6 +19,7 @@ class Setting:
     wallpaper = "خلفية الشاشة"
     power_off = "إيقاف التشغيل"
     restart = "إعادة التشغيل"
+    restart_tip = "نصيحة إعادة التشغيل"
 
 #### Security App
 class Security:
@@ -86,6 +87,7 @@ class Guide:
     device_title_serial_number = 'الرقم التسلسلي'
     bluetooth_name = "اسم البلوتوث"
     bluetooth_version = "إصدار البلوتوث"
+    attention_events = "تنبيهات"
     firmware_title_1 = '1. يرجى التأكد من أن شحن الجهاز أكثر من 20%'
     firmware_title_2 = '2. استخدم كابل USB-C لتوصيل الجهاز بالكمبيوتر'
     firmware_title_3 = '3. اضغط على "تحديث البرنامج الثابت"'
@@ -108,7 +110,6 @@ class Title:
     wallet = "المحفظة"
     import_wallet = "استيراد المحفظة"
     restore_wallet = "استعادة المحفظة"
-    wallet_is_ready = "المحفظة جاهزة"
     select_word_count = "اختر عدد الكلمات"
     wallet_security = "أمان المحفظة"
     pin_security = "نصائح أمان رمز PIN"
@@ -121,11 +122,9 @@ class Title:
     theme_success = "تم تغيير السمة بنجاح"
     warning = "تحذير"
     error = "خطأ"
-    verified = "اكتمل نسخ عبارة الاستعادة"
     invalid_mnemonic = "عبارة استعادة غير صالحة"
     pin_not_match = "رمز PIN غير متطابق"
     check_recovery_mnemonic = "التحقق من عبارة الاستعادة"
-    mnemonic_not_match = "عبارة الاستعادة غير متطابقة"
     power_off = "إيقاف التشغيل"
     restart = "إعادة التشغيل"
     change_language = "تغيير اللغة"
@@ -178,7 +177,7 @@ class Title:
     passphrase_source = "إعدادات إدخال عبارة المرور"
     enable_safety_checks ="تفعيل الفحوصات الأمنية"
     disable_safety_checks ="تعطيل الفحوصات الأمنية"
-    experiment_mode = "وضع التجارب"
+    experimental_mode = "وضع التجارب"
     set_as_homescreen = "تعيين كشاشة رئيسية"
     get_next_u2f_counter = "الحصول على عداد U2F التالي"
     set_u2f_counter = "ضبط عداد U2F"
@@ -196,26 +195,83 @@ class Title:
     verify_device = "تحقق من الجهاز"
     update_bootloader = "تحديث برنامج التحميل الأولي"
     update_resource = "تحديث الموارد"
-    need_input_tips = "يرجى إدخال كافة كلمات التذكير قبل النقر فوق الإ 단계 التالي"
-    need_select_tips = "يرجى النقر واختيار بالترتيب للكلمات التذكير، ثم النقر فوق الخطوة التالية بعد الانتهاء."
-    return_check_mnemonic = "التحقق من كلمات التذكير"
+
+    words_num = "كلمة #{}"
+    download_digital = "تحميل"
+    connect_wallets = "ربط المحافظ"
+    start_setup = "بدء الإعداد"
+    prepare_create = "تحضير الإنشاء"
+    prepare_import = "تحضير الاستيراد"
+    prepare_check = "التحضير للتحقق"
+    input_words = "إدخال عبارة الاستعادة"
+    has_sub = "تم الإرسال"
+    reatart = "إعادة البدء"
+    invalid_words = "عبارة الاستعادة غير صالحة"
+    stop_checking = "إيقاف التحقق"
+    correct_words = "عبارة الاستعادة صحيحة"
+    mnemonic_not_match = "عبارة الاستعادة غير متطابقة"
+    wallet_created = "تم إنشاء المحفظة"
+    check_words = "التحقق من عبارة الاستعادة"
+    verified = "تم التحقق"
+    wallet_is_ready = "المحفظة جاهزة"
+
+    prepare_backup = "التحضير للنسخ الاحتياطي"
+    mnemonic_word = "عبارة الاستعادة"
+    error_mnemonic_word = "كلمة غير صحيحة"
+    right_word = "صحيح"
+    wrong_word = "خطأ"
+
+    pin_not_match = "غير متطابق"
+    has_reset = "تم إعادة ضبط الجهاز"
+    has_wipe = "تم مسح الجهاز"
+    screen_bright = "سطوع الشاشة"
+    download_app = "تحميل التطبيق"
+    official_website = "الموقع الرسمي"
+    scan_ercode = "امسح رمز الاستجابة السريعة المعروض في التطبيق"
+    wipe_notice = "قبل مسح الجهاز، يرجى التأكد من معرفتك بذلك:"
+    receive_tips = "يدعم فقط استقبال أصول {}"
+    sign_fail = "فشل التوقيع"
+    select_network = "اختر الشبكة"
+    preview = "معاينة"
+    go_link = "يرجى زيارة الرابط:"
+    connect_again = "يرجى محاولة إعادة الاتصال."
 
 class Text:
+    start_setup = "ابدأ إعداد محفظة جديدة بعبارة استعادة، أو استورد نسخة احتياطية موجودة لاستعادة المحفظة."
+    select_word_count = "يرجى اختيار عدد كلمات عبارة الاستعادة."
+    input_words = "يرجى إدخال كلمات عبارة الاستعادة بالترتيب، والتأكد من تطابقها مع النسخة الاحتياطية لديك."
+    invalid_words = "عبارة الاستعادة التي أدخلتها غير صالحة، اضغط على الكلمة لتعديلها أو ابدأ من جديد."
+    stop_checking = "سيتم فقدان جميع التقدم بعد الإيقاف، هل أنت متأكد من الإيقاف؟"
+    import_wallet = "أدخل عبارة الاستعادة الخاصة بك لاستعادة المحفظة."
+    correct_words = "عبارة الاستعادة التي أدخلتها صحيحة ومتطابقة مع المخزنة في الجهاز."
+    mnemonic_not_match = "عبارة الاستعادة التي أدخلتها صحيحة لكنها لا تتطابق مع المخزنة في الجهاز."
+    wallet_created = "تم إنشاء المحفظة الجديدة بنجاح، يرجى عمل نسخة احتياطية فوراً."
+    mnemonic_word_tips = "يرجى نسخ الكلمات التالية وعددها {} بالترتيب."
+    select_words = "يرجى اختيار الكلمات الصحيحة"
+    error_mnemonic_word = "الكلمة غير صحيحة، يرجى مراجعة عبارة الاستعادة والمحاولة مرة أخرى."
+    has_reset = "تم إدخال رمز PIN بشكل خاطئ عدة مرات، تم مسح مساحة التخزين."
+    restart_countdown = "سيتم إعادة التشغيل بعد {} ثانية"
+    has_wipe = "تم مسح بيانات الجهاز بنجاح، يرجى إعادة تشغيل الجهاز."
+    download_digital_tips = "يرجى تنزيل تطبيق Digital Shield من: \n{}"
+    sign_fail = "لقد ألغيت التوقيع، تم إلغاء المعاملة."
+    sign_success = "تم توقيع المعاملة"
+    check_words_tips = "يرجى اتباع الإرشادات والتحقق من الكلمات واحدة تلو الأخرى وفقًا لنسخة الاسترداد الخاصة بك."
+    backup_verified = "لقد أكملت التحقق من عبارة الاستعادة."
+    create_success = "تم نسخ عبارة الاستعادة بنجاح وإنشاء المحفظة"
     tap_to_unlock = "اضغط لفتح القفل"
     unlocking = "جاري فتح قفل الجهاز..."
+
     str_words = "#FFFFFF {}# كلمات"
     backup_manual = "اكتب عبارة الاستعادة يدوياً واحفظها في مكان آمن"
     check_manual = "اضغط على الكلمات بالترتيب أدناه"
-    backup_verified = "لقد أكملت نسخ عبارة الاستعادة، يرجى حفظها بعناية وعدم مشاركتها مع أي شخص"
     backup_invalid = "عبارة الاستعادة التي أدخلتها غير صحيحة، يرجى مراجعة النسخة الاحتياطية والمحاولة مرة أخرى"
-    pin_not_match = "رمز PIN الذي أدخلته غير صحيح، يرجى المحاولة مرة أخرى"
+    pin_not_match = "رمز PIN غير متطابق، يرجى المحاولة مرة أخرى."
     please_wait = "يرجى الانتظار"
     wiping_device = "جاري مسح بيانات الجهاز..."
     create_wallet = "إنشاء مجموعة جديدة من عبارة الاستعادة لإنشاء محفظة جديدة"
     restore_wallet = "استعادة المحفظة من عبارة الاستعادة التي قمت بنسخها احتياطياً"
     restore_mnemonic_match = "عبارة الاستعادة الخاصة بك متطابقة، النسخة الاحتياطية صحيحة"
-    restore_success = "تم استعادة المحفظة بنجاح"
-    create_success = "تم نسخ عبارة الاستعادة بنجاح وإنشاء المحفظة"
+    restore_success = "تم استيراد عبارة الاستعادة الخاصة بك، وتم استعادة المحفظة بنجاح."
     check_recovery_mnemonic = "يرجى مراجعة عبارة الاستعادة والتأكد من تطابقها تماماً"
     invalid_recovery_mnemonic = "عبارة الاستعادة التي أدخلتها غير صالحة، يرجى مراجعتها والمحاولة مرة أخرى"
     check_recovery_not_match = "عبارة الاستعادة التي أدخلتها صالحة ولكنها لا تتطابق مع العبارة في الجهاز"
@@ -226,8 +282,8 @@ class Text:
     seconds = "ثواني"
     minute = "دقيقة"
     minutes = "دقائق"
-    changing_language = "أنت تغير اللغة\nتطبيق هذا الإعداد سيعيد تشغيل الجهاز"
-    change_pin = "قم بتعيين رمز PIN مكون من 4-16 خانة لحماية جهازك"
+    changing_language = "أنت تقوم بتغيير اللغة إلى {}، سيؤدي تطبيق هذا الإعداد إلى إعادة تشغيل الجهاز"
+    change_pin = "قم بتعيين رمز PIN يتكون من 4 إلى 16 رقمًا."
     wipe_device = "استعادة الجهاز إلى إعدادات المصنع.\nتحذير: سيتم مسح جميع البيانات من جهازك."
     wipe_device_check = [
         "مسح الجهاز سيزيل جميع البيانات",
@@ -254,7 +310,7 @@ class Text:
     gas_unit_price= "سعر وحدة الغاز"
     gas_price = "سعر الغاز"
     total = "المبلغ الإجمالي"
-    do_sign_this_transaction = "هل تريد توقيع معاملة {} هذه"
+    do_sign_this_transaction = "هل تريد توقيع معاملة {} هذه؟"
     transaction_signed = "تم توقيع المعاملة"
     address = 'العنوان:'
     public_key = "المفتاح العام:"
@@ -370,7 +426,8 @@ class Button:
     redo = "إعادة إنشاء"
     continue_ = "متابعة"
     try_again = "حاول مرة أخرى"
-    power_off = "إيقاف التشغيل"
+    power_off = "الضغط المطول للإيقاف"
+    hold_to_power_off = "اضغط مع الاستمرار لإيقاف التشغيل"
     restart = "إعادة التشغيل"
     hold = "اضغط مع الاستمرار"
     address = "العنوان"
@@ -387,6 +444,7 @@ class Button:
     view_full_message = "عرض الرسالة الكاملة"
     view_data = "عرض البيانات"
     view_more = "عرض المزيد"
+    update = "تحديث"
 class WalletSecurity:
     header = "اكتب عبارة الاستعادة الخاصة بك على ورقة واحفظها في مكان آمن"
     tips = [
@@ -429,7 +487,13 @@ class PinSecurity:
         "3. الحد الأقصى لمحاولات إدخال رمز PIN هو 10 مرات، بعد 10 محاولات خاطئة سيتم إعادة ضبط الجهاز",
         "4. يرجى الحفاظ على رمز PIN الخاص بك بشكل آمن وعدم مشاركته مع أي شخص",
     ]
-
+class DownloadDigital:
+    #header = "يرجى تنزيل وتثبيت تطبيق DigitShield للتحقق من الجهاز"
+    tips = [
+        "1. اضغط على \"ربط المحافظ\"",
+        "2. قم بتوصيل الجهاز:",
+        "3. انتظر قليلاً، سيقوم تطبيق DigitalShield باستعادة الحسابات التي استخدمتها سابقاً.",
+    ]
 class Solana:
     ata_reciver = "المستلم (حساب الرمز المميز المرتبط)"
     ata_sender = "المرسل (حساب الرمز المميز المرتبط)"

@@ -19,8 +19,23 @@ def data_to_hex(buf):
 
 def int_to_bytes(n):
     # return n.to_bytes((n.bit_length() + 7) // 8, 'big')
-    return n.to_bytes(4, 'big')
+    # return n.to_bytes(4, 'big')
+    c = (bit_length(n) + 7) // 8
+    return n.to_bytes(c, 'big')
+#####
+def bit_length(n: int) -> int:
+    """
+    return bit count
+    """
+    return len(bin(n)) - 2
 
+def byte_length(n: int) -> int:
+    """
+    return byte count
+    """
+
+    return (bit_length(n) + 7) // 8
+########
 def bytes_to_int(buf):
     return int.from_bytes(buf, 'big')
 

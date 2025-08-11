@@ -47,6 +47,11 @@ class StatusBar(VStack):
         self.ble.set_src("A:/res/ble-enabled.png" if device.ble_enabled() else "A:/res/ble-disabled.png")
         self.ble.add_flag(lv.obj.FLAG.HIDDEN)
 
+        # battery capacity percent
+        self.battery_percent = lv.label(self)
+        self.battery_percent.set_style_text_font(font.status_bar, 0)
+        self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
+
         # battery capacity icon
         self.battery_icon = lv.img(self)
         self.battery_icon.add_flag(lv.obj.FLAG.HIDDEN)
@@ -55,11 +60,6 @@ class StatusBar(VStack):
         self.battery_charging = lv.img(self)
         self.battery_charging.set_src("A:/res/charging.png")
         self.battery_charging.add_flag(lv.obj.FLAG.HIDDEN)
-
-        # battery capacity percent
-        self.battery_percent = lv.label(self)
-        self.battery_percent.set_style_text_font(font.status_bar, 0)
-        self.battery_percent.add_flag(lv.obj.FLAG.HIDDEN)
 
     def show_ble(self, status: int):
         log.debug(__name__, f"show ble {status}")

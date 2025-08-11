@@ -93,3 +93,49 @@ class Error(Message):
     def __init__(self, title, message):
         super().__init__(title, message, "A:/res/error.png")
         self.text_color(colors.DS.DANGER)
+
+# class Tips(Message):
+#     def __init__(self, title, message):
+#         super().__init__(title, message, "A:/res/error.png")
+#         self.text_color(colors.DS.DANGER)
+#     if icon:
+#         self.icon = self.add(lv.img)
+#         self.icon.set_src(icon)
+#         self.icon.set_size(lv.SIZE.CONTENT, lv.SIZE.CONTENT)
+#         # 使用绝对定位到左上角
+#         self.icon.align(lv.ALIGN.TOP_LEFT, 10, 0)
+#         self.icon.set_style_img_recolor_opa(0, lv.PART.MAIN)
+#         self.icon.set_zoom(256)  # 1.0x zoom, ensures full image is shown
+#         self.icon.clear_flag(lv.obj.FLAG.CLICKABLE)
+#         self.icon.set_style_clip_corner(False, lv.PART.MAIN)
+        
+#          # 容器（重新设计布局）
+#         self.a_container = lv.obj(self)
+#         self.a_container.set_size(436, 200)
+#         self.a_container.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+#         self.a_container.set_style_bg_opa(lv.OPA.TRANSP, lv.PART.MAIN)
+#         self.a_container.set_style_border_width(0, lv.PART.MAIN)
+#         self.a_container.set_style_shadow_width(0, lv.PART.MAIN)  # 去除阴影
+#         self.a_container.set_style_outline_width(0, lv.PART.MAIN) # 去除外轮廓
+#         if icon:
+#             self.a_container.align_to(self.icon,lv.ALIGN.TOP_LEFT, 0, 130)
+#         else:
+#             self.a_container.align(lv.ALIGN.TOP_LEFT, 0, 30)
+
+#         self.text1 = lv.label(self.a_container)
+#         self.text1.set_long_mode(lv.label.LONG.WRAP)
+#         self.text1.set_width(lv.pct(90))
+#         self.text1.set_height(lv.SIZE.CONTENT)
+#         self.text1.set_text(title)
+#         self.text1.set_style_text_color(colors.DS.WHITE, 0)
+#         # self.text1.set_style_shadow_width(0, lv.PART.MAIN)  # 去除阴影
+#         # self.text1.set_style_outline_width(0, lv.PART.MAIN) # 去除外轮廓
+#         # self.text.set_style_text_align(lv.TEXT_ALIGN.LEFT, 0)
+#         self.text2 = lv.label(self.a_container)
+#         self.text2.set_long_mode(lv.label.LONG.WRAP)
+#         self.text2.set_width(lv.pct(90))
+#         self.text2.set_height(lv.SIZE.CONTENT)
+#         self.text2.set_text(message)
+#         self.text2.set_style_text_font(font.Regular.SCS24, lv.PART.MAIN)
+#         self.text2.set_style_text_color(colors.DS.WHITE, 0)
+#         self.text2.align_to(self.text1,lv.TEXT_ALIGN.LEFT, 0, 60)

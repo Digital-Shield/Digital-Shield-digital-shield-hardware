@@ -90,7 +90,7 @@ def write_label_long(src, key_length, to):
     to.write_bit(0)
 
     # Length
-    length = ceil(log(key_length + 1,2))
+    length = ceil(log(key_length + 1))
     to.write_uint(len(src), length)
 
     # Value
@@ -101,7 +101,7 @@ def write_label_long(src, key_length, to):
 
 
 def label_long_length(src, key_length):
-    return 1 + 1 + ceil(log(key_length + 1,2)) + len(src)
+    return 1 + 1 + ceil(log(key_length + 1)) + len(src)
 
 
 def write_label_same(value: bool, length, key_length, to):
@@ -110,12 +110,12 @@ def write_label_same(value: bool, length, key_length, to):
 
     to.write_bit(value)
 
-    len_len = ceil(log(key_length + 1,2))
+    len_len = ceil(log(key_length + 1))
     to.write_uint(length, len_len)
 
 
 def label_same_length(key_size):
-    return 1 + 1 + 1 + ceil(log(key_size + 1,2))
+    return 1 + 1 + 1 + ceil(log(key_size + 1))
 
 
 def is_same(src):

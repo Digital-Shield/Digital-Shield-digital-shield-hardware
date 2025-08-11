@@ -17,7 +17,10 @@ from trezor.ui.layouts import (
     confirm_pin_security,
     confirm_check_recovery_mnemonic,
     show_popup,
+    load_popup,
     show_success,
+    wallet_import_tip,
+    wallet_download_tip
 )
 
 from trezor.ui.layouts import request_word_count
@@ -28,6 +31,7 @@ from apps.common.request_pin import (
     request_pin_confirm,
 )
 
+# from ..recovery_device2.homescreen import _request_share_first_screen
 if TYPE_CHECKING:
     from trezor.messages import RecoveryDevice
 
@@ -56,16 +60,19 @@ async def recovery_device(ctx: wire.Context, msg: RecoveryDevice) -> Success:
         if not msg.dry_run:
             if msg.language is not None:
                 i18n.change_language(msg.language)
-            await show_popup(
-                i18n.Text.wiping_device, timeout_ms=2000
+            await load_popup(
+                i18n.Text.wiping_device, timeout_ms=1000
             )
+            # from trezor.ui.screen.bluetooth import BluetoothPairing
+            # await BluetoothPairing("56778").show()
+            # await wallet_download_tip(ctx,i18n.Title.download_digital,i18n.Text.download_digital_tips.format("https://ds.pro/download"))
             # wipe storage to make sure the device is in a clear state
             storage.reset()
             if msg.language is not None:
                 storage.device.set_language(msg.language)
-            await _continue_dialog(ctx, msg)
+            # await _continue_dialog(ctx, msg)#旧的已经去除
             # set up pin if requested
-            if msg.pin_protection:
+            if msg.pin_protection :
                 await confirm_pin_security(ctx, "", recovery=True)
                 newpin = await request_pin_confirm(ctx)
                 config.change_pin("", newpin, None, None)
@@ -137,22 +144,29 @@ async def _continue_recovery_process(ctx: wire.GenericContext) -> Success:
     secret = None
     while secret is None:
         r = await _request_word_count(ctx, dry_run)
-        if isinstance(r, NavigationBack):
+        if isinstance(r, NavigationBack):  
             raise recover.RecoveryAborted
         word_count = r
+        
+        r = await wallet_import_tip(ctx,i18n.Title.input_words,i18n.Text.input_words,"",False)
+        if isinstance(r, NavigationBack):
+            print("Cancelled")
+            continue
+        
         r = await layout.request_mnemonic(ctx, word_count, None)
         if isinstance(r, NavigationBack):
             continue
         words = r
+        print("words--",words)
         # if they were invalid or some checks failed we continue and request them again
         if not words:
             continue
 
         try:
-            await show_popup(i18n.Text.please_wait)
+            # await show_popup(i18n.Text.please_wait)
             secret, backup_type = await _process_words(ctx, words)
         except MnemonicError:
-            await layout.show_invalid_mnemonic(ctx)
+            await layout.show_invalid_mnemonic(ctx, words)
 
     assert backup_type is not None
     if dry_run:
@@ -175,9 +189,11 @@ async def _finish_recovery_dry_run(
     result = utils.consteq(digest_stored, digest_input)
 
     storage.recovery.end_progress()
-
-    await layout.show_dry_run_result(ctx, result)
-
+    try:
+        await layout.show_dry_run_result(ctx, result)
+    except Exception as e:
+        print(f"Show error: {e}")
+    print("result--",result)
     if result:
         return Success(message="The seed is valid and matches the one in the device")
     else:

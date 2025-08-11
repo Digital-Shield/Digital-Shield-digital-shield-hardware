@@ -32,7 +32,8 @@ async def get_address(
         else:
             network = networks.UNKNOWN_NETWORK
     address = address_from_bytes(node.ethereum_pubkeyhash(), network)
-
+    print(f"network: {get_display_network_name(network)}")
+    print(f"chain_id: {msg.chain_id}")#bnb: 56 polugon :137 eth:1
     if msg.show_display:
         path = paths.address_n_to_str(msg.address_n)
         await show_address(

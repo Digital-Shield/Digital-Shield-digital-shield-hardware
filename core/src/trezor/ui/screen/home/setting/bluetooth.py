@@ -15,7 +15,7 @@ BLE_CMD_CTRL_OP_DISCONNECT = const(3)
 class Bluetooth(ToggleItem):
 
     def __init__(self, parent):
-        super().__init__(parent, i18n.Setting.bluetooth, "A:/res/ble-connected-two.png")
+        super().__init__(parent, i18n.Setting.bluetooth, "A:/res/ble-connected-new.png")
         self.checked = device.ble_enabled()
 
     def toggle(self):
@@ -47,3 +47,4 @@ class Bluetooth(ToggleItem):
             ble.ctrl(BLE_CMD_CTRL, BLE_CMD_CTRL_OP_DISCONNECT)
             ble.ctrl(BLE_CMD_CTRL, BLE_CMD_CTRL_OP_CLOSE)
             ble.power_off()
+            StatusBar.instance().show_ble(StatusBar.BLE_STATE_DISABLED)#关闭蓝牙图标

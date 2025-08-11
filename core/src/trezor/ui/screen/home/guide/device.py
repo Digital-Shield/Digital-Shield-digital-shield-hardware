@@ -3,16 +3,19 @@ from typing import TYPE_CHECKING
 
 from . import *
 from trezor.ui.screen import Navigation, font
-
+from trezor.ui.screen.navaigate import Navigate
 from storage import device
 
 if TYPE_CHECKING:
     from typing import List
     pass
 
-class Device(Navigation):
+class Device(Navigate):
     def __init__(self,title):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.set_title(title)
         self.create_content(HStack)
         self.content: HStack
@@ -21,7 +24,10 @@ class Device(Navigation):
             .pad_all(24),
             0
         )
-
+        #背景色
+        self.content.set_style_bg_color(lv.color_hex(0x0D0E17), 0)
+        #行间距为0
+        self.content.set_style_pad_row(0, 0)
         # label
         Item(self.content, i18n.Guide.device_label, device.get_label())
 
@@ -54,8 +60,8 @@ class Item(HStack):
         self.items_center()
         self.add_style(
             Style()
-            .radius(16)
-            .bg_color(lv.color_hex(0x111126))
+            # .radius(16)
+            .bg_color(lv.color_hex(0x0D0E17))
             .bg_opa(lv.OPA._90)  # 90% 不透明，避免影响子组件
             .text_color(lv.color_hex(0xFFFFFF))
             .width(lv.pct(100))

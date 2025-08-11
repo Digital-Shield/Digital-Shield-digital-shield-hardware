@@ -33,7 +33,8 @@ clear()
 if not config.has_pin():
     config.unlock("", None)
     storage.init_unlocked()
-
+# else:   
+#     config.unlock("5555", None)
 # initialize lvgl drivers
 import trezor.ui
 

@@ -34,15 +34,15 @@ async def sign_tx(ctx: wire.Context, msg: SuiSignTx, keychain: Keychain) -> SuiS
     # from trezor.utils import dump_protobuf_lines
     # print("Sui_message","\n".join(dump_protobuf_lines(msg)))
     # await confirm_blind_sign_common(ctx, address, msg.raw_tx)
-    await require_show_overview_ton(
-        ctx,
-        "SUI",
-        msg.destination,
-        msg.sui_amount,
-        -10,
-        None,
-        False,
-    )
+    # await require_show_overview_ton(
+    #     ctx,
+    #     "SUI",
+    #     msg.destination,
+    #     msg.sui_amount,
+    #     -10,
+    #     None,
+    #     False,
+    # )
     await require_confirm_fee_ton(
         ctx,
         msg.sui_amount,

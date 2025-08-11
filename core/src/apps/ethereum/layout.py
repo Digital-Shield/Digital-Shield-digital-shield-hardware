@@ -177,6 +177,7 @@ def require_confirm_fee_ton(
     token_id: int | None = None,
     evm_chain_id: int | None = None,
     raw_data: bytes | None = None,
+    decimals: int | None = None,
 ) -> Awaitable[None]:
     fee_max = gas_price * gas_limit
     from trezor import log
@@ -185,14 +186,14 @@ def require_confirm_fee_ton(
     return confirm_transaction_detail(
         ctx,
         format_ethereum_amount(
-            spending, token, chain_id, is_nft=False if token_id else False
+            spending, token, chain_id, is_nft=False if token_id else False, decimals_val=decimals
         ),
-        format_ethereum_amount(gas_price, None, chain_id),
-        format_ethereum_amount(fee_max, None, chain_id),
+        format_ethereum_amount(gas_price, None, chain_id, decimals_val=decimals),
+        format_ethereum_amount(fee_max, None, chain_id, decimals_val=decimals),
         from_address,
         to_address,
         (
-            format_ethereum_amount(spending + fee_max, None, chain_id)
+            format_ethereum_amount(spending + fee_max, None, chain_id, decimals_val=decimals)
             if (token is None and contract_addr is None)
             else None
         ),
@@ -465,6 +466,7 @@ def format_ethereum_amount(
     token: tokens.EthereumTokenInfo | None,
     chain_id: int,
     is_nft: bool = False,
+    decimals_val: int | None = None
 ) -> str:
     if is_nft:
         return f"{value} NFT"
@@ -480,6 +482,33 @@ def format_ethereum_amount(
     elif chain_id == -12:
         suffix = "TRON"
         decimals = 6
+    elif chain_id == 1:
+        suffix = "Ethereum"
+        decimals = 18
+    elif chain_id == 137:
+        suffix = "Polygon"
+        decimals = 18
+    elif chain_id == 56:
+        suffix = "BNB Smart Chain"
+        decimals = 18
+    elif chain_id == 32:
+        suffix = "Solana"
+        decimals = 9
+    elif chain_id == 4:
+        suffix = "APTOS"
+        decimals = 8
+    elif chain_id == 258:
+        suffix = "Polkadot"
+        decimals = 10
+    elif chain_id == 20:
+        suffix = "Bitcoin"
+        decimals = decimals_val
+    elif chain_id == 2:
+        suffix = "Litecoin"
+        decimals = decimals_val
+    elif chain_id == 2000:
+        suffix = "Dogecoin"
+        decimals = decimals_val
     else:
         suffix = networks.shortcut_by_chain_id(chain_id)
         decimals = 18
@@ -508,6 +537,9 @@ def format_ethereum_amount_ton(
         decimals = 9
     elif chain_id == -12:
         suffix = "TRON"
+        decimals = 6
+    elif chain_id == -13:
+        suffix = "Ethereum"
         decimals = 6
     else:
         suffix = "Ton"

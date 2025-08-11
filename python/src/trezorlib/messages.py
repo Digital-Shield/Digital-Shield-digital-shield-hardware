@@ -9828,15 +9828,18 @@ class TonGetAddress(protobuf.MessageType):
 class TonAddress(protobuf.MessageType):
     MESSAGE_WIRE_TYPE = 11902
     FIELDS = {
-        1: protobuf.Field("address", "string", repeated=False, required=True),
+        2: protobuf.Field("address", "string", repeated=False, required=True),
+        1: protobuf.Field("public_key", "bytes", repeated=False, required=False),
     }
 
     def __init__(
         self,
         *,
         address: "str",
+        public_key: Optional["bytes"] = None,
     ) -> None:
         self.address = address
+        self.public_key = public_key
 
 
 class TonSignMessage(protobuf.MessageType):

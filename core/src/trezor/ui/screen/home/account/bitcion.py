@@ -1,22 +1,17 @@
 from trezor import utils
 
-from . import DetailBase
 from .helper import parser_path
 
-
-class Bitcoin(DetailBase):
-    @staticmethod
-    def get_name() -> str:
-        return "BTC"
-    @staticmethod
-    def get_icon() -> str:
+# a `CoinProtocol` class
+class Bitcoin:
+    def get_name(self) -> str:
+        return "Bitcoin"
+    def get_icon(self) -> str:
         return "A:/res/btc-btc.png"
-    @staticmethod
-    def get_path() -> str:
+    def get_path(self) -> str:
         return "m/44'/0'/0'/0/0"
 
-    @staticmethod
-    async def get_address() -> str:
+    async def get_address(self) -> str:
         import_manager = utils.unimport()
         with import_manager:
             from trezor.wire import DUMMY_CONTEXT as ctx
@@ -29,7 +24,7 @@ class Bitcoin(DetailBase):
             await handle_Initialize(ctx, init)
 
             # step 2: get address
-            req = GetAddress(address_n=parser_path(Bitcoin.get_path()))
+            req = GetAddress(address_n=parser_path(self.get_path()))
             resp = await get_address(ctx, req)
 
             return resp.address

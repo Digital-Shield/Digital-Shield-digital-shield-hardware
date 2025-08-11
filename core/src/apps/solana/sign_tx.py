@@ -20,6 +20,9 @@ from .constents import (  # STAKE_PROGRAM_ID,; VOTE_PROGRAM_ID,
     SPL_TOKEN_PROGRAM_ID,
     SYS_PROGRAM_ID,
 )
+from ..ethereum.layout import (
+    require_confirm_fee_ton,
+)
 
 if TYPE_CHECKING:
     from trezor.messages import SolanaSignTx
@@ -70,12 +73,15 @@ async def sign_tx(
     #     accounts_keys[i.program_id_index] not in CURRENT_ALLOWED_PROGRAM_IDS
     #     for i in message.instructions
     # )
+    from .spl._layouts.token_instructions import (
+        AMOUNT_LAYOUT,
+    )
     should_blind_sign = False
     ctx.icon_path = ICON
     if should_blind_sign:
         from trezor.ui.layouts.solana import confirm_sol_blinding_sign
         from apps.common.signverify import decode_message
-
+        # print("fee_payer",str(fee_payer))
         message_hex = decode_message(sha256(msg.raw_tx).digest())
         await confirm_sol_blinding_sign(ctx, str(fee_payer), message_hex)
     else:
@@ -85,12 +91,32 @@ async def sign_tx(
             accounts = [accounts_keys[ix] for ix in i.accounts]
             if program_id == SYS_PROGRAM_ID:
                 from .system.program import parse
-
-                await parse(ctx, accounts, i.data)
+                print("accounts:", [str(a) for a in accounts])
+                print("收款地址:",str(accounts[1]))
+                parsed_data = AMOUNT_LAYOUT.parse(i.data)
+                # print("数据",parsed_data)
+                from .utils.helpers import sol_format_amount
+                # print("金额",sol_format_amount(parsed_data.amount, True))
+                # await parse(ctx, accounts, i.data)
+                
+                await require_confirm_fee_ton(
+                    ctx,
+                    msg.amount,
+                    0,
+                    1,
+                    32,
+                    None,
+                    from_address=accounts[0],
+                    to_address=msg.destination,
+                    contract_addr=None,
+                    token_id=None,
+                    evm_chain_id=None,
+                    raw_data=None,
+                )
             elif program_id == SPL_TOKEN_PROGRAM_ID:
                 from .spl.spl_token_program import parse
 
-                await parse(ctx, accounts, i.data)
+                await parse(ctx, accosunts, i.data)
             elif program_id == SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID:
                 from .spl.ata_program import parse
 

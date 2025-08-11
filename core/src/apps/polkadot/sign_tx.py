@@ -7,7 +7,9 @@ from apps.common import paths
 from apps.common.keychain import FORBIDDEN_KEY_PATH
 
 from . import helper, seed, transaction
-
+from ..ethereum.layout import (
+    require_confirm_fee_ton,
+)
 
 @seed.with_keychain
 async def sign_tx(
@@ -27,7 +29,21 @@ async def sign_tx(
     address = helper.ss58_encode(public_key, address_type)
     chain_name, symbol, decimal = helper.update_chain_res(ctx, msg.network)
     tx = transaction.Transaction.deserialize(msg.raw_tx, msg.network)
-    await tx.layout(ctx, address, chain_name, symbol, decimal)
+    # await tx.layout(ctx, address, chain_name, symbol, decimal)
+    await require_confirm_fee_ton(
+        ctx,
+        msg.amount,
+        0,
+        1,
+        258,
+        None,
+        from_address=address,
+        to_address=msg.destination,
+        contract_addr=None,
+        token_id=None,
+        evm_chain_id=None,
+        raw_data=None,
+    )
     await confirm_final(ctx, chain_name)
     signature = ed25519.sign(node.private_key(), msg.raw_tx)
 

@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
 from trezor import ui
-from trezor.ui import i18n
 from trezor.enums import ButtonRequestType
 # from trezor.lvglui.i18n import gettext as _, keys as i18n_keys
 from trezor.strings import format_amount
@@ -27,7 +26,6 @@ def require_confirm_fee(
     is_raw_data: bool = False,
 ) -> Awaitable[None]:
     from trezor.ui.layouts.lvgl.altcoin import confirm_total_ton
-
     fee_limit = gas_price * gas_limit
 
     return confirm_total_ton(
@@ -50,12 +48,10 @@ def require_show_overview(
     token: tokens.TokenInfo | None = None,
 ) -> Awaitable[bool]:
     from trezor.strings import strip_amount
-    format_ton_amount(value, token)
-    # print("格式化后数据为--"+str(format_ton_amount(value, token)))
-    # print("分割后数据为--"+str(strip_amount(format_ton_amount(value, token))))
+
     return should_show_details(
         ctx,
-        title=i18n.Title.send_amount.format(
+        title=_(i18n_keys.TITLE__SEND_MULTILINE).format(
             strip_amount(format_ton_amount(value, token))[0]
         ),
         address=to_addr or _(i18n_keys.LIST_VALUE__NEW_CONTRACT),

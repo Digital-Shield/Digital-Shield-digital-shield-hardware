@@ -126,9 +126,16 @@ class PinKeyboard(Keyboard):
         self.set_size(lv.pct(100), 362)
         self.set_style_pad_top(48, lv.PART.MAIN)
         self.tip = lv.label(self)
-        self.tip.set_size(lv.pct(100), 32)
-        self.tip.align(lv.ALIGN.TOP_MID, 0, -40)
+        self.tip.set_size(lv.pct(100), 41)
+        self.tip.align(lv.ALIGN.BOTTOM_MID, 0, -300)
+        #将tip显示到最上层
+        self.tip.move_foreground()
+        #设置边宽2
+        # self.tip.set_style_border_width(2, lv.PART.MAIN)
+        #设置边框颜色为蓝色
+        # self.tip.set_style_border_color(colors.DS.RED, lv.PART.MAIN)
         self.tip.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)
+        
         self.tip.add_flag(lv.obj.FLAG.HIDDEN)
         self.tip.set_recolor(True)
 
@@ -147,13 +154,14 @@ class PinKeyboard(Keyboard):
             nums[0], nums[1], nums[2], "\n",
             nums[3], nums[4], nums[5], "\n",
             nums[6], nums[7], nums[8], "\n",
-            lv.SYMBOL.CLOSE, nums[9], lv.SYMBOL.OK,
+            lv.SYMBOL.BACKSPACE, nums[9], lv.SYMBOL.OK,
             "",
         ]
         # fmt: on
         self.set_map(self.maps)
         self.set_btn_ctrl_all(__BTN_CTRL)
-
+        # 设置数组键的背景色为蓝色 
+        # self.set_style_bg_color(colors.DS.BLUE, lv.PART.ITEMS | lv.STATE.PRESSED)
         self.accessable = False
 
         self.add_event_cb(self.on_draw, lv.EVENT.DRAW_PART_BEGIN, None)
@@ -173,7 +181,7 @@ class PinKeyboard(Keyboard):
         # count in [min, max]
         self.accessable = max_count >= count >= (self.min_pin_length or 1)
 
-        symbol = lv.SYMBOL.BACKSPACE if count else lv.SYMBOL.CLOSE
+        symbol = lv.SYMBOL.BACKSPACE # if count else lv.SYMBOL.CLOSE
         self.maps[12] = symbol
         self.set_map(self.maps)
 
@@ -206,9 +214,14 @@ class PinKeyboard(Keyboard):
     def on_draw(self, event):
         dsc = lv.obj_draw_part_dsc_t.__cast__(event.get_param())
         if dsc.id == self.ACCESS_BTN_ID and self.accessable:
-            dsc.rect_dsc.bg_color = colors.DS.PLEASURE
+            # dsc.rect_dsc.bg_color = lv.color_hex(0x0D0E17)
+            dsc.label_dsc.color = lv.color_hex(0x1AB72A)
+        # elif dsc.id == self.DELETE_BTN_ID:
+        #     dsc.rect_dsc.bg_color = lv.color_hex(0x0D0E17)
         elif dsc.id == self.DELETE_BTN_ID:
-            dsc.rect_dsc.bg_color = colors.DS.DANGER
+            dsc.label_dsc.color = lv.color_hex(0xFF6969)
+        elif dsc.id == self.DELETE_BTN_ID+2:
+            dsc.label_dsc.color = lv.color_hex(0x1AB72A)
 
 
 class Candidate(lv.obj):
@@ -253,6 +266,7 @@ class MnemonicKeyboard(Keyboard):
             .pad_all(0)
             .width(lv.pct(100))
             .height(lv.SIZE.CONTENT)
+            .pad_top(0)
             .pad_left(16)
             .pad_column(16),
             lv.PART.MAIN,
@@ -264,7 +278,7 @@ class MnemonicKeyboard(Keyboard):
         style = (
             Style()
             .radius(4)
-            .width(140)
+            .width(150)
             .height(40)
             .border_width(1)
             .bg_opa(lv.OPA.TRANSP)
@@ -300,10 +314,12 @@ class MnemonicKeyboard(Keyboard):
 
     def on_draw(self, event):
         dsc = lv.obj_draw_part_dsc_t.__cast__(event.get_param())
-        if dsc.id == self.ACCESS_BTN_ID and self.accessable:
-            dsc.rect_dsc.bg_color = colors.DS.PLEASURE
-        elif dsc.id == self.DELETE_BTN_ID:
-            dsc.rect_dsc.bg_color = colors.DS.DANGER
+        if dsc.id == self.ACCESS_BTN_ID-1 and self.accessable:
+            dsc.rect_dsc.bg_color = colors.DS.RED
+        elif dsc.id == self.DELETE_BTN_ID-1:
+            dsc.label_dsc.color = lv.color_hex(0x1AB72A)
+        elif dsc.id == self.X_BTN_INDEX-2:
+            dsc.label_dsc.color = lv.color_hex(0xFF6969)
 
     def content_changed(self):
         # clear all tips
@@ -313,6 +329,7 @@ class MnemonicKeyboard(Keyboard):
 
         # update buttons state
         mask = bip39.word_completion_mask(txt)
+        # print(f"MnemonicKeyboard mask: {mask}")
         self.update_btn_state(mask)
 
         # not have words begin with `x`
@@ -320,6 +337,7 @@ class MnemonicKeyboard(Keyboard):
             self.set_btn_ctrl(self.X_BTN_INDEX, lv.btnmatrix.CTRL.DISABLED)
 
         words = bip39.complete_word(txt)
+        # print(f"MnemonicKeyboard words: {words}")
         # log.debug(__name__, f"words: {words}")
 
         if not words:
@@ -354,13 +372,14 @@ class MnemonicKeyboard(Keyboard):
         txt = self.textarea.get_text()
 
         words = bip39.complete_word(txt)
-        candidates = words.rstrip().split()
+        if words:
+            candidates = words.rstrip().split()
 
-        # text of textarea already is mnemonic
-        if txt in candidates:
-            return
-        # only one candidate
-        self.textarea.set_text(candidates[0])
+            # text of textarea already is mnemonic
+            if txt in candidates:
+                return
+            # only one candidate
+            self.textarea.set_text(candidates[0])
         self.content_changed()
 
     def on_click_candidate(self, event):
@@ -394,8 +413,9 @@ class MnemonicKeyboard(Keyboard):
         self.maps = [
             "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "\n",
             " ","a", "s", "d", "f", "g", "h", "j", "k", "l", " ", "\n",
-            " ", "z", "x", "c", "v", "b", "n", "m", " ", "\n",
-            lv.SYMBOL.BACKSPACE, lv.SYMBOL.DOWN, lv.SYMBOL.OK, ""
+            # " ", "z", "x", "c", "v", "b", "n", "m", " ", "\n",
+            # lv.SYMBOL.BACKSPACE, lv.SYMBOL.DOWN, lv.SYMBOL.OK, ""
+            lv.SYMBOL.BACKSPACE, "z", "x", "c", "v", "b", "n", "m", lv.SYMBOL.OK, ""
         ]
         # fmt: on
 
@@ -411,14 +431,14 @@ class MnemonicKeyboard(Keyboard):
         self.ctrls.append(1 | lv.btnmatrix.CTRL.HIDDEN)  # placeholder
 
         # third line 9 characters contains 2 placeholders
-        self.ctrls.append(3 | lv.btnmatrix.CTRL.HIDDEN)  # placeholder
-        self.ctrls.extend([2 | __BTN_CTRL] * 7)  # characters
-        self.ctrls.append(3 | lv.btnmatrix.CTRL.HIDDEN)  # placerholder
+        # self.ctrls.append(3 | lv.btnmatrix.CTRL.HIDDEN)  # placeholder
+        self.ctrls.extend([1 | __BTN_CTRL] * 7)  # characters
+        # self.ctrls.append(3 | lv.btnmatrix.CTRL.HIDDEN)  # placerholder
         # not have word begin with `x`
-        self.ctrls[self.X_BTN_INDEX] |= lv.btnmatrix.CTRL.DISABLED
+        # self.ctrls[self.X_BTN_INDEX] |= lv.btnmatrix.CTRL.DISABLED
 
         # fourth line 3 symbol
-        self.ctrls.extend([__BTN_CTRL] * 3)
+        # self.ctrls.extend([__BTN_CTRL] * 3)
 
         self.set_ctrl_map(self.ctrls)
 

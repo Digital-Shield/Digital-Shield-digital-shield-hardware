@@ -1,5 +1,75 @@
 import lvgl as lv
 
+from micropython import const
+
+RADIUS = const(2)
+
+# backlight brightness
+BACKLIGHT_NORMAL = const(150)
+BACKLIGHT_LOW = const(45)
+BACKLIGHT_DIM = const(5)
+BACKLIGHT_NONE = const(2)
+BACKLIGHT_MAX = const(255)
+# 4% of the period is the minimum value
+BACKLIGHT_MIN = const(BACKLIGHT_MAX * 4 // 100)
+
+# color palette
+RED = lv.color_hex(0xFF0000)
+PINK = lv.color_hex(0xE91E63)
+PURPLE = lv.color_hex(0x9C27B0)
+DEEP_PURPLE = lv.color_hex(0x673AB7)
+INDIGO = lv.color_hex(0x3F51B5)
+BLUE = lv.color_hex(0x2196F3)
+LIGHT_BLUE = lv.color_hex(0x03A9F4)
+CYAN = lv.color_hex(0x00BCD4)
+TEAL = lv.color_hex(0x009688)
+GREEN = lv.color_hex(0x00AE0B)
+LIGHT_GREEN = lv.color_hex(0x87CE26)
+LIME = lv.color_hex(0xCDDC39)
+YELLOW = lv.color_hex(0xFFEB3B)
+AMBER = lv.color_hex(0xFFC107)
+ORANGE = lv.color_hex(0xFF9800)
+DEEP_ORANGE = lv.color_hex(0xFF5722)
+BROWN = lv.color_hex(0x794848)
+LIGHT_GREY = lv.color_hex(0xDADDD8)
+GREY = lv.color_hex(0x9E9E9E)
+DARK_GREY = lv.color_hex(0x3E3E3E)
+BLUE_GRAY = lv.color_hex(0x607D8B)
+BLACK = lv.color_hex(0x000000)
+WHITE = lv.color_hex(0xFAFAFA)
+BLACKISH = lv.color_hex(0x303030)
+DARK_BLACK = lv.color_hex(0x101010)
+DARK_WHITE = lv.color_hex(0xE8E8E8)
+
+TITLE_GREY = lv.color_hex(0x9B9B9B)
+ORANGE_ICON = lv.color_hex(0xF5A623)
+# common color styles
+BG = BLACK
+FG = WHITE
+
+# # icons
+# ICON_RESET = "trezor/res/header_icons/reset.toif"
+# ICON_WIPE = "trezor/res/header_icons/wipe.toif"
+# ICON_RECOVERY = "trezor/res/header_icons/recovery.toif"
+# ICON_NOCOPY = "trezor/res/header_icons/nocopy.toif"
+# ICON_WRONG = "trezor/res/header_icons/wrong.toif"
+# ICON_CONFIG = "trezor/res/header_icons/cog.toif"
+# ICON_RECEIVE = "trezor/res/header_icons/receive.toif"
+# ICON_SEND = "trezor/res/header_icons/send.toif"
+
+# ICON_DEFAULT = ICON_CONFIG
+
+# ICON_CANCEL = "trezor/res/cancel.toif"
+# ICON_CONFIRM = "trezor/res/confirm.toif"
+# ICON_LOCK = "trezor/res/lock.toif"
+# ICON_CLICK = "trezor/res/click.toif"
+# ICON_BACK = "trezor/res/left.toif"
+# ICON_SWIPE = "trezor/res/swipe.toif"
+# ICON_SWIPE_LEFT = "trezor/res/swipe_left.toif"
+# ICON_SWIPE_RIGHT = "trezor/res/swipe_right.toif"
+# ICON_CHECK = "trezor/res/check.toif"
+# ICON_SPACE = "trezor/res/space.toif"
+
 class Style(lv.style_t):
     """
     lvgl style wrapper

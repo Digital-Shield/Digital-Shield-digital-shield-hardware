@@ -7,11 +7,14 @@ from trezor.ui.component.keyboard import PinKeyboard
 from trezor.ui import Style, font, colors, i18n, Cancel
 from trezor.ui.constants import MAX_PIN_LENGTH, MIN_PIN_LENGTH
 from trezor.ui.component.container import HStack
+from trezor.ui.screen.navaigate import Navigate
 
-
-class InputPinScreen(Modal):
+class InputPinScreen(Navigate):
     def __init__(self, title: str | None = None):
         super().__init__()
+         #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         # self.title.set_text(title)
         self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
         tip = lv.label(self)# 创建一个label
@@ -93,4 +96,13 @@ class InputPinScreen(Modal):
 
     def cancel(self):
         self.close(Cancel())
+    
+    # def on_nav_back(self, event):
+    #     # from trezor.ui import NavigationBack
+    #     # # should notify caller
+    #     # self.channel.publish(NavigationBack())
+    #     # from . import manager
+    #     from trezor import workflow
+    #     from .home.security import SecurityApp
+    #     workflow.spawn(SecurityApp().show())
 

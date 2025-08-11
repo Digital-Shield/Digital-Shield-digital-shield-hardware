@@ -37,7 +37,8 @@ message TonGetAddress {
  * @end
  */
 message TonAddress {
-    required string address = 1;        // ton base64 user-friendly url-safe address
+    required string address = 2;        // ton base64 user-friendly url-safe address
+    optional bytes public_key = 1; 
 }
 
 /**

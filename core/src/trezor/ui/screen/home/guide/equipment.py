@@ -4,6 +4,7 @@ from trezor import utils
 from trezor.uart import get_ble_version
 from . import *
 from trezor.ui.screen import Navigation
+from trezor.ui.screen.navaigate import Navigate
 
 if TYPE_CHECKING:
     from typing import List
@@ -12,9 +13,12 @@ if TYPE_CHECKING:
 def get_ble_name() -> str:
     return utils.BLE_NAME if utils.BLE_NAME else ""
 
-class Equipment(Navigation):
+class Equipment(Navigate):
     def __init__(self,title):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.set_title(title)
 
         self.create_content(HStack)

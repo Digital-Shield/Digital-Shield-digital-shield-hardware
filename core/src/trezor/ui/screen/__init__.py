@@ -22,11 +22,11 @@ class Screen(lv.obj):
     def __init__(self):
         super().__init__()
         # Set the default background image
-        self.set_style_bg_img_src("A:/res/bootGifs/qingmiao_48.png", 0)
+        # self.set_style_bg_img_src("A:/res/bootGifs/qingmiao_48.png", 0)
         # Create a GIF object and set it as the background
         
         # gif.set_style_bg_opa(lv.OPA.COVER, 0)  # Ensure the background covers the screen
-        
+        # self.set_style_bg_color(lv.color_hex(0x00010B), lv.PART.MAIN)  # 设置背景颜色 
         # wallpaper = device.get_homescreen()
         # if wallpaper:  # 判断 `wallpaper` 是否存在
         #     self.set_style_bg_img_src(wallpaper, 0)
@@ -40,10 +40,10 @@ class Screen(lv.obj):
         # almost all
         # default content is self
         self._content: lv.obj = self
-
+        # self._content.set_style_bg_color(lv.color_hex(0x00010B), lv.PART.MAIN)
         # gif = lv.gif(self.content)
         # gif.set_src("A:/res/wallpapers/988.gif")
-    
+        # self._content.set_style_bg_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)  # 设置背景颜色 
 
         # lazy initialize components
         self._title: Title|None = None
@@ -57,7 +57,7 @@ class Screen(lv.obj):
         self.set_width(SCREEN_WIDTH)
         self.set_height(SCREEN_HEIGHT)
         self.clear_flag(lv.obj.FLAG.SCROLLABLE)
-
+        # self.content.set_style_pad_top(30, 0)
         # a channel for screen lifecycle
         self.__life_chan = loop.chan()
         self.add_event_cb(
@@ -93,6 +93,8 @@ class Screen(lv.obj):
 
             # add title
             self._title = self.add(Title)
+            #向上偏移20
+            # self._title.set_style_pad_top(0, 0)
             # self.title.set_style_text_font(font.Bold.SCS26, 0)
             # `content` is remained, for draw all other ui components
             self.create_content(lv.obj)
@@ -169,8 +171,8 @@ class Screen(lv.obj):
 
         self._btn_container.set_size(lv.pct(100), lv.SIZE.CONTENT)
         self._btn_container.set_style_pad_all(0, lv.PART.MAIN)
-        self._btn_container.set_style_pad_left(32, lv.PART.MAIN)
-        self._btn_container.set_style_pad_right(32, lv.PART.MAIN)
+        self._btn_container.set_style_pad_left(21, lv.PART.MAIN)
+        self._btn_container.set_style_pad_right(21, lv.PART.MAIN)
 
 
     # component manager
@@ -224,7 +226,7 @@ class Screen(lv.obj):
         """
         self.set_style_bg_img_src(None, lv.PART.MAIN)
         self.set_style_bg_opa(lv.OPA.COVER, lv.PART.MAIN)  # 让背景可见
-        self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
+        self.set_style_bg_color(lv.color_hex(0x00010B), lv.PART.MAIN)# 设置背景颜色
         log.debug(__name__, f"{self.__class__.__name__} show")
         pass
 
@@ -262,25 +264,32 @@ class Navigation(Screen):
         super().__init__()
         # leave space for navigation, state bar
         self.set_style_pad_top(64, lv.PART.MAIN)
-
+        self.set_style_bg_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置背景颜色
         # navigation icon container
         # global ui component, not belong to `content`
-        obj = lv.obj(self)
-        obj.set_size(160, 160)
-        obj.add_style(Style().bg_opa(lv.OPA.TRANSP).border_width(0), lv.PART.MAIN)
-        obj.add_flag(lv.obj.FLAG.CLICKABLE)
+        self.obj = lv.obj(self)
+        self.obj.set_size(68, 68)
+        self.obj.add_style(Style().bg_opa(lv.OPA.TRANSP).border_width(0), lv.PART.MAIN)
+        self.obj.add_flag(lv.obj.FLAG.CLICKABLE)
+        self.obj.add_flag(lv.obj.FLAG.FLOATING)
+        self.obj.set_style_border_side(lv.BORDER_SIDE.RIGHT, 0)
+        # self.obj.align(lv.ALIGN.TOP_LEFT, 0, -10)
         # position is relative to the `content` area, `content` is padded top 64
         # so we need to offset by -64
-        obj.set_pos(0, -64)
+        self.obj.set_pos(0, -14)
 
-        nav = lv.img(obj)
+        nav = lv.img(self.obj)
         nav.set_src("A:/res/nav-back.png")
         nav.set_zoom(350)  # 设置缩放比例，256表示原始大小，512表示放大2倍
+        # nav.align(lv.ALIGN.TOP_LEFT, 20, -20)  # x=0，y=8 让图片与 title 水平齐平
+        #边框2
+        # nav.add_style(Style().width(32).height(32).bg_opa(lv.OPA.TRANSP).border_width(2), lv.PART.MAIN)
         # nav.center()
+        # nav.set_size(32, 32)
         nav.add_flag(lv.obj.FLAG.CLICKABLE)
         nav.add_flag(lv.obj.FLAG.EVENT_BUBBLE)
 
-        obj.add_event_cb(self.on_nav_back, lv.EVENT.CLICKED, None)
+        self.obj.add_event_cb(self.on_nav_back, lv.EVENT.CLICKED, None)
         self.add_event_cb(self.on_nav_back, events.NAVIGATION_BACK, None)
 
     def on_nav_back(self, event):

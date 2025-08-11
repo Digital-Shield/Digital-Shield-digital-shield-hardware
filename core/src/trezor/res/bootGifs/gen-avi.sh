@@ -8,4 +8,4 @@ if ! command -v ffmpeg &> /dev/null; then
 fi
 
 # 如果 ffmpeg 存在，执行指定命令
-ffmpeg -framerate 20 -i qingmiao_%02d.png -c:v mjpeg -pix_fmt yuv420p ../booting.avi
+ffmpeg -framerate 11 -i qingmiao_%02d.png -c:v mjpeg -q:v 2.3 -pix_fmt yuv420p ../booting.avi

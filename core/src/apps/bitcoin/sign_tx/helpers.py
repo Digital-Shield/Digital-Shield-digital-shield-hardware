@@ -49,6 +49,7 @@ class UiConfirmOutput(UiConfirm):
         self.amount_unit = amount_unit
 
     def confirm_dialog(self, ctx: wire.Context) -> Awaitable[Any]:
+        print("confirm_dialog")
         return layout.confirm_output(ctx, self.output, self.coin, self.amount_unit)
 
 

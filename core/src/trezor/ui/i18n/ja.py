@@ -2,7 +2,7 @@ class App:
     account = "アカウント"
     scan = "スキャン取引"
     nft = "NFT ギャラリー"
-    guide = "使用説明"
+    guide = "ガイド"
     security = "セキュリティ"
     setting = "設定"
 
@@ -18,6 +18,7 @@ class Setting:
     wallpaper = "壁紙"
     power_off = "電源オフ"
     restart = "再起動"
+    restart_tip = "再起動"
 
 #### Security App
 class Security:
@@ -86,6 +87,7 @@ class Guide:
     device_title_serial_number = 'シリアル番号'
     bluetooth_name = "Bluetooth名"
     bluetooth_version = "Bluetoothバージョン"
+    attention_events = "注意事項"
     firmware_title_1 = '1. デバイスのバッテリーが20%以上あることを確認してください'
     firmware_title_2 = '2. USB-CケーブルでデバイスをPCに接続してください'
     firmware_title_3 = '3. 「ファームウェア更新」をクリックしてください'
@@ -108,10 +110,9 @@ class Title:
     wallet = "ウォレット"
     import_wallet = "ウォレットをインポート"
     restore_wallet = "ウォレットを復元"
-    wallet_is_ready = "ウォレットの準備が完了しました"
     select_word_count = "単語数を選択"
     wallet_security = "ウォレットのセキュリティ"
-    pin_security = "PINセキュリティの注意事項"
+    pin_security = "PINコード保護を有効化"
     mnemonic_security = "シードフレーズの注意事項"
     backup_mnemonic = "シードフレーズをバックアップ"
     enter_mnemonic = "シードフレーズを入力してください"
@@ -121,11 +122,9 @@ class Title:
     theme_success = "主題切換成功"
     warning = "警告"
     error = "エラー"
-    verified = "シードフレーズのバックアップ完了"
     invalid_mnemonic = "無効なシードフレーズ"
     pin_not_match = "PINが一致しません"
     check_recovery_mnemonic = "復元シードフレーズを確認"
-    mnemonic_not_match = "シードフレーズが一致しません"
     power_off = "電源オフ"
     restart = "再起動"
     change_language = "言語を変更"
@@ -178,7 +177,7 @@ class Title:
     passphrase_source = "パスフレーズ入力設定"
     enable_safety_checks ="セキュリティチェックを有効化"
     disable_safety_checks ="セキュリティチェックを無効化"
-    experiment_mode = "実験モード"
+    experimental_mode = "実験モード"
     set_as_homescreen = "ホームスクリーンに設定"
     get_next_u2f_counter = "U2Fカウンターを取得"
     set_u2f_counter = "U2Fカウンターを設定"
@@ -196,26 +195,83 @@ class Title:
     verify_device = "デバイスを検証する"
     update_bootloader = "ブートローダーを更新する"
     update_resource = "リソースを更新する"
-    need_input_tips = "すべてのメモニックワードを入力してから、次のステップをクリックしてください。"
-    need_select_tips = "メモニックワードの順番でクリックして選択し、完了したら次のステップをクリックしてください。"
-    return_check_mnemonic = "メモニックワードを確認する"
-    
+
+    words_num = "単語 #{}"
+    download_digital = "ダウンロード"
+    connect_wallets = "ウォレットを接続"
+    start_setup = "セットアップを開始"
+    prepare_create = "作成の準備"
+    prepare_import = "インポートの準備"
+    prepare_check = "確認の準備"
+    input_words = "シードフレーズを入力"
+    has_sub = "送信済み"
+    reatart = "再開始"
+    invalid_words = "無効なシードフレーズ"
+    stop_checking = "確認を中止"
+    correct_words = "シードフレーズが正しい"
+    mnemonic_not_match = "シードフレーズが一致しません"
+    wallet_created = "ウォレットが作成されました"
+    check_words = "シードフレーズを確認"
+    verified = "確認済み"
+    wallet_is_ready = "ウォレットが準備完了です"
+
+    prepare_backup = "バックアップの準備"
+    mnemonic_word = "シードフレーズ"
+    error_mnemonic_word = "単語が間違っています"
+    right_word = "正しい"
+    wrong_word = "間違い"
+
+    pin_not_match = "一致しません"
+    has_reset = "デバイスがリセットされました"
+    has_wipe = "デバイスが消去されました"
+    screen_bright = "画面の明るさ"
+    download_app = "アプリをダウンロード"
+    official_website = "公式サイト"
+    scan_ercode = "アプリに表示されたQRコードをスキャンしてください"
+    wipe_notice = "デバイスを消去する前に、以下を確認してください："
+    receive_tips = "{}資産のみ受け取り可能です"
+    sign_fail = "署名に失敗しました"
+    select_network = "ネットワークを選択"
+    preview = "プレビュー"
+    go_link = "リンクにアクセスしてください："
+    connect_again = "接続を再試行してください。"
+
 class Text:
+    start_setup = "新しいシードフレーズウォレットを作成するか、既存のシードフレーズバックアップをインポートしてウォレットを復元します。"
+    select_word_count = "シードフレーズの単語数を選択してください。"
+    input_words = "シードフレーズを順番に入力し、番号がバックアップと完全に一致していることを確認してください"
+    invalid_words = "入力したシードフレーズが無効です。単語をクリックして編集するか、再度開始してください。"
+    stop_checking = "中止するとすべての進捗が失われます。中止してもよろしいですか？"
+    import_wallet = "既存のシードフレーズバックアップを入力してウォレットを復元します。"
+    correct_words = "入力したシードフレーズは有効で、デバイスに保存されているものと一致しています。"
+    mnemonic_not_match = "入力したシードフレーズは有効ですが、デバイスに保存されているものと一致しません。"
+    wallet_created = "新しいウォレットが作成されました。すぐにバックアップしてください。"
+    mnemonic_word_tips = "以下の{}個の単語を順番に書き写してください。"
+    select_words = "正しい単語を選択してください"
+    error_mnemonic_word = "単語が正しくありません。バックアップしたシードフレーズを確認し、再度お試しください"
+    has_reset = "PINコードの入力ミスが多すぎたため、ストレージが消去されました。"
+    restart_countdown = "{}秒後に再起動します"
+    has_wipe = "デバイスのデータ消去が完了しました。デバイスを再起動してください。"
+    download_digital_tips = "Digital Shieldアプリをダウンロードしてください: \n{}"
+    sign_fail = "署名をキャンセルしました。取引はキャンセルされました。"
+    sign_success = "取引が署名されました"
+    check_words_tips = "ガイドに従い、手元のシードフレーズのバックアップに従って単語を一つずつ確認してください。"
+    backup_verified = "シードフレーズの確認が完了しました。"
+    create_success = "シードフレーズのバックアップが成功し、ウォレットが作成されました"
     tap_to_unlock = "タップしてロック解除"
     unlocking = "デバイスのロック解除中..."
+
     str_words = "#FFFFFF {}# 単語"
     backup_manual = "シードフレーズを手書きで安全な場所に保管してください"
     check_manual = "以下の単語を順番にタップしてください"
-    backup_verified = "シードフレーズのバックアップが完了しました。安全に保管し、誰とも共有しないでください"
     backup_invalid = "入力したシードフレーズが正しくありません。バックアップを確認して再度お試しください"
-    pin_not_match = "入力したPINコードが正しくありません。再度お試しください"
+    pin_not_match = "2回入力したPINコードが一致しません。もう一度お試しください。"
     please_wait = "お待ちください"
     wiping_device = "デバイスデータを消去中..."
     create_wallet = "新しいシードフレーズを生成して新規ウォレットを作成"
     restore_wallet = "バックアップしたシードフレーズからウォレットを復元"
     restore_mnemonic_match = "シードフレーズが一致しました。バックアップは正しく行われています"
-    restore_success = "ウォレットの復元に成功しました"
-    create_success = "シードフレーズのバックアップが成功し、ウォレットが作成されました"
+    restore_success = "シードフレーズがインポートされ、ウォレットが正常に復元されました。"
     check_recovery_mnemonic = "シードフレーズを確認し、完全に一致しているか確認してください"
     invalid_recovery_mnemonic = "入力したシードフレーズは無効です。シードフレーズを確認して再度お試しください"
     check_recovery_not_match = "入力したシードフレーズは有効ですが、デバイス内のシードフレーズと一致しません"
@@ -226,13 +282,13 @@ class Text:
     seconds = "秒"
     minute = "分"
     minutes = "分"
-    changing_language = "言語を変更しています\nこの設定を適用するとデバイスが再起動します"
-    change_pin = "4～16桁のPINコードを設定してデバイスを保護してください"
+    changing_language = "言語を{}に変更しています。この設定を適用するとデバイスが再起動します"
+    change_pin = "4～16桁のPINコードを設定してください。"
     wipe_device = "デバイスを工場出荷時の状態にリセットします\n警告: デバイス内のすべてのデータが消去されます"
     wipe_device_check = [
-        "デバイスを消去するとすべてのデータが削除されます",
-        "データは復元できません",
-        "シードフレーズをバックアップ済みです",
+        "消去後、このデバイスに保存されているシードフレーズは完全に削除されます。",
+        "シードフレーズが削除されると、復元できません。",
+        "シードフレーズはすでにバックアップされ、安全に保管されています。",
     ]
     wipe_device_success = "デバイスのデータ消去が完了しました\nデバイスを再起動しています..."
     bluetooth_pair = "デバイスにペアリングコードを入力してください"
@@ -370,12 +426,13 @@ class Button:
     continue_ = "続ける"
     try_again = "再試行"
     power_off = "電源オフ"
+    hold_to_power_off = "長押しでシャットダウン"
     restart = "再起動"
     hold = "長押し"
     address = "アドレス"
     qr_code = "QRコード"
     view_detail = "詳細を表示"
-    hold_to_sign = "長押しで署名"
+    hold_to_sign = "スライド署名"
     hold_to_wipe = "長押しで消去"
     receive = "受取アドレス"
     airgap = "Airgap"
@@ -386,6 +443,7 @@ class Button:
     view_full_message = "メッセージ全体を表示"
     view_data = "データを表示"
     view_more = "さらに表示"
+    update = "更新"
 
 class WalletSecurity:
     header = "紙にシードフレーズを書き留め、安全な場所に保管してください"
@@ -429,7 +487,13 @@ class PinSecurity:
         "3. PINコードの最大試行回数は10回で、10回間違えるとデバイスはリセットされます",
         "4. PINコードを厳重に保管し、決して他人と共有しないでください",
     ]
-
+class DownloadDigital:
+    #header = "請下載並安裝DigitShield以進行裝置驗證"
+    tips = [
+        "1.「ウォレットを接続」をタップしてください",
+        "2. デバイスを接続してください:",
+        "3. しばらく待つと、DigitalShieldアプリが以前使用したアカウントを復元します。",
+    ]
 class Solana:
     ata_reciver = "受信者(関連トークンアカウント)"
     ata_sender = "送信者(関連トークンアカウント)"

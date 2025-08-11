@@ -109,7 +109,7 @@ class LowPowerAlert():
         elif self.state == 'None':
             self.state = 'Showing'
             self.screen = LowPower(charge)
-            self.screen.on_confirm = self.on_confirm
+            # self.screen.on_confirm = self.on_confirm
             await self.screen.show()
 
     def on_confirm(self):

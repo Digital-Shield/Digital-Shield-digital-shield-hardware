@@ -2,7 +2,7 @@ from . import *
 
 class WipeDevice(SampleItem):
     def __init__(self, parent):
-        super().__init__(parent, i18n.Security.wipe_device, "A:/res/wipe-device-two.png")
+        super().__init__(parent, i18n.Security.wipe_device, "A:/res/wipe-device-new.png")
 
     def action(self):
         super().action()

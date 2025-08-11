@@ -10,7 +10,15 @@ class Bold:
 class Regular:
     SCS30 = lv.font_scs_reg_30
     SCS26 = lv.font_scs_reg_26
+    SCS28 = lv.font_scs_reg_28 #这个新加的加不上
     SCS24 = lv.font_scs_reg_24
+
+# #中粗体-新加
+class Medium:
+    SCS40 = lv.font_scs_med_40
+    SCS32 = lv.font_scs_med_32
+    SCS28 = lv.font_scs_med_28
+
 
 # 等宽
 class Mono:

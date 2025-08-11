@@ -2,7 +2,7 @@ class App:
     account = "Account"
     scan = "Scan Transactions"
     nft = "NFT Gallery"
-    guide = "User Guide"
+    guide = "Guide"
     security = "Security"
     setting = "Settings"
 
@@ -18,6 +18,7 @@ class Setting:
     wallpaper = "Wallpaper"
     power_off = "Power Off"
     restart = "Restart"
+    restart_tip = "Restart"
 
 # Security App
 class Security:
@@ -28,11 +29,11 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "About Digital Shield"
+    about = "Follow us"
+    follow_us = "Follow us"
     terms_of_use = 'Terms of Service'
     device_info = 'Device Info'
     firmware_update = 'Firmware Update'
-
     terms_title_terms_us = 'Digit Shield Terms of Service'
     terms_describe_terms_us = 'For complete terms of service, visit:\nhttp://digitshield.com/terms'
 
@@ -89,7 +90,7 @@ class Guide:
     device_title_serial_number = 'Serial Number'
     bluetooth_name = "Bluetooth Name"
     bluetooth_version = "Bluetooth Version"
-
+    attention_events = "Attention"
     firmware_title_1 = '1.Ensure the device has more than 20% battery.'
     firmware_title_2 = '2.Connect the device to your computer using a USB-C cable.'
     firmware_title_3 = "3.Click 'Firmware Update'"
@@ -102,35 +103,6 @@ class Guide:
 class Nft:
     nft_item ="{} item"
     nft_items ="{} items"
-class Button:
-    done = "Done"
-    ok = "OK"
-    confirm = "Confirm"
-    reject = "Reject"
-    next = "Next"
-    redo = "Regenerate"
-    continue_ = "Continue"
-    cancel = "Cancel"
-    try_again = "Retry"
-    power_off = "Power Off"
-    restart = "Restart"
-    hold = "Keep\nhold"
-    address = "Address"
-    qr_code = "QR Code"
-    view_detail = "View Details"
-    hold_to_sign = "Hold to\nsign"
-    hold_to_wipe = "Hold to\nwipe"
-    receive = "Receive Address"
-    airgap = "Airgap"
-    sign = "Sign"
-    verify = "Verify"
-    view_full_array = "View Full Array"
-    view_full_struct = "View Full Structure"
-    view_full_message = "View Full Message"
-    view_data = "View Data"
-    view_more = "View More"
-    update = "Update"
-
 class Title:
     enter_old_pin = "Enter Old PIN"
     enter_new_pin = "Enter New PIN"
@@ -141,10 +113,9 @@ class Title:
     wallet = "Wallet"
     import_wallet = "Import Wallet"
     restore_wallet = "Restore Wallet"
-    wallet_is_ready = "Wallet Ready"
     select_word_count = "Choose Number of Words"
     wallet_security = "Wallet Security"
-    pin_security = "PIN Security Hint"
+    pin_security = "Enable PIN Protection"
     mnemonic_security = "Recovery Phrase Security Hint"
     backup_mnemonic = "Backup Recovery Phrase"
     check_mnemonic = "Verify Recovery Phrase"
@@ -154,11 +125,9 @@ class Title:
     theme_success = "Theme Switched Successfully"
     warning = "Warning"
     error = "Error"
-    verified = "Backup Complete"
     invalid_mnemonic = "Invalid Recovery Phrase"
     pin_not_match = "PIN Mismatch"
     check_recovery_mnemonic = "Verify Recovery Phrase"
-    mnemonic_not_match = "Recovery Phrase Mismatch"
     power_off = "Power Off"
     restart = "Restart"
     change_language = "Change Language"
@@ -229,44 +198,100 @@ class Title:
     verify_device ="Verify device"
     update_bootloader = "Update bootloader"
     update_resource = "Update resource"
-    directions = "direction"
-    send_amount = "send\n{}"
 
-class Tip:
-    swipe_down_to_close = "Swipe Down to Close"
+    words_num = "Word #{}"
+    download_digital = "download"
+    connect_wallets = "Connect Hardware Wallet"
+    start_setup = "Start Setup"
+    prepare_create = "Prepare Create"
+    prepare_import = "Prepare Import"
+    prepare_check = "Prepare Check"
+    input_words = "Enter recovery phrase"
+    has_sub = "Submitted"
+    reatart = "Restart"
+    invalid_words = "Invalid recovery phrase"
+    stop_checking = "Stop Checking"
+    correct_words = "The recovery phrase is correct"
+    mnemonic_not_match = "Recovery Phrase Mismatch"
+    wallet_created = "Wallet Created"
+    check_words = "Check Recovery Phrase"
+    verified = "Verified"
+    wallet_is_ready = "Wallet is ready"
+
+    prepare_backup = "Prepare Backup"
+    mnemonic_word = "Mnemonic Word"
+    error_mnemonic_word = "Mnemonic word error"
+    right_word = "right"
+    wrong_word = "wrong"
+
+    pin_not_match= "Not match"
+    has_reset = "Device has been reset"
+    has_wipe = "Device has been wiped"
+    screen_bright = "Screen Brightness"
+    download_app = "Download App"
+    official_website = "Official Website"
+    scan_ercode = "Scan QR Code in App"
+    wipe_notice = "Before wiping the device, please confirm that you understand:"
+    receive_tips = "Only supports receiving {} assets"
+    sign_fail = "Sign Failed"
+    select_network = "Select Network"
+    preview = "Preview"
+    go_link = "Go to link:"
+    connect_again = "Please try to reconnect."
+
 class Text:
+    start_setup = "Create a new wallet with a recovery phrase, or import an existing backup to restore your wallet."
+    select_word_count = "Please select the number of words in your recovery phrase."
+    input_words = "Enter the words in order, ensuring their numbers match your backup exactly"
+    invalid_words = "The recovery phrase you entered is invalid. Tap a word to edit, or start over."
+    stop_checking = "All progress will be lost after stopping. Are you sure you want to stop?"
+    import_wallet = "Enter your existing recovery phrase to restore wallet."
+    correct_words = "The recovery phrase you entered is valid and matches the one stored on the device."
+    mnemonic_not_match = "The mnemonic you entered is valid, but it does not match the one stored on the device."
+    wallet_created = "Wallet created successfully. Please back up immediately."
+    mnemonic_word_tips = "Please write down the following {} words in order."
+    select_words = "Please select the correct words"
+    error_mnemonic_word = "The word is incorrect. Please check your backup recovery phrase and try again."
+    has_reset = "Too many incorrect PIN attempts. Device storage has been wiped."
+    restart_countdown = "Restarting in {} seconds"
+    has_wipe = "Device data has been wiped successfully. Please restart the device."
+    download_digital_tips = "Please download the Digital Shield App: \n{}"
+    sign_fail = "You cancelled signing, transaction cancelled."
+    sign_success = "Transaction signed"
+    check_words_tips = "Please follow the instructions and check each word one by one according to your backup recovery phrase."
+    backup_verified = "You have completed the recovery phrase verification."
+    create_success = "Recovery phrase backed up successfully. Wallet created"
     tap_to_unlock = "Tap to Unlock"
     unlocking = "Unlocking device..."
+
     str_words = "#FFFFFF {}# words"
     backup_manual = "Manually write down recovery phrase and store securely"
     check_manual = "Tap words below in correct order"
-    backup_verified = "Recovery phrase backup complete. Store securely and never share"
     backup_invalid = "Invalid recovery phrase. Please verify and try again"
-    pin_not_match = "Incorrect PIN. Please try again"
+    pin_not_match = "The two PIN entries do not match, please try again."
     please_wait = "Please wait"
     wiping_device = "Wiping device data..."
     create_wallet = "Generate a new recovery phrase to create wallet"
     restore_wallet = "Restore wallet from your backup phrase"
     restore_mnemonic_match = "Recovery phrase matches. Backup is valid"
-    restore_success = "Wallet Restored Successfully"
-    create_success = "Recovery phrase backed up successfully. Wallet created"
+    restore_success = "Your recovery phrase has been imported and the wallet has been successfully restored."
     check_recovery_mnemonic = "Verify your recovery phrase matches exactly"
     invalid_recovery_mnemonic = "Invalid recovery phrase. Please verify and try again"
     check_recovery_not_match = "Valid recovery phrase but doesn't match device"
-    shutting_down = "Shutting down..."
-    restarting = "Restarting..."
+    shutting_down = "Shutting down"
+    restarting = "Restarting"
     never = "Never"
     second = "Second"
     seconds = "Seconds"
     minute = "Minute"
     minutes = "Minutes"
-    changing_language = "Changing language\nDevice will restart"
-    change_pin = "Set a 4-16 digit PIN to protect your device"
+    changing_language = "You are changing the language to {}. The device will restart to apply this setting."
+    change_pin = "Set a 4-16 digit PIN."
     wipe_device = "Restore the device to factory settings.\nWarning: This will erase all data from your device."
     wipe_device_check = [
-        "Factory reset erases all data",
-        "Data cannot be recovered",
-        "Recovery phrase is backed up",
+        "After wiping, the recovery phrase stored on this device will be permanently deleted.",
+        "Once deleted, the recovery phrase cannot be restored.",
+        "Your recovery phrase has been backed up and is stored securely.",
     ]
     wipe_device_success = "Device wiped successfully\nRestarting..."
     bluetooth_pair = "Enter pairing code on your device"
@@ -286,7 +311,7 @@ class Text:
     gas_unit_price= "Gas unit price:"
     gas_price = "Gas Price"
     total = "Total"
-    do_sign_this_transaction = "Sign this{}transaction?"
+    do_sign_this_transaction = "Are you sure you want to sign this {} transaction?"
     transaction_signed = "Transaction signed"
     address = 'Address:'
     public_key = 'Public Key:'
@@ -344,7 +369,8 @@ class Text:
     fee_increased = "Fee Increased"
     fee_decreased = "Fee Decreased"
     your_spend = "Your Spend"
-    change_label_to_x = "Change Label to {}"
+    change_label_to = "Change Label to"
+    change_label_to_x = "Change Label to: {}?"
     enable_passphrase = "Enable Passphrase Encryption?"
     disable_passphrase = "Disable Passphrase Encryption?"
     enable_passphrase_always = "Always Enter Passphrase On Device?"
@@ -392,13 +418,47 @@ class Text:
     need_input_tips = "Please enter all the mnemonic words before clicking the next step"
     need_select_tips = "Please click and select in the order of the mnemonic words, and then click the next step after completion."
     return_check_mnemonic = "Check the mnemonic words"
-    
+    download_digital_tips = "Please download the Digital Shield App: https://ds.pro/download"
+
+class Tip:
+    swipe_down_to_close = "Swipe Down to Close"
+
+class Button:
+    done = "Done"
+    ok = "OK"
+    confirm = "Confirm"
+    reject = "Reject"
+    next = "Next"
+    redo = "Regenerate"
+    continue_ = "Continue"
+    cancel = "Cancel"
+    try_again = "Retry"
+    power_off = "Power Off"
+    hold_to_power_off = "Long press shutdown"
+    restart = "Restart"
+    hold = "Keep\nhold"
+    address = "Address"
+    qr_code = "QR Code"
+    view_detail = "View Details"
+    hold_to_sign = "Slider to\nsign"
+    hold_to_wipe = "Hold to\nwipe"
+    receive = "Receive Address"
+    airgap = "Airgap"
+    sign = "Sign"
+    verify = "Verify"
+    view_full_array = "View Full Array"
+    view_full_struct = "View Full Structure"
+    view_full_message = "View Full Message"
+    view_data = "View Data"
+    view_more = "View More"
+    update = "Update"
+     
 class WalletSecurity:
     header = "Write recovery phrase on paper and store securely"
     tips = [
         {
             "level": "info",
-            "msgs": [
+            "msgs": [ 
                 "#00001F Securely store your recovery phrase#",
                 "#18794E * Store in a bank safety deposit box#",
                 "#18794E * Store it in a home safe#",
@@ -435,7 +495,13 @@ class PinSecurity:
         "3.You have up to 10 attempts. The device will reset after 10 incorrect entries.",
         "4.Keep your PIN confidential. Never share it with anyone.",
     ]
-
+class DownloadDigital:
+    #header = "請下載並安裝DigitShield以進行裝置驗證"
+    tips = [
+        "1. Click 'Connect Wallet'",
+        "2. Connect the device:",
+        "3. Wait a moment, the DigitalShield App will restore the accounts you have previously used.",
+    ]
 class Solana:
     ata_reciver = "Receiver (Associated Token Account)"
     ata_sender = "Sender (Associated Token Account)"

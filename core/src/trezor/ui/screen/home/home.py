@@ -6,16 +6,20 @@ from trezor import log, workflow, motor
 from trezor.ui import i18n, events,font
 from trezor.ui.theme import Styles
 from trezor.ui.screen import Screen, Navigation
+from trezor.ui.screen.navaigate import Navigate
 from trezor.ui.component import VStack, HStack
 from trezor.ui.component import Swipedown
 
-class Developing(Navigation):
+class Developing(Navigate):
     """
     A placeholder for development
     """
 
     def __init__(self, title):
         super().__init__()
+        #隐藏左右按钮
+        self.btn_cancel.add_flag(lv.obj.FLAG.HIDDEN)
+        self.btn_confirm.add_flag(lv.obj.FLAG.HIDDEN)
         self.title.set_text(title)
 
         img = lv.img(self.content)
@@ -42,17 +46,17 @@ class HomeScreen(Screen):
             self.set_style_bg_color(lv.color_hex(0x0D0D17), lv.PART.MAIN)# 设置背景颜色
 
         self.set_style_pad_top(64, lv.PART.MAIN)
-        tip = lv.label(self)
-        tip.set_text(i18n.Tip.swipe_down_to_close)
-        tip.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)  # 确保文本居中
-        tip.set_width(500)  # 设置标签的宽度
-        cur_language = i18n.using.code if i18n.using is not None else None
-        if cur_language == "al":
-            tip.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向为向右
-        # 启动滚动
-        tip.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
-        tip.align(lv.ALIGN.TOP_MID, 0, -32)
-        tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
+        # tip = lv.label(self)
+        # tip.set_text(i18n.Tip.swipe_down_to_close)
+        # tip.set_style_text_align(lv.TEXT_ALIGN.CENTER, lv.PART.MAIN)  # 确保文本居中
+        # tip.set_width(500)  # 设置标签的宽度
+        # cur_language = i18n.using.code if i18n.using is not None else None
+        # if cur_language == "al":
+        #     tip.set_style_base_dir(lv.BASE_DIR.RTL, 0)  # 设置滚动方向为向右
+        # # 启动滚动
+        # tip.set_long_mode(lv.label.LONG.SCROLL_CIRCULAR)  # 启用循环滚动模式
+        # tip.align(lv.ALIGN.TOP_MID, 0, -32)
+        # tip.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)# 设置文本颜色
 
         self.add_event_cb(self.on_swipe_down, events.SWIPEDOWN, None)
         self.add_event_cb(self.on_change_wallpaper, events.WALLPAPER_CHANGED, None)
@@ -134,6 +138,11 @@ class HomeScreen(Screen):
     def click_scan(self, app: 'Item'):
         log.debug(__name__, "click scan")
         motor.vibrate()#触摸振动
+        from trezor import io
+        if not hasattr(io, "Camera"):
+            from trezor.ui.layouts import show_error
+            workflow.spawn(show_error("错误", "相机无法使用"))
+            return
         from .scan import ScanApp
         workflow.spawn(ScanApp().show())
 
@@ -195,7 +204,7 @@ class Item(HStack):
         title.set_height(60)
         title.set_style_pad_top(12, lv.PART.MAIN)  # 调小此值，减少文字与图片之间的间距
         title.align(lv.ALIGN.OUT_BOTTOM_MID, 0, -2)  # 减小 y 轴偏移
-        # title.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)
+        title.set_style_text_font(font.Bold.SCS30, lv.PART.MAIN)
         title.set_style_text_color(lv.color_hex(0xFFFFFF), lv.PART.MAIN)
 
         title.set_width(200)  # 设置标签的宽度

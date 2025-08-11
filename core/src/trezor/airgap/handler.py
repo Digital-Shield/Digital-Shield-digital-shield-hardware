@@ -52,6 +52,7 @@ async def handle_eth_sign_request(ctx: 'GenericContext', cbor: bytes) -> 'UR':
         # initialize session
         from apps.base import handle_Initialize
         from trezor.messages import Initialize
+        from .ur import utils
         init = Initialize(session_id=b'\x00')
         await handle_Initialize(ctx, init)
 
@@ -82,7 +83,9 @@ async def handle_eth_sign_request(ctx: 'GenericContext', cbor: bytes) -> 'UR':
         if req.data_type == ETH_TRANSACTION_DATA:
             # legacy transaction
             resp = await eth_sign_tx(ctx, req)
-            signature = resp.signature_r + resp.signature_s + bytes([resp.signature_v])
+            v_bytes_length = utils.byte_length(resp.signature_v)
+            signature = resp.signature_r + resp.signature_s + resp.signature_v.to_bytes(v_bytes_length, 'big')
+            # print("content---" ,signature)
         elif req.data_type == ETH_TYPED_DATA:
             # eip-712 message
             resp = await eth_sign_typed_data(ctx, req)
@@ -94,7 +97,8 @@ async def handle_eth_sign_request(ctx: 'GenericContext', cbor: bytes) -> 'UR':
         elif req.data_type == ETH_TYPED_TRANSACTION:
             # typed transaction
             resp = await eth_sign_tx_eip1559(ctx, req)
-            signature = resp.signature_r + resp.signature_s + bytes([resp.signature_v])
+            v_bytes_length = utils.byte_length(resp.signature_v)
+            signature = resp.signature_r + resp.signature_s + resp.signature_v.to_bytes(v_bytes_length, 'big')
         else:
             raise errors.DataError(f"Unknown data type: {req.data_type}")
 
@@ -104,6 +108,7 @@ async def handle_eth_sign_request(ctx: 'GenericContext', cbor: bytes) -> 'UR':
             request_id=req.request_id,
             origin="DigitShield"
         )
+        # print("qrcode content--",sig)
         return UR(sig.type(), sig.cbor())
     finally:
         from trezor.messages import EndSession
@@ -120,7 +125,8 @@ async def eth_sign_tx(ctx: 'GenericContext', req: EthSignRequest):
     # rlp([nonce, gasPrice, gasLimit, to, value, data, v, r, s])
     data = req.sign_data
     items = rlp.decode(data)
-    if len(items) != 6:
+    print("长度是：",len(items))
+    if len(items) < 6:
         raise errors.DataError("Invalid sign data")
     address_n = _keypath_to_address_n(req.derivation_path)
     chain_id = req.chain_id
@@ -148,6 +154,7 @@ async def eth_sign_tx(ctx: 'GenericContext', req: EthSignRequest):
     )
 
     return await sign_tx(ctx, msg)
+
 
 async def eth_sign_typed_data(ctx: 'GenericContext', req: EthSignRequest):
     from trezor.messages import EthereumSignTypedData

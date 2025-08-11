@@ -29,7 +29,7 @@ class Security:
 
 #### guide App
 class Guide:
-    about = "关于Digit Shield"
+    about = "關於我們"
     terms_of_use = '使用条款'
     device_info = '设备信息'
     firmware_update = '固件升级'
@@ -158,7 +158,7 @@ class Text:
     check_manual = "按顺序依次点击下面的单词"
     backup_verified = "您已完成助记词的备份，请妥善保存,不要与任何人分享"
     backup_invalid = "您输入的助记词不正确,请检查备份的助记词，再次尝试"
-    pin_not_match = "您输入的PIN码不正确，请再次尝试"
+    pin_not_match = "兩次輸入的PIN碼不一致，請重試。"
     please_wait = "请稍等"
     wiping_device = "正在清除设备数据..."
     create_wallet = "生成一组新的助记词，创建新钱包"

@@ -18,6 +18,7 @@ class Setting:
     wallpaper = "배경화면"
     power_off = "전원 끄기"
     restart = "재시작"
+    restart_tip = "재시작하시겠습니까?"
 
 #### Security App
 class Security:
@@ -86,6 +87,7 @@ class Guide:
     device_title_serial_number = '시리얼 번호'
     bluetooth_name = "블루투스 이름"
     bluetooth_version = "블루투스 버전"
+    attention_events = "주의 사항"
     firmware_title_1 = '1. 장치의 배터리가 20% 이상인지 확인하세요'
     firmware_title_2 = '2. USB-C 케이블로 장치를 컴퓨터에 연결하세요'
     firmware_title_3 = '3. 「펌웨어 업그레이드」를 클릭하세요'
@@ -108,10 +110,9 @@ class Title:
     wallet = "지갑"
     import_wallet = "지갑 가져오기"
     restore_wallet = "지갑 복구"
-    wallet_is_ready = "지갑 준비 완료"
     select_word_count = "단어 개수 선택"
     wallet_security = "지갑 보안"
-    pin_security = "PIN 보안 안내"
+    pin_security = "PIN 코드 보호 활성화"
     mnemonic_security = "니모닉 보안 안내"
     backup_mnemonic = "니모닉 백업"
     enter_mnemonic = "니모닉을 입력하세요"
@@ -121,11 +122,9 @@ class Title:
     theme_success = "테마 변경 성공"
     warning = "경고"
     error = "오류"
-    verified = "니모닉 백업 완료"
     invalid_mnemonic = "유효하지 않은 니모닉"
     pin_not_match = "PIN 불일치"
     check_recovery_mnemonic = "복구 니모닉 확인"
-    mnemonic_not_match = "니모닉 불일치"
     power_off = "전원 끄기"
     restart = "재시작"
     change_language = "언어 변경"
@@ -178,7 +177,7 @@ class Title:
     passphrase_source = "Passphrase 입력 설정"
     enable_safety_checks ="안전 검사 활성화"
     disable_safety_checks ="안전 검사 비활성화"
-    experiment_mode = "실험 모드"
+    experimental_mode = "실험 모드"
     set_as_homescreen = "홈화면으로 설정"
     get_next_u2f_counter = "U2F 카운터 가져오기"
     set_u2f_counter = "U2F 카운터 설정"
@@ -196,26 +195,82 @@ class Title:
     verify_device = "장치 검증"
     update_bootloader = "부트로더 업데이트"
     update_resource = "리소스 업데이트"
-    need_input_tips = "모든 보안어를 입력한 후 다음 단계를 클릭하십시오."
-    need_select_tips = "보안어 순서대로 클릭하여 선택한 후 완료되면 다음 단계를 클릭하십시오."
-    return_check_mnemonic = "보안어 확인하기"
+
+    words_num = "단어 #{}"
+    download_digital = "다운로드"
+    connect_wallets = "지갑 연결"
+    start_setup = "설정 시작"
+    prepare_create = "생성 준비"
+    prepare_import = "지갑 가져오기 준비"
+    prepare_check = "확인 준비"
+    input_words = "니모닉 입력"
+    has_sub = "제출됨"
+    reatart = "다시 시작"
+    invalid_words = "유효하지 않은 니모닉"
+    stop_checking = "확인 중지"
+    correct_words = "니모닉 일치"
+    mnemonic_not_match = "니모닉 불일치"
+    wallet_created = "지갑 생성됨"
+    check_words = "니모닉 확인"
+    verified = "인증됨"
+    wallet_is_ready = "지갑 준비 완료"
+
+    prepare_backup = "백업 준비"
+    mnemonic_word = "니모닉"
+    error_mnemonic_word = "단어 오류"
+    right_word = "정확함"
+    wrong_word = "오류"
+
+    pin_not_match = "불일치"
+    has_reset = "기기 초기화됨"
+    has_wipe = "기기 삭제됨"
+    screen_bright = "화면 밝기"
+    download_app = "앱 다운로드"
+    official_website = "공식 웹사이트"
+    scan_ercode = "앱에 표시된 QR코드를 스캔하세요"
+    wipe_notice = "기기를 삭제하기 전에 반드시 숙지하세요:"
+    receive_tips = "{} 자산만 수신 지원"
+    sign_fail = "서명 실패"
+    select_network = "네트워크 선택"
+    preview = "미리보기"
+    go_link = "링크로 이동하세요:"
+    connect_again = "다시 연결을 시도하세요."
     
 class Text:
+    start_setup = "새로운 니모닉 지갑을 생성하거나 기존 니모닉 백업을 가져와 지갑을 복구하세요."
+    select_word_count = "니모닉 단어 개수를 선택하세요."
+    input_words = "니모닉을 순서대로 입력하세요. 입력한 번호가 백업한 니모닉과 완전히 일치해야 합니다."
+    invalid_words = "입력한 니모닉이 유효하지 않습니다. 단어를 클릭해 수정하거나 다시 시작하세요."
+    stop_checking = "중단하면 모든 진행 상황이 사라집니다. 정말 중단하시겠습니까?"
+    import_wallet = "기존 니모닉 백업을 입력해 지갑을 복구하세요."
+    correct_words = "입력한 니모닉이 유효하며, 기기에 저장된 것과 일치합니다."
+    wallet_created = "새 지갑이 성공적으로 생성되었습니다. 즉시 백업하세요."
+    mnemonic_word_tips = "{}개의 단어를 순서대로 적어두세요."
+    select_words = "올바른 단어를 선택하세요."
+    error_mnemonic_word = "단어가 올바르지 않습니다. 백업한 니모닉을 확인한 후 다시 시도하세요."
+    has_reset = "PIN 코드 오류 횟수가 너무 많아 저장 공간이 초기화되었습니다."
+    restart_countdown = "{}초 후 재시작"
+    has_wipe = "기기 데이터가 성공적으로 삭제되었습니다. 기기를 재시작하세요."
+    download_digital_tips = "Digital Shield 앱을 다운로드하려면 다음 링크를 방문하세요: \n{}"
+    sign_fail = "서명을 취소하셨습니다. 거래가 취소되었습니다."
+    sign_success = "거래가 서명되었습니다"
+    check_words_tips = "안내에 따라 백업한 니모닉을 하나씩 확인하세요."
+    backup_verified = "니모닉 검증이 완료되었습니다."
+    create_success = "니모닉 백업이 완료되었으며 지갑이 생성되었습니다"
     tap_to_unlock = "잠금 해제를 터치하세요"
     unlocking = "기기 잠금 해제 중..."
+
     str_words = "#FFFFFF {}# 단어"
     backup_manual = "니모닉을 수동으로 기록하여 안전한 장소에 보관하세요"
     check_manual = "아래 단어들을 순서대로 터치해주세요"
-    backup_verified = "니모닉 백업이 완료되었습니다. 안전하게 보관하고 누구와도 공유하지 마세요"
     backup_invalid = "입력한 니모닉이 올바르지 않습니다. 백업한 니모닉을 확인 후 다시 시도해주세요"
-    pin_not_match = "입력한 PIN 코드가 올바르지 않습니다. 다시 시도해주세요"
+    pin_not_match = "두 번 입력한 PIN 코드가 일치하지 않습니다. 다시 시도하세요."
     please_wait = "잠시만 기다려주세요"
     wiping_device = "기기 데이터 삭제 중..."
     create_wallet = "새 니모닉 생성으로 지갑 만들기"
     restore_wallet = "백업한 니모닉으로 지갑 복구하기"
     restore_mnemonic_match = "니모닉이 일치합니다. 백업이 정확하게 이루어졌습니다"
-    restore_success = "지갑 복구 성공"
-    create_success = "니모닉 백업이 완료되었으며 지갑이 생성되었습니다"
+    restore_success = "니모닉이 성공적으로 복구되어 지갑이 복원되었습니다."
     check_recovery_mnemonic = "니모닉을 확인하고 완전히 일치하는지 확인해주세요"
     invalid_recovery_mnemonic = "입력한 니모닉이 유효하지 않습니다. 니모닉을 확인 후 다시 시도해주세요"
     check_recovery_not_match = "입력한 니모닉은 유효하지만, 기기에 저장된 니모닉과 일치하지 않습니다"
@@ -226,13 +281,13 @@ class Text:
     seconds = "초"
     minute = "분"
     minutes = "분"
-    changing_language = "언어를 변경합니다\n이 설정을 적용하면 기기가 재시작됩니다"
-    change_pin = "4~16자리 PIN 코드를 설정하여 기기를 보호하세요"
+    changing_language = "언어를 {}(으)로 변경 중입니다. 이 설정을 적용하면 장치가 재시작됩니다."
+    change_pin = "4~16자리의 PIN 코드를 설정하세요."
     wipe_device = "기기를 공장 초기 상태로 복구합니다.\n경고: 기기의 모든 데이터가 삭제됩니다"
     wipe_device_check = [
-        "기기 초기화 시 모든 데이터가 삭제됩니다",
-        "삭제된 데이터는 복구할 수 없습니다",
-        "니모닉을 백업했습니다",
+        "지우면 이 기기에 저장된 니모닉이 영구적으로 삭제됩니다.",
+        "니모닉이 삭제되면 복구할 수 없습니다.",
+        "니모닉이 이미 백업되어 안전하게 보관되었습니다.",
     ]
     wipe_device_success = "기기 데이터 삭제 완료\n기기를 재시작하는 중..."
     bluetooth_pair = "기기에 페어링 코드를 입력하세요"
@@ -370,12 +425,13 @@ class Button:
     continue_ = "계속"
     try_again = "재시도"
     power_off = "전원 끄기"
+    hold_to_power_off = "장시간 누르고 종료"
     restart = "재시작"
     hold = "길게 누르기"
     address = "주소"
     qr_code = "QR 코드"
     view_detail = "상세 보기"
-    hold_to_sign = "서명하려면 길게 누르세요"
+    hold_to_sign = "길게 눌러 서명"
     hold_to_wipe = "초기화하려면 길게 누르세요"
     receive = "수신 주소"
     airgap = "에어갭"
@@ -386,6 +442,7 @@ class Button:
     view_full_message = "전체 메시지 보기"
     view_data = "데이터 보기"
     view_more = "더 보기"
+    update = "업데이트"
 
 class WalletSecurity:
     header = "종이에 니모닉을 적어 안전한 곳에 보관하세요"
@@ -429,7 +486,13 @@ class PinSecurity:
         "3. PIN 오류 10회 시 기기 초기화 조치됨", 
         "4. PIN 코드 절대 타인과 공유 금지",
     ]
-
+class DownloadDigital:
+    #header = "請下載並安裝DigitShield以進行裝置驗證"
+    tips = [
+        "1. '지갑 연결'을 클릭하세요",
+        "2. 장치를 연결하세요:",
+        "3. 잠시 기다리면 DigitalShield 앱이 이전에 사용한 계정을 복구합니다.",
+    ]
 class Solana:
     ata_reciver = "수신자(연동 토큰 계정)"
     ata_sender = "송신자(연동 토큰 계정)"

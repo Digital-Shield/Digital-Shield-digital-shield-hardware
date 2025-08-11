@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
 from storage.device import is_initialized
-from trezor import config, wire
+from trezor import config, wire, loop
 from trezor.messages import Success
 from trezor.ui import i18n
-from trezor.ui.layouts import confirm_change_pin, show_success
+from trezor.ui.layouts import confirm_change_pin, show_success, show_success_pin
 
 from apps.common.request_pin import (
     error_pin_invalid,
@@ -28,11 +28,23 @@ async def change_pin(ctx: wire.Context, msg: ChangePin) -> Success:
 
     # get old pin
     curpin, salt = await request_pin_and_sd_salt(ctx, i18n.Title.enter_old_pin)
-
+    #判断是否正确
+    if not config.check_pin(curpin, salt):#如果错误，则重新输入
+        print("pin error")
+        from trezor.ui.layouts import request_pin_on_device
+        while True:
+            pin_rem = config.get_pin_rem()
+            pin = await request_pin_on_device(  # type: ignore ["request_pin_on_device" is possibly unbound]
+                ctx, i18n.Title.enter_pin, pin_rem, True
+            )
+            if config.check_pin(pin, salt):
+                print("pin correct")
+                #跳出循环，向下执行
+                break
     # if changing pin, pre-check the entered pin before getting new pin
-    if curpin and not msg.remove:
-        if not config.check_pin(curpin, salt):
-            await error_pin_invalid(ctx)
+    # if curpin and not msg.remove:
+    #     if not config.check_pin(curpin, salt):
+    #         await error_pin_invalid(ctx)
 
     # get new pin
     if not msg.remove:
@@ -58,7 +70,7 @@ async def change_pin(ctx: wire.Context, msg: ChangePin) -> Success:
         msg_screen = i18n.Text.pin_disable_success
         msg_wire = i18n.Title.pin_disabled
 
-    await show_success(
+    await show_success_pin(
         ctx,
         msg_screen,
         title=msg_wire,

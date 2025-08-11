@@ -42,7 +42,7 @@ class LabeledItem(HStack):
     #加粗26号label
     def set_label_2(self, text: str):
         self.label.set_text(text)
-        self.label.set_style_text_font(font.Bold.SCS26, lv.PART.MAIN)    
+        self.label.set_style_text_font(font.Regular.SCS26, lv.PART.MAIN)    
         
     def add_item(self, cls: Type[Widget]) -> Widget:
         self.item = cls(self)

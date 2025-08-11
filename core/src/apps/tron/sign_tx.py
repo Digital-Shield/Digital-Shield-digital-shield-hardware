@@ -56,11 +56,11 @@ async def _require_confirm_by_type(ctx, transaction, owner_address):
     if contract.transfer_contract:
         if contract.transfer_contract.amount is None:
             raise wire.DataError("Invalid Tron transfer amount")
-        await layout.require_confirm_tx(
-            ctx,
-            contract.transfer_contract.to_address,
-            contract.transfer_contract.amount,
-        )
+        # await layout.require_confirm_tx(
+        #     ctx,
+        #     contract.transfer_contract.to_address,
+        #     contract.transfer_contract.amount,
+        # )
         await require_confirm_fee_ton(
                 ctx,
                 contract.transfer_contract.amount,

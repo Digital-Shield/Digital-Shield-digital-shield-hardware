@@ -10,11 +10,13 @@ from . import ICON
 from .helper import TRANSACTION_PREFIX
 from .account_address import AccountAddress
 from .transaction import RawTransaction
-from trezor.ui.layouts.aptos import (
-    confirm_transaction_detail,
-    show_transaction_overview,
+# from trezor.ui.layouts.aptos import (
+#     confirm_transaction_detail,
+#     show_transaction_overview,
+# )
+from ..ethereum.layout import (
+    require_confirm_fee_ton,
 )
-
 
 @auto_keychain(__name__)
 async def sign_tx(
@@ -43,11 +45,24 @@ async def sign_tx(
     ctx.name = "APTOS"
     ctx.icon_path = ICON
 
-    if confirm_handler:
-        await confirm_handler(ctx, tx)
-    else:
-        await confirm_blind_sign_common(ctx, address, msg.raw_tx)
-
+    # if confirm_handler:
+    #     await confirm_handler(ctx, tx)
+    # else:
+    #     await confirm_blind_sign_common(ctx, address, msg.raw_tx)
+    await require_confirm_fee_ton(
+        ctx,
+        msg.amount,
+        0,
+        1,
+        4,
+        None,
+        from_address=address,
+        to_address=msg.destination,
+        contract_addr=None,
+        token_id=None,
+        evm_chain_id=None,
+        raw_data=None,
+    )
     prefix_bytes = RawTransaction.prehash()
     raw_tx = prefix_bytes + msg.raw_tx
     signature = ed25519.sign(node.private_key(), raw_tx)

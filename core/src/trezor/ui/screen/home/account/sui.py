@@ -1,23 +1,16 @@
-
 from trezor import utils
-
-from . import DetailBase
 from .helper import parser_path
 
-
-class Sui(DetailBase):
-    @staticmethod
-    def get_name() -> str:
+# a `CoinProtocol` class
+class Sui:
+    def get_name(self) -> str:
         return "SUI"
-    @staticmethod
-    def get_icon() -> str:
+    def get_icon(self) -> str:
         return "A:/res/chain-sui.png"
-    @staticmethod
-    def get_path() -> str:
+    def get_path(self) -> str:
         return "m/44'/784'/0'/0'/0'"
 
-    @classmethod
-    async def get_address(cls) -> str:
+    async def get_address(self) -> str:
         import_manager = utils.unimport()
         with import_manager:
             from trezor.wire import DUMMY_CONTEXT as ctx
@@ -30,7 +23,7 @@ class Sui(DetailBase):
             await handle_Initialize(ctx, init)
 
             # step 2: get address
-            req = SuiGetAddress(address_n=parser_path(cls.get_path()))
+            req = SuiGetAddress(address_n=parser_path(self.get_path()))
             resp = await get_address(ctx, req)
 
             return resp.address

@@ -19,6 +19,7 @@ class Setting:
     wallpaper = "Hintergrundbild"
     power_off = "Herunterfahren"
     restart = "Neustart"
+    restart_tip = "Gerät neu starten"
 
 #### Security App
 class Security:
@@ -86,6 +87,7 @@ class Guide:
     device_title_serial_number = 'Seriennummer'
     bluetooth_name = "Bluetooth-Name"
     bluetooth_version = "Bluetooth-Version"
+    attention_events = "Hinweise"
     firmware_title_1 = '1. Stellen Sie sicher, dass der Akkustand über 20% liegt'
     firmware_title_2 = '2. Verbinden Sie das Gerät über ein USB-C-Kabel mit dem Computer'
     firmware_title_3 = '3. Klicken Sie auf "Firmware-Update"'
@@ -108,10 +110,9 @@ class Title:
     wallet = "Wallet"
     import_wallet = "Wallet importieren"
     restore_wallet = "Wallet wiederherstellen"
-    wallet_is_ready = "Wallet bereit"
     select_word_count = "Wortanzahl wählen"
     wallet_security = "Wallet-Sicherheit"
-    pin_security = "PIN-Sicherheitshinweis"
+    pin_security = "PIN-Schutz aktivieren"
     mnemonic_security = "Mnemonic-Sicherheitshinweis"
     backup_mnemonic = "Mnemonic sichern"
     enter_mnemonic = "Mnemonic eingeben"
@@ -121,11 +122,9 @@ class Title:
     theme_success = "Design erfolgreich geändert"
     warning = "Warnung"
     error = "Fehler"
-    verified = "Mnemonic-Sicherung abgeschlossen"
     invalid_mnemonic = "Ungültiger Mnemonic"
     pin_not_match = "PIN stimmt nicht überein"
     check_recovery_mnemonic = "Wiederherstellungs-Mnemonic prüfen"
-    mnemonic_not_match = "Mnemonic stimmt nicht überein"
     power_off = "Ausschalten"
     restart = "Neustart"
     change_language = "Sprache ändern"
@@ -178,7 +177,7 @@ class Title:
     passphrase_source = "Passphrase-Eingabeeinstellung"
     enable_safety_checks ="Sicherheitsprüfungen aktivieren"
     disable_safety_checks ="Sicherheitsprüfungen deaktivieren"
-    experiment_mode = "Experimentiermodus"
+    experimental_mode = "Experimentiermodus"
     set_as_homescreen = "Als Startbildschirm festlegen"
     get_next_u2f_counter = "Nächsten U2F-Zähler abrufen"
     set_u2f_counter = "U2F-Zähler setzen"
@@ -197,22 +196,82 @@ class Title:
     update_bootloader = "Bootloader aktualisieren"
     update_resource = "Ressourcen aktualisieren"
 
+    words_num = "Wort #{}"
+    download_digital = "Herunterladen"
+    connect_wallets = "Wallet verbinden"
+    start_setup = "Einrichtung starten"
+    prepare_create = "Vorbereitung zur Erstellung"
+    prepare_import = "Import vorbereiten"
+    prepare_check = "Vorbereitung zur Überprüfung"
+    input_words = "Mnemonic eingeben"
+    has_sub = "Eingereicht"
+    reatart = "Neu starten"
+    invalid_words = "Ungültiger Mnemonic"
+    stop_checking = "Überprüfung beenden"
+    correct_words = "Mnemonic korrekt"
+    mnemonic_not_match = "Mnemonic stimmt nicht überein"
+    wallet_created = "Wallet erstellt"
+    check_words = "Wörter überprüfen"
+    verified = "Verifiziert"
+    wallet_is_ready = "Wallet bereit"
+
+    prepare_backup = "Backup vorbereiten"
+    mnemonic_word = "Mnemonic"
+    error_mnemonic_word = "Falsches Wort"
+    right_word = "Richtig"
+    wrong_word = "Falsch"
+
+    pin_not_match = "Stimmt nicht überein"
+    has_reset = "Gerät wurde zurückgesetzt"
+    has_wipe = "Gerät wurde gelöscht"
+    screen_bright = "Bildschirmhelligkeit"
+    download_app = "App herunterladen"
+    official_website = "Offizielle Webseite"
+    scan_ercode = "Scannen Sie den auf der App angezeigten QR-Code"
+    wipe_notice = "Bitte beachten Sie vor dem Zurücksetzen des Geräts:"
+    receive_tips = "Nur {}-Assets werden unterstützt"
+    sign_fail = "Signatur fehlgeschlagen"
+    select_network = "Netzwerk auswählen"
+    preview = "Vorschau"
+    go_link = "Bitte gehen Sie zum Link:"
+    connect_again = "Bitte versuchen Sie erneut, eine Verbindung herzustellen."
+
 class Text:
+    start_setup = "Erstellen Sie eine neue Wallet mit einem Mnemonic oder importieren Sie ein vorhandenes Mnemonic-Backup, um die Wallet wiederherzustellen."
+    select_word_count = "Bitte wählen Sie die Anzahl der Mnemonic-Wörter."
+    input_words = "Bitte geben Sie die Mnemonic-Wörter in der richtigen Reihenfolge ein und stellen Sie sicher, dass die Nummerierung mit Ihrem Backup übereinstimmt."
+    invalid_words = "Die eingegebenen Mnemonic-Wörter sind ungültig. Klicken Sie auf ein Wort, um es zu bearbeiten, oder starten Sie neu."
+    stop_checking = "Wenn Sie abbrechen, gehen alle bisherigen Fortschritte verloren. Möchten Sie wirklich abbrechen?"
+    import_wallet = "Geben Sie Ihr vorhandenes Mnemonic-Backup ein, um die Wallet wiederherzustellen."
+    correct_words = "Die eingegebenen Mnemonic-Wörter sind gültig und stimmen mit denen auf dem Gerät überein."
+    mnemonic_not_match = "Die eingegebenen Mnemonic-Wörter sind gültig, stimmen jedoch nicht mit denen auf dem Gerät überein."
+    wallet_created = "Neue Wallet erfolgreich erstellt. Bitte sichern Sie sie umgehend."
+    mnemonic_word_tips = "Bitte schreiben Sie die folgenden {} Wörter in der richtigen Reihenfolge auf."
+    select_words = "Bitte wählen Sie die richtigen Wörter aus."
+    error_mnemonic_word = "Das Wort ist nicht korrekt. Bitte überprüfen Sie Ihr Mnemonic-Backup und versuchen Sie es erneut."
+    has_reset = "Zu viele falsche PIN-Eingaben. Der Speicher wurde gelöscht."
+    restart_countdown = "Neustart in {} Sekunden"
+    has_wipe = "Gerätedaten wurden erfolgreich gelöscht. Bitte starten Sie das Gerät neu."
+    download_digital_tips = "Bitte laden Sie die Digital Shield App herunter: \n{}"
+    sign_fail = "Sie haben die Signatur abgebrochen, die Transaktion wurde storniert."
+    sign_success = "Transaktion wurde signiert"
+    check_words_tips = "Bitte folgen Sie den Anweisungen und überprüfen Sie jedes Wort einzeln anhand Ihrer Sicherung."
+    backup_verified = "Sie haben die Mnemonic-Überprüfung abgeschlossen."
+    create_success = "Ihr Mnemonic wurde gesichert, beginnen Sie mit der Nutzung."
     tap_to_unlock = "Zum Entsperren tippen"
     unlocking = "Gerät wird entsperrt..."
+
     str_words = "#FFFFFF {}# Wörter"
     backup_manual = "Mnemonic manuell aufschreiben und sicher aufbewahren"
     check_manual = "Wörter in der richtigen Reihenfolge auswählen"
-    backup_verified = "Mnemonic erfolgreich gesichert. Bewahren Sie ihn sicher auf und teilen Sie ihn mit niemandem"
     backup_invalid = "Ungültiger Mnemonic. Bitte überprüfen und erneut versuchen"
-    pin_not_match = "Falsche PIN. Bitte erneut versuchen"
+    pin_not_match = "Die beiden eingegebenen PINs stimmen nicht überein, bitte versuchen Sie es erneut."
     please_wait = "Bitte warten..."
     wiping_device = "Gerätedaten werden gelöscht..."
     create_wallet = "Neuen Mnemonic generieren und Wallet erstellen"
     restore_wallet = "Wallet aus gesichertem Mnemonic wiederherstellen"
     restore_mnemonic_match = "Mnemonic stimmt überein - Ihre Sicherung ist korrekt"
-    restore_success = "Wallet erfolgreich wiederhergestellt"
-    create_success = "Mnemonic erfolgreich gesichert und Wallet erstellt"
+    restore_success = "Ihr Mnemonic wurde importiert, Wallet erfolgreich wiederhergestellt."
     check_recovery_mnemonic = "Bitte überprüfen Sie Ihren Mnemonic auf Übereinstimmung"
     invalid_recovery_mnemonic = "Ungültiger Mnemonic. Bitte überprüfen und erneut versuchen"
     check_recovery_not_match = "Mnemonic ist gültig, stimmt aber nicht mit dem Gerät überein"
@@ -223,8 +282,8 @@ class Text:
     seconds = "Sekunden"
     minute = "Minute"
     minutes = "Minuten"
-    changing_language = "Sie ändern die Sprache\nDiese Änderung erfordert einen Neustart des Geräts"
-    change_pin = "Legen Sie einen 4-16-stelligen PIN-Code fest, um Ihr Gerät zu schützen"
+    changing_language = "Sie ändern die Sprache zu {}. Das Anwenden dieser Einstellung startet das Gerät neu."
+    change_pin = "Legen Sie eine 4- bis 16-stellige PIN fest."
     wipe_device = "Setzt das Gerät auf Werkseinstellungen zurück.\nWarnung: Alle Daten werden unwiderruflich gelöscht."
     wipe_device_check = [
         "Zurücksetzen löscht alle Daten",
@@ -247,7 +306,7 @@ class Text:
     max_fee_per_gas = "Maximale Gebühr pro Gas"
     gas_price = "Gas-Preis"
     total = "Gesamtbetrag"
-    do_sign_this_transaction = "Diese {} Transaktion signieren?"
+    do_sign_this_transaction = "Möchten Sie diese {}-Transaktion signieren?"
     transaction_signed = "Transaktion signiert"
     address = 'Adresse:'
     public_key = "Öffentlicher Schlüssel:"
@@ -368,6 +427,7 @@ class Button:
     continue_ = "Fortsetzen"
     try_again = "Erneut versuchen"
     power_off = "Ausschalten"
+    hold_to_power_off = "Lange drücken, um herunterzufahren"
     restart = "Neu starten"
     hold = "Gedrückt halten"
     address = "Adresse"
@@ -384,6 +444,7 @@ class Button:
     view_full_message = "Vollständige Nachricht anzeigen"
     view_data = "Daten anzeigen"
     view_more = "Mehr anzeigen"
+    update = "Aktualisieren"
 
 class WalletSecurity:
     header = "Schreiben Sie Ihren Mnemonic auf Papier und bewahren Sie ihn sicher auf"
@@ -427,7 +488,13 @@ class PinSecurity:
         "3. Maximale Fehlversuche: 10. Nach dem 10. Fehlversuch wird das Gerät zurückgesetzt.",
         "4. Bewahren Sie Ihren PIN sicher auf und teilen Sie ihn NIEMANDEM mit.",
     ]
-
+class DownloadDigital:
+    #header = "請下載並安裝DigitShield以進行裝置驗證"
+    tips = [
+        "1. Klicken Sie auf „Wallet verbinden“",
+        "2. Gerät verbinden:",
+        "3. Warten Sie einen Moment, die DigitalShield App stellt Ihre zuvor verwendeten Konten wieder her.",
+    ]
 class Solana:
     ata_reciver = "Empfänger (Assoziiertes Token-Konto)"
     ata_sender = "Sender (Assoziiertes Token-Konto)"

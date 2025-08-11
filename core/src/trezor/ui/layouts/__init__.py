@@ -1,5 +1,6 @@
 # from trezor import utils
-
+# import storage
+# import storage.recovery
 from typing import TYPE_CHECKING
 import lvgl as lv
 from trezor import log, wire, workflow, loop
@@ -35,12 +36,49 @@ async def show_popup(
     screen.auto_close_timeout = timeout_ms
     await screen
 
+#蓝牙连接失败弹窗
+async def show_popup_connection_failed(
+    operation: str,
+    timeout_ms: int = 3000,
+    icon: str | None = None,
+) -> None:
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(operation,i18n.Title.connect_again,icon,True)
+    screen.btn_confirm.set_text(i18n.Button.done)
+    await screen.show()
+    screen.auto_close_timeout = timeout_ms
+    await screen
 
+async def show_trans_popup(
+    operation: str,
+    timeout_ms: int = 3000,
+    icon: str | None = None,
+) -> None:
+    
+    print("show transaction signed")
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(i18n.Text.transaction_signed,i18n.Text.sign_success,"A:/res/wallet_ready.png",True)
+    screen.btn_confirm.set_text(i18n.Button.done)
+    await screen.show()
+    await screen
+
+async def load_popup(
+    operation: str,
+    timeout_ms: int = 2000,
+    icon: str | None = None,
+) -> None:
+    from trezor.ui.screen.popup import LoadingPopup
+
+    screen = LoadingPopup(operation, icon)
+    await screen.show()
+    screen.auto_close_timeout = timeout_ms
+    await screen
+#蓝牙连接失败
 async def show_pairing_error() -> None:
-    await show_popup(
+    await show_popup_connection_failed(
         i18n.Text.bluetooth_pair_failed,
         timeout_ms=2000,
-        icon="A:/res/error.png",
+        icon="A:/res/word_error.png",
     )
 
 
@@ -56,6 +94,29 @@ async def show_airgap_signature(sig: str):
     await screen.show()
     await screen
 
+async def show_success_create(
+    ctx: wire.GenericContext,
+    msg: str,
+    title: str = "Success",
+    button: str = i18n.Button.done,
+) -> Awaitable[None]:
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(title, msg,"A:/res/wallet_ready.png",True,i18n.Button.done)
+    screen.btn_confirm.set_text(i18n.Button.done)
+    await screen.show()
+    return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Success))
+
+async def show_success_pin(
+    ctx: wire.GenericContext,
+    msg: str,
+    title: str = "Success",
+    button: str = i18n.Button.done,
+) -> Awaitable[None]:
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(title, msg,"A:/res/wallet_ready.png",True,i18n.Button.done)
+    screen.btn_confirm.set_text(i18n.Button.done)
+    await screen.show()
+    return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Success))
 
 async def show_success(
     ctx: wire.GenericContext,
@@ -63,14 +124,25 @@ async def show_success(
     title: str = "Success",
     button: str = i18n.Button.done,
 ) -> Awaitable[None]:
-    from trezor.ui.screen.message import Success
-
-    screen = Success(title, msg)
-    screen.button_text(button)
+    # from trezor.ui.screen.message import Success
+    # screen = Success(title, msg)
+    # screen.button_text(button)
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(title, msg,"A:/res/wallet_ready.png",True,i18n.Button.done)
+    screen.btn_confirm.set_text(i18n.Button.done)
     await screen.show()
-    return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Success))
-
-
+    if msg == i18n.Text.correct_words:#核对钱包成功
+        # 延迟发布消息，确保界面状态稳定 await loop.sleep(200)
+        return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Success))
+    else:
+        await interact(
+            ctx,
+            screen,
+            ButtonRequestType.ResetDevice,
+        )
+        # await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Success))
+        await wallet_download_tip(ctx,i18n.Title.download_digital, i18n.Text.download_digital_tips)
+        await wallet_connect_tip(ctx,i18n.Title.connect_wallets, "")
 async def show_warning(
     ctx: wire.GenericContext,
     msg: str,
@@ -79,10 +151,62 @@ async def show_warning(
 ) -> Awaitable[None]:
     from trezor.ui.screen.message import Warning
 
-    screen = Warning(title, msg)
-    screen.button_text(button)
+    # screen = Warning(title, msg)
+    # screen.button_text(button)
+    # await screen.show()
+    # from trezor.ui.screen.confirm import WordCheckConfirm
+    # screen = WordCheckConfirm(title,msg,"A:/res/word_error.png",False)
+    # screen.btn_confirm.delete()
+    # screen.btn_cancel.set_text(i18n.Button.try_again)
+    # screen.btn_cancel.set_style_bg_color(lv.color_hex(0x0062CE), lv.PART.MAIN)  # 设置背景颜色
+    from trezor.ui.screen.alerts import Alerts
+    screen = Alerts(title, msg, "A:/res/word_error.png")
+    screen.btn_right.set_text(i18n.Button.try_again)
     await screen.show()
     return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Warning))
+
+async def show_notmatch_warning(
+    ctx: wire.GenericContext,
+    msg: str,
+    title: str = "Warning",
+    button: str = i18n.Button.try_again,
+) -> Awaitable[None]:
+    from trezor.ui.screen.message import Warning
+
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(title,msg,"A:/res/word_error.png",False)
+    screen.btn_confirm.delete()
+    screen.btn_cancel.set_text(i18n.Button.try_again)
+    screen.btn_cancel.set_style_width(440, lv.PART.MAIN)
+    screen.btn_cancel.set_style_bg_color(lv.color_hex(0x0062CE), lv.PART.MAIN)  # 设置背景颜色
+    await screen.show()
+    return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Warning))
+
+async def show_mnemonics_warning(
+    ctx: wire.GenericContext,
+    msg: str,
+    title: str = "Warning",
+    button: str = i18n.Button.try_again,
+    words: str = ""
+) -> Awaitable[None]:
+    from trezor.ui.screen.initialize.mnemonick import MnemonicInputs
+    screen = MnemonicInputs(len(words.split()), words)
+    await screen.show()
+    print("show success - after show, screen displayed")
+    from trezor.enums import ButtonRequestType
+    r = await interact(ctx, screen, ButtonRequestType.Other)
+    if isinstance(r, NavigationBack):
+        print("back----")
+        raise wire.ActionCancelled()
+    log.debug(__name__, f"checked words: {r}")
+    return r
+    # return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Warning))
+    # from trezor.ui.screen.message import Warning
+
+    # screen = Warning(title, msg)
+    # screen.button_text(button)
+    # await screen.show()
+    # return await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Warning))
 
 
 async def show_error(
@@ -107,7 +231,7 @@ async def show_address(
     chain_id: int | None = None,
 ):
     from trezor.ui.screen.template import Address
-
+    print("show address")
     screen = Address(address, path, network, chain_id)
     await screen.show()
     return await interact(ctx, screen, ButtonRequestType.Address)
@@ -115,26 +239,26 @@ async def show_address(
 
 # confirm functions
 async def hold_confirm_action(
-    ctx: wire.GenericContext, title: str, msg: str, br_code=ButtonRequestType.Other
+    ctx: wire.GenericContext, title: str, msg: str, br_code=ButtonRequestType.Other, chain_name: str = ""
 ):
     from trezor.ui.screen.template import HoldConfirmAction
 
-    screen = HoldConfirmAction(msg)
-    icon = None
-    if hasattr(ctx, "icon_path"):
-        icon = ctx.icon_path
-    screen.set_title(title, icon)
+    screen = HoldConfirmAction(title, msg, chain_name)
+    # icon = None
+    # if hasattr(ctx, "icon_path"):
+    #     icon = ctx,icon_path
+    # screen.set_title(title, icon)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, br_code))
 
 
 async def confirm_action(
-    ctx: wire.GenericContext, title: str, msg: str, br_code=ButtonRequestType.Other
+    ctx: wire.GenericContext, title: str, msg: str, br_code=ButtonRequestType.Other, names: str=""
 ):
-    from trezor.ui.screen.confirm import SimpleConfirm
+    from trezor.ui.screen.confirm import SimpleConfirm, UpdateCheckConfirm
 
-    screen = SimpleConfirm(msg)
-    screen.title.set_text(title)
+    screen = UpdateCheckConfirm(title, msg, names, False)
+    # screen.title.set_text(title)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, br_code))
 
@@ -146,9 +270,10 @@ async def confirm_final(ctx: wire.GenericContext, chain_name: str) -> None:
         i18n.Title.confirm_transaction,
         i18n.Text.do_sign_this_transaction.format(chain_name),
         ButtonRequestType.SignTx,
+        chain_name
     )
     # show success
-    await show_popup(
+    await show_trans_popup(
         i18n.Text.transaction_signed, timeout_ms=3000, icon="A:/res/success.png"
     )
 
@@ -193,12 +318,16 @@ async def confirm_update_res(ctx, update_boot:bool):
 
 ## wipe device
 async def confirm_wipe_device(ctx: wire.GenericContext):
-    from trezor.ui.screen.confirm import SimpleConfirm
+    # from trezor.ui.screen.confirm import SimpleConfirm
 
-    screen = SimpleConfirm(i18n.Text.wipe_device)
-    screen.btn_confirm.color(colors.DS.DANGER)
-    screen.btn_confirm.set_text(i18n.Button.continue_)
-    screen.text_color(colors.DS.DANGER)
+    # screen = SimpleConfirm(i18n.Text.wipe_device)
+    # screen.btn_confirm.color(colors.DS.DANGER)
+    # screen.btn_confirm.set_text(i18n.Button.continue_)
+    # screen.text_color(colors.DS.DANGER)
+    # await screen.show()
+    from trezor.ui.screen.confirm import SimpleConfirm, WordCheckConfirm
+    screen = WordCheckConfirm(i18n.Title.wipe_device,i18n.Text.wipe_device,"A:/res/warning_tip.png",False)
+    screen.btn_confirm.set_text(i18n.Button.confirm)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.WipeDevice))
 
@@ -212,14 +341,67 @@ async def confirm_wipe_device_tips(ctx: wire.GenericContext):
 
 
 async def confirm_wipe_device_success(ctx: wire.GenericContext):
-    from trezor.ui.screen.message import Info
+    # from trezor.ui.screen.message import Info
 
-    screen = Info(None, i18n.Text.wipe_device_success)
-    screen.button_text(i18n.Button.continue_)
+    # screen = Info(None, i18n.Text.wipe_device_success)
+    # screen.button_text(i18n.Button.continue_)
+    # await screen.show()
+    from trezor.ui.screen.confirm import SimpleConfirm, WordCheckConfirm
+    screen = WordCheckConfirm(i18n.Title.has_wipe,i18n.Text.has_wipe,"A:/res/warning_tip.png",True)
+    screen.btn_confirm.set_text(i18n.Setting.restart_tip)
     await screen.show()
     return await interact(ctx, screen, ButtonRequestType.WipeDevice)
+#钱包创建相关提示
+async def wallet_colleted_tip(ctx: wire.GenericContext,title:str,msg:str,icon: str = "A:/res/success.png") -> bool:
+    # from trezor.ui.screen.alerts import Alerts
+    # screen = Alerts(title, msg, icon)
+    # await screen.show()
+    from trezor.ui.screen.confirm import WordCheckConfirm
+    screen = WordCheckConfirm(title, msg,icon,True,i18n.Button.continue_)
+    # screen.btn_confirm.set_text(i18n.Button.done)
+    await screen.show()
+    await interact(
+        ctx,
+        screen,
+        ButtonRequestType.ResetDevice,
+    )
+#钱包导入相关提示
+async def wallet_import_tip(ctx: wire.GenericContext,title:str,msg:str,icon: str,left_btn_hidden: bool) -> bool:
+    from trezor.ui.screen.alerts import Alerts
+    screen = Alerts(title, msg, icon, left_btn_hidden)
+    screen.btn_left.clear_flag(lv.obj.FLAG.HIDDEN)
+    await screen.show()
 
+    return await interact(
+        ctx,
+        screen,
+        ButtonRequestType.ResetDevice,
+    )
+#下载钱包提示
+async def wallet_download_tip(ctx: wire.GenericContext,title:str,msg:str) -> bool:
+    from trezor.ui.screen.qrcode import Qrcode
+    screen = Qrcode(title, msg, True) 
+    # screen.btn_left.clear_flag(lv.obj.FLAG.HIDDEN)
+    await screen.show()
 
+    return await interact(
+        ctx,
+        screen,
+        ButtonRequestType.ResetDevice,
+    )
+#连接钱包提示
+async def wallet_connect_tip(ctx: wire.GenericContext,title:str,msg:str) -> bool:
+    from trezor.ui.screen.qrcode import Qrcode
+    screen = Qrcode(title, msg, False, i18n.DownloadDigital)
+    screen.btn_right.set_text(i18n.Button.done)
+    # screen.btn_left.clear_flag(lv.obj.FLAG.HIDDEN)
+    await screen.show()
+
+    return await interact(
+        ctx,
+        screen,
+        ButtonRequestType.ResetDevice,
+    )
 async def mnemonic_security_tip(ctx: wire.GenericContext) -> bool:
     from trezor.ui.screen.initialize.xsecurity import MnemonicSecurity
 
@@ -247,15 +429,28 @@ async def request_pin_on_device(
     else:
         subprompt = i18n.Text.incorrect_pin_times_left.format(attempts_remaining)
     from trezor.ui.screen.pin import InputPinScreen
-
-    screen = InputPinScreen(prompt)
-    screen.warning(subprompt)
-    await screen.show()
+    #输入pin码超了次数，进行跳转页面，含有倒计时重启
+    if attempts_remaining == 0:
+        from trezor.ui.screen.tips import Tips
+        screen = Tips(i18n.Title.has_reset,i18n.Text.has_reset)
+        await screen.show()
+    else:    
+        screen = InputPinScreen(prompt)
+        screen.warning(subprompt)
+        await screen.show()
     result = await ctx.wait(screen)
     if not result:
         if not allow_cancel:
             loop.clear()
         raise wire.PinCancelled
+    #超次数重启
+    if attempts_remaining == 0:
+        async def restart_delay():
+            from trezor import utils
+            utils.reset()
+        from trezor import workflow
+        workflow.spawn(restart_delay())
+        
     assert isinstance(result, str)
     return result
 
@@ -264,15 +459,17 @@ async def request_word_count(ctx: wire.GenericContext, dry_run: bool) -> int | N
     from trezor.ui.screen import manager
     screen = manager.try_switch_to(WordcountScreen)
     if not screen:
-        screen = WordcountScreen()
+        screen = WordcountScreen(dry_run)
         await screen.show()
 
     r = await interact(ctx, screen, ButtonRequestType.MnemonicWordCount)
     if isinstance(r, NavigationBack):
         return r
+    
     return int(r)
 
 async def request_mnemonic(ctx, word_count: int) -> str | NavigationBack:
+    
     from trezor.ui.screen.initialize.mnemonic import MnemonicInput
     screen = MnemonicInput(word_count)
     await screen.show()
@@ -280,10 +477,12 @@ async def request_mnemonic(ctx, word_count: int) -> str | NavigationBack:
     if isinstance(r, NavigationBack):
         await screen.wait_unloaded()
         return r
-    words = screen.mnemonics
+    # words = screen.mnemonics
+    words = [str(w) if w is not None else "" for w in screen.mnemonics]
+    print(f"response_mnemonic: {words}")
     return ' '.join(words)
 
-async def request_strength(ctx) -> int:
+async def request_strength(ctx,label: str) -> int:
     word_cnt_strength_map = {
         12: 128,
         18: 192,
@@ -292,7 +491,7 @@ async def request_strength(ctx) -> int:
 
     from trezor.ui.screen.initialize.wordcount import WordcountScreen
 
-    screen = WordcountScreen()
+    screen = WordcountScreen(False,label)
     await screen.show()
     count = await interact(ctx, screen, ButtonRequestType.MnemonicWordCount)
     if not isinstance(count, int):
@@ -303,10 +502,13 @@ async def request_strength(ctx) -> int:
 async def confirm_reset_device(
     ctx: wire.GenericContext, prompt: str, recovery: bool = False
 ) -> None:
-    from trezor.ui.screen.message import Info
+    # from trezor.ui.screen.message import Info
 
-    title = i18n.Title.restore_wallet if recovery else i18n.Title.create_wallet
-    screen = Info(title, prompt)
+    # title = i18n.Title.restore_wallet if recovery else i18n.Title.create_wallet
+    # screen = Info(title, prompt)
+    # await screen.show()
+    from trezor.ui.screen.confirm import HolderConfirm
+    screen = HolderConfirm("确认交易", "是否签名这笔TON交易？", "TON")
     await screen.show()
     await raise_if_cancelled(
         interact(
@@ -356,11 +558,15 @@ async def confirm_change_pin(ctx: wire.GenericContext):
     # from trezor.ui.screen.message import Info
     from trezor.ui.screen.confirm import SimpleConfirm
 
-    screen = SimpleConfirm(i18n.Text.change_pin)
-    screen.title.set_text(i18n.Security.change_pin)  # 设置标题
-    #screen.btn_confirm.color(colors.DS.DANGER)
+    # screen = SimpleConfirm(i18n.Text.change_pin)
+    # screen.title.set_text(i18n.Security.change_pin)  # 设置标题
+    # #screen.btn_confirm.color(colors.DS.DANGER)
+    # screen.btn_confirm.set_text(i18n.Button.continue_)
+    # screen.text_color(colors.DS.WHITE)
+    # await screen.show()
+    from trezor.ui.screen.confirm import SimpleConfirm, WordCheckConfirm
+    screen = WordCheckConfirm(i18n.Security.change_pin,i18n.Text.change_pin, "A:/res/warning_tip.png", False)
     screen.btn_confirm.set_text(i18n.Button.continue_)
-    screen.text_color(colors.DS.WHITE)
     await screen.show()
     await raise_if_cancelled(interact(ctx, screen, ButtonRequestType.Other))
 
@@ -410,19 +616,24 @@ async def show_words(
 
 
 async def confirm_words(ctx: wire.GenericContext, share_words: Sequence[str]) -> bool:
-    from trezor.ui.screen.initialize.mnemonic import MnemonicDisplay, MnemonicCheck
-    from trezor.crypto import random
+    from trezor.ui.screen.initialize.mnemonic import MnemonicDisplay, MnemonicCheck #MnemonicInput
+    # from trezor.crypto import random
 
-    rnd_words = [x for x in share_words]
-    random.shuffle(rnd_words)
+    # rnd_words = [x for x in share_words]
+    # random.shuffle(rnd_words) #重新排列词语
+    
     # log.debug(__name__, f"original words: {share_words}")
     # log.debug(__name__, f"random words: {rnd_words}")
-    screen = MnemonicCheck()
-    screen.update_mnemonics(rnd_words)
+    await wallet_colleted_tip(ctx,i18n.Title.check_words, i18n.Text.check_words_tips,"A:/res/warning_tip.png")
+    
+    print("传递words", share_words)
+    screen = MnemonicCheck(share_words)
+    # screen.update_mnemonics(rnd_words)
     await screen.show()
-
+    
     r = await interact(ctx, screen, ButtonRequestType.Other)
     if isinstance(r, NavigationBack):
+        print("back----")
         raise wire.ActionCancelled()
     log.debug(__name__, f"checked words: {r}")
 
